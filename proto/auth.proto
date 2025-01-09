@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package auth;
+// option go_package = "backend/auth_service/generated;authpb";
+option go_package = "/;authpb";
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc GetSekolahByNpsn(GetSekolahByNpsnRequest) returns (GetSekolahByNpsnResponse);
+  rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+}
+
+// Struktur Sekolah
+message Sekolah {
+  string sekolah_id_enkrip = 1;
+  string kecamatan = 2;
+  string kabupaten = 3;
+  string propinsi = 4;
+  string kode_kecamatan = 5;
+  string kode_kab = 6;
+  string kode_prop = 7;
+  string nama_sekolah = 8;
+  string npsn = 9;
+  string alamat_jalan = 10;
+  string status = 11;
+}
+
+// Struktur User
+message User {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+  string role = 4;
+}
+
+// Struktur User Profile
+message UserProfile {
+  string user_id = 1;
+  string nama = 2;
+  string jk = 3;
+  string phone = 4;
+  string tpt_lahir = 5;
+  string tgl_lahir = 6;
+  string alamat_jalan = 7;
+  string kota_kab = 8;
+  string prov = 9;
+  string kode_pos = 10;
+  string nama_ayah = 11;
+  string nama_ibu = 12;
+  string photo_url = 13;
+}
+
+
+
+// Request untuk Register
+message RegisterRequest {
+  Sekolah sekolah = 1;
+  User user = 2;
+  UserProfile user_profile = 3;
+}
+
+// Response untuk Register
+message RegisterResponse {
+  string message = 1;
+  string user_id = 2;
+}
+
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message GetSekolahByNpsnRequest {
+  string npsn = 1;
+}
+
+message GetSekolahByNpsnResponse {
+  string sekolah_name = 1;
+  string address = 2;
+}
+
+message GetUserByIDRequest {
+  string user_id = 1;
+}
+
+message GetUserByIDResponse {
+  string name = 1;
+  string email = 2;
+}

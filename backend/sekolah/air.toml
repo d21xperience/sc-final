@@ -1,0 +1,13 @@
+# Config file for Air
+[build]
+  # Command to build the application
+  cmd = "go build -o ./tmp/auth_service"
+
+[run]
+  # Command to run the application
+  cmd = "./tmp/auth_service"
+  # Watch changes in these directories
+  watch_dir = "./"
+  # Exclude files or directories
+  exclude_dir = ["tmp", "tests"]
+  exclude_file = ["*.md", "*.env"]

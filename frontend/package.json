@@ -1,0 +1,40 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.1",
+    "@fortawesome/free-brands-svg-icons": "^6.7.1",
+    "@fortawesome/free-regular-svg-icons": "^6.7.1",
+    "@fortawesome/free-solid-svg-icons": "^6.7.1",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@primevue/forms": "^4.2.5",
+    "@primevue/themes": "^4.0.5",
+    "@unhead/vue": "^1.11.11",
+    "axios": "^1.7.7",
+    "chart.js": "^4.4.6",
+    "lodash": "^4.17.21",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.0.5",
+    "qrcode.vue": "^3.6.0",
+    "tailwindcss-primeui": "^0.3.4",
+    "vue": "^3.4.29",
+    "vue-recaptcha": "^3.0.0-alpha.2",
+    "vue-router": "^4.3.3",
+    "vuex": "^4.1.0",
+    "web3": "^4.11.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10",
+    "vite": "^5.3.1"
+  }
+}

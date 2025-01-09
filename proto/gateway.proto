@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package gateway;
+
+option go_package = "/;gatewayp";
+
+import "google/api/annotations.proto";
+import "auth.proto"; // Mengimpor auth_service
+
+service GatewayService {
+  rpc Login(auth.LoginRequest) returns (auth.LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/login"
+      body: "*"
+    };
+  },
+  rpc GetSekolahByNpsn(GetSekolahByNpsnRequest) returns (GetSekolahByNpsnResponse){
+    option (google.api.http) = {
+      get: "/v1/sekolah/npsn/{npsn}"
+      };
+  }
+}
