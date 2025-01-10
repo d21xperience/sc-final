@@ -8,9 +8,9 @@ import (
 
 type UserProfileService interface {
 	CreateUserProfile(up *models.UserProfile) error
-	GetUserProfileByID(userID string) (*models.UserProfile, error)
-	UpdateUserProfile(userID string, updatedData *models.UserProfile) error
-	DeleteUserProfile(userID string) error
+	GetUserProfileByID(userID int64) (*models.UserProfile, error)
+	UpdateUserProfile(userID int64, updatedData *models.UserProfile) error
+	DeleteUserProfile(userID int64) error
 }
 
 type userProfileServiceImpl struct {
@@ -32,7 +32,7 @@ func (uPS userProfileServiceImpl) CreateUserProfile(up *models.UserProfile) erro
 	return nil
 }
 
-func (uPS userProfileServiceImpl) GetUserProfileByID(userID string) (*models.UserProfile, error) {
+func (uPS userProfileServiceImpl) GetUserProfileByID(userID int64) (*models.UserProfile, error) {
 	userProfile, err := uPS.userProfileRepo.FindByID(userID)
 	if err != nil {
 		return nil, errors.New("failed to retrieve user profile: " + err.Error())
@@ -43,7 +43,7 @@ func (uPS userProfileServiceImpl) GetUserProfileByID(userID string) (*models.Use
 	return userProfile, nil
 }
 
-func (uPS userProfileServiceImpl) UpdateUserProfile(userID string, updatedData *models.UserProfile) error {
+func (uPS userProfileServiceImpl) UpdateUserProfile(userID int64, updatedData *models.UserProfile) error {
 	existingProfile, err := uPS.userProfileRepo.FindByID(userID)
 	if err != nil {
 		return errors.New("failed to find user profile: " + err.Error())
@@ -60,7 +60,7 @@ func (uPS userProfileServiceImpl) UpdateUserProfile(userID string, updatedData *
 	return nil
 }
 
-func (uPS userProfileServiceImpl) DeleteUserProfile(userID string) error {
+func (uPS userProfileServiceImpl) DeleteUserProfile(userID int64) error {
 	err := uPS.userProfileRepo.Delete(userID)
 	if err != nil {
 		return errors.New("failed to delete user profile: " + err.Error())

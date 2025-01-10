@@ -1,6 +1,5 @@
 go 1.22.3
 
 use (
-	./backend/auth_service
-	./gateway_service
+	// ./backend/auth_service
 )

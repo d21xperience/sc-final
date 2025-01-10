@@ -3,8 +3,8 @@ package models
 import "time"
 
 type UserProfile struct {
-	ID             uint   `gorm:"primaryKey;autoIncrement" json:"biodata_id"`
-	UserID         uint   `gorm:"foreignKey:ID"`
+	ID             int64  `gorm:"primaryKey;autoIncrement" json:"biodata_id"`
+	UserID         int64  `gorm:"foreignKey:ID"`
 	Nama           string `gorm:"size:100" json:"nama"`
 	JK             string `gorm:"size:100" json:"jk"`
 	Phone          string `gorm:"size:100" json:"phone"`

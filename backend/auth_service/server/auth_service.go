@@ -159,3 +159,50 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 
 	return response, nil
 }
+
+// ✅ GetUserProfile - Mengambil profil pengguna berdasarkan UserID
+func (s *AuthServiceServer) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
+	profile, err := s.userProfile.GetUserProfileByID(req.UserId)
+	if err != nil {
+		log.Printf("Error fetching user profile: %v", err)
+		return nil, errors.New("failed to retrieve user profile")
+	}
+
+	return &pb.GetUserProfileResponse{
+		Name: "OK",
+		UserProfile: &pb.UserProfile{
+			UserId:   profile.UserID,
+			Nama:     profile.Nama,
+			Jk:       profile.JK,
+			Phone:    profile.Phone,
+			TptLahir: profile.TptLahir,
+			// TglLahir: profile.TglLahir.Format(),
+			AlamatJalan: profile.AlamatJalan,
+			KotaKab:     profile.KotaKab,
+			Prov:        profile.Prov,
+			KodePos:     profile.KodePos,
+			NamaAyah:    profile.NamaAyah,
+			NamaIbu:     profile.NamaIbu,
+		},
+	}, nil
+}
+
+// ✅ GetSekolahByNpsn - Mengambil data sekolah berdasarkan NPSN
+func (s *AuthServiceServer) GetSekolahByNpsn(ctx context.Context, req *pb.GetSekolahByNpsnRequest) (*pb.GetSekolahByNpsnResponse, error) {
+	sekolah, err := s.sekolahService.GetSekolahByNpsn(req.Npsn)
+	if err != nil {
+		log.Printf("Error fetching school data: %v", err)
+		return nil, errors.New("failed to retrieve school data")
+	}
+
+	return &pb.GetSekolahByNpsnResponse{
+		Nama: "nama_sekolah",
+		SekolahData: &pb.Sekolah{
+			SekolahIdEnkrip: sekolah.SekolahIDEnkrip,
+			Kecamatan:       sekolah.Kecamatan,
+			Kabupaten:       sekolah.Kabupaten,
+			Propinsi:        sekolah.Propinsi,
+			KodeKecamatan:   sekolah.Kecamatan,
+		},
+	}, nil
+}

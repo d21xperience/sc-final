@@ -1,7 +1,7 @@
 import axios from "axios";
 const baseURL = "http://localhost:8080/api/v1/auth";
 const state = {
-  token: localStorage.getItem("token") || null,
+  token: true,//localStorage.getItem("token") || null,
   admin: null,
   refreshToken: null,
 };

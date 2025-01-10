@@ -1,50 +1,42 @@
-version: "3.9"
+version: "3.8"
+
 services:
-  auth_service:
-    build:
-      context: ./backend/auth-service
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-
-  sekolah_service:
-    build:
-      context: ./backend/sekolah
-    ports:
-      - "8082:8082"
-    depends_on:
-      - postgres
-
-  smartcontract_service:
-    build:
-      context: ./backend/sc-service
-    ports:
-      - "8081:8081"
-    depends_on:
-      - postgres
-
   nginx:
     build:
       context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx_gateway
     ports:
       - "80:80"
-      - "443:443"
     depends_on:
       - auth_service
+      - sc_service
       - sekolah_service
-      - smartcontract_service
 
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+  auth_service:
+    image: auth_service_image
+    container_name: auth_service
     ports:
-      - "5432:5432"
+      - "50051:50051"
 
-volumes:
-  postgres_data:
+  sc_service:
+    image: sc_service_image
+    container_name: sc_service
+    ports:
+      - "50052:50052"
+
+  sekolah_service:
+    image: sekolah_service_image
+    container_name: sekolah_service
+    ports:
+      - "50053:50053"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - nginx

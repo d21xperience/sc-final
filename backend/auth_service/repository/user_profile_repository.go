@@ -8,9 +8,9 @@ import (
 
 type UserProfileRepository interface {
 	Save(user *models.UserProfile) error
-	FindByID(userID string) (*models.UserProfile, error)
+	FindByID(userID int64) (*models.UserProfile, error)
 	Update(user *models.UserProfile) error
-	Delete(userID string) error
+	Delete(userID int64) error
 }
 
 type userProfileRepositoryImpl struct {
@@ -27,7 +27,7 @@ func (r *userProfileRepositoryImpl) Save(userProfile *models.UserProfile) error 
 }
 
 // Read (Cari User Profile berdasarkan ID)
-func (r *userProfileRepositoryImpl) FindByID(userID string) (*models.UserProfile, error) {
+func (r *userProfileRepositoryImpl) FindByID(userID int64) (*models.UserProfile, error) {
 	var userProfile models.UserProfile
 	err := r.db.First(&userProfile, "id = ?", userID).Error
 	if err != nil {
@@ -42,6 +42,6 @@ func (r *userProfileRepositoryImpl) Update(userProfile *models.UserProfile) erro
 }
 
 // Delete (Hapus User Profile berdasarkan ID)
-func (r *userProfileRepositoryImpl) Delete(userID string) error {
+func (r *userProfileRepositoryImpl) Delete(userID int64) error {
 	return r.db.Delete(&models.UserProfile{}, "id = ?", userID).Error
 }
