@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: .  # Build dari folder nginx/
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "80:80"  # Akses API Gateway melalui http://localhost
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true

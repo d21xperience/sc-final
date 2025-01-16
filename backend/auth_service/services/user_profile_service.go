@@ -7,10 +7,10 @@ import (
 )
 
 type UserProfileService interface {
-	CreateUserProfile(up *models.UserProfile) error
-	GetUserProfileByID(userID int64) (*models.UserProfile, error)
-	UpdateUserProfile(userID int64, updatedData *models.UserProfile) error
-	DeleteUserProfile(userID int64) error
+	CreateUserProfile(*models.UserProfile) error
+	GetUserProfileByID(int64) (*models.UserProfile, error)
+	UpdateUserProfile(*models.UserProfile) error
+	DeleteUserProfile(int64) error
 }
 
 type userProfileServiceImpl struct {
@@ -43,17 +43,8 @@ func (uPS userProfileServiceImpl) GetUserProfileByID(userID int64) (*models.User
 	return userProfile, nil
 }
 
-func (uPS userProfileServiceImpl) UpdateUserProfile(userID int64, updatedData *models.UserProfile) error {
-	existingProfile, err := uPS.userProfileRepo.FindByID(userID)
-	if err != nil {
-		return errors.New("failed to find user profile: " + err.Error())
-	}
-	if existingProfile == nil {
-		return errors.New("user profile not found")
-	}
-
-	updatedData.ID = existingProfile.ID // Pastikan ID tidak berubah
-	err = uPS.userProfileRepo.Update(updatedData)
+func (uPS userProfileServiceImpl) UpdateUserProfile(userProfileModel *models.UserProfile) error {
+	err := uPS.userProfileRepo.Update(userProfileModel)
 	if err != nil {
 		return errors.New("failed to update user profile: " + err.Error())
 	}
@@ -67,6 +58,7 @@ func (uPS userProfileServiceImpl) DeleteUserProfile(userID int64) error {
 	}
 	return nil
 }
+
 
 // func (s *userProfileServiceImpl) UpdateProfilePicture(userID string, filepath string) error {
 // 	user, err := s.userProfileRepo.FindByID(userID)

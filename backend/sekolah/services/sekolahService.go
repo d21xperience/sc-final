@@ -1,38 +1,44 @@
 package services
 
 import (
+	"context"
+	"errors"
 	"sekolah/models"
 	"sekolah/repositories"
 )
 
 type SekolahService interface {
-	Save(sekolah *models.Sekolah) error
-	FindByID(sekolahID string) (*models.Sekolah, error)
-	Update(sekolah *models.Sekolah) error
-	Delete(sekolahID string) error
+	Save(ctx context.Context, pd *models.Sekolah, schemaName string) error
+	Find(ctx context.Context, schemaName string) (*models.Sekolah, error)
+	FindByID(ctx context.Context, SekolahID string, schemaName string) (*models.Sekolah, error)
+	Update(ctx context.Context, Sekolah *models.Sekolah, schemaName string) error
+	Delete(ctx context.Context, SekolahID string, schemaName string) error
 }
 
-type sekolahServiceImpl struct {
+type SekolahServiceImpl struct {
 	SekolahRepo repositories.SekolahRepository
 }
 
 func NewSekolahService(sr repositories.SekolahRepository) SekolahService {
-	return &sekolahServiceImpl{SekolahRepo: sr}
+	return &SekolahServiceImpl{SekolahRepo: sr}
 }
 
-func (s sekolahServiceImpl) Save(sekolah *models.Sekolah) error {
-	return s.Save(sekolah)
+func (s *SekolahServiceImpl) Save(ctx context.Context, sekolah *models.Sekolah, schemaName string) error {
+	err := s.SekolahRepo.Save(ctx, sekolah, schemaName)
+	if err != nil {
+		return errors.New("gagal menyimpan Sekolah")
+	}
+	return err
 }
-func (s sekolahServiceImpl) FindByID(sekolahID string) (*models.Sekolah, error) {
-	return s.SekolahRepo.FindByID(sekolahID)
+func (s *SekolahServiceImpl) Find(ctx context.Context, schemaName string) (*models.Sekolah, error) {
+	return s.SekolahRepo.Find(ctx, schemaName)
 }
-func (s sekolahServiceImpl) Update(sekolah *models.Sekolah) error {
-	return s.SekolahRepo.Update(sekolah)
+func (s *SekolahServiceImpl) FindByID(ctx context.Context, SekolahID string, schemaName string) (*models.Sekolah, error) {
+	return s.SekolahRepo.FindByID(ctx, SekolahID, schemaName)
 }
-func (s sekolahServiceImpl) Delete(sekolahID string) error {
-	// id, err := uuid.Parse(sekolahID)
-	// if err != nil {
-	// 	return errors.New("invalid UUID format")
-	// }
-	return s.SekolahRepo.Delete(sekolahID)
+func (s *SekolahServiceImpl) Update(ctx context.Context, Sekolah *models.Sekolah, schemaName string) error {
+	return s.SekolahRepo.Update(ctx, Sekolah, schemaName)
+}
+func (s *SekolahServiceImpl) Delete(ctx context.Context, SekolahID string, schemaName string) error {
+	return s.SekolahRepo.Delete(ctx, SekolahID, schemaName)
 }

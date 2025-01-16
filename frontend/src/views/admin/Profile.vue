@@ -23,10 +23,10 @@
                         </div>
                         <div class="text-center">
                             <h1 class="text-2xl font-bold">
-                                {{ akun.nama }}
+                                {{ akun.username }}
                             </h1>
                             <p class="text-gray-600">
-                                {{ akun.role }}
+                                {{ akun.role.toUpperCase() }}
                             </p>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                                 <span class="font-bold">
                                     Email:
                                 </span>
-                                john.doe@example.com
+                                {{ akun.email }}
                             </p>
                             <p>
                                 <span class="font-bold">
@@ -49,15 +49,29 @@
                             </p>
                             <div>
                                 <span class="font-bold">
-                                    Date of Birth:
+                                    Nama:
                                 </span>
                                 <div class="inline-block">
                                     <div v-if="isProfileEdit">
-                                        <DatePicker v-model="akun.biodata.tglLahir" dateFormat="dd/mm/yy"
+                                        {{ akun.nama }}
+                                    </div>
+                                    <div v-else>
+                                        {{ akun.nama }}
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div>
+                                <span class="font-bold">
+                                    Tanggal Lahir:
+                                </span>
+                                <div class="inline-block">
+                                    <div v-if="isProfileEdit">
+                                        <DatePicker v-model="akun.tglLahir" dateFormat="dd/mm/yy"
                                             :inputClass="{ dateClass: isProfileEdit }" />
                                     </div>
                                     <div v-else>
-                                        {{ akun.biodata.tglLahir }}
+                                        {{ akun.tglLahir }}
                                     </div>
 
                                 </div>
@@ -68,72 +82,60 @@
                 <div class="w-1/2">
                     <div class="mt-6">
                         <h2 class="text-xl font-semibold">
-                            Address
+                            Alamat
                         </h2>
                         <div class="mt-4">
                             <p>
                                 <span class="font-bold">
-                                    Street:
+                                    Nama Jalan:
                                 </span>
-                                <input type="text" name="tgl-lahir" id="tgl-lahir" v-model="akun.biodata.Street"
+                                <input type="text" name="nama-jalan" id="nama-jalan" v-model="akun.alamatJalan"
                                     :class="{ 'p-inputtext': isProfileEdit }">
                                 <!-- 123 Main St -->
                             </p>
                             <p>
                                 <span class="font-bold">
-                                    City:
+                                    Kota/Kab:
                                 </span>
-                                <input type="text" name="tgl-lahir" id="tgl-lahir" v-model="akun.biodata.city"
+                                <input type="text" name="kota-kab" id="kota-kab" v-model="akun.kotaKab"
                                     :class="{ 'p-inputtext': isProfileEdit }">
                             </p>
                             <p>
                                 <span class="font-bold">
-                                    State:
+                                    Provinsi:
                                 </span>
-                                <input type="text" name="tgl-lahir" id="tgl-lahir" v-model="akun.biodata.state"
+                                <input type="text" name="prov" id="prov" v-model="akun.prov"
                                     :class="{ 'p-inputtext': isProfileEdit }">
                             </p>
                             <p>
                                 <span class="font-bold">
-                                    Zip Code:
+                                    Kode Pos:
                                 </span>
-                                <input type="text" name="tgl-lahir" id="tgl-lahir" v-model="akun.biodata.zipCode"
+                                <input type="text" name="kodepos" id="kodepos" v-model="akun.kodePos"
                                     :class="{ 'p-inputtext': isProfileEdit }">
                             </p>
                         </div>
                     </div>
                     <div class="mt-6">
                         <h2 class="text-xl font-semibold">
-                            Parents
+                            Orang tua
                         </h2>
                         <div class="mt-4">
                             <p>
                                 <span class="font-bold">
-                                    Father's Name:
+                                    Nama Ayah:
                                 </span>
-                                <input type="text" name="tgl-lahir" id="tgl-lahir" v-model="akun.biodata.namaAyah"
+                                <input type="text" name="tgl-lahir" id="nm-ayah" v-model="akun.namaAyah"
                                     :class="{ 'p-inputtext': isProfileEdit }">
                             </p>
                             <p>
                                 <span class="font-bold">
-                                    Mother's Name:
+                                    Nama Ibu:
                                 </span>
-                                <input type="text" name="tgl-lahir" id="tgl-lahir" v-model="akun.biodata.namaIbu"
+                                <input type="text" name="tgl-lahir" id="nama-ibu" v-model="akun.namaIbu"
                                     :class="{ 'p-inputtext': isProfileEdit }">
                             </p>
-                            <p>
-                                <span class="font-bold">
-                                    Father's Phone:
-                                </span>
-                                <input type="text" name="tgl-lahir" id="tgl-lahir" v-model="akun.biodata.phoneAyah"
-                                    :class="{ 'p-inputtext': isProfileEdit }">
-                            </p>
-                            <p>
-                                <span class="font-bold">
-                                    Mother's Phone:
-                                </span>
-                                +123 456 7892
-                            </p>
+
                         </div>
                     </div>
                 </div>
@@ -144,7 +146,8 @@
                         class="bg-yellow-400 hover:bg-yellow-500 hover:text-white p-2 rounded-lg w-40">Batal</button>
                 </div>
                 <div>
-                    <button class="bg-blue-400 hover:bg-blue-500 hover:text-white p-2 rounded-lg w-40">Simpan</button>
+                    <button class="bg-blue-400 hover:bg-blue-500 hover:text-white p-2 rounded-lg w-40"
+                        @click="showUpdateProfile">Simpan</button>
                 </div>
             </div>
         </div>
@@ -170,7 +173,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 
 import DatePicker from 'primevue/datepicker';
 
@@ -181,7 +183,40 @@ import DatePicker from 'primevue/datepicker';
 // import TabPanel from 'primevue/tabpanel';
 
 
+// ==========[RPFOLE]-----------
+import { ref, onMounted, watch, computed } from "vue";
+import { useStore } from "vuex";
 
+const store = useStore();
+const fetchUserProfile = async () => {
+    try {
+        const userId = store.state.authService.user?.userId;
+        if (!userId) throw new Error("User ID not found");
+
+        // Dispatch untuk mendapatkan profil pengguna
+        await store.dispatch("authService/getUserProfile", userId);
+
+        // Ambil data terbaru dari store
+        akun.value = store.getters["authService/getUserProfile"];
+
+    } catch (error) {
+        console.error("Failed to fetch user profile:", error.message);
+    }
+};
+const showUpdateProfile = async () => {
+    try {
+        await store.dispatch("authService/updateUserProfile", akun.value);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+onMounted(fetchUserProfile);
+// watch(userProfile, (newVal) => {
+//     console.log("UserProfile updated:", newVal);
+// });
+// ==============================
 // State untuk menyimpan file yang dipilih
 const selectedFile = ref(null);
 
@@ -201,22 +236,24 @@ const triggerFileInput = () => {
 };
 // Biodata
 const akun = ref({
-    nama: "Jack Doe",
-    email: "john.doe@example.com",
-    phone: "+6283 456 7890",
+    userId: "6",
+    username: "administrator",
+    email: "example@gmail.com",
     role: "admin",
-    biodata: {
-        tglLahir: "January 1, 1990",
-        Street: "123 Main St",
-        city: "Springfield",
-        state: "IL",
-        zipCode: "62704",
-        namaAyah: "Richard Doe",
-        namaIbu: "Jane Doe",
-        phoneAyah: "+123 456 7891",
-        phoneIbu: +"123 456 7892",
-        photoURL: ""
-    }
+    sekolahId: "",
+    nama: "",
+    jk: "",
+    phone: "",
+    tptLahir: "",
+    tglLahir: "",
+    alamatJalan: "",
+    kotaKab: "",
+    prov: "",
+    kodePos: "",
+    namaAyah: "",
+    namaIbu: "",
+    photoUrl: ""
+
 })
 const isProfileEdit = ref(false)
 const editProfile = () => {

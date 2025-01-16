@@ -4,11 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"log"
+	"os"
 
 	pb "auth_service/generated"
 	"auth_service/models"
+	"auth_service/repository"
 	"auth_service/services"
+	"auth_service/utils"
 
 	"github.com/go-redis/redis"
 )
@@ -33,29 +37,42 @@ type SchoolRegistration struct {
 }
 
 func (s *AuthServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	log.Println(req.Email)
-	log.Println(req.GetEmail())
+	username := req.GetUsername()
+	password := req.Password
 
-	token, err := s.authService.Login(req.Email, req.Password)
+	resp, err := s.authService.Login(username, password)
 	if err != nil {
-		log.Printf("Error publishing to Redis: %v", err)
+		log.Printf("Error username/password salah : %v", err)
+
 		return nil, err
 	}
-
-	return &pb.LoginResponse{Token: token}, nil
+	// Generate JWT
+	token, err := utils.GenerateJWT(resp)
+	if err != nil {
+		return nil, errors.New("failed to generate token")
+	}
+	return &pb.LoginResponse{
+		Token: token,
+		Ok:    true,
+		User: &pb.User{
+			UserId:    resp.ID,
+			Username:  resp.Username,
+			Email:     resp.Email,
+			Role:      resp.Role,
+			SekolahId: resp.SekolahID,
+		},
+	}, nil
 }
 
 func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	// Ambil data dari request
 	user := req.GetUser()
 	sekolah := req.GetSekolah()
-	// userProfile := req.GetUserProfile()
-
-	log.Printf("cek poin 1")
-	log.Printf("Menerima pendaftaran: User %s, Sekolah %s\n", user.GetUsername(), sekolah.GetNpsn())
-
+	var query = repository.SekolahQuery{
+		Npsn: sekolah.Npsn,
+	}
 	// Cek apakah sekolah sudah ada
-	sekolahModel, err := s.sekolahService.GetSekolahByNpsn(sekolah.Npsn)
+	sekolahModel, err := s.sekolahService.GetSekolah(query)
 	if err != nil {
 		if errors.Is(err, services.ErrNotFound) {
 			if user.Role == "admin" {
@@ -72,27 +89,27 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 					KodeProp:        sekolah.KodeProp,
 					AlamatJalan:     sekolah.AlamatJalan,
 					Status:          sekolah.Status,
-					// CreatedAt: sekolah.Crea,
 				})
 				if err != nil {
 					log.Printf("Gagal membuat sekolah: %v", err)
 					return nil, fmt.Errorf("gagal membuat sekolah: %w", err)
 				}
 			} else {
-				return nil, fmt.Errorf("sekolah tidak ditemukan")
+				// Pendaftaran siswa
+				return nil, fmt.Errorf("sekolah belum terdaftar di aplikasi")
 			}
 		} else {
 			log.Printf("Server error saat mencari sekolah: %v", err)
 			return nil, fmt.Errorf("server error: %w", err)
 		}
 	}
-	log.Printf("cek point")
 	// Hubungkan user dengan sekolah
 	userModel := &models.User{
-		Username: user.Username,
-		Email:    user.Email,
-		Role:     user.Role,
-		SchoolID: sekolahModel.ID,
+		Username:  user.Username,
+		Email:     user.Email,
+		Role:      user.Role,
+		SekolahID: int32(sekolahModel.ID),
+		Password: user.Password,
 	}
 
 	// Cek jika role user adalah admin dan apakah sudah ada admin
@@ -129,11 +146,29 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 		return nil, fmt.Errorf("server error saat membuat user profile")
 	}
 
-	log.Println("User berhasil didaftarkan")
-	response := &pb.RegisterResponse{
-		Message: "User registered successfully",
-		UserId:  fmt.Sprintf("%d", userModel.ID),
+	var response *pb.RegisterResponse
+	if userModel.Role == "admin" {
+		token, err := utils.GenerateJWT(userModel)
+		if err != nil {
+			return nil, errors.New("failed to generate token")
+		}
+		response = &pb.RegisterResponse{
+			Token: token,
+			Ok:    true,
+			User: &pb.User{
+				UserId:    userModel.ID,
+				Username:  userModel.Username,
+				Email:     userModel.Email,
+				Role:      userModel.Role,
+				SekolahId: userModel.SekolahID,
+			},
+		}
+	} else {
+		response = &pb.RegisterResponse{
+			Ok: true,
+		}
 	}
+	log.Println("User berhasil didaftarkan")
 
 	// // Siapkan data registrasi sekolah untuk dikirim ke Redis
 	// registration := SchoolRegistration{
@@ -160,8 +195,8 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 	return response, nil
 }
 
-// ✅ GetUserProfile - Mengambil profil pengguna berdasarkan UserID
-func (s *AuthServiceServer) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
+// GetUserProfile - Mengambil profil pengguna berdasarkan UserID
+func (s *AuthServiceServer) GetUserPofile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
 	profile, err := s.userProfile.GetUserProfileByID(req.UserId)
 	if err != nil {
 		log.Printf("Error fetching user profile: %v", err)
@@ -169,7 +204,6 @@ func (s *AuthServiceServer) GetUserProfile(ctx context.Context, req *pb.GetUserP
 	}
 
 	return &pb.GetUserProfileResponse{
-		Name: "OK",
 		UserProfile: &pb.UserProfile{
 			UserId:   profile.UserID,
 			Nama:     profile.Nama,
@@ -187,22 +221,160 @@ func (s *AuthServiceServer) GetUserProfile(ctx context.Context, req *pb.GetUserP
 	}, nil
 }
 
-// ✅ GetSekolahByNpsn - Mengambil data sekolah berdasarkan NPSN
-func (s *AuthServiceServer) GetSekolahByNpsn(ctx context.Context, req *pb.GetSekolahByNpsnRequest) (*pb.GetSekolahByNpsnResponse, error) {
-	sekolah, err := s.sekolahService.GetSekolahByNpsn(req.Npsn)
+// UpdateUserProfile - Memperbarui profil pengguna berdasarkan UserID
+func (s *AuthServiceServer) UpdateUserPofile(ctx context.Context, req *pb.UpdateUserProfileRequest) (*pb.UpdateUserProfileResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received UpdateUserProfile request: %+v\n", req)
+
+	// Cek apakah req atau req.UserProfile kosong
+	if req == nil {
+		log.Println("Request is nil")
+		return nil, errors.New("invalid request: request is nil")
+	}
+
+	if req.UserProfile == nil {
+		log.Println("UserProfile is nil in request")
+		return nil, errors.New("invalid request: user profile is nil")
+	}
+
+	profile, err := s.userProfile.GetUserProfileByID(int64(req.GetUserId()))
+	if err != nil {
+		log.Printf("Error fetching user profile: %v", err)
+		return nil, errors.New("user profile not found")
+	}
+	// profi := req.GetUserProfile()
+	// log.Println(profi)
+	// Perbarui data profil berdasarkan input
+	profile.Nama = req.UserProfile.Nama
+	profile.JK = req.UserProfile.Jk
+	profile.Phone = req.UserProfile.Phone
+	profile.TptLahir = req.UserProfile.TptLahir
+	profile.AlamatJalan = req.UserProfile.AlamatJalan
+	profile.KotaKab = req.UserProfile.KotaKab
+	profile.Prov = req.UserProfile.Prov
+	profile.KodePos = req.UserProfile.KodePos
+	profile.NamaAyah = req.UserProfile.NamaAyah
+	profile.NamaIbu = req.UserProfile.NamaIbu
+
+	// Simpan perubahan ke database
+	err = s.userProfile.UpdateUserProfile(profile)
+	if err != nil {
+		log.Printf("Error updating user profile: %v", err)
+		return nil, errors.New("failed to update user profile")
+	}
+
+	return &pb.UpdateUserProfileResponse{
+		Message: "Updated",
+	}, nil
+}
+
+// UploadUserPhotoProfile - Mengunggah foto profil pengguna
+func (s *AuthServiceServer) UploadUserPhotoProfile(stream pb.AuthService_UploadUserPhotoProfileServer) error {
+	var userID int32
+	var filePath string
+	var file *os.File
+	// var err error
+
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			// Jika selesai menerima file, kirim respons sukses
+			return stream.SendAndClose(&pb.UploadUserPhotoResponse{
+				Status:  "OK",
+				FileUrl: filePath,
+			})
+		}
+		if err != nil {
+			log.Printf("Error receiving file chunk: %v", err)
+			return err
+		}
+
+		// Ambil User ID dari request pertama
+		if userID != 0 {
+			userID = req.UserId
+			filePath = fmt.Sprintf("uploads/%d_profile.jpg", userID)
+			// Simpan ke database
+			curentProfile, err := s.userProfile.GetUserProfileByID(int64(userID))
+			if err != nil {
+				log.Printf("Error getting user profile: %v", err)
+			}
+			err = s.userProfile.UpdateUserProfile(&models.UserProfile{
+				ID:             curentProfile.ID,
+				ProfilePicture: filePath,
+			})
+			if err != nil {
+				log.Printf("Error updating user profile: %v", err)
+			}
+			// Buat file baru
+			file, err = os.Create(filePath)
+			if err != nil {
+				log.Printf("Error creating file: %v", err)
+				return err
+			}
+			defer file.Close()
+		}
+
+		// Tulis chunk ke file
+		_, err = file.Write(req.FileChunk)
+		if err != nil {
+			log.Printf("Error writing file: %v", err)
+			return err
+		}
+	}
+}
+
+func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
+	var query = repository.SekolahQuery{
+		Npsn:      req.GetNpsn(),
+		SekolahID: int(req.GetSekolahId()),
+	}
+
+	sekolah, err := s.sekolahService.GetSekolah(query)
 	if err != nil {
 		log.Printf("Error fetching school data: %v", err)
 		return nil, errors.New("failed to retrieve school data")
 	}
 
-	return &pb.GetSekolahByNpsnResponse{
-		Nama: "nama_sekolah",
+	return &pb.GetSekolahResponse{
+		Nama: sekolah.NamaSekolah,
 		SekolahData: &pb.Sekolah{
+			SekolahId:       int32(sekolah.ID),
 			SekolahIdEnkrip: sekolah.SekolahIDEnkrip,
 			Kecamatan:       sekolah.Kecamatan,
 			Kabupaten:       sekolah.Kabupaten,
 			Propinsi:        sekolah.Propinsi,
 			KodeKecamatan:   sekolah.Kecamatan,
+			AlamatJalan:     sekolah.AlamatJalan,
+			KodeKab:         sekolah.KodeKab,
+			KodeProp:        sekolah.KodeProp,
+			NamaSekolah:     sekolah.NamaSekolah,
+			Status:          sekolah.Status,
+			Npsn:            sekolah.NPSN,
 		},
 	}, nil
 }
+
+// // GetSekolahByNpsn - Mengambil data sekolah berdasarkan ID
+// func (s *AuthServiceServer) GetSekolahByID(ctx context.Context, req *pb.GetSekolahByIDRequest) (*pb.GetSekolahByIDResponse, error) {
+// 	sekolah, err := s.sekolahService.GetSekolahByID(int(req.SekolahId))
+// 	if err != nil {
+// 		log.Printf("Error fetching school data: %v", err)
+// 		return nil, errors.New("failed to retrieve school data")
+// 	}
+
+// 	return &pb.GetSekolahByIDResponse{
+// 		Nama: sekolah.NamaSekolah,
+// 		SekolahData: &pb.Sekolah{
+// 			SekolahIdEnkrip: sekolah.SekolahIDEnkrip,
+// 			Kecamatan:       sekolah.Kecamatan,
+// 			Kabupaten:       sekolah.Kabupaten,
+// 			Propinsi:        sekolah.Propinsi,
+// 			KodeKecamatan:   sekolah.Kecamatan,
+// 			AlamatJalan:     sekolah.AlamatJalan,
+// 			KodeKab:         sekolah.KodeKab,
+// 			KodeProp:        sekolah.KodeProp,
+// 			NamaSekolah:     sekolah.NamaSekolah,
+// 			Status:          sekolah.Status,
+// 		},
+// 	}, nil
+// }

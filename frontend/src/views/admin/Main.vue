@@ -1,18 +1,26 @@
 <script setup>
-import { ref } from "vue";
-import store from "@/store";
+import { ref, computed } from "vue";
+import PanelMenu from 'primevue/panelmenu';
+// import router from "@/router";
+// import store from "@/store";
 import 'primeicons/primeicons.css'
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
-// Menu bar
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+const router = useRouter();
+const store = useStore();
+
+const userRole = ref(store.state.authService.userRole); // Ambil role user dari Vuex
 
 import Menubar from 'primevue/menubar';
 
-
+// computed({
+//     ...mapGetters("authService", ["userRole"]),
+// })
 // Penel Menu
-import PanelMenu from 'primevue/panelmenu';
-import router from "@/router";
-const items = ref([
+
+const menuItems = ref([
     {
         label: 'Home',
         icon: 'pi pi-home',
@@ -150,6 +158,7 @@ const items = ref([
             {
                 label: 'Data Siswa',
                 icon: 'pi pi-angle-double-right',
+
                 command: () => {
                     router.push({ name: 'dapodikSiswa' })
                 }
@@ -175,54 +184,34 @@ const items = ref([
 
         ]
     },
-    {
-        label: 'Sign Out',
-        icon: 'pi pi-sign-out',
-        command: () => {
-            dialogSignOut.value = !dialogSignOut.value
-        }
-    }
+    // {
+    //     label: 'Sign Out',
+    //     icon: 'pi pi-sign-out',
+    //     command: () => {
+    //         dialogSignOut.value = !dialogSignOut.value
+    //     }
+    // }
 ]);
 
-
-const menuItems = ref([
-    {
-        label: 'Home',
-        icon: 'pi pi-home'
-    },
-    {
-        label: 'Projects',
-        icon: 'pi pi-search',
-        badge: 3,
-        items: [
-            {
-                label: 'Core',
-                icon: 'pi pi-bolt',
-                shortcut: '⌘+S'
-            },
-            {
-                label: 'Blocks',
-                icon: 'pi pi-server',
-                shortcut: '⌘+B'
-            },
-            {
-                separator: true
-            },
-            {
-                label: 'UI Kit',
-                icon: 'pi pi-pencil',
-                shortcut: '⌘+U'
-            }
-        ]
+// Filter menu berdasarkan role
+const items = computed(() => {
+    let excludedLabels = []
+    if (userRole.value === "siswa") {
+        excludedLabels = ["Home", "Blockchain", "IPFS", "Data Dapodik"]; // Kategori yang akan dihapus
+    } else if (userRole.value === "admin") {
+        excludedLabels = ["Data Akademik"]; // Kategori yang akan dihapus
     }
-]);
+    return menuItems.value.filter(item => !excludedLabels.includes(item.label))
+});
+
 
 
 // SignOut
 const dialogSignOut = ref(false)
-// const signOut = () => {
-//     dialogSignOut.value = true
-// }
+const signOut = async () => {
+    const resp = await store.dispatch('authService/logout');
+    router.push({ name: 'home' })
+}
 
 // Logout
 const onLogout = async () => {
@@ -256,9 +245,9 @@ const onLogout = async () => {
             </div>
             <div class="border-b-1 shadow-sm mb-2">
                 <h2 class="flex flex-wrap justify-center">
-                    userd43886712d10
+                    {{ store.state.authService.user?.username }}
                 </h2>
-                <h3 class="flex justify-center">Admin</h3>
+                <h3 class="flex justify-center">{{ store.state.authService.user?.role ?? 'Anonymous' }}</h3>
             </div>
             <div
                 class="absolute -right-6 top-0 h-6 w-6 p-[6px] cursor-pointer bg-[#007bff] flex items-center justify-center rounded-full">
@@ -329,6 +318,10 @@ const onLogout = async () => {
         <RouterView></RouterView>
     </div>
 
+    <footer class="bg-gray-100 text-gray-600 p-4 fixed bottom-0 w-full">
+        <button type="button" @click="dialogSignOut = true" class="w-[150px] hover:text-blue-400"><i class="pi pi-sign-out mr-2"></i>Logout</button>
+    </footer>
+
 
     <!-- Dialog start -->
     <Dialog v-model:visible="dialogSignOut" :style="{ width: '450px' }" header="Sign Out" :modal="true" position="top">
@@ -338,7 +331,7 @@ const onLogout = async () => {
         </div>
         <template #footer>
             <Button label="Tidak" icon="pi pi-times" text @click="dialogSignOut = false" severity="warn" />
-            <Button label="Ya" icon="pi pi-check" text @click="onLogout" />
+            <Button label="Ya" icon="pi pi-check" text @click="signOut" />
         </template>
     </Dialog>
 

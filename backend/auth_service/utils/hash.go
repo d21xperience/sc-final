@@ -3,7 +3,7 @@ package utils
 import "golang.org/x/crypto/bcrypt"
 
 func EncryptPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	return string(bytes), err
 }
 

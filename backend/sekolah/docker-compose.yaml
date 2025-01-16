@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  sekolah_db:
+    image: postgres:15-alpine
+    container_name: sekolah_db_container
+    restart: always
+    environment:
+      POSTGRES_USER: ${SEKOLAH_USER}
+      POSTGRES_PASSWORD: ${SEKOLAH_PASSWORD}
+      POSTGRES_DB: ${SEKOLAH_DB}
+    ports:
+      - "${SEKOLAH_PORT}:5432"
+    volumes:
+      - sekolah_db_data:/var/lib/postgresql/data
+
+  sekolah_redis:
+    image: redis:alpine
+    container_name: sekolah_redis_container
+    restart: always
+    ports:
+      - "${SEKOLAHREDIS_PORT}:6379"
+
+volumes:
+  sekolah_db_data:

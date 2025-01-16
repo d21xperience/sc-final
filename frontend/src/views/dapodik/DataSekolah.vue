@@ -62,22 +62,28 @@
                 </div>
             </div>
             <div v-else>
-                <EmptyData />
+                <EmptyData @profileFetched="handleProfileFetched" @fetchError="handleFetchError" />
             </div>
         </div>
     </div>
 
+
+
 </template>
 
 <script setup>
+
 import EmptyData from '@/components/EmptyData.vue';
 import { ref } from 'vue';
 
+
+
+
 const sekolah = ref({
-    sekolah_id: '8a5bd957-66bc-4096-9ff1-fee096b87ba0',
-    nama: 'SMK PASUNDAN JATINANGOR',
-    nss: '402021015029',
-    npsn: '20254180',
+    sekolah_id: '',
+    nama: 'SMK ',
+    nss: '',
+    npsn: '',
     bentuk_pendidikan_id: '',
     alamat_jalan: '',
     rt: '',
@@ -90,6 +96,17 @@ const sekolah = ref({
 })
 
 const dataConnected = ref(false)
+
+// Fungsi yang menangkap event emit dari child
+const handleProfileFetched = (data) => {
+    dataConnected.value = data;
+    console.log("Data sekolah diterima di parent:", data);
+};
+
+const handleFetchError = (error) => {
+    dataConnected.value = data;
+    console.error("Error diterima di parent:", error);
+};
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "@/store";
-import HomeView from "../views/HomeView.vue";
-import Login from "../views/auth/Login.vue";
+// import HomeView from "../views/HomeView.vue";
+// // import Login from "../views/auth/Login.vue";
 const router = createRouter({
   linkExactActiveClass: "bg-blue-100",
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +15,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: HomeView,
+      component: () => import("../views/HomeView.vue"),
       meta: { title: "Home" },
     },
     {
@@ -25,7 +25,7 @@ const router = createRouter({
         {
           path: "login",
           name: "login",
-          component: Login,
+          component: () => import("../views/auth/Login.vue"),
           meta: { title: "Login" },
         },
         {
@@ -46,7 +46,6 @@ const router = createRouter({
     },
     {
       path: "/admin",
-
       component: () => import("../views/admin/Main.vue"),
       // meta: { requiresAuth: true },
       children: [
@@ -74,7 +73,11 @@ const router = createRouter({
             {
               path: "setting",
               name: "setingBlockchain",
-              meta: { title: "Blockhain setting", requiresAuth: true },
+              meta: {
+                title: "Blockhain setting",
+                requiresAuth: true,
+                role: "admin",
+              },
               component: () =>
                 import("../views/sc_ijazah/BlockchainSettings.vue"),
               children: [
@@ -88,7 +91,11 @@ const router = createRouter({
             {
               path: "list-bcnetwork",
               name: "listBCNetwork",
-              meta: { title: "Daftar Blockhain", requiresAuth: true },
+              meta: {
+                title: "Daftar Blockhain",
+                requiresAuth: true,
+                role: "admin",
+              },
               component: () => import("../views/sc_ijazah/ListBCNetwork.vue"),
             },
             {
@@ -108,7 +115,7 @@ const router = createRouter({
           path: "input-ijazah",
           name: "inputIjazah",
           component: () => import("../views/dapodik/DataSiswa.vue"),
-          meta: { title: "Data Ijazah", requiresAuth: true },
+          meta: { title: "Data Ijazah", requiresAuth: true, role: "admin" },
         },
 
         // Data DAPODIK
@@ -116,31 +123,31 @@ const router = createRouter({
           path: "seting-dapodik",
           name: "syncDapodik",
           component: () => import("../views/dapodik/SetingDapodik.vue"),
-          meta: { title: "Seting Dapodik", requiresAuth: true },
+          meta: { title: "Seting Dapodik", requiresAuth: true, role: "admin" },
         },
         {
           path: "data-sekolah",
           name: "dapodikSekolah",
           component: () => import("../views/dapodik/DataSekolah.vue"),
-          meta: { title: "Data Sekolah" },
+          meta: { title: "Data Sekolah", requiresAuth: true, role: "admin" },
         },
         {
           path: "data-guru",
           name: "dapodikGuru",
           component: () => import("../views/dapodik/DataGuru.vue"),
-          meta: { title: "Data Guru" },
+          meta: { title: "Data Guru", requiresAuth: true, role: "admin" },
         },
         {
           path: "data-siswa",
           name: "dapodikSiswa",
           component: () => import("../views/dapodik/DataSiswa.vue"),
-          meta: { title: "Data Siswa" },
+          meta: { title: "Data Siswa", requiresAuth: true, role: "admin" },
         },
         {
           path: "data-kelas",
           name: "dapodikKelas",
           component: () => import("../views/dapodik/DataKelas.vue"),
-          meta: { title: "Data Kelas" },
+          meta: { title: "Data Kelas", requiresAuth: true, role: "admin" },
         },
 
         // Data akademik siswa
@@ -148,33 +155,67 @@ const router = createRouter({
           path: "ketuntasan-rapor",
           name: "ketuntasanRapor",
           component: () => import("../views/data_akademik/KetuntasanRapor.vue"),
-          meta: { title: "Ketuntasan Rapor" },
+          meta: {
+            title: "Ketuntasan Rapor",
+            requiresAuth: true,
+            role: "siswa",
+          },
         },
         {
           path: "data-ijazah",
           name: "dataIjazah",
           component: () => import("../views/data_akademik/DataIjazah.vue"),
-          meta: { title: "Data Ijazah" },
+          meta: { title: "Data Ijazah", requiresAuth: true, role: "siswa" },
         },
       ],
     },
   ],
 });
 
+// router.beforeEach((to, from, next) => {
+//   document.title = to.meta.title || "Default Title";
+//   const isAuthenticated = store.getters["authService/isAuthenticated"];
+//   if (to.meta.requiresAuth && !isAuthenticated) {
+//     // console.log(to);
+//     next({ name: "login" }); // Redirect ke Login jika tidak login
+//   }
+//   // Halaman yang tidak boleh diakses oleh user yang sudah login (seperti login dan register)
+//   else if ((to.name === "login" || to.name === "register") && isAuthenticated) {
+//     next({ name: "home" }); // Redirect ke dashboard jika sudah login
+//   } else {
+//     next();
+//   }
+// });
+
 router.beforeEach((to, from, next) => {
-  // document.title = to.name;
   document.title = to.meta.title || "Default Title";
+
+  // Ambil informasi autentikasi dan peran pengguna dari store
   const isAuthenticated = store.getters["authService/isAuthenticated"];
-  // console.log(isAuthenticated);
+  const userRole = store.getters["authService/userRole"]; // 'admin' atau 'siswa'
+  // console.log(userRole);
   if (to.meta.requiresAuth && !isAuthenticated) {
-    // console.log(to);
-    next({ name: "login" }); // Redirect ke Login jika tidak login
-  }
-  // Halaman yang tidak boleh diakses oleh user yang sudah login (seperti login dan register)
-  else if ((to.name === "login" || to.name === "register") && isAuthenticated) {
-    next({ name: "home" }); // Redirect ke dashboard jika sudah login
+    // Redirect ke Login jika tidak login
+    next({ name: "login" });
+  } else if (
+    (to.name === "login" || to.name === "register") &&
+    isAuthenticated
+  ) {
+    // Redirect ke dashboard jika sudah login
+    next({ name: "home" });
   } else {
-    next();
+    // Periksa peran pengguna untuk akses khusus
+    if (to.meta.role && to.meta.role !== userRole) {
+      // Jika pengguna tidak memiliki akses ke rute tertentu
+      if (userRole === "admin") {
+        next();
+        // next({ name: "adminDashboard" }); // Redirect ke dashboard admin
+      } else {
+        // next({ name: "studentDashboard" }); // Redirect ke dashboard siswa
+      }
+    } else {
+      next();
+    }
   }
 });
 export default router;

@@ -25,3 +25,4 @@ func InitDatabase(cfg Config) {
 	sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
 	sqlDB.SetConnMaxLifetime(cfg.ConnMaxLifetime)
 }
+

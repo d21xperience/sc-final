@@ -1,21 +1,20 @@
-# Base image
-FROM golang:1.22.3 AS builder
+# Gunakan base image Golang
+FROM golang:1.23.4-alpine
 
-# Set environment variables
-ENV GO111MODULE=on
-ENV GOPROXY=https://proxy.golang.org,direct
-
-# Set working directory
+# Set Working Directory di dalam Container
 WORKDIR /app
 
-# Copy go.mod, go.sum, dan dependensi lokal
-COPY auth_service/go.mod auth_service/go.sum ./
+# Copy go.mod dan go.sum terlebih dahulu untuk caching layer dependencies
+COPY go.mod go.sum ./
 
-# Download dependencies
-RUN go mod download
+# Unduh dependencies agar tetap cache-efficient
+RUN go mod tidy
 
-# Copy seluruh source code
-COPY auth_service/. .
+# Copy seluruh kode sumber ke dalam container
+COPY . .
+
+# Install Air untuk hot reload
+RUN go install github.com/cosmtrek/air@v1.45.0
 
 # Expose port gRPC
 EXPOSE 50051

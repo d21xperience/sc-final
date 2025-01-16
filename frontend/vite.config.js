@@ -8,12 +8,18 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     proxy: {
-      "/dapo": {
-        target: "https://dapo.kemdikbud.go.id",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/dapo/, ""),
-        secure: false,
-      },
+      // "/dapo": {
+      //   target: "https://dapo.kemdikbud.go.id",
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/dapo/, ""),
+      //   // secure: false,
+      // },
+      // Pastikan path `/dapo/api` sesuai dengan yang kamu gunakan di frontend
+      // "/dapo/api": {
+      //   target: "https://dapo.dikdasmen.go.id",
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/dapo\/api/, "/api"),
+      // },
       // "/api": {
       //   target: "https://dapo.kemdikbud.go.id",
       //   changeOrigin: true,

@@ -1,60 +1,36 @@
 package models
 
 import (
-	"time"
-
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Sekolah struct {
+	SekolahID           string `json:"sekolah_id"`
+	Nama                string `json:"nama"`
+	Npsn                string `json:"npsn"`
+	Nss                 string `json:"nss"`
+	Alamat              string `json:"alamat"`
+	KdPos               string `json:"kd_pos"`
+	Telepon             string `json:"telepon"`
+	Fax                 string `json:"fax"`
+	Kelurahan           string `json:"kelurahan"`
+	Kecamatan           string `json:"kecamatan"`
+	KabKota             string `json:"kab_kota"`
+	Propinsi            string `json:"propinsi"`
+	Website             string `json:"website"`
+	Email               string `json:"email"`
+	NmKepsek            string `json:"nm_kepsek"`
+	NipKepsek           string `json:"nip_kepsek"`
+	NiyKepsek           string `json:"niy_kepsek"`
+	StatusKepemilikanId string `json:"status_kepemilikan_id"`
+	KodeAktivasi        string `json:"kode_aktivasi"`
+	Jenjang             string `json:"jenjang"`
+	BentukPendidikanId  string `json:"bentuk_pendidikan_id"`
+}
+
+type SekolahTabelTenant struct {
 	gorm.Model
-	SekolahID                uuid.UUID `gorm:"primaryKey"`
-	Nama                     string    `gorm:"type:varchar(255)"`
-	NamaNomenklatur          string    `gorm:"type:varchar(255)"`
-	NSS                      string    `gorm:"type:varchar(255)"`
-	NPSN                     string    `gorm:"type:varchar(255)"`
-	BentukPendidikanID       int
-	AlamatJalan              string `gorm:"type:varchar(255)"`
-	RT                       string `gorm:"type:varchar(255)"`
-	RW                       string `gorm:"type:varchar(255)"`
-	NamaDusun                string `gorm:"type:varchar(255)"`
-	DesaKelurahan            string `gorm:"type:varchar(255)"`
-	KodeWilayah              string `gorm:"type:varchar(255)"`
-	KodePos                  string `gorm:"type:varchar(255)"`
-	Lintang                  int
-	Bujur                    int
-	NomorTelepon             string `gorm:"type:varchar(255)"`
-	NomorFax                 string `gorm:"type:varchar(255)"`
-	Email                    string `gorm:"type:varchar(255)"`
-	Website                  string `gorm:"type:varchar(255)"`
-	KebutuhanKhususID        int
-	StatusSekolah            int
-	SkPendirianSekolah       string `gorm:"type:varchar(255)"`
-	TanggalSkPendirian       string `gorm:"type:varchar(255)"`
-	StatusKepemilikanID      string `gorm:"type:varchar(255)"`
-	YayasanId                string `gorm:"type:varchar(255)"`
-	SkIzinOperasional        string `gorm:"type:varchar(255)"`
-	TanggalSkIzinOperasional string `gorm:"type:varchar(255)"`
-	NoRekening               string `gorm:"type:varchar(255)"`
-	NamaBank                 string `gorm:"type:varchar(255)"`
-	CabangKcpUnit            string `gorm:"type:varchar(255)"`
-	RekeningAtasNama         string `gorm:"type:varchar(255)"`
-	MBS                      string `gorm:"type:varchar(255)"`
-	LuasTanahMilik           string `gorm:"type:varchar(255)"`
-	LuasTanahBukanMilik      string `gorm:"type:varchar(255)"`
-	KodeRegistrasi           string `gorm:"type:varchar(255)"`
-	Npwp                     string `gorm:"type:varchar(255)"`
-	NmWp                     string `gorm:"type:varchar(255)"`
-	Keaktifan                string `gorm:"type:varchar(255)"`
-	Flag                     string `gorm:"type:varchar(255)"`
-	// CreateDate               time.Time
-	// LastUpdate               time.Time
-	// SoftDelete               time.Time
-	LastSync  time.Time
-	UpdaterId string `gorm:"type:varchar(255)"`
-	Results   string `gorm:"type:varchar(255)"`
-	Id        string `gorm:"type:varchar(255)"`
-	Start     string `gorm:"type:varchar(255)"`
-	Limit     string `gorm:"type:varchar(255)"`
+	Nama       string `gorm:"unique;not null"`
+	SekolahID  int    `gorm:"unique;not null"`
+	NamaSchema string `gorm:"unique;not null"`
 }

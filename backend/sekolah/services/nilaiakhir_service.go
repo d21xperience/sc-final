@@ -1,15 +1,17 @@
 package services
 
 import (
+	"context"
+	"errors"
 	"sekolah/models"
 	"sekolah/repositories"
 )
 
 type NilaiAkhirService interface {
-	Save(NilaiAkhir *models.TabelNilaiAkhir) error
-	FindByID(NilaiAkhirID string) (*models.TabelNilaiAkhir, error)
-	Update(NilaiAkhir *models.TabelNilaiAkhir) error
-	Delete(NilaiAkhirID string) error
+	Save(ctx context.Context, pd *models.TabelNilaiAkhir, schemaName string) error
+	FindByID(ctx context.Context, NilaiAkhirID string, schemaName string) (*models.TabelNilaiAkhir, error)
+	Update(ctx context.Context, NilaiAkhir *models.TabelNilaiAkhir, schemaName string) error
+	Delete(ctx context.Context, NilaiAkhirID string, schemaName string) error
 }
 
 type NilaiAkhirServiceImpl struct {
@@ -20,19 +22,19 @@ func NewNilaiAkhirService(sr repositories.NilaiAkhirRepository) NilaiAkhirServic
 	return &NilaiAkhirServiceImpl{NilaiAkhirRepo: sr}
 }
 
-func (s NilaiAkhirServiceImpl) Save(NilaiAkhir *models.TabelNilaiAkhir) error {
-	return s.Save(NilaiAkhir)
+func (s *NilaiAkhirServiceImpl) Save(ctx context.Context, nilaiAkhirModel *models.TabelNilaiAkhir, schemaName string) error {
+	err := s.NilaiAkhirRepo.Save(ctx, nilaiAkhirModel, schemaName)
+	if err != nil {
+		return errors.New("gagal menyimpan NilaiAkhir")
+	}
+	return err
 }
-func (s NilaiAkhirServiceImpl) FindByID(NilaiAkhirID string) (*models.TabelNilaiAkhir, error) {
-	return s.NilaiAkhirRepo.FindByID(NilaiAkhirID)
+func (s *NilaiAkhirServiceImpl) FindByID(ctx context.Context, NilaiAkhirID string, schemaName string) (*models.TabelNilaiAkhir, error) {
+	return s.NilaiAkhirRepo.FindByID(ctx, NilaiAkhirID, schemaName)
 }
-func (s NilaiAkhirServiceImpl) Update(NilaiAkhir *models.TabelNilaiAkhir) error {
-	return s.NilaiAkhirRepo.Update(NilaiAkhir)
+func (s *NilaiAkhirServiceImpl) Update(ctx context.Context, nilaiAkhirModel *models.TabelNilaiAkhir, schemaName string) error {
+	return s.NilaiAkhirRepo.Update(ctx, nilaiAkhirModel, schemaName)
 }
-func (s NilaiAkhirServiceImpl) Delete(NilaiAkhirID string) error {
-	// id, err := uuid.Parse(NilaiAkhirID)
-	// if err != nil {
-	// 	return errors.New("invalid UUID format")
-	// }
-	return s.NilaiAkhirRepo.Delete(NilaiAkhirID)
+func (s *NilaiAkhirServiceImpl) Delete(ctx context.Context, NilaiAkhirID string, schemaName string) error {
+	return s.NilaiAkhirRepo.Delete(ctx, NilaiAkhirID, schemaName)
 }

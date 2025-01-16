@@ -1,36 +1,40 @@
 package services
 
 import (
-	"sekolah/data/request"
+	"context"
+	"errors"
+	"sekolah/models"
+	"sekolah/repositories"
 )
 
 type IjazahService interface {
-	Create(ijazah request.CreateIjazahRequest)
-	Update(ijazah request.UpdateIjazahRequest)
-	Delete(noIjazah int)
-	// FindById(noIjazah int)
-	// FindAll() []response.IjazahResponse
+	Save(ctx context.Context, pd *models.Ijazah, schemaName string) error
+	FindByID(ctx context.Context, IjazahID string, schemaName string) (*models.Ijazah, error)
+	Update(ctx context.Context, Ijazah *models.Ijazah, schemaName string) error
+	Delete(ctx context.Context, IjazahID string, schemaName string) error
 }
+
 type IjazahServiceImpl struct {
-	// ID          uuid.UUID
-	// Nama        string
-	// AsalSekolah string
-	// RerataNilai string
-	Ija *IjazahService
+	IjazahRepo repositories.IjazahRepository
 }
 
-func NewIjazahService(ijazahServ IjazahServiceImpl) IjazahService {
-	return IjazahServiceImpl{ijazahServ.Ija}
+func NewIjazahService(sr repositories.IjazahRepository) IjazahService {
+	return &IjazahServiceImpl{IjazahRepo: sr}
 }
 
-func (ij IjazahServiceImpl) Create(ijazah request.CreateIjazahRequest) {
-
+func (s *IjazahServiceImpl) Save(ctx context.Context, IjazahModel *models.Ijazah, schemaName string) error {
+	err := s.IjazahRepo.Save(ctx, IjazahModel, schemaName)
+	if err != nil {
+		return errors.New("gagal menyimpan Guru")
+	}
+	return err
 }
-
-func (ij IjazahServiceImpl) Update(ijazah request.UpdateIjazahRequest) {
-
+func (s *IjazahServiceImpl) FindByID(ctx context.Context, IjazahID string, schemaName string) (*models.Ijazah, error) {
+	return s.IjazahRepo.FindByID(ctx, IjazahID, schemaName)
 }
-
-func (ij IjazahServiceImpl) Delete(noIjazah int) {
-
+func (s *IjazahServiceImpl) Update(ctx context.Context, Ijazah *models.Ijazah, schemaName string) error {
+	return s.IjazahRepo.Update(ctx, Ijazah, schemaName)
+}
+func (s *IjazahServiceImpl) Delete(ctx context.Context, IjazahID string, schemaName string) error {
+	return s.IjazahRepo.Delete(ctx, IjazahID, schemaName)
 }

@@ -431,7 +431,7 @@ const dataSiswa = ref({})
     <section id="our-patner" class="md:min-h-[350px] p-3 flex flex-wrap bg-slate-700">
       <div class="container">
         <h2 class="p-3 text-white uppercase font-semibold">Our Patner</h2>
-        <Carousel />
+        <!-- <Carousel /> -->
       </div>
 
     </section>

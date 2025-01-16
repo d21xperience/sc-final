@@ -1,0 +1,10 @@
+{
+    "protoc": {
+        "path": "C://protoc-28.3-win64//bin//",
+        "options": [
+            "--proto_path=protos/v3",
+            "--proto_path=protos/v2",
+            "--go_out=./"
+        ]
+    }
+}

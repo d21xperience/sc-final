@@ -4,7 +4,8 @@ import "time"
 
 type UserProfile struct {
 	ID             int64  `gorm:"primaryKey;autoIncrement" json:"biodata_id"`
-	UserID         int64  `gorm:"foreignKey:ID"`
+	UserID         int64  `gorm:"foreignKey:UserRefer"`
+	User           User   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Nama           string `gorm:"size:100" json:"nama"`
 	JK             string `gorm:"size:100" json:"jk"`
 	Phone          string `gorm:"size:100" json:"phone"`

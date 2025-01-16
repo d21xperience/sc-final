@@ -2,161 +2,259 @@ package server
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
+	pb "sekolah/generated"
+	"sekolah/models"
+	"sekolah/services"
 
-	pb "auth_service/generated"
-	"auth_service/models"
-	"auth_service/services"
-
-	"github.com/go-redis/redis"
+	"gorm.io/gorm"
 )
 
 // AuthServiceServer dengan Redis Client sebagai Dependency Injection
-type AuthServiceServer struct {
-	pb.UnimplementedAuthServiceServer
-	RedisClient    *redis.Client // Tambahkan Redis sebagai field
-	sekolahService services.SekolahService
-	authService    services.AuthService
-	userProfile    services.UserProfileService
+type SekolahServiceServer struct {
+	pb.UnimplementedSchoolServiceServer
+	// RedisClient    *redis.Client // Tambahkan Redis sebagai field
+	schemaService       services.SchemaService
+	sekolahService      services.SekolahService
+	pesertaDidikService services.PesertaDidikService
+	// nilaiAkhirService   services.NilaiAkhirService
 }
 
 // Constructor untuk AuthServiceServer dengan Redis
-func NewAuthServiceServer(redisClient *redis.Client) *AuthServiceServer {
-	return &AuthServiceServer{RedisClient: redisClient}
+func NewAuthServiceServer() *SekolahServiceServer {
+	return &SekolahServiceServer{}
 }
 
-type SchoolRegistration struct {
-	SchoolName string `json:"school_name"`
-	AdminEmail string `json:"admin_email"`
+func (s *SekolahServiceServer) RegistrasiSekolah(ctx context.Context, req *pb.TabelSekolahRequest) (*pb.TabelSekolahResponse, error) {
+	sekolah := req.GetSekolah()
+	namaSchema := sekolah.SekolahIdEnkrip
+	existingSchema, err := s.schemaService.GetSchemaBySekolahID(int(sekolah.SekolahId))
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		log.Printf("Lanjutkan pendaftaran: %v", err)
+		// return nil, errors.New("gagal mengecek pendaftaran sekolah")
+	}
+
+	if existingSchema != nil {
+		return &pb.TabelSekolahResponse{
+			Message: "Pendaftaran dibatalkan: Sekolah sudah terdaftar",
+			Status:  false,
+		}, nil
+	}
+
+	cek := s.schemaService.RegistrasiSekolah(ctx, namaSchema)
+	if errors.Is(cek, gorm.ErrInvalidData) {
+		return nil, errors.New("gagal total")
+	}
+	// 2 Simpan informasi schema sekolah
+	err = s.schemaService.SimpanSchemaSekolah(&models.SekolahTabelTenant{
+		SekolahID:  int(sekolah.SekolahId),
+		NamaSchema: namaSchema,
+		Nama:       sekolah.NamaSekolah,
+	})
+	if err != nil {
+		log.Printf("Gagal menyimpan schema sekolah: %v", err)
+		return nil, errors.New("gagal menyimpan informasi sekolah")
+	}
+
+	// 3 Kirim respon sukses
+	return &pb.TabelSekolahResponse{
+		Message: "Pembuatan database berhasil",
+		Status:  true,
+	}, nil
 }
 
-// func (s *AuthServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-// 	log.Println(req.Email)
-// 	log.Println(req.GetEmail())
+func (s *SekolahServiceServer) GetSekolahTabelTenant(ctx context.Context, req *pb.SekolahTabelTenantRequest) (*pb.SekolahTabelTenantResponse, error) {
+	sekolahID := req.GetSekolahId()
+	sekolahTerdaftar, err := s.schemaService.GetSchemaBySekolahID(int(sekolahID))
+	if err != nil {
+		return nil, err
+	}
 
-// 	token, err := s.authService.Login(req.Email, req.Password)
+	return &pb.SekolahTabelTenantResponse{
+		SekolahId:  int32(sekolahTerdaftar.SekolahID),
+		Nama:       sekolahTerdaftar.Nama,
+		NamaSchema: sekolahTerdaftar.NamaSchema, // nama schema
+	}, err
+
+}
+
+// ================================================================================//
+// Tenant table
+func (s *SekolahServiceServer) CreateSekolah(ctx context.Context, req *pb.CreateSekolahRequest) (*pb.CreateSekolahResponse, error) {
+	schemaName := req.GetSchemaname()
+	sekolah := req.GetSekolah()
+	// sekolahID, _ := uuid.Parse(sekolah.SekolahId)
+	sekolahModel := &models.Sekolah{
+		SekolahID:           sekolah.SekolahId,
+		Nama:                sekolah.Nama,
+		Npsn:                sekolah.Npsn,
+		Alamat:              sekolah.Alamat,
+		KdPos:               sekolah.KdPos,
+		Telepon:             sekolah.Telepon,
+		Fax:                 sekolah.Fax,
+		Kelurahan:           sekolah.Kelurahan,
+		Kecamatan:           sekolah.Kecamatan,
+		KabKota:             sekolah.KabKota,
+		Propinsi:            sekolah.Propinsi,
+		Website:             sekolah.Website,
+		Email:               sekolah.Email,
+		NmKepsek:            sekolah.NmKepsek,
+		NipKepsek:           sekolah.NipKepsek,
+		NiyKepsek:           sekolah.NipKepsek,
+		StatusKepemilikanId: sekolah.StatusKepemilikanId,
+		KodeAktivasi:        sekolah.KodeAktivasi,
+		Jenjang:             sekolah.Jenjang,
+		BentukPendidikanId:  sekolah.BentukPendidikanId,
+	}
+
+	sekolahTerdaftar := s.sekolahService.Save(ctx, sekolahModel, schemaName)
+	if sekolahTerdaftar != nil {
+		log.Printf("Gagal menyimpan sekolah: %v", sekolahTerdaftar.Error())
+		return nil, errors.New("gagal menyimpan informasi sekolah")
+	}
+
+	return &pb.CreateSekolahResponse{
+		Message: "sekolah berhasil ditambahkan",
+		Status:  true,
+	}, nil
+
+}
+
+func (s *SekolahServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
+	// 🔥 Ambil schema dari request
+	schemaName := req.GetSchemaname()
+	// sekolahID := req.GetSekolahId()
+
+	// 🔥 Cari sekolah berdasarkan ID dan schema
+	sekolah, err := s.sekolahService.Find(ctx, schemaName)
+	if err != nil {
+		log.Printf("Gagal menemukan sekolah: %v", err)
+		return nil, fmt.Errorf("gagal menemukan sekolah: %w", err)
+	}
+
+	// 🔥 Return response dalam format protobuf
+	return &pb.GetSekolahResponse{
+		Sekolah: &pb.SekolahDapo{
+			SekolahId:           sekolah.SekolahID,
+			Nama:                sekolah.Nama,
+			Npsn:                sekolah.Npsn,
+			Alamat:              sekolah.Alamat,
+			KdPos:               sekolah.KdPos,
+			Telepon:             sekolah.Telepon,
+			Fax:                 sekolah.Fax,
+			Kelurahan:           sekolah.Kelurahan,
+			Kecamatan:           sekolah.Kecamatan,
+			KabKota:             sekolah.KabKota,
+			Propinsi:            sekolah.Propinsi,
+			Website:             sekolah.Website,
+			Email:               sekolah.Email,
+			NmKepsek:            sekolah.NmKepsek,
+			NipKepsek:           sekolah.NipKepsek,
+			NiyKepsek:           sekolah.NipKepsek,
+			StatusKepemilikanId: sekolah.StatusKepemilikanId,
+			KodeAktivasi:        sekolah.KodeAktivasi,
+			Jenjang:             sekolah.Jenjang,
+			BentukPendidikanId:  sekolah.BentukPendidikanId,
+		},
+	}, nil
+}
+
+// **CreateSiswa**
+func (s *SekolahServiceServer) CreateSiswa(ctx context.Context, req *pb.CreateSiswaRequest) (*pb.CreateSiswaResponse, error) {
+	schemaName := req.GetSchemaname()
+	siswa := req.GetSiswa()
+
+	siswaModel := &models.PesertaDidik{
+		PesertaDidikID:  siswa.PesertaDidikID,
+		NIS:             siswa.NIS,
+		NISN:            siswa.NISN,
+		NamaSiswa:       siswa.NamaSiswa,
+		TempatLahir:     siswa.TempatLahir,
+		TanggalLahir:    siswa.TanggalLahir,
+		JenisKelamin:    siswa.JenisKelamin,
+		Agama:           siswa.Agama,
+		AlamatSiswa:     &siswa.AlamatSiswa,
+		TeleponSiswa:    siswa.TeleponSiswa,
+		DiterimaTanggal: siswa.DiterimaTanggal,
+		NamaAyah:        siswa.NamaAyah,
+		NamaIbu:         siswa.NamaIbu,
+		PekerjaanAyah:   siswa.PekerjaanAyah,
+		PekerjaanIbu:    siswa.PekerjaanIbu,
+		NamaWali:        &siswa.NamaWali,
+		PekerjaanWali:   &siswa.PekerjaanWali,
+	}
+
+	err := s.pesertaDidikService.Save(ctx, siswaModel, schemaName)
+	if err != nil {
+		log.Printf("Gagal menyimpan siswa: %v", err)
+		return nil, fmt.Errorf("gagal menyimpan siswa: %w", err)
+	}
+
+	return &pb.CreateSiswaResponse{
+		Message: "Siswa berhasil ditambahkan",
+		Status:  true,
+	}, nil
+}
+
+// **GetSiswa**
+// func (s *SekolahServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaRequest) (*pb.GetSiswaResponse, error) {
+// 	schemaName := req.GetSchemaname()
+// 	siswaID := req.GetSiswaId()
+
+// 	siswa, err := s.siswaRepo.FindByID(ctx, siswaID, schemaName)
 // 	if err != nil {
-// 		log.Printf("Error publishing to Redis: %v", err)
-// 		return nil, err
+// 		log.Printf("Gagal menemukan siswa: %v", err)
+// 		return nil, fmt.Errorf("gagal menemukan siswa: %w", err)
 // 	}
 
-// 	return &pb.LoginResponse{Token: token}, nil
+// 	return &pb.GetSiswaResponse{
+// 		SiswaId: siswa.SiswaID.String(),
+// 		Nama:    siswa.Nama,
+// 		Kelas:   siswa.Kelas,
+// 	}, nil
 // }
 
-func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	// Ambil data dari request
-	user := req.GetUser()
-	sekolah := req.GetSekolah()
-	// userProfile := req.GetUserProfile()
+// // **UpdateSiswa**
+// func (s *SekolahServiceServer) UpdateSiswa(ctx context.Context, req *pb.UpdateSiswaRequest) (*pb.UpdateSiswaResponse, error) {
+// 	schemaName := fmt.Sprintf("tabel_%s", req.GetSchemaName())
+// 	siswaID, err := uuid.Parse(req.GetSiswaId())
+// 	if err != nil {
+// 		return nil, fmt.Errorf("format UUID tidak valid: %w", err)
+// 	}
 
-	log.Printf("cek poin 1")
-	log.Printf("Menerima pendaftaran: User %s, Sekolah %s\n", user.GetUsername(), sekolah.GetNpsn())
+// 	siswa := &models.PesertaDidik{
+// 		SiswaID: siswaID,
+// 		Nama:    req.GetNama(),
+// 		Kelas:   req.GetKelas(),
+// 	}
 
-	// Cek apakah sekolah sudah ada
-	sekolahModel, err := s.sekolahService.GetSekolahByNpsn(sekolah.Npsn)
-	if err != nil {
-		if errors.Is(err, services.ErrNotFound) {
-			if user.Role == "admin" {
-				// Buat sekolah baru
-				sekolahModel, err = s.sekolahService.CreateSekolah(&models.Sekolah{
-					NPSN:            sekolah.Npsn,
-					NamaSekolah:     sekolah.NamaSekolah,
-					SekolahIDEnkrip: sekolah.SekolahIdEnkrip,
-					Kecamatan:       sekolah.Kecamatan,
-					Kabupaten:       sekolah.Kabupaten,
-					Propinsi:        sekolah.Propinsi,
-					KodeKecamatan:   sekolah.KodeKecamatan,
-					KodeKab:         sekolah.KodeKab,
-					KodeProp:        sekolah.KodeProp,
-					AlamatJalan:     sekolah.AlamatJalan,
-					Status:          sekolah.Status,
-					// CreatedAt: sekolah.Crea,
-				})
-				if err != nil {
-					log.Printf("Gagal membuat sekolah: %v", err)
-					return nil, fmt.Errorf("gagal membuat sekolah: %w", err)
-				}
-			} else {
-				return nil, fmt.Errorf("sekolah tidak ditemukan")
-			}
-		} else {
-			log.Printf("Server error saat mencari sekolah: %v", err)
-			return nil, fmt.Errorf("server error: %w", err)
-		}
-	}
-	log.Printf("cek point")
-	// Hubungkan user dengan sekolah
-	userModel := &models.User{
-		Username: user.Username,
-		Email:    user.Email,
-		Role:     user.Role,
-		SchoolID: sekolahModel.ID,
-	}
+// 	err = s.siswaRepo.Update(ctx, siswa, schemaName)
+// 	if err != nil {
+// 		log.Printf("Gagal memperbarui siswa: %v", err)
+// 		return nil, fmt.Errorf("gagal memperbarui siswa: %w", err)
+// 	}
 
-	// Cek jika role user adalah admin dan apakah sudah ada admin
-	if userModel.Role == "admin" {
-		adminExists, err := s.authService.IsAdminExists(sekolahModel.ID)
-		if err != nil {
-			log.Printf("Error mengecek admin: %v", err)
-			return nil, fmt.Errorf("server error: %w", err)
-		}
-		if adminExists {
-			return nil, fmt.Errorf("admin sudah ada untuk sekolah ini")
-		}
+// 	return &pb.UpdateSiswaResponse{
+// 		Message: "Siswa berhasil diperbarui",
+// 		Status:  true,
+// 	}, nil
+// }
 
-		// Registrasi admin
-		if err := s.authService.RegisterAdmin(userModel); err != nil {
-			log.Printf("Error registrasi admin: %v", err)
-			return nil, fmt.Errorf("gagal registrasi admin: %w", err)
-		}
-	} else if userModel.Role == "siswa" {
-		// Registrasi siswa
-		if err := s.authService.Register(userModel); err != nil {
-			log.Printf("Error registrasi siswa: %v", err)
-			return nil, fmt.Errorf("gagal registrasi siswa: %w", err)
-		}
-	}
+// // **DeleteSiswa**
+// func (s *SekolahServiceServer) DeleteSiswa(ctx context.Context, req *pb.DeleteSiswaRequest) (*pb.DeleteSiswaResponse, error) {
+// 	schemaName := fmt.Sprintf("tabel_%s", req.GetSchemaName())
+// 	siswaID := req.GetSiswaId()
 
-	// Hubungkan user dengan profil
-	userProfileModel := &models.UserProfile{
-		UserID: userModel.ID,
-	}
+// 	err := s.siswaRepo.Delete(ctx, siswaID, schemaName)
+// 	if err != nil {
+// 		log.Printf("Gagal menghapus siswa: %v", err)
+// 		return nil, fmt.Errorf("gagal menghapus siswa: %w", err)
+// 	}
 
-	if err := s.userProfile.CreateUserProfile(userProfileModel); err != nil {
-		log.Printf("Error membuat user profile: %v", err)
-		return nil, fmt.Errorf("server error saat membuat user profile")
-	}
-
-	log.Println("User berhasil didaftarkan")
-	response := &pb.RegisterResponse{
-		Message: "User registered successfully",
-		UserId:  fmt.Sprintf("%d", userModel.ID),
-	}
-
-	// Siapkan data registrasi sekolah untuk dikirim ke Redis
-	registration := SchoolRegistration{
-		SchoolName: sekolah.GetNamaSekolah(), // Menggunakan metode GetNamaSekolah()
-		AdminEmail: user.GetEmail(),          // Menggunakan metode GetEmail()
-	}
-
-	// Konversi data ke JSON
-	data, err := json.Marshal(registration)
-	if err != nil {
-		log.Printf("Error marshalling registration data: %v", err)
-		return nil, fmt.Errorf("gagal memproses data registrasi")
-	}
-
-	// Kirim data ke Redis
-	err = s.RedisClient.Publish("school_registration", data).Err()
-	if err != nil {
-		log.Printf("Error publishing to Redis: %v", err)
-		return nil, fmt.Errorf("gagal mengirim data ke sistem antrian")
-	}
-
-	fmt.Println("Registration message published successfully!")
-
-	return response, nil
-}
+// 	return &pb.DeleteSiswaResponse{
+// 		Message: "Siswa berhasil dihapus",
+// 		Status:  true,
+// 	}, nil
+// }

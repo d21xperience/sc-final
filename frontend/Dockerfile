@@ -1,27 +1,32 @@
-# Gunakan image Node.js untuk build
-FROM node:18 AS builder
+# Gunakan image Node.js terbaru sebagai base image
+FROM node:20-alpine AS build-stage
 
-# Set working directory
+# Set direktori kerja di dalam container
 WORKDIR /app
 
-# Copy package.json dan install dependencies
-COPY package*.json ./
+# Salin file package.json dan package-lock.json (jika ada)
+COPY package.json ./
+
+# Install dependensi
 RUN npm install
 
-# Copy seluruh source code
+# Salin seluruh proyek ke dalam container
 COPY . .
 
-# Build aplikasi
+# Build proyek menggunakan Vite
 RUN npm run build
 
-# Image runtime
-FROM nginx:alpine
+# Gunakan image Nginx sebagai production server
+FROM nginx:1.25.3-alpine AS production-stage
 
-# Copy build output ke NGINX
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Salin file build hasil dari tahap sebelumnya ke direktori Nginx
+COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-# Expose port default NGINX
+# Salin konfigurasi default Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
 EXPOSE 80
 
-# Jalankan NGINX
+# Jalankan Nginx
 CMD ["nginx", "-g", "daemon off;"]

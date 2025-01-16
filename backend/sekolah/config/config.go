@@ -26,14 +26,14 @@ func LoadConfig() Config {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
-	port, _ := strconv.Atoi(os.Getenv("POSTGRES_PORT"))
+	port, _ := strconv.Atoi(os.Getenv("SEKOLAH_PORT"))
 
 	return Config{
-		Host:            os.Getenv("POSTGRES_HOST"),
-		Password:        os.Getenv("POSTGRES_PASSWORD"),
+		Host:            os.Getenv("SEKOLAH_HOST"),
+		Password:        os.Getenv("SEKOLAH_PASSWORD"),
 		Port:            port,
-		User:            os.Getenv("POSTGRES_USER"),
-		DBName:          os.Getenv("POSTGRES_DB"),
+		User:            os.Getenv("SEKOLAH_USER"),
+		DBName:          os.Getenv("SEKOLAH_DB"),
 		MaxIdleConns:    10,
 		MaxOpenConns:    100,
 		ConnMaxLifetime: 30 * time.Minute,

@@ -1,0 +1,51 @@
+package repositories
+
+import (
+	"errors"
+	"sekolah/models"
+
+	"gorm.io/gorm"
+)
+
+var ErrRecordNotFound = errors.New("record not found")
+
+type SekolahTenantRepository interface {
+	Save(sekolahTenant *models.SekolahTabelTenant) error
+	FindByID(sekolahTenantID int) (*models.SekolahTabelTenant, error)
+	Update(sekolahTenant *models.SekolahTabelTenant) error
+	Delete(sekolahTenantID string) error
+}
+
+type sekolahTenantRepositoryImpl struct {
+	db *gorm.DB
+}
+
+func NewsekolahTenantRepository(db *gorm.DB) SekolahTenantRepository {
+	return &sekolahTenantRepositoryImpl{db: db}
+}
+
+// Create (Menyimpan Data sekolahTenant)
+func (r *sekolahTenantRepositoryImpl) Save(st *models.SekolahTabelTenant) error {
+	// sekolahTenant.sekolahTenantID = uuid.New() // Generate UUID baru untuk setiap sekolahTenant
+	return r.db.Create(st).Error
+}
+
+// Read (Mencari Sekolah berdasarkan ID)
+func (r *sekolahTenantRepositoryImpl) FindByID(sekolahTenantID int) (*models.SekolahTabelTenant, error) {
+	var sekolah models.SekolahTabelTenant
+	err := r.db.First(&sekolah, "sekolah_id = ?", sekolahTenantID).Error
+	if err != nil {
+		return nil, err
+	}
+	return &sekolah, nil
+}
+
+// Update (Memperbarui Data Sekolah)
+func (r *sekolahTenantRepositoryImpl) Update(sekolahTenant *models.SekolahTabelTenant) error {
+	return r.db.Save(sekolahTenant).Error
+}
+
+// Delete (Menghapus Data Sekolah berdasarkan ID)
+func (r *sekolahTenantRepositoryImpl) Delete(sekolahTenantID string) error {
+	return r.db.Delete(&models.Sekolah{}, "sekolah_id = ?", sekolahTenantID).Error
+}

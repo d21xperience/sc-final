@@ -9,7 +9,7 @@ import InputIcon from 'primevue/inputicon';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 
-import { FloatLabel, Message } from 'primevue';
+import { FloatLabel, Message, Select } from 'primevue';
 import router from '@/router';
 
 
@@ -28,11 +28,12 @@ const resolver = ref(zodResolver(
     })
 ));
 
-const onFormSubmit = async ({ values }) => {
-    if (values) {
-        const success = await store.dispatch('authService/login', { email: values.email, password: values.password });
-        console.log(success)
+const onFormSubmit = async ({ valid, values }) => {
+    if (valid) {
+        const success = await store.dispatch('authService/login', { username: values.username, password: values.password });
+        // console.log(typeof success)
         if (!success) {
+            alert(success.message)
             // error.value = 'Invalid login credentials';
             alert("Invalid login credentials")
         } else {
@@ -59,7 +60,7 @@ const onFormSubmit = async ({ values }) => {
                         <FloatLabel variant="on">
                             <IconField>
                                 <InputText name="username" type="text" size="small" class="w-full" autocomplete="on" />
-                                <InputIcon class="pi pi-envelope" />
+                                <InputIcon class="pi pi-user" />
                             </IconField>
                             <label for="email">Username</label>
                         </FloatLabel>

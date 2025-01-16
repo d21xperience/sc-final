@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # auth_service:
+  #   build:
+  #     context: .  # Menggunakan path lokal (karena file ini ada di auth_service/)
+  #     dockerfile: Dockerfile
+  #   container_name: auth_service
+  #   environment:
+  #     - DB_HOST=${AUTHDB_HOST}
+  #     - DB_PORT=${AUTHDB_PORT}
+  #     - DB_USER=${AUTHDB_USER}
+  #     - DB_PASSWORD=${AUTHDB_PASSWORD}
+  #     - DB_NAME=${AUTHDB_DB}
+  #     - REDIS_HOST=${AUTHREDIS_HOST}
+  #     - REDIS_PORT=${AUTHREDIS_PORT}
+  #   ports:
+  #     - "50051:50051"
+  #   depends_on:
+  #     - auth_db
+  #     - auth_redis
+  #   volumes:
+  #     - .:/app  # Mount kode agar bisa berubah tanpa rebuild container
+  #   command: ["air"]  # Jalankan dengan hot reload
+
+  auth_db:
+    image: postgres:15-alpine
+    container_name: auth_db_container
+    restart: always
+    environment:
+      POSTGRES_USER: ${AUTHDB_USER}
+      POSTGRES_PASSWORD: ${AUTHDB_PASSWORD}
+      POSTGRES_DB: ${AUTHDB_DB}
+    ports:
+      - "${AUTHDB_PORT}:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+
+  auth_redis:
+    image: redis:alpine
+    container_name: auth_redis_container
+    restart: always
+    ports:
+      - "${AUTHREDIS_PORT}:6379"
+
+volumes:
+  auth_db_data:
+  # auth_redis_data:

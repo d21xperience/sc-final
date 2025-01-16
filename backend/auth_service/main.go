@@ -16,7 +16,7 @@ func main() {
 	config.InitDatabase(cfg)
 
 	// Migrasi model
-	config.DB.AutoMigrate(&models.User{}, &models.Sekolah{}, &models.UserProfile{})
+	config.DB.AutoMigrate(&models.User{}, &models.Sekolah{}, &models.UserProfile{}, &models.SekolahRef{})
 	userRepo := repository.NewUserRepository(config.DB)
 	userService := services.NewAuthService(userRepo)
 	userProfileRepo := repository.NewUserProfileRepository(config.DB)

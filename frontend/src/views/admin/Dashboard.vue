@@ -1,5 +1,6 @@
 <template>
-    <h1 class="text-2xl mb-2">Welcome back, <span class="font-bold ">userd43886712d10</span> 🖐</h1>
+    <h1 class="text-2xl mb-2">Welcome back, <span class="font-bold ">{{ store.state.authService.user?.username
+            }}</span> 🖐</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex justify-between items-center mb-4">
@@ -240,7 +241,9 @@ import router from '@/router';
 import Chart from 'primevue/chart';
 
 import { ref, onMounted } from "vue";
+import { useStore } from "vuex";
 
+const store = useStore();
 onMounted(() => {
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();

@@ -1,0 +1,88 @@
+version: '3.8'
+
+networks:
+  backend_network:
+    driver: bridge
+
+services:
+  auth_service:
+    build:
+      context: ./backend/auth_service
+    container_name: auth_service_container
+    environment:
+      - DB_HOST=${AUTHDB_HOST}
+      - DB_PORT=${AUTHDB_PORT}
+      - DB_USER=${AUTHDB_USER}
+      - DB_PASSWORD=${AUTHDB_PASSWORD}
+      - DB_NAME=${AUTHDB_DB}
+      - REDIS_HOST=${AUTHREDIS_HOST}
+      - REDIS_PORT=${AUTHREDIS_PORT}
+    ports:
+      - "50051:50051"
+    depends_on:
+      - auth_db
+      - auth_redis
+    networks:
+      - backend_network
+
+  auth_db:
+    image: postgres:15-alpine
+    container_name: auth_db_container
+    restart: always
+    environment:
+      POSTGRES_USER: ${AUTHDB_USER}
+      POSTGRES_PASSWORD: ${AUTHDB_PASSWORD}
+      POSTGRES_DB: ${AUTHDB_DB}
+    ports:
+      - "54532:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+
+  auth_redis:
+    image: redis:alpine
+    container_name: auth_redis_container
+    restart: always
+    ports:
+      - "6380:6379"
+    networks:
+      - backend_network
+
+  sekolah_db:
+    image: postgres:15-alpine
+    container_name: sekolah_db_container
+    restart: always
+    environment:
+      POSTGRES_USER: ${SEKOLAH_USER}
+      POSTGRES_PASSWORD: ${SEKOLAH_PASSWORD}
+      POSTGRES_DB: ${SEKOLAH_DB}
+    ports:
+      - "54533:5432"
+    volumes:
+      - sekolah_db_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+
+  sekolah_redis:
+    image: redis:alpine
+    container_name: sekolah_redis_container
+    restart: always
+    ports:
+      - "6381:6379"
+    networks:
+      - backend_network
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - auth_service
+    networks:
+      - backend_network
+
+volumes:
+  auth_db_data:
+  sekolah_db_data:

@@ -14,7 +14,7 @@ type AuthService interface {
 	IsAdminExists(schoolID int) (bool, error)
 	Register(user *models.User) error
 	RegisterAdmin(user *models.User) error
-	Login(email, password string) (string, error)
+	Login(username, password string) (*models.User, error)
 	GenerateToken(userID int, role string) (string, error)
 }
 
@@ -106,26 +106,18 @@ func (s *authServiceImpl) RegisterAdmin(user *models.User) error {
 	}
 }
 
+func (s *authServiceImpl) Login(username, password string) (*models.User, error) {
 
-func (s *authServiceImpl) Login(email, password string) (string, error) {
 	// Ambil user berdasarkan username
-	user, err := s.repository.FindByEmail(email)
+	user, err := s.repository.FindByUsername(username)
 	if err != nil {
-		return "", errors.New("invalid credentials")
+		return nil, errors.New("invalid credentials")
 	}
-
 	// Verifikasi password
 	if !utils.VerifyPassword(password, user.Password) {
-		return "", errors.New("invalid credentials")
+		return nil, errors.New("invalid credentials")
 	}
-
-	// Generate JWT
-	token, err := utils.GenerateJWT(user)
-	if err != nil {
-		return "", errors.New("failed to generate token")
-	}
-
-	return token, nil
+	return user, nil
 }
 func (as *authServiceImpl) GenerateToken(userID int, role string) (string, error) {
 	claims := jwt.MapClaims{

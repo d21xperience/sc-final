@@ -89,7 +89,7 @@
                 </DataTable>
             </div>
             <div v-else>
-                <EmptyData />
+                <EmptyData @profileFetched="handleProfileFetched" @fetchError="handleFetchError" />
             </div>
         </div>
 
@@ -374,4 +374,16 @@ const jurusan = ref([
     { name: 'AKuntansi Lembaga', code: 'AKL' }
 ]);
 
+
+
+// Fungsi yang menangkap event emit dari child
+const handleProfileFetched = (data) => {
+    dataConnected.value = data;
+    console.log("Data sekolah diterima di parent:", data);
+};
+
+const handleFetchError = (error) => {
+    dataConnected.value = data;
+    console.error("Error diterima di parent:", error);
+};
 </script>

@@ -1,72 +1,105 @@
 package repositories
 
-// import (
-// 	"errors"
-// 	"sekolah/data/request"
-// 	"sekolah/helper"
-// 	"sekolah/models"
+import (
+	"context"
+	"fmt"
+	"sekolah/models"
+	"strings"
 
-// 	"gorm.io/gorm"
-// )
+	"gorm.io/gorm"
+)
 
-// type IjazahRepositoryImpl struct {
-// 	Db *gorm.DB
-// }
+type IjazahRepository interface {
+	Save(ctx context.Context, Ijazah *models.Ijazah, schemaName string) error
+	FindByID(ctx context.Context, IjazahID string, schemaName string) (*models.Ijazah, error)
+	Update(ctx context.Context, Ijazah *models.Ijazah, schemaName string) error
+	Delete(ctx context.Context, IjazahID string, schemaName string) error
+}
 
-// // Buat fungsi dengan parameter yang berisi tipe data sesuai dengan field yang ada pada struct IjazahRepositoryImpl dan mengembalikan nilai berupa interface
-// func NewIjazahRepositoryImpl(Db *gorm.DB) IjazahRepository {
-// 	return &IjazahRepositoryImpl{Db: Db}
-// }
+type IjazahRepositoryImpl struct {
+	// schemaRepository SchemaRepository
+	db *gorm.DB
+}
 
-// // implenentasikan semua fungsi yang telah dibuat pada file sebelumnya
-// // Create function
-// func (ir IjazahRepositoryImpl) Save(tblIjazah models.TabelIjazah) {
-// 	result := ir.Db.Create(&tblIjazah)
-// 	helper.ErrorPanic(result.Error)
-// }
+// NewIjazahRepository membuat instance baru dari IjazahRepository
+func NewIjazahRepository(dB *gorm.DB) IjazahRepository {
+	return &IjazahRepositoryImpl{
+		db: dB,
+		// schemaRepository: NewSchemaRepository(dB),
+	}
+}
 
-// // Update
-// func (ir IjazahRepositoryImpl) Update(tblIjazah models.TabelIjazah) {
-// 	var updateTableIjazah = request.UpdateTableIjazah{
-// 		NomorIjazah: tblIjazah.NomorIjazah,
-// 		AsalSekolah: tblIjazah.AsalSekolah,
-// 		Nama:        tblIjazah.Nama,
-// 		TglLahir:    tblIjazah.TglLahir,
-// 		TptLahir:    tblIjazah.TptLahir,
-// 		Nis:         tblIjazah.Nis,
-// 		Nisn:        tblIjazah.Nisn,
-// 		NamaWali:    tblIjazah.NamaWali,
-// 		TahunLulus:  tblIjazah.TahunLulus,
-// 		RerataNilai: tblIjazah.RerataNilai,
-// 		// valid       : tblIjazah.valid,
-// 	}
-// 	result := ir.Db.Model(&tblIjazah).Updates(updateTableIjazah)
-// 	helper.ErrorPanic(result.Error)
-// }
+var tabelIjazah = "tabel_Ijazah"
 
-// // Delete
-// func (ir IjazahRepositoryImpl) Delete(noIjazah int) {
-// 	var iJazah models.TabelIjazah
-// 	results := ir.Db.Where("no_ijazah = ?", noIjazah).Delete(&iJazah)
-// 	helper.ErrorPanic(results.Error)
-// }
+func (r *IjazahRepositoryImpl) Save(ctx context.Context, Ijazah *models.Ijazah, schemaName string) error {
+	// Gunakan transaksi agar atomic
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// 🔥 Pastikan schema diubah dalam transaksi
+		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+			return fmt.Errorf("failed to set schema: %w", err)
+		}
 
-// // findById
-// func (ir IjazahRepositoryImpl) FindById(noIjazah int) (models.TabelIjazah, error) {
-// 	var iJazah models.TabelIjazah
-// 	res := ir.Db.Find(&iJazah, noIjazah)
-// 	helper.ErrorPanic(res.Error)
-// 	if res != nil {
-// 		return iJazah, nil
-// 	} else {
-// 		return iJazah, errors.New("Ijazah tidak ditemukan")
-// 	}
-// }
+		// 🔥 Gunakan `tx.Table(schemaName + ".Ijazahs")` agar GORM tahu schema yang benar
+		if err := tx.Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelIjazah)).Create(Ijazah).Error; err != nil {
+			return fmt.Errorf("failed to save school in schema %s: %w", schemaName, err)
+		}
 
-// // Find All
-// func (ir IjazahRepositoryImpl) FindAll() []models.TabelIjazah {
-// 	var Ijazah []models.TabelIjazah
-// 	res := ir.Db.Find(&Ijazah)
-// 	helper.ErrorPanic(res.Error)
-// 	return Ijazah
-// }
+		return nil
+	})
+}
+
+func (r *IjazahRepositoryImpl) FindByID(ctx context.Context, IjazahID string, schemaName string) (*models.Ijazah, error) {
+	var IjazahModel models.Ijazah
+
+	// 🔥 Pastikan schema diubah sebelum query
+	if err := r.db.WithContext(ctx).Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+		return nil, fmt.Errorf("failed to set schema: %w", err)
+	}
+
+	// 🔥 Gunakan `tx.Table(schemaName + ".tabel_Ijazah")` agar GORM tahu schema yang benar
+	if err := r.db.WithContext(ctx).
+		Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelIjazah)).
+		First(&IjazahModel, "Ijazah_id = ?", IjazahID).Error; err != nil {
+		return nil, fmt.Errorf("failed to find school in schema %s: %w", schemaName, err)
+	}
+
+	return &IjazahModel, nil
+}
+
+// Update (Memperbarui Data Ijazah)
+func (r *IjazahRepositoryImpl) Update(ctx context.Context, IjazahModel *models.Ijazah, schemaName string) error {
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// 🔥 Set schema sebelum query
+		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+			return fmt.Errorf("failed to set schema: %w", err)
+		}
+
+		// 🔥 Lakukan update dalam transaksi
+		if err := tx.Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelIjazah)).
+			Where("Ijazah_id = ?", IjazahModel.ID).
+			Updates(IjazahModel).Error; err != nil {
+			return fmt.Errorf("failed to update school in schema %s: %w", schemaName, err)
+		}
+
+		return nil // Commit transaksi jika tidak ada error
+	})
+}
+
+// Delete (Menghapus Data Ijazah berdasarkan ID)
+func (r *IjazahRepositoryImpl) Delete(ctx context.Context, IjazahID string, schemaName string) error {
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// 🔥 Set schema sebelum query
+		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+			return fmt.Errorf("failed to set schema: %w", err)
+		}
+
+		// 🔥 Hapus data dalam transaksi
+		if err := tx.Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelIjazah)).
+			Where("Ijazah_id = ?", IjazahID).
+			Delete(nil).Error; err != nil {
+			return fmt.Errorf("failed to delete school in schema %s: %w", schemaName, err)
+		}
+
+		return nil // Commit transaksi jika tidak ada error
+	})
+}

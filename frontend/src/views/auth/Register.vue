@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, reactive, toRaw } from 'vue';
 import { useStore } from 'vuex';
 
 import AutoComplete from 'primevue/autocomplete';
@@ -10,12 +10,34 @@ import Password from 'primevue/password';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
-
-
 import Dialog from 'primevue/dialog';
 import { FloatLabel, Message } from 'primevue';
 import router from '@/router';
+// ============AUTOCOMPLETE STATIS=======================
+import CountryService from "@/service/CountryService";
+onMounted(() => {
+    CountryService.getSekolah().then((data) => (countries.value = data));
+});
+const initialValues = ref({
+    country: { name: '' }
+});
 
+const countries = ref();
+const filteredCountries = ref();
+// const toast = useToast();
+
+const search = (event) => {
+    setTimeout(() => {
+        if (!event.query.trim().length) {
+            filteredCountries.value = [...countries.value];
+        } else {
+            filteredCountries.value = countries.value.filter((country) =>
+                country.nama_sekolah.toLowerCase().includes(event.query.toLowerCase())
+            );
+        }
+    }, 250);
+};
+// ======================================================
 
 
 // -----------------------------------------
@@ -33,13 +55,14 @@ const onSearch = async () => {
         console.log("Please enter at least 4 characters");
         return;
     }
-
     loading.value = true;
     try {
         items.value = await store.dispatch('search/fetchResults', searchTerm.value);
         // console.log("Results:", items.value);
     } catch (error) {
         console.error("Error fetching results:", error);
+        errorDialog.value = true
+        errorInfo.value = "Sepertinya internet tidak terhubung"
     } finally {
         loading.value = false;
     }
@@ -56,40 +79,69 @@ const onSearch = async () => {
 
 
 // Mmembuat Register form ---------------------
-const registerForm = ref({
-    email: "",
-    password: "",
+const registerForm = reactive({
+    username: '',
+    email: '',
+    password: '',
 })
 
-
-// watch(searchTerm, (oldVal, newVal) => {
-//     if (newVal.length > 0) {
-//         console.log("hello")
-//     }
-// })
-const onFormSubmit = async (e) => {
-    // console.log(e.values)
-    // Mengirim data ke Server
+// Fungsi untuk menghapus spasi dan konversi ke string
+const formatValues = obj => {
+    return Object.fromEntries(
+        Object.entries(obj).map(([key, value]) => [key, String(value).trim()])
+    );
+};
+const errorDialog = ref(false)
+const errorInfo = ref("")
+const onFormSubmit = async ({ valid, values }) => {
     let dataReg = {
-        email: e.values['email'],
-        password: e.values['password'],
-        sekolah: items.value.length > 0 ? toRaw(items.value[0]) : null,
+        user: {
+            username: values.username,
+            email: values.email,
+            password: values.password,
+            role: 'admin'
+        },
+        sekolah:
+        {
+            sekolah_id_enkrip: searchTerm.value.sekolah_id_enkrip,
+            kecamatan: searchTerm.value.kecamatan,
+            kabupaten: searchTerm.value.kabupaten,
+            propinsi: searchTerm.value.propinsi,
+            kode_kecamatan: searchTerm.value.kode_kecamatan,
+            kode_kab: searchTerm.value.kode_kab,
+            kode_prop: searchTerm.value.kode_prop,
+            nama_sekolah: searchTerm.value.nama_sekolah,
+            npsn: searchTerm.value.npsn,
+            alamat_jalan: searchTerm.value.alamat_jalan,
+            status: searchTerm.value.status
+        }
+    }
+    dataReg.sekolah = formatValues(dataReg.sekolah);
+    // console.log(dataReg.sekolah)
+    // return
+    if (valid) {
+        try {
+            const resp = await store.dispatch('authService/registerAdmin', dataReg);
+            // Jika sukses, arahkan ke beranda
+            if (resp.ok) {
+                router.push({ name: 'admin' })
+            }
+            // success.value = 'Admin registered successfully!';
+        } catch (error) {
+            errorDialog.value = true
+            errorInfo.value = error
+            console.error(error)
+            // error.value = err.error || 'Registration failed';
+        }
+        // return { name, email, password, schoolName, register, error, success };
     }
 
-    console.log(dataReg)
-    try {
-        await store.dispatch('authService/registerAdmin', dataReg);
-        // success.value = 'Admin registered successfully!';
-    } catch (error) {
-        console.error(error)
-        // error.value = err.error || 'Registration failed';
-    }
-    // return { name, email, password, schoolName, register, error, success };
 }
 const resolver = ref(zodResolver(
     z.object({
         email: z.string().min(1, { message: 'Email harus diisi.' }).email({ message: 'Invalid email address.' }),
         password: z.string().min(1, { message: 'Password harus diisi.' }),
+        username: z.string().min(1, { message: 'Username harus diisi.' }),
     })
 ));
 
@@ -99,11 +151,41 @@ const resolver = ref(zodResolver(
 const agreement = ref(false);
 
 // Cek sekolah
+const npsn = ref(""); // Input untuk NPSN
+const sekolah = ref(null); // Data sekolah dari API
+const error = ref(""); // Menyimpan pesan error
+const infoSekolah = ref(false)
 const statusSekolahTerdaftar = ref(false)
-const infoError = ref(false)
-const cekSekolah = () => {
-    // infoError.value = !infoError.value
-    statusSekolahTerdaftar.value = !statusSekolahTerdaftar.value
+const cekSekolah = async () => {
+    npsn.value = searchTerm.value?.npsn
+    // console.log(npsn./value)
+    try {
+        error.value = ""; // Reset error
+        sekolah.value = null; // Reset data sekolah
+        // Panggil fungsi ceknpsn dari Vuex storex
+        const data = await store.dispatch("authService/ceknpsn", npsn.value);
+        // console.log(data)
+        if (data) {
+            sekolah.value = data; // Tampilkan data sekolah
+            infoSekolah.value = true
+        } else if (data === null) {
+            statusSekolahTerdaftar.value = true
+        }
+        else {
+            statusSekolahTerdaftar.value = true
+        }
+    } catch (e) {
+        error.value = "Terjadi kesalahan saat mengambil data sekolah.";
+    }
+}
+const agrement = ref(false)
+const terimaPersetujuan = () => {
+    showPesyaratan.value = false
+    agreement.value = true
+}
+const batalPersetujuan = () => {
+    // showPesyaratan.value = true
+    agreement.value = false
 }
 
 </script>
@@ -138,8 +220,9 @@ const cekSekolah = () => {
                             <div class="w-full">
                                 <FloatLabel variant="on">
                                     <IconField>
-                                        <AutoComplete name="sekolah" optionLabel="nama_sekolah" v-model="searchTerm"
-                                            :suggestions="items" @complete="onSearch" fluid size="small" />
+                                        <AutoComplete name="nama_sekolah" optionLabel="nama_sekolah"
+                                            v-model="searchTerm" :suggestions="filteredCountries" @complete="search"
+                                            fluid size="small" />
                                         <InputIcon class="pi pi-building-columns" />
                                     </IconField>
                                     <label for="sekolah">NPSN/Nama Sekolah</label>
@@ -147,13 +230,9 @@ const cekSekolah = () => {
                             </div>
                             <div>
                                 <button type="button" class="bg-blue-600 text-white text-sm p-2 rounded-lg"
-                                    @click="cekSekolah">Cek</button>
+                                    :disabled="searchTerm.length <= 0" @click="cekSekolah">Cek</button>
                             </div>
                         </div>
-                        <!-- <Message v-if="$form.sekolah?.invalid" severity="error" size="small" variant="simple">{{
-                            $form.sekolah.error?.message }}</Message> -->
-                        <!-- <Message size="small" severity="secondary" variant="simple">Diisi NPSN dan Nama Sekolah.
-                        </Message> -->
                     </div>
 
                     <div class="flex justify-between mt-6">
@@ -170,15 +249,27 @@ const cekSekolah = () => {
                         </div>
                     </div>
                 </div>
-
-
-                <Form v-slot="$form" :initialValues="registerForm" :resolver="resolver" @submit="onFormSubmit"
-                    class="w-full justify-center" v-else>
-
-
+                <Form v-else v-slot="$form" :initialValues="registerForm" :resolver="resolver" @submit="onFormSubmit"
+                    class="w-full justify-center">
+                    <div class="mt-4 mb-6">
+                        <label class="block w-full rounded-lg p-2 text-slate-800 bg-slate-500" for="nm-sekolah">{{
+                            searchTerm?.nama_sekolah ?? '-' }}</label>
+                        <!-- <input type="text" name="nama-sekolah" disabled :value="searchTerm?.nama_sekolah ?? '-'"
+                            class="w-full rounded-lg p-2 text-slate-800 bg-slate-500"> -->
+                    </div>
                     <div class="my-4">
-                        <input type="text" name="" id="" disabled value="SMKS Pasundan Jatinangor"
-                            class="w-full rounded-lg p-2 text-slate-800 bg-slate-500">
+                        <!-- <label class="text-slate-700 text-sm block">Email Dapodik</label> -->
+                        <FloatLabel variant="on">
+                            <IconField>
+                                <InputText name="username" type="text" size="small" class="w-full"
+                                    autocomplete="false" />
+                                <InputIcon class="pi pi-user" />
+                            </IconField>
+                            <label for="email">Username</label>
+                        </FloatLabel>
+                        <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{
+                            $form.username.error?.message }}</Message>
+                        <Message size="small" severity="secondary" variant="simple">Isi dengan username.</Message>
                     </div>
                     <div class="my-4">
                         <!-- <label class="text-slate-700 text-sm block">Email Dapodik</label> -->
@@ -187,7 +278,7 @@ const cekSekolah = () => {
                                 <InputText name="email" type="email" size="small" class="w-full" autocomplete="false" />
                                 <InputIcon class="pi pi-envelope" />
                             </IconField>
-                            <label for="email">Email Dapodik</label>
+                            <label for="email">Email</label>
                         </FloatLabel>
                         <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{
                             $form.email.error?.message }}</Message>
@@ -220,9 +311,10 @@ const cekSekolah = () => {
                         <Message size="small" severity="secondary" variant="simple">Buat Password baru.</Message>
                     </div>
                     <div class=" flex items-center">
-                        <input id="aggrement" name="aggrement" type="checkbox" @click="agreement = !agreement"
+                        <input id="agrement" name="agrement" type="checkbox" v-model="agrement"
+                            @click="showPesyaratan = true"
                             class="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-md" />
-                        <label for="aggrement" class="ml-3 block text-sm">
+                        <label for="agrement" class="ml-3 block text-sm">
                             Saya menyetujui <button type="button" @click="showPesyaratan = true"
                                 class="text-blue-600 font-semibold hover:underline ml-1">Persyaratan & Aturan</button>
                         </label>
@@ -230,7 +322,7 @@ const cekSekolah = () => {
                     <!-- <p>{{ $form.email.error?.message }}</p> -->
                     <div class="flex justify-between mt-1 mb-2 space-x-2">
                         <!-- <div class="w-1/2"> -->
-                        <button type="button" @click="cekSekolah"
+                        <button type="button" @click="statusSekolahTerdaftar = false"
                             class="block w-1/2 py-2.5 px-4 text-sm tracking-wider font-semibold rounded-md bg-green-600  text-white focus:outline-none">
                             Kembali
                         </button>
@@ -292,24 +384,33 @@ const cekSekolah = () => {
                 </li>
             </ol>
             <div class="flex items-center space-x-2 text-white my-3">
-                <button class="bg-yellow-600 block p-2 rounded-lg w-64 hover:opacity-75">Batal</button>
-                <button class="bg-blue-600 block p-2 rounded-lg w-64 hover:opacity-75">Terima</button>
+                <button class="bg-yellow-600 block p-2 rounded-lg w-64 hover:opacity-75"
+                    @click="showPesyaratan = false">Batal</button>
+                <button class="bg-blue-600 block p-2 rounded-lg w-64 hover:opacity-75"
+                    @click="terimaPersetujuan">Terima</button>
             </div>
         </div>
     </Dialog>
     <!-- End of dialog term -->
     <!-- Dialog Info register -->
-    <Dialog v-model:visible="infoError" header="Warning">
+    <Dialog v-model:visible="infoSekolah" header="Warning">
         <div class="text-slate-500">
             <p>Maaf sekolah yang Anda pilih telah terdaftar di sistem kami.</p>
             <p>Anda tidak bisa melanjutkan proses pendaftaran. </p>
             <p>Jika ini suatu kesalahan, silahkan hubungi admin kami</p>
         </div>
         <div class="flex my-4">
-            <button class="bg-yellow-600 p-2 rounded-lg text-white" @click="router.push('/')">Ok, Terima kasih.</button>
+            <button class="bg-yellow-600 p-2 rounded-lg text-white" @click="infoSekolah = false">Ok, Terima
+                kasih.</button>
         </div>
     </Dialog>
 
+
+    <Dialog v-model:visible="errorDialog" header="Warning">
+        <div>
+            {{ errorInfo }}
+        </div>
+    </Dialog>
 
     <!-- End ofDialog Info register -->
     <!-- Dialog end -->

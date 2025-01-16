@@ -6,8 +6,7 @@ import (
 
 type Ijazah struct {
 	gorm.Model
-	ID                          string
-	PesertaDidikID              string
+	PesertaDidikID              PesertaDidik
 	ProgramKeahlian             string
 	PaketKeahlian               string
 	NPSN                        string
