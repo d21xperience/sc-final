@@ -43,7 +43,6 @@ func (s *AuthServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*p
 	resp, err := s.authService.Login(username, password)
 	if err != nil {
 		log.Printf("Error username/password salah : %v", err)
-
 		return nil, err
 	}
 	// Generate JWT
@@ -202,7 +201,6 @@ func (s *AuthServiceServer) GetUserPofile(ctx context.Context, req *pb.GetUserPr
 		log.Printf("Error fetching user profile: %v", err)
 		return nil, errors.New("failed to retrieve user profile")
 	}
-
 	return &pb.GetUserProfileResponse{
 		UserProfile: &pb.UserProfile{
 			UserId:   profile.UserID,
@@ -353,28 +351,3 @@ func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRe
 		},
 	}, nil
 }
-
-// // GetSekolahByNpsn - Mengambil data sekolah berdasarkan ID
-// func (s *AuthServiceServer) GetSekolahByID(ctx context.Context, req *pb.GetSekolahByIDRequest) (*pb.GetSekolahByIDResponse, error) {
-// 	sekolah, err := s.sekolahService.GetSekolahByID(int(req.SekolahId))
-// 	if err != nil {
-// 		log.Printf("Error fetching school data: %v", err)
-// 		return nil, errors.New("failed to retrieve school data")
-// 	}
-
-// 	return &pb.GetSekolahByIDResponse{
-// 		Nama: sekolah.NamaSekolah,
-// 		SekolahData: &pb.Sekolah{
-// 			SekolahIdEnkrip: sekolah.SekolahIDEnkrip,
-// 			Kecamatan:       sekolah.Kecamatan,
-// 			Kabupaten:       sekolah.Kabupaten,
-// 			Propinsi:        sekolah.Propinsi,
-// 			KodeKecamatan:   sekolah.Kecamatan,
-// 			AlamatJalan:     sekolah.AlamatJalan,
-// 			KodeKab:         sekolah.KodeKab,
-// 			KodeProp:        sekolah.KodeProp,
-// 			NamaSekolah:     sekolah.NamaSekolah,
-// 			Status:          sekolah.Status,
-// 		},
-// 	}, nil
-// }

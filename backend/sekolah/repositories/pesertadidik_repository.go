@@ -12,7 +12,7 @@ import (
 type PesertaDidikRepository interface {
 	Save(ctx context.Context, pesertaDidik *models.PesertaDidik, schemaName string) error
 	FindByID(ctx context.Context, pesertaDidikID string, schemaName string) (*models.PesertaDidik, error)
-	Update(ctx context.Context, pesertaDidik *models.PesertaDidik, schemaName string) error
+	Update(ctx context.Context, pesertaDidik *models.PesertaDidik, pdPelengkap *models.PesertaDidikPelengkap, schemaName string) error
 	Delete(ctx context.Context, pesertaDidikID string, schemaName string) error
 }
 
@@ -66,7 +66,7 @@ func (r *pesertaDidikRepositoryImpl) FindByID(ctx context.Context, pesertaDidikI
 }
 
 // Update (Memperbarui Data pesertaDidik)
-func (r *pesertaDidikRepositoryImpl) Update(ctx context.Context, pesertaDidik *models.PesertaDidik, schemaName string) error {
+func (r *pesertaDidikRepositoryImpl) Update(ctx context.Context, pesertaDidik *models.PesertaDidik, pdPelengkap *models.PesertaDidikPelengkap, schemaName string) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		// 🔥 Set schema sebelum query
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {

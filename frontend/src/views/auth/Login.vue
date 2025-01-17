@@ -31,9 +31,8 @@ const resolver = ref(zodResolver(
 const onFormSubmit = async ({ valid, values }) => {
     if (valid) {
         const success = await store.dispatch('authService/login', { username: values.username, password: values.password });
-        // console.log(typeof success)
         if (!success) {
-            alert(success.message)
+            // alert(success.message)
             // error.value = 'Invalid login credentials';
             alert("Invalid login credentials")
         } else {

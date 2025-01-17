@@ -10,7 +10,7 @@ import (
 type PesertaDidikService interface {
 	Save(ctx context.Context, pd *models.PesertaDidik, schemaName string) error
 	FindByID(ctx context.Context, pesertaDidikID string, schemaName string) (*models.PesertaDidik, error)
-	Update(ctx context.Context, pesertaDidik *models.PesertaDidik, schemaName string) error
+	Update(ctx context.Context, pesertaDidik *models.PesertaDidik, pdPelengkap *models.PesertaDidikPelengkap, schemaName string) error
 	Delete(ctx context.Context, pesertaDidikID string, schemaName string) error
 }
 
@@ -32,8 +32,8 @@ func (s *pesertaDidikServiceImpl) Save(ctx context.Context, pd *models.PesertaDi
 func (s *pesertaDidikServiceImpl) FindByID(ctx context.Context, pesertaDidikID string, schemaName string) (*models.PesertaDidik, error) {
 	return s.pesertaDidikRepo.FindByID(ctx, pesertaDidikID, schemaName)
 }
-func (s *pesertaDidikServiceImpl) Update(ctx context.Context, pesertaDidik *models.PesertaDidik, schemaName string) error {
-	return s.pesertaDidikRepo.Update(ctx, pesertaDidik, schemaName)
+func (s *pesertaDidikServiceImpl) Update(ctx context.Context, pesertaDidik *models.PesertaDidik, pdPelengkap *models.PesertaDidikPelengkap, schemaName string) error {
+	return s.pesertaDidikRepo.Update(ctx, pesertaDidik, pdPelengkap ,schemaName)
 }
 func (s *pesertaDidikServiceImpl) Delete(ctx context.Context, pesertaDidikID string, schemaName string) error {
 	return s.pesertaDidikRepo.Delete(ctx, pesertaDidikID, schemaName)

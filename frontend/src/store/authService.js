@@ -12,7 +12,9 @@ const api = axios.create({
 const state = {
   token: localStorage.getItem("token") || null,
   userRole: localStorage.getItem("userRole") || null,
-  user: JSON.parse(localStorage.getItem("user")) || null, // Ambil dari localStorage
+  user: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null,
   userProfile: JSON.parse(localStorage.getItem("userProfile")) || null, // Ambil dari localStorage
   sekolah: JSON.parse(localStorage.getItem("sekolah")) || null, // Ambil dari localStorage
   refreshToken: null,
@@ -79,8 +81,8 @@ const actions = {
         return true;
       }
     } catch (error) {
-      console.error("Login failed:", error);
-      return error;
+      console.error("Login failed:", error.response ? error.response.data : error.message);
+      return false; // Menghindari mengembalikan error langsung
     }
   },
   async logout({ commit }) {
@@ -164,7 +166,6 @@ const actions = {
   // Update Profil Pengguna
   async updateUserProfile({ commit }, updatedProfile) {
     console.log("Mengirim data ke server:", updatedProfile);
-
     try {
       const response = await api.put(`/user/${updatedProfile.userId}/profile`, {
         user_id: updatedProfile.userId, // Sesuai dengan .proto

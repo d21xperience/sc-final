@@ -1,7 +1,7 @@
 package models
 
 type PesertaDidik struct {
-	PesertaDidikID  string  `json:"peserta_didik_id"` // UUID
+	PesertaDidikID  string  `json:"peserta_didik_id"` // STRING
 	NIS             string  `json:"nis"`              // String
 	NISN            string  `json:"nisn"`             // String
 	NamaSiswa       string  `json:"nm_siswa"`         // String
@@ -22,7 +22,7 @@ type PesertaDidik struct {
 
 type PesertaDidikPelengkap struct {
 	PelengkapSiswaID string       `json:"pelengkap_siswa_id"` // UUID
-	PesertaDidikID   PesertaDidik `json:"peserta_didik_id"`   // UUID
+	PesertaDidikID   *PesertaDidik `json:"peserta_didik_id"`   // UUID
 	StatusDalamKel   *string      `json:"status_dalam_kel"`   // Nullable string
 	AnakKe           *string      `json:"anak_ke"`            // Integer
 	SekolahAsal      string       `json:"sekolah_asal"`       // Non-nullable string

@@ -21,15 +21,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 )
 
-type GRPCServer struct {
-	grpcServer          *grpc.Server
-	schemaService       services.SchemaService
-	sekolahService      services.SekolahService
-	pesertaDidikService services.PesertaDidikService
-}
-
-// Jalankan gRPC Server
-func (s *GRPCServer) run() {
+func StartGRPCServer(schemaServices services.SchemaService, sekolahService services.SekolahService, pesertaDidikService services.PesertaDidikService) {
 	// Buat context utama dengan cancel untuk shutdown yang aman
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel() // Pastikan resource dibersihkan saat fungsi keluar
@@ -43,11 +35,24 @@ func (s *GRPCServer) run() {
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
+
+	// gRPC Server
+	grpcServer := grpc.NewServer()
+	pb.RegisterSchoolServiceServer(grpcServer, &SekolahServiceServer{
+		schemaService:  schemaServices,
+		sekolahService: sekolahService,
+		// pesertaDidikService: pesertaDidikService,
+	})
+	// REGISTER SISWA
+	pb.RegisterSiswaServiceServer(grpcServer, &SiswaServiceServer{
+		pesertaDidikService: pesertaDidikService,
+	})
+
 	// HTTP Gateway
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
-	err = pb.RegisterSekolahServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", opts)
+	err = pb.RegisterSchoolServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", opts)
 	if err != nil {
 		log.Fatalf("Failed to register gRPC Gateway: %v", err)
 	}
@@ -69,7 +74,7 @@ func (s *GRPCServer) run() {
 	go func() {
 		defer wg.Done()
 		fmt.Println("gRPC Service running on port 50052")
-		if err := s.grpcServer.Serve(listener); err != nil {
+		if err := grpcServer.Serve(listener); err != nil {
 			log.Fatalf("Failed to serve gRPC: %v", err)
 		}
 	}()
@@ -93,7 +98,7 @@ func (s *GRPCServer) run() {
 		defer shutdownCancel() // Pastikan timeout berlaku
 
 		// Matikan server gRPC
-		s.grpcServer.GracefulStop()
+		grpcServer.GracefulStop()
 
 		// Matikan HTTP Gateway
 		httpListener.Close()
@@ -105,29 +110,6 @@ func (s *GRPCServer) run() {
 	// Menunggu semua Goroutine selesai
 	wg.Wait()
 	fmt.Println("Server shutdown complete")
-}
-
-func StartGRPCServer(schemaServices services.SchemaService, sekolahService services.SekolahService, pesertaDidikService services.PesertaDidikService) {
-	// Buat instance server
-	server := &GRPCServer{
-		grpcServer:          grpc.NewServer(),
-		schemaService:       schemaServices,
-		sekolahService:      sekolahService,
-		pesertaDidikService: pesertaDidikService,
-	}
-	// gRPC Server
-	// grpcServer := grpc.NewServer()
-	pb.RegisterSekolahServiceServer(server.grpcServer, &SekolahServiceServer{
-		schemaService:  server.schemaService,
-		sekolahService: server.sekolahService,
-	})
-	// REGISTER SISWA
-	pb.RegisterSiswaServiceServer(server.grpcServer, &SiswaServiceServer{
-		pesertaDidikService: server.pesertaDidikService,
-	})
-
-	// Jalankan server
-	server.run()
 }
 
 func corsMiddleware(h http.Handler) http.Handler {

@@ -51,7 +51,6 @@ func (s *schemaServiceImpl) RegistrasiSekolah(ctx context.Context, schemaName st
 	if err != nil {
 		return fmt.Errorf("gagal mendapatkan direktori kerja: %w", err)
 	}
-
 	// 2️ Tentukan lokasi file SQL untuk schema
 	schemaFile := filepath.Join(wd, "migrations", "schema_template.sql")
 	if err := s.schemaRepo.InitializeDatabase(ctx, schemaFile, schemaName); err != nil {

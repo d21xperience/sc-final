@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import Toast from 'primevue/toast';
 // import TheWelcome from '../components/Utama.vue'
 import Navbar from '../components/Navbar.vue';
@@ -114,7 +114,24 @@ const showRobot = () => {
 
 
 const dataSiswa = ref({})
+const imgRef = ref(null);
+const isVisible = ref(false);
 
+onMounted(() => {
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        isVisible.value = true;
+        observer.disconnect(); // Hentikan observasi setelah gambar dimuat
+      }
+    },
+    { threshold: 0.1 } // Gambar mulai dimuat ketika 10% terlihat
+  );
+
+  if (imgRef.value) {
+    observer.observe(imgRef.value);
+  }
+});
 
 </script>
 
@@ -126,8 +143,8 @@ const dataSiswa = ref({})
   </main> -->
   <div class="bg-slate-100 text-black mt-20">
     <div class="">
-      <!-- <img src="https://readymadeui.com/cardImg.webp" alt="Background Image" class="w-full" /> -->
-      <!-- <img src="https://readymadeui.com/cardImg.webp" alt="Background Image"
+      <!-- <img loading="lazy" src="https://readymadeui.com/cardImg.webp" alt="Background Image" class="w-full" /> -->
+      <!-- <img loading="lazy" src="https://readymadeui.com/cardImg.webp" alt="Background Image"
         class="w-full h-full object-cover opacity-50" /> -->
     </div>
 
@@ -164,7 +181,7 @@ const dataSiswa = ref({})
 
     <div v-show="dlg">
 
-      <Captcha />
+      <!-- <Captcha /> -->
     </div>
     <!-- SECTION -1  -->
     <!-- <div class="bg-blue-100"> -->
@@ -306,7 +323,7 @@ const dataSiswa = ref({})
         </div>
       </div>
       <div class="relative mb-4">
-        <img alt="A serene night landscape with a tree reflected in water" class="rounded-lg w-full" height="180"
+        <img loading="lazy" alt="A serene night landscape with a tree reflected in water" class="rounded-lg w-full" height="180"
           src="https://storage.googleapis.com/a1aa/image/VUgCU0IKDhauLlnhaCBtVtjbxH8CZWdZGzA3Ky1xW7pOXe7JA.jpg"
           width="320">
         <div class="absolute top-2 left-2">
@@ -345,7 +362,7 @@ const dataSiswa = ref({})
     <!-- About start -->
     <!-- Section 2 -->
     <section id="about" class="lg:min-h-[350px] p-3 flex flex-wrap">
-      <div class="container">
+      <div class="container" v-if="isVisible">
         <div class="flex flex-wrap">
           <div class="w-full px-4 mb-10 lg:w-1/2">
             <h4 class="font-bold uppercase mb-3">Tentang Kami</h4>
@@ -373,6 +390,7 @@ const dataSiswa = ref({})
           </div>
         </div>
       </div>
+      <div v-else class="placeholder">Loading</div>
     </section>
     <!-- End of Section 2 -->
 
@@ -380,11 +398,11 @@ const dataSiswa = ref({})
       <h2 class="text-xl font-bold mb-4">
         Platform yang Digunakan
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" v-if="isVisible">
         <div class="bg-white p-4 rounded-lg shadow-md">
           <img alt="Ethereum logo with blockchain elements" class="w-full h-auto mb-4 rounded-lg" height="200"
             src="https://storage.googleapis.com/a1aa/image/FJjJhxyfdhymaCz6sBLvGJKSVWtXxv6f7bfIy29W4DVBOcfPB.jpg"
-            width="300">
+            width="300" loading="lazy">
           <h3 class="text-lg font-bold mb-2">
             Ethereum
           </h3>
@@ -396,7 +414,7 @@ const dataSiswa = ref({})
         <div class="bg-white p-4 rounded-lg shadow-md">
           <img alt="Hyperledger Fabric logo with network nodes" class="w-full h-auto mb-4 rounded-lg" height="200"
             src="https://storage.googleapis.com/a1aa/image/l6eS2IgpBPTtDiYT0Bhlo1A8Cew90IY7ja9i3Yickh1IHufnA.jpg"
-            width="300">
+            width="300" loading="lazy">
           <h3 class="text-lg font-bold mb-2">
             Hyperledger Fabric
           </h3>
@@ -406,7 +424,8 @@ const dataSiswa = ref({})
           </p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-md">
-          <img alt="Quorum logo with secure transaction elements" class="w-full h-auto mb-4 rounded-lg" height="200"
+          <img loading="lazy" alt="Quorum logo with secure transaction elements" class="w-full h-auto mb-4 rounded-lg"
+            height="200"
             src="https://storage.googleapis.com/a1aa/image/1TIdlaY1OZodJBYXBSr9X2skHNLlpMzR1fsT83zCHWzhD3fTA.jpg"
             width="300">
           <h3 class="text-lg font-bold mb-2">
@@ -418,12 +437,9 @@ const dataSiswa = ref({})
           </p>
         </div>
       </div>
+      <div v-else class="placeholder">Loading</div>
+
     </section>
-
-
-
-
-
 
 
     <!-- About End -->
@@ -443,9 +459,10 @@ const dataSiswa = ref({})
       <h2 class="text-xl font-bold mb-4">
         Berita Terbaru
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" v-if="isVisible">
         <div class="bg-white p-4 rounded-lg shadow-md">
-          <img alt="News image showing a blockchain conference" class="w-full h-auto mb-4 rounded-lg" height="200"
+          <img loading="lazy" alt="News image showing a blockchain conference" class="w-full h-auto mb-4 rounded-lg"
+            height="200"
             src="https://storage.googleapis.com/a1aa/image/8c54PjjFN3buIBwaaoi4uEVUUgGNmnvrmT43v3cQOiowh7fJA.jpg"
             width="300">
           <h3 class="text-lg font-bold mb-2">
@@ -457,7 +474,8 @@ const dataSiswa = ref({})
           </p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-md">
-          <img alt="News image showing a new blockchain partnership" class="w-full h-auto mb-4 rounded-lg" height="200"
+          <img loading="lazy" alt="News image showing a new blockchain partnership"
+            class="w-full h-auto mb-4 rounded-lg" height="200"
             src="https://storage.googleapis.com/a1aa/image/JJgHI2WEvq4KO59545kadeeOFONLTwnTEes568r92rPKOcfPB.jpg"
             width="300">
           <h3 class="text-lg font-bold mb-2">
@@ -469,7 +487,8 @@ const dataSiswa = ref({})
           </p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-md">
-          <img alt="News image showing a blockchain workshop" class="w-full h-auto mb-4 rounded-lg" height="200"
+          <img loading="lazy" alt="News image showing a blockchain workshop" class="w-full h-auto mb-4 rounded-lg"
+            height="200"
             src="https://storage.googleapis.com/a1aa/image/0OwVEfhSMvTSXyHN5SSRbCbSuVUsQmCdWGNRee591o2OOcfPB.jpg"
             width="300">
           <h3 class="text-lg font-bold mb-2">
@@ -481,6 +500,8 @@ const dataSiswa = ref({})
           </p>
         </div>
       </div>
+      <div v-else class="placeholder">Loading</div>
+
     </section>
 
 
@@ -500,7 +521,7 @@ const dataSiswa = ref({})
           </div>
         </div>
         <div>
-          <img src="../assets/eth.jpg" alt="" srcset="">
+          <img loading="lazy" src="../assets/eth.jpg" alt="" srcset="">
         </div>
       </div>
     </section> -->
@@ -514,7 +535,7 @@ const dataSiswa = ref({})
             <div class="border border-surface-200 dark:border-surface-700 rounded m-2  p-4">
               <div class="mb-4">
                 <div class="relative mx-auto">
-                  <img :src="'https://primefaces.org/cdn/primevue/images/product/' + slotProps.data.image"
+                  <img loading="lazy" :src="'https://primefaces.org/cdn/primevue/images/product/' + slotProps.data.image"
                     :alt="slotProps.data.name" class="w-full rounded" />
                   <Tag :value="slotProps.data.inventoryStatus" :severity="getSeverity(slotProps.data.inventoryStatus)"
                     class="absolute" style="left:5px; top: 5px" />
@@ -541,7 +562,7 @@ const dataSiswa = ref({})
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
       <div class="lg:flex lg:items-center">
         <!-- <a href="javascript:void(0)">
-          <img src="https://readymadeui.com/readymadeui-light.svg" alt="logo" class="w-52" />
+          <img loading="lazy" src="https://readymadeui.com/readymadeui-light.svg" alt="logo" class="w-52" />
         </a> -->
       </div>
 
@@ -620,3 +641,18 @@ const dataSiswa = ref({})
   <!-- End of footer -->
 
 </template>
+<style>
+.image-container {
+  width: 400px;
+  height: 300px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder {
+  font-size: 18px;
+  color: gray;
+}
+</style>

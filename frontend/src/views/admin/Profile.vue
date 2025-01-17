@@ -176,27 +176,18 @@
 
 import DatePicker from 'primevue/datepicker';
 
-// import Tabs from 'primevue/tabs';
-// import TabList from 'primevue/tablist';
-// import Tab from 'primevue/tab';
-// import TabPanels from 'primevue/tabpanels';
-// import TabPanel from 'primevue/tabpanel';
-
-
-// ==========[RPFOLE]-----------
 import { ref, onMounted, watch, computed } from "vue";
 import { useStore } from "vuex";
-
 const store = useStore();
+// ==========[PROFILE]-----------
 const fetchUserProfile = async () => {
     try {
         const userId = store.state.authService.user?.userId;
         if (!userId) throw new Error("User ID not found");
-
         // Dispatch untuk mendapatkan profil pengguna
         await store.dispatch("authService/getUserProfile", userId);
 
-        // Ambil data terbaru dari store
+        // // Ambil data terbaru dari store
         akun.value = store.getters["authService/getUserProfile"];
 
     } catch (error) {
@@ -213,9 +204,6 @@ const showUpdateProfile = async () => {
 
 
 onMounted(fetchUserProfile);
-// watch(userProfile, (newVal) => {
-//     console.log("UserProfile updated:", newVal);
-// });
 // ==============================
 // State untuk menyimpan file yang dipilih
 const selectedFile = ref(null);
@@ -235,11 +223,12 @@ const triggerFileInput = () => {
     if (fileInput) fileInput.click();
 };
 // Biodata
+// const akun = computed(() => store.getters["authService/getUserProfile"])
 const akun = ref({
-    userId: "6",
-    username: "administrator",
-    email: "example@gmail.com",
-    role: "admin",
+    userId: "",
+    username: "",
+    email: "",
+    role: "",
     sekolahId: "",
     nama: "",
     jk: "",

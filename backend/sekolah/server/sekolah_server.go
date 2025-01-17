@@ -12,20 +12,17 @@ import (
 	"gorm.io/gorm"
 )
 
-// AuthServiceServer dengan Redis Client sebagai Dependency Injection
 type SekolahServiceServer struct {
-	pb.UnimplementedSchoolServiceServer
+	pb.UnimplementedSekolahServiceServer
 	// RedisClient    *redis.Client // Tambahkan Redis sebagai field
-	schemaService       services.SchemaService
-	sekolahService      services.SekolahService
-	pesertaDidikService services.PesertaDidikService
-	// nilaiAkhirService   services.NilaiAkhirService
+	schemaService  services.SchemaService
+	sekolahService services.SekolahService
 }
 
-// Constructor untuk AuthServiceServer dengan Redis
-func NewAuthServiceServer() *SekolahServiceServer {
-	return &SekolahServiceServer{}
-}
+// // Constructor untuk AuthServiceServer dengan Redis
+// func NewAuthServiceServer() *SekolahServiceServer {
+// 	return &SekolahServiceServer{}
+// }
 
 func (s *SekolahServiceServer) RegistrasiSekolah(ctx context.Context, req *pb.TabelSekolahRequest) (*pb.TabelSekolahResponse, error) {
 	sekolah := req.GetSekolah()
@@ -160,101 +157,3 @@ func (s *SekolahServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekola
 		},
 	}, nil
 }
-
-// **CreateSiswa**
-func (s *SekolahServiceServer) CreateSiswa(ctx context.Context, req *pb.CreateSiswaRequest) (*pb.CreateSiswaResponse, error) {
-	schemaName := req.GetSchemaname()
-	siswa := req.GetSiswa()
-
-	siswaModel := &models.PesertaDidik{
-		PesertaDidikID:  siswa.PesertaDidikID,
-		NIS:             siswa.NIS,
-		NISN:            siswa.NISN,
-		NamaSiswa:       siswa.NamaSiswa,
-		TempatLahir:     siswa.TempatLahir,
-		TanggalLahir:    siswa.TanggalLahir,
-		JenisKelamin:    siswa.JenisKelamin,
-		Agama:           siswa.Agama,
-		AlamatSiswa:     &siswa.AlamatSiswa,
-		TeleponSiswa:    siswa.TeleponSiswa,
-		DiterimaTanggal: siswa.DiterimaTanggal,
-		NamaAyah:        siswa.NamaAyah,
-		NamaIbu:         siswa.NamaIbu,
-		PekerjaanAyah:   siswa.PekerjaanAyah,
-		PekerjaanIbu:    siswa.PekerjaanIbu,
-		NamaWali:        &siswa.NamaWali,
-		PekerjaanWali:   &siswa.PekerjaanWali,
-	}
-
-	err := s.pesertaDidikService.Save(ctx, siswaModel, schemaName)
-	if err != nil {
-		log.Printf("Gagal menyimpan siswa: %v", err)
-		return nil, fmt.Errorf("gagal menyimpan siswa: %w", err)
-	}
-
-	return &pb.CreateSiswaResponse{
-		Message: "Siswa berhasil ditambahkan",
-		Status:  true,
-	}, nil
-}
-
-// **GetSiswa**
-// func (s *SekolahServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaRequest) (*pb.GetSiswaResponse, error) {
-// 	schemaName := req.GetSchemaname()
-// 	siswaID := req.GetSiswaId()
-
-// 	siswa, err := s.siswaRepo.FindByID(ctx, siswaID, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal menemukan siswa: %v", err)
-// 		return nil, fmt.Errorf("gagal menemukan siswa: %w", err)
-// 	}
-
-// 	return &pb.GetSiswaResponse{
-// 		SiswaId: siswa.SiswaID.String(),
-// 		Nama:    siswa.Nama,
-// 		Kelas:   siswa.Kelas,
-// 	}, nil
-// }
-
-// // **UpdateSiswa**
-// func (s *SekolahServiceServer) UpdateSiswa(ctx context.Context, req *pb.UpdateSiswaRequest) (*pb.UpdateSiswaResponse, error) {
-// 	schemaName := fmt.Sprintf("tabel_%s", req.GetSchemaName())
-// 	siswaID, err := uuid.Parse(req.GetSiswaId())
-// 	if err != nil {
-// 		return nil, fmt.Errorf("format UUID tidak valid: %w", err)
-// 	}
-
-// 	siswa := &models.PesertaDidik{
-// 		SiswaID: siswaID,
-// 		Nama:    req.GetNama(),
-// 		Kelas:   req.GetKelas(),
-// 	}
-
-// 	err = s.siswaRepo.Update(ctx, siswa, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal memperbarui siswa: %v", err)
-// 		return nil, fmt.Errorf("gagal memperbarui siswa: %w", err)
-// 	}
-
-// 	return &pb.UpdateSiswaResponse{
-// 		Message: "Siswa berhasil diperbarui",
-// 		Status:  true,
-// 	}, nil
-// }
-
-// // **DeleteSiswa**
-// func (s *SekolahServiceServer) DeleteSiswa(ctx context.Context, req *pb.DeleteSiswaRequest) (*pb.DeleteSiswaResponse, error) {
-// 	schemaName := fmt.Sprintf("tabel_%s", req.GetSchemaName())
-// 	siswaID := req.GetSiswaId()
-
-// 	err := s.siswaRepo.Delete(ctx, siswaID, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal menghapus siswa: %v", err)
-// 		return nil, fmt.Errorf("gagal menghapus siswa: %w", err)
-// 	}
-
-// 	return &pb.DeleteSiswaResponse{
-// 		Message: "Siswa berhasil dihapus",
-// 		Status:  true,
-// 	}, nil
-// }
