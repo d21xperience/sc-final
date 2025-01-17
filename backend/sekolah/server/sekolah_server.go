@@ -25,6 +25,19 @@ type SekolahServiceServer struct {
 // }
 
 func (s *SekolahServiceServer) RegistrasiSekolah(ctx context.Context, req *pb.TabelSekolahRequest) (*pb.TabelSekolahResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+
+	// Cek apakah req atau req.Sekolah kosong
+	if req == nil {
+		log.Println("Request is nil")
+		return nil, errors.New("invalid request: request is nil")
+	}
+
+	if req.Sekolah == nil {
+		log.Println("Sekolah is nil in request")
+		return nil, errors.New("invalid request: sekolah is nil")
+	}
 	sekolah := req.GetSekolah()
 	namaSchema := sekolah.SekolahIdEnkrip
 	existingSchema, err := s.schemaService.GetSchemaBySekolahID(int(sekolah.SekolahId))
