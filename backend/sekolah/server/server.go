@@ -25,6 +25,8 @@ type GRPCServer struct {
 	grpcServer          *grpc.Server
 	schemaService       services.SchemaService
 	sekolahService      services.SekolahService
+	tahunAjaranService  services.TahunAjaranService
+	semesterService     services.SemesterService
 	pesertaDidikService services.PesertaDidikService
 }
 
@@ -50,6 +52,16 @@ func (s *GRPCServer) run() {
 	err = pb.RegisterSekolahServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", opts)
 	if err != nil {
 		log.Fatalf("Failed to register gRPC Gateway: %v", err)
+	}
+
+	err = pb.RegisterTahunAjaranServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Tahun Ajaran Gateway: %v", err)
+	}
+
+	err = pb.RegisterSemesterServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Tahun Ajaran Gateway: %v", err)
 	}
 
 	// HTTP Listener
@@ -107,19 +119,27 @@ func (s *GRPCServer) run() {
 	fmt.Println("Server shutdown complete")
 }
 
-func StartGRPCServer(schemaServices services.SchemaService, sekolahService services.SekolahService, pesertaDidikService services.PesertaDidikService) {
+func StartGRPCServer(schemaServices services.SchemaService, sekolahService services.SekolahService, tahunAjaranService services.TahunAjaranService, semesterService services.SemesterService, pesertaDidikService services.PesertaDidikService) {
 	// Buat instance server
 	server := &GRPCServer{
 		grpcServer:          grpc.NewServer(),
 		schemaService:       schemaServices,
 		sekolahService:      sekolahService,
 		pesertaDidikService: pesertaDidikService,
+		tahunAjaranService:  tahunAjaranService,
+		semesterService:     semesterService,
 	}
 	// gRPC Server
 	// grpcServer := grpc.NewServer()
 	pb.RegisterSekolahServiceServer(server.grpcServer, &SekolahServiceServer{
 		schemaService:  server.schemaService,
 		sekolahService: server.sekolahService,
+	})
+	pb.RegisterTahunAjaranServiceServer(server.grpcServer, &TahunAjaranServiceServer{
+		TahunAjaranService: server.tahunAjaranService,
+	})
+	pb.RegisterSemesterServiceServer(server.grpcServer, &SemesterServiceServer{
+		SemesterService: server.semesterService,
 	})
 	// REGISTER SISWA
 	pb.RegisterSiswaServiceServer(server.grpcServer, &SiswaServiceServer{

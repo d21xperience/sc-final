@@ -21,11 +21,13 @@ func main() {
 	schemaRepo := repositories.NewSchemaRepository(config.DB)
 	sekolahTenantRepo := repositories.NewsekolahTenantRepository(config.DB)
 	schemaService := services.NewSchemaService(schemaRepo, sekolahTenantRepo)
+	tahunAjaranRepo := repositories.NewTahunAjaranRepository(config.DB)
+	tahunAjaranService := services.NewTahunAjaranService(tahunAjaranRepo)
+	semesterRepo := repositories.NewSemesterRepository(config.DB)
+	semesterService := services.NewSemesterService(semesterRepo)
 	// =============================================================================
 	pesertaDidikRepo := repositories.NewpesertaDidikRepository(config.DB)
 	pesertaDidikService := services.NewPesertaDidikService(pesertaDidikRepo)
-	// // nilaiAkhirRepo := repositories.NewNilaiAkhirRepository(config.DB)
-	// // nilaiAkhirService := services.NewNilaiAkhirService(nilaiAkhirRepo)
-	// // Start GRPC Server
-	server.StartGRPCServer(schemaService, sekolahService, pesertaDidikService)
+
+	server.StartGRPCServer(schemaService, sekolahService, tahunAjaranService, semesterService, pesertaDidikService)
 }

@@ -3,7 +3,7 @@ package models
 type RombonganBelajar struct {
 	RombonganBelajarID  string       `json:"rombongan_belajar_id"`
 	SekolahID           Sekolah      `json:"sekolah_id"`
-	SemesterID          DataSemester `json:"semester_id"`
+	SemesterID          Semester `json:"semester_id"`
 	JurusanID           string       `json:"jurusan_id"`
 	PtkTerdaftarID      PTKTerdaftar `json:"ptk_id"`
 	NmKelas             string       `json:"nm_kelas"`

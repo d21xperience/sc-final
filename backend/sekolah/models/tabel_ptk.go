@@ -11,7 +11,6 @@ type TabelPTK struct {
 	NUPTK             *string `json:"nuptk"`               // Nullable string
 	AlamatJalan       string  `json:"alamat_jalan"`        // String
 	StatusKeaktifanID string  `json:"status_keaktifan_id"` // String
-	SoftDelete        string  `json:"soft_delete"`         // String (bisa diubah ke boolean jika nilainya 0/1 saja)
 }
 
 type PTKPelengkap struct {
@@ -26,5 +25,4 @@ type PTKTerdaftar struct {
 	PtkID          string  `json:"ptk_id"`
 	TahunAjaranID  string  `json:"tahun_ajaran_id"`
 	JenisKeluarID  *string `json:"jenis_keluar_id"` // Nullable field
-	SoftDelete     string  `json:"soft_delete"`
 }

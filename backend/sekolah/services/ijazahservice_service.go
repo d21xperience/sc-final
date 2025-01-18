@@ -25,7 +25,7 @@ func NewIjazahService(sr repositories.IjazahRepository) IjazahService {
 func (s *IjazahServiceImpl) Save(ctx context.Context, IjazahModel *models.Ijazah, schemaName string) error {
 	err := s.IjazahRepo.Save(ctx, IjazahModel, schemaName)
 	if err != nil {
-		return errors.New("gagal menyimpan Guru")
+		return errors.New("gagal menyimpan Ijazah")
 	}
 	return err
 }

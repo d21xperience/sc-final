@@ -19,6 +19,450 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	TahunAjaranService_CreateTahunAjaran_FullMethodName = "/sekolah.TahunAjaranService/CreateTahunAjaran"
+	TahunAjaranService_GetTahunAjaran_FullMethodName    = "/sekolah.TahunAjaranService/GetTahunAjaran"
+	TahunAjaranService_UpdateTahunAjaran_FullMethodName = "/sekolah.TahunAjaranService/UpdateTahunAjaran"
+	TahunAjaranService_DeleteTahunAjaran_FullMethodName = "/sekolah.TahunAjaranService/DeleteTahunAjaran"
+)
+
+// TahunAjaranServiceClient is the client API for TahunAjaranService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// =============================================
+// Generated Tahun Ajaran
+// =============================================
+type TahunAjaranServiceClient interface {
+	// CRUD for TahunAjaran
+	CreateTahunAjaran(ctx context.Context, in *CreateTahunAjaranRequest, opts ...grpc.CallOption) (*CreateTahunAjaranResponse, error)
+	GetTahunAjaran(ctx context.Context, in *GetTahunAjaranRequest, opts ...grpc.CallOption) (*GetTahunAjaranResponse, error)
+	UpdateTahunAjaran(ctx context.Context, in *UpdateTahunAjaranRequest, opts ...grpc.CallOption) (*UpdateTahunAjaranResponse, error)
+	DeleteTahunAjaran(ctx context.Context, in *DeleteTahunAjaranRequest, opts ...grpc.CallOption) (*DeleteTahunAjaranResponse, error)
+}
+
+type tahunAjaranServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewTahunAjaranServiceClient(cc grpc.ClientConnInterface) TahunAjaranServiceClient {
+	return &tahunAjaranServiceClient{cc}
+}
+
+func (c *tahunAjaranServiceClient) CreateTahunAjaran(ctx context.Context, in *CreateTahunAjaranRequest, opts ...grpc.CallOption) (*CreateTahunAjaranResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTahunAjaranResponse)
+	err := c.cc.Invoke(ctx, TahunAjaranService_CreateTahunAjaran_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tahunAjaranServiceClient) GetTahunAjaran(ctx context.Context, in *GetTahunAjaranRequest, opts ...grpc.CallOption) (*GetTahunAjaranResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTahunAjaranResponse)
+	err := c.cc.Invoke(ctx, TahunAjaranService_GetTahunAjaran_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tahunAjaranServiceClient) UpdateTahunAjaran(ctx context.Context, in *UpdateTahunAjaranRequest, opts ...grpc.CallOption) (*UpdateTahunAjaranResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateTahunAjaranResponse)
+	err := c.cc.Invoke(ctx, TahunAjaranService_UpdateTahunAjaran_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tahunAjaranServiceClient) DeleteTahunAjaran(ctx context.Context, in *DeleteTahunAjaranRequest, opts ...grpc.CallOption) (*DeleteTahunAjaranResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteTahunAjaranResponse)
+	err := c.cc.Invoke(ctx, TahunAjaranService_DeleteTahunAjaran_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TahunAjaranServiceServer is the server API for TahunAjaranService service.
+// All implementations must embed UnimplementedTahunAjaranServiceServer
+// for forward compatibility.
+//
+// =============================================
+// Generated Tahun Ajaran
+// =============================================
+type TahunAjaranServiceServer interface {
+	// CRUD for TahunAjaran
+	CreateTahunAjaran(context.Context, *CreateTahunAjaranRequest) (*CreateTahunAjaranResponse, error)
+	GetTahunAjaran(context.Context, *GetTahunAjaranRequest) (*GetTahunAjaranResponse, error)
+	UpdateTahunAjaran(context.Context, *UpdateTahunAjaranRequest) (*UpdateTahunAjaranResponse, error)
+	DeleteTahunAjaran(context.Context, *DeleteTahunAjaranRequest) (*DeleteTahunAjaranResponse, error)
+	mustEmbedUnimplementedTahunAjaranServiceServer()
+}
+
+// UnimplementedTahunAjaranServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedTahunAjaranServiceServer struct{}
+
+func (UnimplementedTahunAjaranServiceServer) CreateTahunAjaran(context.Context, *CreateTahunAjaranRequest) (*CreateTahunAjaranResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTahunAjaran not implemented")
+}
+func (UnimplementedTahunAjaranServiceServer) GetTahunAjaran(context.Context, *GetTahunAjaranRequest) (*GetTahunAjaranResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTahunAjaran not implemented")
+}
+func (UnimplementedTahunAjaranServiceServer) UpdateTahunAjaran(context.Context, *UpdateTahunAjaranRequest) (*UpdateTahunAjaranResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTahunAjaran not implemented")
+}
+func (UnimplementedTahunAjaranServiceServer) DeleteTahunAjaran(context.Context, *DeleteTahunAjaranRequest) (*DeleteTahunAjaranResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTahunAjaran not implemented")
+}
+func (UnimplementedTahunAjaranServiceServer) mustEmbedUnimplementedTahunAjaranServiceServer() {}
+func (UnimplementedTahunAjaranServiceServer) testEmbeddedByValue()                            {}
+
+// UnsafeTahunAjaranServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TahunAjaranServiceServer will
+// result in compilation errors.
+type UnsafeTahunAjaranServiceServer interface {
+	mustEmbedUnimplementedTahunAjaranServiceServer()
+}
+
+func RegisterTahunAjaranServiceServer(s grpc.ServiceRegistrar, srv TahunAjaranServiceServer) {
+	// If the following call pancis, it indicates UnimplementedTahunAjaranServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&TahunAjaranService_ServiceDesc, srv)
+}
+
+func _TahunAjaranService_CreateTahunAjaran_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTahunAjaranRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TahunAjaranServiceServer).CreateTahunAjaran(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TahunAjaranService_CreateTahunAjaran_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TahunAjaranServiceServer).CreateTahunAjaran(ctx, req.(*CreateTahunAjaranRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TahunAjaranService_GetTahunAjaran_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTahunAjaranRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TahunAjaranServiceServer).GetTahunAjaran(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TahunAjaranService_GetTahunAjaran_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TahunAjaranServiceServer).GetTahunAjaran(ctx, req.(*GetTahunAjaranRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TahunAjaranService_UpdateTahunAjaran_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTahunAjaranRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TahunAjaranServiceServer).UpdateTahunAjaran(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TahunAjaranService_UpdateTahunAjaran_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TahunAjaranServiceServer).UpdateTahunAjaran(ctx, req.(*UpdateTahunAjaranRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TahunAjaranService_DeleteTahunAjaran_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTahunAjaranRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TahunAjaranServiceServer).DeleteTahunAjaran(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TahunAjaranService_DeleteTahunAjaran_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TahunAjaranServiceServer).DeleteTahunAjaran(ctx, req.(*DeleteTahunAjaranRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// TahunAjaranService_ServiceDesc is the grpc.ServiceDesc for TahunAjaranService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var TahunAjaranService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sekolah.TahunAjaranService",
+	HandlerType: (*TahunAjaranServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateTahunAjaran",
+			Handler:    _TahunAjaranService_CreateTahunAjaran_Handler,
+		},
+		{
+			MethodName: "GetTahunAjaran",
+			Handler:    _TahunAjaranService_GetTahunAjaran_Handler,
+		},
+		{
+			MethodName: "UpdateTahunAjaran",
+			Handler:    _TahunAjaranService_UpdateTahunAjaran_Handler,
+		},
+		{
+			MethodName: "DeleteTahunAjaran",
+			Handler:    _TahunAjaranService_DeleteTahunAjaran_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sekolah.proto",
+}
+
+const (
+	SemesterService_CreateSemester_FullMethodName = "/sekolah.SemesterService/CreateSemester"
+	SemesterService_GetSemester_FullMethodName    = "/sekolah.SemesterService/GetSemester"
+	SemesterService_UpdateSemester_FullMethodName = "/sekolah.SemesterService/UpdateSemester"
+	SemesterService_DeleteSemester_FullMethodName = "/sekolah.SemesterService/DeleteSemester"
+)
+
+// SemesterServiceClient is the client API for SemesterService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type SemesterServiceClient interface {
+	// CRUD for Semester
+	CreateSemester(ctx context.Context, in *CreateSemesterRequest, opts ...grpc.CallOption) (*CreateSemesterResponse, error)
+	GetSemester(ctx context.Context, in *GetSemesterRequest, opts ...grpc.CallOption) (*GetSemesterResponse, error)
+	UpdateSemester(ctx context.Context, in *UpdateSemesterRequest, opts ...grpc.CallOption) (*UpdateSemesterResponse, error)
+	DeleteSemester(ctx context.Context, in *DeleteSemesterRequest, opts ...grpc.CallOption) (*DeleteSemesterResponse, error)
+}
+
+type semesterServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewSemesterServiceClient(cc grpc.ClientConnInterface) SemesterServiceClient {
+	return &semesterServiceClient{cc}
+}
+
+func (c *semesterServiceClient) CreateSemester(ctx context.Context, in *CreateSemesterRequest, opts ...grpc.CallOption) (*CreateSemesterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateSemesterResponse)
+	err := c.cc.Invoke(ctx, SemesterService_CreateSemester_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *semesterServiceClient) GetSemester(ctx context.Context, in *GetSemesterRequest, opts ...grpc.CallOption) (*GetSemesterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSemesterResponse)
+	err := c.cc.Invoke(ctx, SemesterService_GetSemester_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *semesterServiceClient) UpdateSemester(ctx context.Context, in *UpdateSemesterRequest, opts ...grpc.CallOption) (*UpdateSemesterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateSemesterResponse)
+	err := c.cc.Invoke(ctx, SemesterService_UpdateSemester_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *semesterServiceClient) DeleteSemester(ctx context.Context, in *DeleteSemesterRequest, opts ...grpc.CallOption) (*DeleteSemesterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteSemesterResponse)
+	err := c.cc.Invoke(ctx, SemesterService_DeleteSemester_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SemesterServiceServer is the server API for SemesterService service.
+// All implementations must embed UnimplementedSemesterServiceServer
+// for forward compatibility.
+type SemesterServiceServer interface {
+	// CRUD for Semester
+	CreateSemester(context.Context, *CreateSemesterRequest) (*CreateSemesterResponse, error)
+	GetSemester(context.Context, *GetSemesterRequest) (*GetSemesterResponse, error)
+	UpdateSemester(context.Context, *UpdateSemesterRequest) (*UpdateSemesterResponse, error)
+	DeleteSemester(context.Context, *DeleteSemesterRequest) (*DeleteSemesterResponse, error)
+	mustEmbedUnimplementedSemesterServiceServer()
+}
+
+// UnimplementedSemesterServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedSemesterServiceServer struct{}
+
+func (UnimplementedSemesterServiceServer) CreateSemester(context.Context, *CreateSemesterRequest) (*CreateSemesterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSemester not implemented")
+}
+func (UnimplementedSemesterServiceServer) GetSemester(context.Context, *GetSemesterRequest) (*GetSemesterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSemester not implemented")
+}
+func (UnimplementedSemesterServiceServer) UpdateSemester(context.Context, *UpdateSemesterRequest) (*UpdateSemesterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSemester not implemented")
+}
+func (UnimplementedSemesterServiceServer) DeleteSemester(context.Context, *DeleteSemesterRequest) (*DeleteSemesterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSemester not implemented")
+}
+func (UnimplementedSemesterServiceServer) mustEmbedUnimplementedSemesterServiceServer() {}
+func (UnimplementedSemesterServiceServer) testEmbeddedByValue()                         {}
+
+// UnsafeSemesterServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to SemesterServiceServer will
+// result in compilation errors.
+type UnsafeSemesterServiceServer interface {
+	mustEmbedUnimplementedSemesterServiceServer()
+}
+
+func RegisterSemesterServiceServer(s grpc.ServiceRegistrar, srv SemesterServiceServer) {
+	// If the following call pancis, it indicates UnimplementedSemesterServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&SemesterService_ServiceDesc, srv)
+}
+
+func _SemesterService_CreateSemester_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSemesterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SemesterServiceServer).CreateSemester(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SemesterService_CreateSemester_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SemesterServiceServer).CreateSemester(ctx, req.(*CreateSemesterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SemesterService_GetSemester_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSemesterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SemesterServiceServer).GetSemester(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SemesterService_GetSemester_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SemesterServiceServer).GetSemester(ctx, req.(*GetSemesterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SemesterService_UpdateSemester_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSemesterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SemesterServiceServer).UpdateSemester(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SemesterService_UpdateSemester_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SemesterServiceServer).UpdateSemester(ctx, req.(*UpdateSemesterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SemesterService_DeleteSemester_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSemesterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SemesterServiceServer).DeleteSemester(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SemesterService_DeleteSemester_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SemesterServiceServer).DeleteSemester(ctx, req.(*DeleteSemesterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// SemesterService_ServiceDesc is the grpc.ServiceDesc for SemesterService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var SemesterService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sekolah.SemesterService",
+	HandlerType: (*SemesterServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateSemester",
+			Handler:    _SemesterService_CreateSemester_Handler,
+		},
+		{
+			MethodName: "GetSemester",
+			Handler:    _SemesterService_GetSemester_Handler,
+		},
+		{
+			MethodName: "UpdateSemester",
+			Handler:    _SemesterService_UpdateSemester_Handler,
+		},
+		{
+			MethodName: "DeleteSemester",
+			Handler:    _SemesterService_DeleteSemester_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sekolah.proto",
+}
+
+const (
 	SekolahService_GetSchoolInfo_FullMethodName         = "/sekolah.SekolahService/GetSchoolInfo"
 	SekolahService_RegistrasiSekolah_FullMethodName     = "/sekolah.SekolahService/RegistrasiSekolah"
 	SekolahService_GetSekolahTabelTenant_FullMethodName = "/sekolah.SekolahService/GetSekolahTabelTenant"
@@ -1393,10 +1837,10 @@ var IjazahService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	PTKService_CreateGuru_FullMethodName = "/sekolah.PTKService/CreateGuru"
-	PTKService_GetGuru_FullMethodName    = "/sekolah.PTKService/GetGuru"
-	PTKService_UpdateGuru_FullMethodName = "/sekolah.PTKService/UpdateGuru"
-	PTKService_DeleteGuru_FullMethodName = "/sekolah.PTKService/DeleteGuru"
+	PTKService_CreatePTK_FullMethodName = "/sekolah.PTKService/CreatePTK"
+	PTKService_GetPTK_FullMethodName    = "/sekolah.PTKService/GetPTK"
+	PTKService_UpdatePTK_FullMethodName = "/sekolah.PTKService/UpdatePTK"
+	PTKService_DeletePTK_FullMethodName = "/sekolah.PTKService/DeletePTK"
 )
 
 // PTKServiceClient is the client API for PTKService service.
@@ -1406,11 +1850,11 @@ const (
 // =======================================
 // PTK SERVICE
 type PTKServiceClient interface {
-	// CRUD for Guru
-	CreateGuru(ctx context.Context, in *CreateGuruRequest, opts ...grpc.CallOption) (*CreateGuruResponse, error)
-	GetGuru(ctx context.Context, in *GetGuruRequest, opts ...grpc.CallOption) (*GetGuruResponse, error)
-	UpdateGuru(ctx context.Context, in *UpdateGuruRequest, opts ...grpc.CallOption) (*UpdateGuruResponse, error)
-	DeleteGuru(ctx context.Context, in *DeleteGuruRequest, opts ...grpc.CallOption) (*DeleteGuruResponse, error)
+	// CRUD for PTK
+	CreatePTK(ctx context.Context, in *CreatePTKRequest, opts ...grpc.CallOption) (*CreatePTKResponse, error)
+	GetPTK(ctx context.Context, in *GetPTKRequest, opts ...grpc.CallOption) (*GetPTKResponse, error)
+	UpdatePTK(ctx context.Context, in *UpdatePTKRequest, opts ...grpc.CallOption) (*UpdatePTKResponse, error)
+	DeletePTK(ctx context.Context, in *DeletePTKRequest, opts ...grpc.CallOption) (*DeletePTKResponse, error)
 }
 
 type pTKServiceClient struct {
@@ -1421,40 +1865,40 @@ func NewPTKServiceClient(cc grpc.ClientConnInterface) PTKServiceClient {
 	return &pTKServiceClient{cc}
 }
 
-func (c *pTKServiceClient) CreateGuru(ctx context.Context, in *CreateGuruRequest, opts ...grpc.CallOption) (*CreateGuruResponse, error) {
+func (c *pTKServiceClient) CreatePTK(ctx context.Context, in *CreatePTKRequest, opts ...grpc.CallOption) (*CreatePTKResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateGuruResponse)
-	err := c.cc.Invoke(ctx, PTKService_CreateGuru_FullMethodName, in, out, cOpts...)
+	out := new(CreatePTKResponse)
+	err := c.cc.Invoke(ctx, PTKService_CreatePTK_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pTKServiceClient) GetGuru(ctx context.Context, in *GetGuruRequest, opts ...grpc.CallOption) (*GetGuruResponse, error) {
+func (c *pTKServiceClient) GetPTK(ctx context.Context, in *GetPTKRequest, opts ...grpc.CallOption) (*GetPTKResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGuruResponse)
-	err := c.cc.Invoke(ctx, PTKService_GetGuru_FullMethodName, in, out, cOpts...)
+	out := new(GetPTKResponse)
+	err := c.cc.Invoke(ctx, PTKService_GetPTK_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pTKServiceClient) UpdateGuru(ctx context.Context, in *UpdateGuruRequest, opts ...grpc.CallOption) (*UpdateGuruResponse, error) {
+func (c *pTKServiceClient) UpdatePTK(ctx context.Context, in *UpdatePTKRequest, opts ...grpc.CallOption) (*UpdatePTKResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateGuruResponse)
-	err := c.cc.Invoke(ctx, PTKService_UpdateGuru_FullMethodName, in, out, cOpts...)
+	out := new(UpdatePTKResponse)
+	err := c.cc.Invoke(ctx, PTKService_UpdatePTK_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pTKServiceClient) DeleteGuru(ctx context.Context, in *DeleteGuruRequest, opts ...grpc.CallOption) (*DeleteGuruResponse, error) {
+func (c *pTKServiceClient) DeletePTK(ctx context.Context, in *DeletePTKRequest, opts ...grpc.CallOption) (*DeletePTKResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteGuruResponse)
-	err := c.cc.Invoke(ctx, PTKService_DeleteGuru_FullMethodName, in, out, cOpts...)
+	out := new(DeletePTKResponse)
+	err := c.cc.Invoke(ctx, PTKService_DeletePTK_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1468,11 +1912,11 @@ func (c *pTKServiceClient) DeleteGuru(ctx context.Context, in *DeleteGuruRequest
 // =======================================
 // PTK SERVICE
 type PTKServiceServer interface {
-	// CRUD for Guru
-	CreateGuru(context.Context, *CreateGuruRequest) (*CreateGuruResponse, error)
-	GetGuru(context.Context, *GetGuruRequest) (*GetGuruResponse, error)
-	UpdateGuru(context.Context, *UpdateGuruRequest) (*UpdateGuruResponse, error)
-	DeleteGuru(context.Context, *DeleteGuruRequest) (*DeleteGuruResponse, error)
+	// CRUD for PTK
+	CreatePTK(context.Context, *CreatePTKRequest) (*CreatePTKResponse, error)
+	GetPTK(context.Context, *GetPTKRequest) (*GetPTKResponse, error)
+	UpdatePTK(context.Context, *UpdatePTKRequest) (*UpdatePTKResponse, error)
+	DeletePTK(context.Context, *DeletePTKRequest) (*DeletePTKResponse, error)
 	mustEmbedUnimplementedPTKServiceServer()
 }
 
@@ -1483,17 +1927,17 @@ type PTKServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPTKServiceServer struct{}
 
-func (UnimplementedPTKServiceServer) CreateGuru(context.Context, *CreateGuruRequest) (*CreateGuruResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateGuru not implemented")
+func (UnimplementedPTKServiceServer) CreatePTK(context.Context, *CreatePTKRequest) (*CreatePTKResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePTK not implemented")
 }
-func (UnimplementedPTKServiceServer) GetGuru(context.Context, *GetGuruRequest) (*GetGuruResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetGuru not implemented")
+func (UnimplementedPTKServiceServer) GetPTK(context.Context, *GetPTKRequest) (*GetPTKResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPTK not implemented")
 }
-func (UnimplementedPTKServiceServer) UpdateGuru(context.Context, *UpdateGuruRequest) (*UpdateGuruResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateGuru not implemented")
+func (UnimplementedPTKServiceServer) UpdatePTK(context.Context, *UpdatePTKRequest) (*UpdatePTKResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePTK not implemented")
 }
-func (UnimplementedPTKServiceServer) DeleteGuru(context.Context, *DeleteGuruRequest) (*DeleteGuruResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteGuru not implemented")
+func (UnimplementedPTKServiceServer) DeletePTK(context.Context, *DeletePTKRequest) (*DeletePTKResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePTK not implemented")
 }
 func (UnimplementedPTKServiceServer) mustEmbedUnimplementedPTKServiceServer() {}
 func (UnimplementedPTKServiceServer) testEmbeddedByValue()                    {}
@@ -1516,74 +1960,74 @@ func RegisterPTKServiceServer(s grpc.ServiceRegistrar, srv PTKServiceServer) {
 	s.RegisterService(&PTKService_ServiceDesc, srv)
 }
 
-func _PTKService_CreateGuru_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateGuruRequest)
+func _PTKService_CreatePTK_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePTKRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PTKServiceServer).CreateGuru(ctx, in)
+		return srv.(PTKServiceServer).CreatePTK(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PTKService_CreateGuru_FullMethodName,
+		FullMethod: PTKService_CreatePTK_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PTKServiceServer).CreateGuru(ctx, req.(*CreateGuruRequest))
+		return srv.(PTKServiceServer).CreatePTK(ctx, req.(*CreatePTKRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PTKService_GetGuru_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGuruRequest)
+func _PTKService_GetPTK_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPTKRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PTKServiceServer).GetGuru(ctx, in)
+		return srv.(PTKServiceServer).GetPTK(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PTKService_GetGuru_FullMethodName,
+		FullMethod: PTKService_GetPTK_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PTKServiceServer).GetGuru(ctx, req.(*GetGuruRequest))
+		return srv.(PTKServiceServer).GetPTK(ctx, req.(*GetPTKRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PTKService_UpdateGuru_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateGuruRequest)
+func _PTKService_UpdatePTK_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePTKRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PTKServiceServer).UpdateGuru(ctx, in)
+		return srv.(PTKServiceServer).UpdatePTK(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PTKService_UpdateGuru_FullMethodName,
+		FullMethod: PTKService_UpdatePTK_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PTKServiceServer).UpdateGuru(ctx, req.(*UpdateGuruRequest))
+		return srv.(PTKServiceServer).UpdatePTK(ctx, req.(*UpdatePTKRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PTKService_DeleteGuru_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteGuruRequest)
+func _PTKService_DeletePTK_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePTKRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PTKServiceServer).DeleteGuru(ctx, in)
+		return srv.(PTKServiceServer).DeletePTK(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PTKService_DeleteGuru_FullMethodName,
+		FullMethod: PTKService_DeletePTK_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PTKServiceServer).DeleteGuru(ctx, req.(*DeleteGuruRequest))
+		return srv.(PTKServiceServer).DeletePTK(ctx, req.(*DeletePTKRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1596,20 +2040,238 @@ var PTKService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PTKServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateGuru",
-			Handler:    _PTKService_CreateGuru_Handler,
+			MethodName: "CreatePTK",
+			Handler:    _PTKService_CreatePTK_Handler,
 		},
 		{
-			MethodName: "GetGuru",
-			Handler:    _PTKService_GetGuru_Handler,
+			MethodName: "GetPTK",
+			Handler:    _PTKService_GetPTK_Handler,
 		},
 		{
-			MethodName: "UpdateGuru",
-			Handler:    _PTKService_UpdateGuru_Handler,
+			MethodName: "UpdatePTK",
+			Handler:    _PTKService_UpdatePTK_Handler,
 		},
 		{
-			MethodName: "DeleteGuru",
-			Handler:    _PTKService_DeleteGuru_Handler,
+			MethodName: "DeletePTK",
+			Handler:    _PTKService_DeletePTK_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sekolah.proto",
+}
+
+const (
+	PTKTerdaftarService_CreatePTKTerdaftar_FullMethodName = "/sekolah.PTKTerdaftarService/CreatePTKTerdaftar"
+	PTKTerdaftarService_GetPTKTerdaftar_FullMethodName    = "/sekolah.PTKTerdaftarService/GetPTKTerdaftar"
+	PTKTerdaftarService_UpdatePTKTerdaftar_FullMethodName = "/sekolah.PTKTerdaftarService/UpdatePTKTerdaftar"
+	PTKTerdaftarService_DeletePTKTerdaftar_FullMethodName = "/sekolah.PTKTerdaftarService/DeletePTKTerdaftar"
+)
+
+// PTKTerdaftarServiceClient is the client API for PTKTerdaftarService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type PTKTerdaftarServiceClient interface {
+	// CRUD for PTKTerdaftar
+	CreatePTKTerdaftar(ctx context.Context, in *CreatePTKTerdaftarRequest, opts ...grpc.CallOption) (*CreatePTKTerdaftarResponse, error)
+	GetPTKTerdaftar(ctx context.Context, in *GetPTKTerdaftarRequest, opts ...grpc.CallOption) (*GetPTKTerdaftarResponse, error)
+	UpdatePTKTerdaftar(ctx context.Context, in *UpdatePTKTerdaftarRequest, opts ...grpc.CallOption) (*UpdatePTKTerdaftarResponse, error)
+	DeletePTKTerdaftar(ctx context.Context, in *DeletePTKTerdaftarRequest, opts ...grpc.CallOption) (*DeletePTKTerdaftarResponse, error)
+}
+
+type pTKTerdaftarServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPTKTerdaftarServiceClient(cc grpc.ClientConnInterface) PTKTerdaftarServiceClient {
+	return &pTKTerdaftarServiceClient{cc}
+}
+
+func (c *pTKTerdaftarServiceClient) CreatePTKTerdaftar(ctx context.Context, in *CreatePTKTerdaftarRequest, opts ...grpc.CallOption) (*CreatePTKTerdaftarResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreatePTKTerdaftarResponse)
+	err := c.cc.Invoke(ctx, PTKTerdaftarService_CreatePTKTerdaftar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pTKTerdaftarServiceClient) GetPTKTerdaftar(ctx context.Context, in *GetPTKTerdaftarRequest, opts ...grpc.CallOption) (*GetPTKTerdaftarResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPTKTerdaftarResponse)
+	err := c.cc.Invoke(ctx, PTKTerdaftarService_GetPTKTerdaftar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pTKTerdaftarServiceClient) UpdatePTKTerdaftar(ctx context.Context, in *UpdatePTKTerdaftarRequest, opts ...grpc.CallOption) (*UpdatePTKTerdaftarResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePTKTerdaftarResponse)
+	err := c.cc.Invoke(ctx, PTKTerdaftarService_UpdatePTKTerdaftar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pTKTerdaftarServiceClient) DeletePTKTerdaftar(ctx context.Context, in *DeletePTKTerdaftarRequest, opts ...grpc.CallOption) (*DeletePTKTerdaftarResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeletePTKTerdaftarResponse)
+	err := c.cc.Invoke(ctx, PTKTerdaftarService_DeletePTKTerdaftar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PTKTerdaftarServiceServer is the server API for PTKTerdaftarService service.
+// All implementations must embed UnimplementedPTKTerdaftarServiceServer
+// for forward compatibility.
+type PTKTerdaftarServiceServer interface {
+	// CRUD for PTKTerdaftar
+	CreatePTKTerdaftar(context.Context, *CreatePTKTerdaftarRequest) (*CreatePTKTerdaftarResponse, error)
+	GetPTKTerdaftar(context.Context, *GetPTKTerdaftarRequest) (*GetPTKTerdaftarResponse, error)
+	UpdatePTKTerdaftar(context.Context, *UpdatePTKTerdaftarRequest) (*UpdatePTKTerdaftarResponse, error)
+	DeletePTKTerdaftar(context.Context, *DeletePTKTerdaftarRequest) (*DeletePTKTerdaftarResponse, error)
+	mustEmbedUnimplementedPTKTerdaftarServiceServer()
+}
+
+// UnimplementedPTKTerdaftarServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPTKTerdaftarServiceServer struct{}
+
+func (UnimplementedPTKTerdaftarServiceServer) CreatePTKTerdaftar(context.Context, *CreatePTKTerdaftarRequest) (*CreatePTKTerdaftarResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePTKTerdaftar not implemented")
+}
+func (UnimplementedPTKTerdaftarServiceServer) GetPTKTerdaftar(context.Context, *GetPTKTerdaftarRequest) (*GetPTKTerdaftarResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPTKTerdaftar not implemented")
+}
+func (UnimplementedPTKTerdaftarServiceServer) UpdatePTKTerdaftar(context.Context, *UpdatePTKTerdaftarRequest) (*UpdatePTKTerdaftarResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePTKTerdaftar not implemented")
+}
+func (UnimplementedPTKTerdaftarServiceServer) DeletePTKTerdaftar(context.Context, *DeletePTKTerdaftarRequest) (*DeletePTKTerdaftarResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePTKTerdaftar not implemented")
+}
+func (UnimplementedPTKTerdaftarServiceServer) mustEmbedUnimplementedPTKTerdaftarServiceServer() {}
+func (UnimplementedPTKTerdaftarServiceServer) testEmbeddedByValue()                             {}
+
+// UnsafePTKTerdaftarServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PTKTerdaftarServiceServer will
+// result in compilation errors.
+type UnsafePTKTerdaftarServiceServer interface {
+	mustEmbedUnimplementedPTKTerdaftarServiceServer()
+}
+
+func RegisterPTKTerdaftarServiceServer(s grpc.ServiceRegistrar, srv PTKTerdaftarServiceServer) {
+	// If the following call pancis, it indicates UnimplementedPTKTerdaftarServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PTKTerdaftarService_ServiceDesc, srv)
+}
+
+func _PTKTerdaftarService_CreatePTKTerdaftar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePTKTerdaftarRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PTKTerdaftarServiceServer).CreatePTKTerdaftar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PTKTerdaftarService_CreatePTKTerdaftar_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PTKTerdaftarServiceServer).CreatePTKTerdaftar(ctx, req.(*CreatePTKTerdaftarRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PTKTerdaftarService_GetPTKTerdaftar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPTKTerdaftarRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PTKTerdaftarServiceServer).GetPTKTerdaftar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PTKTerdaftarService_GetPTKTerdaftar_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PTKTerdaftarServiceServer).GetPTKTerdaftar(ctx, req.(*GetPTKTerdaftarRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PTKTerdaftarService_UpdatePTKTerdaftar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePTKTerdaftarRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PTKTerdaftarServiceServer).UpdatePTKTerdaftar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PTKTerdaftarService_UpdatePTKTerdaftar_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PTKTerdaftarServiceServer).UpdatePTKTerdaftar(ctx, req.(*UpdatePTKTerdaftarRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PTKTerdaftarService_DeletePTKTerdaftar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePTKTerdaftarRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PTKTerdaftarServiceServer).DeletePTKTerdaftar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PTKTerdaftarService_DeletePTKTerdaftar_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PTKTerdaftarServiceServer).DeletePTKTerdaftar(ctx, req.(*DeletePTKTerdaftarRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PTKTerdaftarService_ServiceDesc is the grpc.ServiceDesc for PTKTerdaftarService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PTKTerdaftarService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sekolah.PTKTerdaftarService",
+	HandlerType: (*PTKTerdaftarServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreatePTKTerdaftar",
+			Handler:    _PTKTerdaftarService_CreatePTKTerdaftar_Handler,
+		},
+		{
+			MethodName: "GetPTKTerdaftar",
+			Handler:    _PTKTerdaftarService_GetPTKTerdaftar_Handler,
+		},
+		{
+			MethodName: "UpdatePTKTerdaftar",
+			Handler:    _PTKTerdaftarService_UpdatePTKTerdaftar_Handler,
+		},
+		{
+			MethodName: "DeletePTKTerdaftar",
+			Handler:    _PTKTerdaftarService_DeletePTKTerdaftar_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

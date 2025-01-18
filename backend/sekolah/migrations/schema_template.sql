@@ -152,3 +152,26 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_nilaiakhir (
 	semester NUMERIC(1,0) NULL DEFAULT NULL
 );
 
+CREATE TABLE semester (
+	semester_id VARCHAR(5) NOT NULL,
+	tahun_ajaran_id VARCHAR(4) NOT NULL,
+	nama_semester VARCHAR(20) NOT NULL,
+	semester NUMERIC(1,0) NOT NULL,
+	periode_aktif VARCHAR(1) NOT NULL,
+	tanggal_mulai DATE NOT NULL,
+	tanggal_selesai DATE NOT NULL
+);
+
+CREATE TABLE tahun_ajaran (
+	tahun_ajaran_id NUMERIC(4,0) NOT NULL,
+	nama VARCHAR(10) NOT NULL,
+	periode_aktif NUMERIC(1,0) NOT NULL,
+	tanggal_mulai DATE NOT NULL,
+	tanggal_selesai DATE NOT NULL,
+	create_date TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:59.628052',
+	last_update TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:59.628052',
+	expired_date TIMESTAMP NULL DEFAULT NULL,
+	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
+	PRIMARY KEY (tahun_ajaran_id),
+	UNIQUE INDEX tahun_ajaran_pk (tahun_ajaran_id)
+)

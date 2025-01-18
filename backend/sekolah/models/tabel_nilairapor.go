@@ -6,7 +6,7 @@ type TabelNilaiAkhir struct {
 	// AnggotaRombelID uuid.UUID `gorm:"type:uuid"`
 	AnggotaRombelID string
 	MataPelajaranID int
-	SemesterID      DataSemester
+	SemesterID      Semester
 	NilaiPeng       float64
 	PredikatPeng    string
 	NilaiKet        float64
