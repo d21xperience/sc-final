@@ -7,6 +7,7 @@ import (
 	pb "sekolah/generated"
 	"sekolah/models"
 	"sekolah/services"
+	"sekolah/utils"
 )
 
 type SiswaServiceServer struct {
@@ -16,14 +17,23 @@ type SiswaServiceServer struct {
 
 // **CreateSiswa**
 func (s *SiswaServiceServer) CreateSiswa(ctx context.Context, req *pb.CreateSiswaRequest) (*pb.CreateSiswaResponse, error) {
-	schemaName := req.GetSchemaname()
-	siswa := req.GetSiswa()
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SchemaName", "Siswa"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	siswa := req.Siswa
 
 	siswaModel := &models.PesertaDidik{
-		PesertaDidikID:  siswa.PesertaDidikID,
-		NIS:             siswa.NIS,
-		NISN:            siswa.NISN,
-		NamaSiswa:       siswa.NamaSiswa,
+		PesertaDidikID:  siswa.PesertaDidikId,
+		Nis:             siswa.Nis,
+		Nisn:            siswa.Nisn,
+		NmSiswa:         siswa.NmSiswa,
 		TempatLahir:     siswa.TempatLahir,
 		TanggalLahir:    siswa.TanggalLahir,
 		JenisKelamin:    siswa.JenisKelamin,
@@ -31,15 +41,15 @@ func (s *SiswaServiceServer) CreateSiswa(ctx context.Context, req *pb.CreateSisw
 		AlamatSiswa:     &siswa.AlamatSiswa,
 		TeleponSiswa:    siswa.TeleponSiswa,
 		DiterimaTanggal: siswa.DiterimaTanggal,
-		NamaAyah:        siswa.NamaAyah,
-		NamaIbu:         siswa.NamaIbu,
+		NmAyah:          siswa.NmAyah,
+		NmIbu:           siswa.NmIbu,
 		PekerjaanAyah:   siswa.PekerjaanAyah,
 		PekerjaanIbu:    siswa.PekerjaanIbu,
-		NamaWali:        &siswa.NamaWali,
+		NmWali:          &siswa.NmWali,
 		PekerjaanWali:   &siswa.PekerjaanWali,
 	}
 
-	err := s.pesertaDidikService.Save(ctx, siswaModel, schemaName)
+	err = s.pesertaDidikService.Save(ctx, siswaModel, schemaName)
 	if err != nil {
 		log.Printf("Gagal menyimpan siswa: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan siswa: %w", err)
@@ -50,98 +60,172 @@ func (s *SiswaServiceServer) CreateSiswa(ctx context.Context, req *pb.CreateSisw
 		Status:  true,
 	}, nil
 }
+func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.CreateBanyakSiswaRequest) (*pb.CreateBanyakSiswaResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SchemaName", "Siswa"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	siswa := req.Siswa
+
+	siswaModels := ConvertPBToModels(siswa, func(sis *pb.Siswa) *models.PesertaDidik {
+		return &models.PesertaDidik{
+			PesertaDidikID:  sis.PesertaDidikId,
+			Nis:             sis.Nis,
+			Nisn:            sis.Nisn,
+			NmSiswa:         sis.NmSiswa,
+			TempatLahir:     sis.TempatLahir,
+			TanggalLahir:    sis.TanggalLahir,
+			JenisKelamin:    sis.JenisKelamin,
+			Agama:           sis.Agama,
+			AlamatSiswa:     &sis.AlamatSiswa,
+			TeleponSiswa:    sis.TeleponSiswa,
+			DiterimaTanggal: sis.DiterimaTanggal,
+			NmAyah:          sis.NmAyah,
+			NmIbu:           sis.NmIbu,
+			PekerjaanAyah:   sis.PekerjaanAyah,
+			PekerjaanIbu:    sis.PekerjaanIbu,
+			NmWali:          &sis.NmWali,
+			PekerjaanWali:   &sis.PekerjaanWali,
+		}
+	})
+	err = s.pesertaDidikService.SaveMany(ctx, schemaName, siswaModels)
+	if err != nil {
+		log.Printf("Gagal menyimpan siswa: %v", err)
+		return nil, fmt.Errorf("gagal menyimpan siswa: %w", err)
+	}
+
+	return &pb.CreateBanyakSiswaResponse{
+		Message: "Siswa berhasil ditambahkan",
+		Status:  true,
+	}, nil
+}
 
 // **GetSiswa**
 func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaRequest) (*pb.GetSiswaResponse, error) {
-	schemaName := req.GetSchemaname()
-	siswaID := req.GetSiswaId()
-
-	siswa, err := s.pesertaDidikService.FindByID(ctx, siswaID, schemaName)
-	if err != nil {
-		log.Printf("Gagal menemukan siswa: %v", err)
-		return nil, fmt.Errorf("gagal menemukan siswa: %w", err)
+	schemaName := req.GetSchemaName()
+	if schemaName == "" {
+		return nil, fmt.Errorf("schema name is required")
 	}
 
+	// Cek apakah harus mengambil semua data atau data spesifik berdasarkan SemesterId
+	PesertaDidikId := req.GetPesertaDidikId()
+	rombelID := req.GetRombelId()
+	if PesertaDidikId != "" {
+		// Ambil data siswa berdasarkan PesertaDidikId
+		
+	} else if rombelID != "" {
+		// Ambil data siswa berdasarkan SemesterId
+
+	}
+	// Ambil semua data siswa
+	banyakSiswa, err := s.pesertaDidikService.FindAll(ctx, schemaName, int(req.GetLimit()), int(req.GetOffset()))
+	if err != nil {
+		log.Printf("[ERROR] Gagal menemukan siswa di schema '%s': %v", schemaName, err)
+		return nil, fmt.Errorf("gagal menemukan siswa di schema '%s': %w", schemaName, err)
+	}
+	banyakSiswaList := ConvertModelsToPB(banyakSiswa, func(siswa *models.PesertaDidik) *pb.Siswa {
+		return &pb.Siswa{
+			PesertaDidikId:  siswa.PesertaDidikID,
+			Nis:             siswa.Nis,
+			Nisn:            siswa.Nisn,
+			NmSiswa:         siswa.NmSiswa,
+			TempatLahir:     siswa.TempatLahir,
+			TanggalLahir:    siswa.TanggalLahir,
+			JenisKelamin:    siswa.JenisKelamin,
+			Agama:           siswa.Agama,
+			AlamatSiswa:     *siswa.AlamatSiswa,
+			TeleponSiswa:    siswa.TeleponSiswa,
+			DiterimaTanggal: siswa.DiterimaTanggal,
+			NmAyah:          siswa.NmAyah,
+			NmIbu:           siswa.NmIbu,
+			PekerjaanAyah:   siswa.PekerjaanAyah,
+			PekerjaanIbu:    siswa.PekerjaanIbu,
+			NmWali:          *siswa.NmWali,
+			PekerjaanWali:   *siswa.PekerjaanWali,
+		}
+	})
 	return &pb.GetSiswaResponse{
-		Siswa: &pb.Siswa{
-			PesertaDidikID: siswa.PesertaDidikID,
-		},
+		Siswa: banyakSiswaList,
 	}, nil
 }
 
 // **UpdateSiswa**
-func (s *SiswaServiceServer) UpdateSiswa(ctx context.Context, req *pb.UpdateSiswaRequest) (*pb.UpdateSiswaResponse, error) {
-	// Debugging: Cek nilai request yang diterima
-	log.Printf("Received UpdateUserProfile request: %+v\n", req)
-	schemaName := req.GetSchemaname()
-	siswaReq := req.GetSiswa()
-	siswaPelenReq := req.GetSiswaPelengkap()
-	siswa := &models.PesertaDidik{
-		PesertaDidikID:  siswaReq.PesertaDidikID,
-		NIS:             siswaReq.NIS,
-		NISN:            siswaReq.NISN,
-		NamaSiswa:       siswaReq.NamaSiswa,
-		TempatLahir:     siswaReq.TempatLahir,
-		TanggalLahir:    siswaReq.TanggalLahir,
-		JenisKelamin:    siswaReq.JenisKelamin,
-		Agama:           siswaReq.Agama,
-		AlamatSiswa:     &siswaReq.AlamatSiswa,
-		TeleponSiswa:    siswaReq.TeleponSiswa,
-		DiterimaTanggal: siswaReq.DiterimaTanggal,
-		NamaAyah:        siswaReq.NamaAyah,
-		NamaIbu:         siswaReq.NamaIbu,
-		PekerjaanAyah:   siswaReq.PekerjaanAyah,
-		PekerjaanIbu:    siswaReq.PekerjaanIbu,
-		NamaWali:        &siswaReq.NamaWali,
-		PekerjaanWali:   &siswaReq.PekerjaanWali,
-	}
-	siswaPelenkap := &models.PesertaDidikPelengkap{
-		PelengkapSiswaID: siswaPelenReq.PelengkapSiswaID,
-		PesertaDidikID: &models.PesertaDidik{
-			PesertaDidikID: siswaReq.PesertaDidikID,
-		},
-		StatusDalamKel: &siswaPelenReq.StatusDalamKel,
-		AnakKe:         &siswaPelenReq.AnakKe,
-		SekolahAsal:    siswaPelenReq.SekolahAsal,
-		DiterimaKelas:  &siswaPelenReq.DiterimaKelas,
-		AlamatOrtu:     &siswaPelenReq.AlamatOrtu,
-		TeleponOrtu:    &siswaPelenReq.TeleponOrtu,
-		AlamatWali:     &siswaPelenReq.AlamatWali,
-		TeleponWali:    &siswaPelenReq.TeleponWali,
-		FotoSiswa:      &siswaPelenReq.FotoSiswa,
-	}
-	err := s.pesertaDidikService.Update(ctx, siswa, siswaPelenkap, schemaName)
-	if err != nil {
-		log.Printf("Gagal memperbarui siswa: %v", err)
-		return nil, fmt.Errorf("gagal memperbarui siswa: %w", err)
-	}
+// func (s *SiswaServiceServer) UpdateSiswa(ctx context.Context, req *pb.UpdateSiswaRequest) (*pb.UpdateSiswaResponse, error) {
+// 	// Debugging: Cek nilai request yang diterima
+// 	log.Printf("Received UpdateUserProfile request: %+v\n", req)
+// 	schemaName := req.GetSchemaName()
+// 	siswaReq := req.GetSiswa()
+// 	siswaPelenReq := req.GetSiswaPelengkap()
+// 	siswa := &models.PesertaDidik{
+// 		PesertaDidikID:  siswaReq.PesertaDidikID,
+// 		NIS:             siswaReq.NIS,
+// 		NISN:            siswaReq.NISN,
+// 		NamaSiswa:       siswaReq.NamaSiswa,
+// 		TempatLahir:     siswaReq.TempatLahir,
+// 		TanggalLahir:    siswaReq.TanggalLahir,
+// 		JenisKelamin:    siswaReq.JenisKelamin,
+// 		Agama:           siswaReq.Agama,
+// 		AlamatSiswa:     &siswaReq.AlamatSiswa,
+// 		TeleponSiswa:    siswaReq.TeleponSiswa,
+// 		DiterimaTanggal: siswaReq.DiterimaTanggal,
+// 		NamaAyah:        siswaReq.NamaAyah,
+// 		NamaIbu:         siswaReq.NamaIbu,
+// 		PekerjaanAyah:   siswaReq.PekerjaanAyah,
+// 		PekerjaanIbu:    siswaReq.PekerjaanIbu,
+// 		NamaWali:        &siswaReq.NamaWali,
+// 		PekerjaanWali:   &siswaReq.PekerjaanWali,
+// 	}
+// 	siswaPelenkap := &models.PesertaDidikPelengkap{
+// 		PelengkapSiswaID: siswaPelenReq.PelengkapSiswaID,
+// 		PesertaDidikID:   &siswaPelenReq.PesertaDidikID,
+// 		StatusDalamKel:   &siswaPelenReq.StatusDalamKel,
+// 		AnakKe:           &siswaPelenReq.AnakKe,
+// 		SekolahAsal:      siswaPelenReq.SekolahAsal,
+// 		DiterimaKelas:    &siswaPelenReq.DiterimaKelas,
+// 		AlamatOrtu:       &siswaPelenReq.AlamatOrtu,
+// 		TeleponOrtu:      &siswaPelenReq.TeleponOrtu,
+// 		AlamatWali:       &siswaPelenReq.AlamatWali,
+// 		TeleponWali:      &siswaPelenReq.TeleponWali,
+// 		FotoSiswa:        &siswaPelenReq.FotoSiswa,
+// 	}
+// 	err := s.pesertaDidikService.Update(ctx, siswa, siswaPelenkap, schemaName)
+// 	if err != nil {
+// 		log.Printf("Gagal memperbarui siswa: %v", err)
+// 		return nil, fmt.Errorf("gagal memperbarui siswa: %w", err)
+// 	}
 
-	return &pb.UpdateSiswaResponse{
-		Message: "Siswa berhasil diperbarui",
-		Status:  true,
-	}, nil
-}
+// 	return &pb.UpdateSiswaResponse{
+// 		Message: "Siswa berhasil diperbarui",
+// 		Status:  true,
+// 	}, nil
+// }
 
-// // **DeleteSiswa**
-func (s *SiswaServiceServer) DeleteSiswa(ctx context.Context, req *pb.DeleteSiswaRequest) (*pb.DeleteSiswaResponse, error) {
-	schemaName := req.GetSchemaname()
-	siswaID := req.GetSiswaId()
+// // // **DeleteSiswa**
+// func (s *SiswaServiceServer) DeleteSiswa(ctx context.Context, req *pb.DeleteSiswaRequest) (*pb.DeleteSiswaResponse, error) {
+// 	schemaName := req.GetSchemaName()
+// 	siswaID := req.GetSiswaId()
 
-	err := s.pesertaDidikService.Delete(ctx, siswaID, schemaName)
-	if err != nil {
-		log.Printf("Gagal menghapus siswa: %v", err)
-		return nil, fmt.Errorf("gagal menghapus siswa: %w", err)
-	}
+// 	err := s.pesertaDidikService.Delete(ctx, siswaID, schemaName)
+// 	if err != nil {
+// 		log.Printf("Gagal menghapus siswa: %v", err)
+// 		return nil, fmt.Errorf("gagal menghapus siswa: %w", err)
+// 	}
 
-	return &pb.DeleteSiswaResponse{
-		Message: "Siswa berhasil dihapus",
-		Status:  true,
-	}, nil
-}
+// 	return &pb.DeleteSiswaResponse{
+// 		Message: "Siswa berhasil dihapus",
+// 		Status:  true,
+// 	}, nil
+// }
 
 // // UploadSiswa mengunggah data siswa dari file Excel
 // func (s *SiswaServiceServer) UploadSiswa(ctx context.Context, req *pb.UploadSiswaRequest) (*pb.UploadSiswaResponse, error) {
-// 	schemaName := req.GetSchemaname()
+// 	schemaName := req.GetSchemaName()
 // 	fileData := req.GetFile() // File dalam bentuk byte array
 
 // 	// Simpan file ke sementara

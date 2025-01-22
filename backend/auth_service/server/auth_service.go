@@ -4,9 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"log"
-	"os"
 
 	pb "auth_service/generated"
 	"auth_service/models"
@@ -108,7 +106,7 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 		Email:     user.Email,
 		Role:      user.Role,
 		SekolahID: int32(sekolahModel.ID),
-		Password: user.Password,
+		Password:  user.Password,
 	}
 
 	// Cek jika role user adalah admin dan apakah sudah ada admin
@@ -137,7 +135,7 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 
 	// Hubungkan user dengan profil
 	userProfileModel := &models.UserProfile{
-		UserID: userModel.ID,
+		UserId: userModel.ID,
 	}
 
 	if err := s.userProfile.CreateUserProfile(userProfileModel); err != nil {
@@ -192,133 +190,6 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 	// fmt.Println("Registration message published successfully!")
 
 	return response, nil
-}
-
-// GetUserProfile - Mengambil profil pengguna berdasarkan UserID
-func (s *AuthServiceServer) GetUserPofile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
-	profile, err := s.userProfile.GetUserProfileByID(req.UserId)
-	if err != nil {
-		log.Printf("Error fetching user profile: %v", err)
-		return nil, errors.New("failed to retrieve user profile")
-	}
-	return &pb.GetUserProfileResponse{
-		UserProfile: &pb.UserProfile{
-			UserId:   profile.UserID,
-			Nama:     profile.Nama,
-			Jk:       profile.JK,
-			Phone:    profile.Phone,
-			TptLahir: profile.TptLahir,
-			// TglLahir: profile.TglLahir.Format(),
-			AlamatJalan: profile.AlamatJalan,
-			KotaKab:     profile.KotaKab,
-			Prov:        profile.Prov,
-			KodePos:     profile.KodePos,
-			NamaAyah:    profile.NamaAyah,
-			NamaIbu:     profile.NamaIbu,
-		},
-	}, nil
-}
-
-// UpdateUserProfile - Memperbarui profil pengguna berdasarkan UserID
-func (s *AuthServiceServer) UpdateUserPofile(ctx context.Context, req *pb.UpdateUserProfileRequest) (*pb.UpdateUserProfileResponse, error) {
-	// Debugging: Cek nilai request yang diterima
-	log.Printf("Received UpdateUserProfile request: %+v\n", req)
-
-	// Cek apakah req atau req.UserProfile kosong
-	if req == nil {
-		log.Println("Request is nil")
-		return nil, errors.New("invalid request: request is nil")
-	}
-
-	if req.UserProfile == nil {
-		log.Println("UserProfile is nil in request")
-		return nil, errors.New("invalid request: user profile is nil")
-	}
-
-	profile, err := s.userProfile.GetUserProfileByID(int64(req.GetUserId()))
-	if err != nil {
-		log.Printf("Error fetching user profile: %v", err)
-		return nil, errors.New("user profile not found")
-	}
-	// profi := req.GetUserProfile()
-	// log.Println(profi)
-	// Perbarui data profil berdasarkan input
-	profile.Nama = req.UserProfile.Nama
-	profile.JK = req.UserProfile.Jk
-	profile.Phone = req.UserProfile.Phone
-	profile.TptLahir = req.UserProfile.TptLahir
-	profile.AlamatJalan = req.UserProfile.AlamatJalan
-	profile.KotaKab = req.UserProfile.KotaKab
-	profile.Prov = req.UserProfile.Prov
-	profile.KodePos = req.UserProfile.KodePos
-	profile.NamaAyah = req.UserProfile.NamaAyah
-	profile.NamaIbu = req.UserProfile.NamaIbu
-
-	// Simpan perubahan ke database
-	err = s.userProfile.UpdateUserProfile(profile)
-	if err != nil {
-		log.Printf("Error updating user profile: %v", err)
-		return nil, errors.New("failed to update user profile")
-	}
-
-	return &pb.UpdateUserProfileResponse{
-		Message: "Updated",
-	}, nil
-}
-
-// UploadUserPhotoProfile - Mengunggah foto profil pengguna
-func (s *AuthServiceServer) UploadUserPhotoProfile(stream pb.AuthService_UploadUserPhotoProfileServer) error {
-	var userID int32
-	var filePath string
-	var file *os.File
-	// var err error
-
-	for {
-		req, err := stream.Recv()
-		if err == io.EOF {
-			// Jika selesai menerima file, kirim respons sukses
-			return stream.SendAndClose(&pb.UploadUserPhotoResponse{
-				Status:  "OK",
-				FileUrl: filePath,
-			})
-		}
-		if err != nil {
-			log.Printf("Error receiving file chunk: %v", err)
-			return err
-		}
-
-		// Ambil User ID dari request pertama
-		if userID != 0 {
-			userID = req.UserId
-			filePath = fmt.Sprintf("uploads/%d_profile.jpg", userID)
-			// Simpan ke database
-			curentProfile, err := s.userProfile.GetUserProfileByID(int64(userID))
-			if err != nil {
-				log.Printf("Error getting user profile: %v", err)
-			}
-			err = s.userProfile.UpdateUserProfile(&models.UserProfile{
-				ID:             curentProfile.ID,
-				ProfilePicture: filePath,
-			})
-			if err != nil {
-				log.Printf("Error updating user profile: %v", err)
-			}
-			// Buat file baru
-			file, err = os.Create(filePath)
-			if err != nil {
-				log.Printf("Error creating file: %v", err)
-				return err
-			}
-			defer file.Close()
-		}
-
-		// Tulis chunk ke file
-		_, err = file.Write(req.FileChunk)
-		if err != nil {
-			log.Printf("Error writing file: %v", err)
-			return err
-		}
-	}
 }
 
 func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {

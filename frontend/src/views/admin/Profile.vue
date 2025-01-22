@@ -10,8 +10,7 @@
                     <div class="flex items-center space-x-6">
                         <div class="relative">
                             <img alt="Profile picture of a person" class="w-32 h-32 rounded-full block" height="150"
-                                src="https://storage.googleapis.com/a1aa/image/bS2nVV2XXD7IPNInU3xBCiOkojwX5fyy6Ne1rlaANQ9Rqs0TA.jpg"
-                                width="150" />
+                                :src="akun.photo_url" width="150" />
                             <div
                                 class="absolute  w-full h-full top-0 left-0 flex items-center justify-center opacity-0 rounded-full hover:opacity-100 bg-black bg-opacity-50 text-gray-100 transition ease-in-out duration-500">
                                 <i @click="triggerFileInput" class="pi pi-camera cursor-pointer "
@@ -187,7 +186,7 @@ const fetchUserProfile = async () => {
         // Dispatch untuk mendapatkan profil pengguna
         await store.dispatch("authService/getUserProfile", userId);
 
-        // // Ambil data terbaru dari store
+        // Ambil data terbaru dari store
         akun.value = store.getters["authService/getUserProfile"];
 
     } catch (error) {
@@ -241,7 +240,7 @@ const akun = ref({
     kodePos: "",
     namaAyah: "",
     namaIbu: "",
-    photoUrl: ""
+    photo_url: "@/assets/default_profile.jpg"
 
 })
 const isProfileEdit = ref(false)

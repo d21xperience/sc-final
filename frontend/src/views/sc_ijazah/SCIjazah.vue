@@ -6,7 +6,7 @@
             <div class="flex flex-wrap justify-between my-2">
                 <h4 class="font-bold text-2xl lg:text-lg my-2">Data Peserta Didik Penerima Ijazah </h4>
                 <div>
-                    <Select v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Tahun Pelajaran"
+                    <Select v-model="selectedsemester" :options="semester" optionLabel="namaSemester" placeholder="Tahun Pelajaran"
                         class="w-full md:w-56 mr-2" />
                 </div>
 
@@ -142,6 +142,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useStore } from 'vuex';
+const store = useStore();
 import axios from 'axios';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -161,7 +163,10 @@ const DataLulusanService = ref([]);
 const error = ref("");
 
 // Fetch data ketika komponen dimount
-onMounted(() => { fetchStudents() });
+onMounted(() => {
+    fetchSemester()
+    // fetchStudents() 
+});
 
 const fetchStudents = async () => {
     try {
@@ -323,15 +328,26 @@ const getStatusLabel = (status) => {
 
 import Select from 'primevue/select';
 
+
 // select tahun ijazah
-const selectedCity = ref();
-const cities = ref([
-    { name: '2023/2024', code: '20232' },
-    { name: '2022/2023', code: '20222' },
-    { name: '2021/2022', code: '20212' },
-    { name: '2022/2021', code: '20202' },
-    { name: '2019/2020', code: '20192' }
-]);
+const selectedsemester = ref();
+const semester = ref()
+const fetchSemester = async () => {
+    const param = {
+        limit: 5,
+        offset: 56,
+    }
+    try {
+        const results = await store.dispatch("sekolahService/getSemester",param)
+        // console.log(results)
+        semester.value = results.semester
+    } catch (error) {
+        console.log("Gagal mengambil data semester", error)
+    } finally {
+        console.log("Fungsi fetchSemester selesai")
+    }
+}
+
 const selectedJurusan = ref();
 const jurusan = ref([
     { name: 'Teknik Kendaraan Ringan', code: 'TKR' },

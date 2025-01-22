@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"errors"
 	"sekolah/models"
 	"sekolah/repositories"
 )
@@ -26,7 +25,7 @@ func NewSekolahService(sr repositories.SekolahRepository) SekolahService {
 func (s *SekolahServiceImpl) Save(ctx context.Context, sekolah *models.Sekolah, schemaName string) error {
 	err := s.SekolahRepo.Save(ctx, sekolah, schemaName)
 	if err != nil {
-		return errors.New("gagal menyimpan Sekolah")
+		return err
 	}
 	return err
 }

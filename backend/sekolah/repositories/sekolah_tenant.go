@@ -26,7 +26,6 @@ func NewsekolahTenantRepository(db *gorm.DB) SekolahTenantRepository {
 
 // Create (Menyimpan Data sekolahTenant)
 func (r *sekolahTenantRepositoryImpl) Save(st *models.SekolahTabelTenant) error {
-	// sekolahTenant.sekolahTenantID = uuid.New() // Generate UUID baru untuk setiap sekolahTenant
 	return r.db.Create(st).Error
 }
 

@@ -30,7 +30,12 @@ type Sekolah struct {
 
 type SekolahTabelTenant struct {
 	gorm.Model
-	Nama       string `gorm:"unique;not null"`
-	SekolahID  int    `gorm:"unique;not null"`
-	NamaSchema string `gorm:"unique;not null"`
+	NamaSekolah string `gorm:"unique;not null"`
+	SekolahID   int    `gorm:"unique;not null"`
+	SchemaName  string `gorm:"unique;not null"`
+}
+
+type SchemaLog struct {
+	gorm.Model
+	SchemaName string
 }

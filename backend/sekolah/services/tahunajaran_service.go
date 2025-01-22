@@ -9,6 +9,7 @@ import (
 
 type TahunAjaranService interface {
 	Save(ctx context.Context, pd *models.TahunAjaran, schemaName string) error
+	FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.TahunAjaran, error)
 	FindByID(ctx context.Context, TahunAjaranID string, schemaName string) (*models.TahunAjaran, error)
 	Update(ctx context.Context, TahunAjaran *models.TahunAjaran, schemaName string) error
 	Delete(ctx context.Context, TahunAjaranID string, schemaName string) error
@@ -25,9 +26,12 @@ func NewTahunAjaranService(sr repositories.TahunAjaranRepository) TahunAjaranSer
 func (s *TahunAjaranServiceImpl) Save(ctx context.Context, TahunAjaranModel *models.TahunAjaran, schemaName string) error {
 	err := s.TahunAjaranRepo.Save(ctx, TahunAjaranModel, schemaName)
 	if err != nil {
-		return errors.New("gagal menyimpan TahunAjaran")
+		return errors.New(err.Error())
 	}
 	return err
+}
+func (s *TahunAjaranServiceImpl) FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.TahunAjaran, error) {
+	return s.TahunAjaranRepo.FindAll(ctx, schemaName, limit, offset)
 }
 func (s *TahunAjaranServiceImpl) FindByID(ctx context.Context, TahunAjaranID string, schemaName string) (*models.TahunAjaran, error) {
 	return s.TahunAjaranRepo.FindByID(ctx, TahunAjaranID, schemaName)

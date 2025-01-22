@@ -25,7 +25,81 @@ func InitRedis() *redis.Client {
 	})
 }
 
+// func StartGRPCServer(authService services.AuthService, sekolahService services.SekolahService, userProfileService services.UserProfileService) {
+
+// 	// gRPC server endpoint
+// 	grpcServerEndpoint := "localhost:50051"
+// 	// gRPC Listener
+// 	listener, err := net.Listen("tcp", ":50051")
+// 	if err != nil {
+// 		log.Fatalf("Failed to listen: %v", err)
+// 	}
+
+// 	// gRPC Server
+// 	grpcServer := grpc.NewServer()
+
+// 	pb.RegisterAuthServiceServer(grpcServer, &AuthServiceServer{
+// 		authService:    authService,
+// 		sekolahService: sekolahService,
+// 		userProfile:    userProfileService,
+// 	})
+// 	pb.RegisterUserProfileServiceServer(grpcServer, &UserProfileServiceServer{
+// 		userProfile: userProfileService,
+// 	})
+// 	// HTTP Gateway
+// 	mux := runtime.NewServeMux()
+
+// 	ctx := context.Background()
+// 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+
+// 	err = pb.RegisterAuthServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+// 	if err != nil {
+// 		log.Fatalf("Failed to register Auth service gRPC Gateway: %v", err)
+// 	}
+
+// 	err = pb.RegisterUserProfileServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+// 	if err != nil {
+// 		log.Fatalf("Failed to register User profile service gRPC Gateway: %v", err)
+// 	}
+
+// 	// HTTP Listener
+// 	httpListener, err := net.Listen("tcp", ":8080")
+
+// 	if err != nil {
+// 		log.Fatalf("Failed to listen on HTTP Gateway: %v", err)
+// 	}
+
+// 	// Middleware CORS
+// 	corsHandler := corsMiddleware(mux)
+
+// 	// Sync WaitGroup
+// 	var wg sync.WaitGroup
+// 	wg.Add(2)
+
+// 	go func() {
+// 		defer wg.Done()
+// 		fmt.Println("Auth Service running on port 50051 (gRPC)")
+// 		if err := grpcServer.Serve(listener); err != nil {
+// 			log.Fatalf("Failed to serve gRPC: %v", err)
+// 		}
+// 	}()
+
+// 	go func() {
+// 		defer wg.Done()
+// 		fmt.Println("HTTP Gateway running on port 8080")
+
+// 		if err := http.Serve(httpListener, corsHandler); err != nil {
+// 			log.Fatalf("Failed to serve HTTP Gateway: %v", err)
+// 		}
+// 	}()
+
+// 	wg.Wait()
+// }
+
 func StartGRPCServer(authService services.AuthService, sekolahService services.SekolahService, userProfileService services.UserProfileService) {
+	// gRPC server endpoint
+	grpcServerEndpoint := "localhost:50051"
+
 	// gRPC Listener
 	listener, err := net.Listen("tcp", ":50051")
 	if err != nil {
@@ -34,20 +108,31 @@ func StartGRPCServer(authService services.AuthService, sekolahService services.S
 
 	// gRPC Server
 	grpcServer := grpc.NewServer()
+
+	// Register gRPC services
 	pb.RegisterAuthServiceServer(grpcServer, &AuthServiceServer{
 		authService:    authService,
 		sekolahService: sekolahService,
 		userProfile:    userProfileService,
 	})
+	pb.RegisterUserProfileServiceServer(grpcServer, &UserProfileServiceServer{
+		userProfile: userProfileService,
+	})
 
 	// HTTP Gateway
-	mux := runtime.NewServeMux()
+	gatewayMux := runtime.NewServeMux()
 	ctx := context.Background()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
-	err = pb.RegisterAuthServiceHandlerFromEndpoint(ctx, mux, "localhost:50051", opts)
+	// Register gRPC-Gateway handlers
+	err = pb.RegisterAuthServiceHandlerFromEndpoint(ctx, gatewayMux, grpcServerEndpoint, opts)
 	if err != nil {
-		log.Fatalf("Failed to register gRPC Gateway: %v", err)
+		log.Fatalf("Failed to register Auth service gRPC Gateway: %v", err)
+	}
+
+	err = pb.RegisterUserProfileServiceHandlerFromEndpoint(ctx, gatewayMux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register User profile service gRPC Gateway: %v", err)
 	}
 
 	// HTTP Listener
@@ -56,13 +141,26 @@ func StartGRPCServer(authService services.AuthService, sekolahService services.S
 		log.Fatalf("Failed to listen on HTTP Gateway: %v", err)
 	}
 
+	// Static File Handler
+	staticFileHandler := http.StripPrefix("/static/profile_photos/", http.FileServer(http.Dir("./uploads/profile_photos/")))
+
+	// Create HTTP multiplexer
+	httpMux := http.NewServeMux()
+
+	// Add static file handler
+	httpMux.Handle("/static/profile_photos/", staticFileHandler)
+
+	// Add gRPC-Gateway handler
+	httpMux.Handle("/", gatewayMux)
+
 	// Middleware CORS
-	corsHandler := corsMiddleware(mux)
+	corsHandler := corsMiddleware(httpMux)
 
 	// Sync WaitGroup
 	var wg sync.WaitGroup
 	wg.Add(2)
 
+	// Start gRPC server
 	go func() {
 		defer wg.Done()
 		fmt.Println("Auth Service running on port 50051 (gRPC)")
@@ -71,6 +169,7 @@ func StartGRPCServer(authService services.AuthService, sekolahService services.S
 		}
 	}()
 
+	// Start HTTP Gateway server
 	go func() {
 		defer wg.Done()
 		fmt.Println("HTTP Gateway running on port 8080")

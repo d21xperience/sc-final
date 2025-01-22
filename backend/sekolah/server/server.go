@@ -22,12 +22,15 @@ import (
 )
 
 type GRPCServer struct {
-	grpcServer          *grpc.Server
-	schemaService       services.SchemaService
-	sekolahService      services.SekolahService
-	tahunAjaranService  services.TahunAjaranService
-	semesterService     services.SemesterService
-	pesertaDidikService services.PesertaDidikService
+	grpcServer              *grpc.Server
+	schemaService           services.SchemaService
+	sekolahService          services.SekolahService
+	tahunAjaranService      services.TahunAjaranService
+	semesterService         services.SemesterService
+	pesertaDidikService     services.PesertaDidikService
+	rombonganBelajarService services.RombonganBelajarService
+	rombelAnggotaService    services.RombelAnggotaService
+	nilaiAkhirService       services.NilaiAkhirService
 }
 
 // Jalankan gRPC Server
@@ -40,6 +43,8 @@ func (s *GRPCServer) run() {
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
 
+	// gRPC server endpoint
+	grpcServerEndpoint := "localhost:50052"
 	// gRPC Listener
 	listener, err := net.Listen("tcp", ":50052")
 	if err != nil {
@@ -49,19 +54,35 @@ func (s *GRPCServer) run() {
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
-	err = pb.RegisterSekolahServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", opts)
+	err = pb.RegisterSekolahServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 	if err != nil {
 		log.Fatalf("Failed to register gRPC Gateway: %v", err)
 	}
 
-	err = pb.RegisterTahunAjaranServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", opts)
+	err = pb.RegisterTahunAjaranServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 	if err != nil {
 		log.Fatalf("Failed to register gRPC Tahun Ajaran Gateway: %v", err)
 	}
 
-	err = pb.RegisterSemesterServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", opts)
+	err = pb.RegisterSemesterServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 	if err != nil {
-		log.Fatalf("Failed to register gRPC Tahun Ajaran Gateway: %v", err)
+		log.Fatalf("Failed to register gRPC Semester Gateway: %v", err)
+	}
+	err = pb.RegisterSiswaServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Siswa Gateway: %v", err)
+	}
+	err = pb.RegisterKelasServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Kelas Gateway: %v", err)
+	}
+	err = pb.RegisterAnggotaKelasServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Kelas Gateway: %v", err)
+	}
+	err = pb.RegisterNilaiAkhirServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Nilai akhir Gateway: %v", err)
 	}
 
 	// HTTP Listener
@@ -119,15 +140,18 @@ func (s *GRPCServer) run() {
 	fmt.Println("Server shutdown complete")
 }
 
-func StartGRPCServer(schemaServices services.SchemaService, sekolahService services.SekolahService, tahunAjaranService services.TahunAjaranService, semesterService services.SemesterService, pesertaDidikService services.PesertaDidikService) {
+func StartGRPCServer(schemaServices services.SchemaService, sekolahService services.SekolahService, tahunAjaranService services.TahunAjaranService, semesterService services.SemesterService, pesertaDidikService services.PesertaDidikService, rombonganBelajarService services.RombonganBelajarService, rombelAnggotaServices services.RombelAnggotaService, nilaiAkhirService services.NilaiAkhirService) {
 	// Buat instance server
 	server := &GRPCServer{
-		grpcServer:          grpc.NewServer(),
-		schemaService:       schemaServices,
-		sekolahService:      sekolahService,
-		pesertaDidikService: pesertaDidikService,
-		tahunAjaranService:  tahunAjaranService,
-		semesterService:     semesterService,
+		grpcServer:              grpc.NewServer(),
+		schemaService:           schemaServices,
+		sekolahService:          sekolahService,
+		pesertaDidikService:     pesertaDidikService,
+		tahunAjaranService:      tahunAjaranService,
+		semesterService:         semesterService,
+		rombonganBelajarService: rombonganBelajarService,
+		rombelAnggotaService:    rombelAnggotaServices,
+		nilaiAkhirService:       nilaiAkhirService,
 	}
 	// gRPC Server
 	// grpcServer := grpc.NewServer()
@@ -144,6 +168,18 @@ func StartGRPCServer(schemaServices services.SchemaService, sekolahService servi
 	// REGISTER SISWA
 	pb.RegisterSiswaServiceServer(server.grpcServer, &SiswaServiceServer{
 		pesertaDidikService: server.pesertaDidikService,
+	})
+	// REGISTER KELAS
+	pb.RegisterKelasServiceServer(server.grpcServer, &RombelServiceServer{
+		rombonganBelajarService: server.rombonganBelajarService,
+	})
+	// REGISTER ANGGOTA KELAS
+	pb.RegisterAnggotaKelasServiceServer(server.grpcServer, &RombelAnggotaServiceServer{
+		rombelAnggotaService: server.rombelAnggotaService,
+	})
+	// REGISTER ANGGOTA KELAS
+	pb.RegisterNilaiAkhirServiceServer(server.grpcServer, &NilaiAkhirServiceServer{
+		NilaiAkhirService: server.nilaiAkhirService,
 	})
 
 	// Jalankan server

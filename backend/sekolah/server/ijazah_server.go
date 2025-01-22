@@ -16,23 +16,24 @@ type IjazahServiceServer struct {
 
 // **CreateIjazah**
 func (s *IjazahServiceServer) CreateIjazah(ctx context.Context, req *pb.CreateIjazahRequest) (*pb.CreateIjazahResponse, error) {
-	schemaName := req.GetSchemaname()
+	schemaName := req.GetSchemaName()
 	ijazah := req.GetIjazah()
+	// tanggalIjazah, err := time.Parse("2006-01-02", ijazah.TanggalIjazah)
 	IjazahModel := &models.Ijazah{
 		Nama:                        ijazah.Nama,
 		Nis:                         ijazah.Nis,
-		NISN:                        ijazah.NISN,
-		NPSN:                        ijazah.NPSN,
-		NoIjazah:                    ijazah.NoIjazah,
+		NISN:                        ijazah.Nisn,
+		NPSN:                        ijazah.Npsn,
+		NoIjazah:                    ijazah.NomorIjazah,
 		TempatLahir:                 ijazah.TempatLahir,
 		TanggalLahir:                ijazah.TanggalLahir,
-		NamaOrtuWali:                ijazah.NamaOrtuWali,
+		NamaOrtuWali:                ijazah.NamaOrtuwali,
 		PaketKeahlian:               ijazah.PaketKeahlian,
-		KabupatenKota:               ijazah.KabupatenKota,
+		KabupatenKota:               ijazah.Kabupatenkota,
 		Provinsi:                    ijazah.Provinsi,
 		ProgramKeahlian:             ijazah.ProgramKeahlian,
-		SekolahPenyelenggaraUjianUS: ijazah.SekolahPenyelenggaraUjianUS,
-		SekolahPenyelenggaraUjianUN: ijazah.SekolahPenyelenggaraUjianUN,
+		SekolahPenyelenggaraUjianUS: ijazah.SekolahPenyelenggaraUjianUs,
+		SekolahPenyelenggaraUjianUN: ijazah.SekolahPenyelenggaraUjianUn,
 		AsalSekolah:                 ijazah.AsalSekolah,
 		NomorIjazah:                 ijazah.NomorIjazah,
 		TempatIjazah:                ijazah.TempatIjazah,
@@ -52,81 +53,81 @@ func (s *IjazahServiceServer) CreateIjazah(ctx context.Context, req *pb.CreateIj
 }
 
 // **GetIjazah**
-func (s *IjazahServiceServer) GetIjazah(ctx context.Context, req *pb.GetIjazahRequest) (*pb.GetIjazahResponse, error) {
-	schemaName := req.GetSchemaname()
-	ijazahID := req.GetIjazahId()
+// func (s *IjazahServiceServer) GetIjazah(ctx context.Context, req *pb.GetIjazahRequest) (*pb.GetIjazahResponse, error) {
+// 	schemaName := req.GetSchemaName()
+// 	ijazahID := req.GetIjazahId()
 
-	ijazah, err := s.ijazahService.FindByID(ctx, ijazahID, schemaName)
-	if err != nil {
-		log.Printf("Gagal menemukan Ijazah: %v", err)
-		return nil, fmt.Errorf("gagal menemukan Ijazah: %w", err)
-	}
+// 	ijazah, err := s.ijazahService.FindByID(ctx, ijazahID, schemaName)
+// 	if err != nil {
+// 		log.Printf("Gagal menemukan Ijazah: %v", err)
+// 		return nil, fmt.Errorf("gagal menemukan Ijazah: %w", err)
+// 	}
 
-	return &pb.GetIjazahResponse{
-		Ijazah: &pb.Ijazah{
-			// PesertaDidikID:              ,
-			Nama:                        ijazah.Nama,
-			Nis:                         ijazah.Nis,
-			NISN:                        ijazah.NISN,
-			NPSN:                        ijazah.NPSN,
-			NoIjazah:                    ijazah.NoIjazah,
-			TempatLahir:                 ijazah.TempatLahir,
-			TanggalLahir:                ijazah.TanggalLahir,
-			NamaOrtuWali:                ijazah.NamaOrtuWali,
-			PaketKeahlian:               ijazah.PaketKeahlian,
-			KabupatenKota:               ijazah.KabupatenKota,
-			Provinsi:                    ijazah.Provinsi,
-			ProgramKeahlian:             ijazah.ProgramKeahlian,
-			SekolahPenyelenggaraUjianUS: ijazah.SekolahPenyelenggaraUjianUS,
-			SekolahPenyelenggaraUjianUN: ijazah.SekolahPenyelenggaraUjianUN,
-			AsalSekolah:                 ijazah.AsalSekolah,
-			NomorIjazah:                 ijazah.NomorIjazah,
-			TempatIjazah:                ijazah.TempatIjazah,
-			TanggalIjazah:               ijazah.TanggalIjazah,
-		},
-	}, nil
-}
+// 	return &pb.GetIjazahResponse{
+// 		Ijazah: &pb.Ijazah{
+// 			// PesertaDidikID:              ,
+// 			Nama:                        ijazah.Nama,
+// 			Nis:                         ijazah.Nis,
+// 			NISN:                        ijazah.NISN,
+// 			NPSN:                        ijazah.NPSN,
+// 			NoIjazah:                    ijazah.NoIjazah,
+// 			TempatLahir:                 ijazah.TempatLahir,
+// 			TanggalLahir:                ijazah.TanggalLahir,
+// 			NamaOrtuWali:                ijazah.NamaOrtuWali,
+// 			PaketKeahlian:               ijazah.PaketKeahlian,
+// 			KabupatenKota:               ijazah.KabupatenKota,
+// 			Provinsi:                    ijazah.Provinsi,
+// 			ProgramKeahlian:             ijazah.ProgramKeahlian,
+// 			SekolahPenyelenggaraUjianUS: ijazah.SekolahPenyelenggaraUjianUS,
+// 			SekolahPenyelenggaraUjianUN: ijazah.SekolahPenyelenggaraUjianUN,
+// 			AsalSekolah:                 ijazah.AsalSekolah,
+// 			NomorIjazah:                 ijazah.NomorIjazah,
+// 			TempatIjazah:                ijazah.TempatIjazah,
+// 			TanggalIjazah:               ijazah.TanggalIjazah,
+// 		},
+// 	}, nil
+// }
 
 // **UpdateIjazah**
-func (s *IjazahServiceServer) UpdateIjazah(ctx context.Context, req *pb.UpdateIjazahRequest) (*pb.UpdateIjazahResponse, error) {
-	// Debugging: Cek nilai request yang diterima
-	log.Printf("Received UpdateUserProfile request: %+v\n", req)
-	schemaName := req.GetSchemaname()
-	ijazahReq := req.GetIjazah()
-	ijazahModel := &models.Ijazah{
-		Nama:                        ijazahReq.Nama,
-		Nis:                         ijazahReq.Nis,
-		NISN:                        ijazahReq.NISN,
-		NPSN:                        ijazahReq.NPSN,
-		NoIjazah:                    ijazahReq.NoIjazah,
-		TempatLahir:                 ijazahReq.TempatLahir,
-		TanggalLahir:                ijazahReq.TanggalLahir,
-		NamaOrtuWali:                ijazahReq.NamaOrtuWali,
-		PaketKeahlian:               ijazahReq.PaketKeahlian,
-		KabupatenKota:               ijazahReq.KabupatenKota,
-		Provinsi:                    ijazahReq.Provinsi,
-		ProgramKeahlian:             ijazahReq.ProgramKeahlian,
-		SekolahPenyelenggaraUjianUS: ijazahReq.SekolahPenyelenggaraUjianUS,
-		SekolahPenyelenggaraUjianUN: ijazahReq.SekolahPenyelenggaraUjianUN,
-		AsalSekolah:                 ijazahReq.AsalSekolah,
-		NomorIjazah:                 ijazahReq.NomorIjazah,
-		TempatIjazah:                ijazahReq.TempatIjazah,
-		TanggalIjazah:               ijazahReq.TanggalIjazah,
-	}
-	err := s.ijazahService.Update(ctx, ijazahModel, schemaName)
-	if err != nil {
-		log.Printf("Gagal memperbarui Ijazah: %v", err)
-		return nil, fmt.Errorf("gagal memperbarui Ijazah: %w", err)
-	}
-	return &pb.UpdateIjazahResponse{
-		Message: "Ijazah berhasil diperbarui",
-		Status:  true,
-	}, nil
-}
+// func (s *IjazahServiceServer) UpdateIjazah(ctx context.Context, req *pb.UpdateIjazahRequest) (*pb.UpdateIjazahResponse, error) {
+// 	// Debugging: Cek nilai request yang diterima
+// 	log.Printf("Received UpdateUserProfile request: %+v\n", req)
+// 	schemaName := req.GetSchemaName()
+// 	ijazahReq := req.GetIjazah()
+// 	ijazahModel := &models.Ijazah{
+// 		Nama:                        ijazahReq.Nama,
+// 		Nis:                         ijazahReq.Nis,
+// 		NISN:                        ijazahReq.NISN,
+// 		NPSN:                        ijazahReq.NPSN,
+// 		NoIjazah:                    ijazahReq.NoIjazah,
+// 		TempatLahir:                 ijazahReq.TempatLahir,
+// 		TanggalLahir:                ijazahReq.TanggalLahir,
+// 		NamaOrtuWali:                ijazahReq.NamaOrtuWali,
+// 		PaketKeahlian:               ijazahReq.PaketKeahlian,
+// 		KabupatenKota:               ijazahReq.KabupatenKota,
+// 		Provinsi:                    ijazahReq.Provinsi,
+// 		ProgramKeahlian:             ijazahReq.ProgramKeahlian,
+// 		SekolahPenyelenggaraUjianUS: ijazahReq.SekolahPenyelenggaraUjianUS,
+// 		SekolahPenyelenggaraUjianUN: ijazahReq.SekolahPenyelenggaraUjianUN,
+// 		AsalSekolah:                 ijazahReq.AsalSekolah,
+// 		NomorIjazah:                 ijazahReq.NomorIjazah,
+// 		TempatIjazah:                ijazahReq.TempatIjazah,
+// 		TanggalIjazah:               ijazahReq.TanggalIjazah,
+// 	}
+// 	err := s.ijazahService.Update(ctx, ijazahModel, schemaName)
+// 	if err != nil {
+// 		log.Printf("Gagal memperbarui Ijazah: %v", err)
+// 		return nil, fmt.Errorf("gagal memperbarui Ijazah: %w", err)
+// 	}
+// 	return &pb.UpdateIjazahResponse{
+// 		Message: "Ijazah berhasil diperbarui",
+// 		Status:  true,
+// 	}, nil
+// }
 
 // // **DeleteIjazah**
 func (s *IjazahServiceServer) DeleteIjazah(ctx context.Context, req *pb.DeleteIjazahRequest) (*pb.DeleteIjazahResponse, error) {
-	schemaName := req.GetSchemaname()
+	schemaName := req.GetSchemaName()
 	IjazahID := req.GetIjazahId()
 
 	err := s.ijazahService.Delete(ctx, IjazahID, schemaName)

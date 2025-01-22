@@ -19,13 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Login_FullMethodName                  = "/auth.AuthService/Login"
-	AuthService_Register_FullMethodName               = "/auth.AuthService/Register"
-	AuthService_GetSekolah_FullMethodName             = "/auth.AuthService/GetSekolah"
-	AuthService_GetUserByID_FullMethodName            = "/auth.AuthService/GetUserByID"
-	AuthService_GetUserPofile_FullMethodName          = "/auth.AuthService/GetUserPofile"
-	AuthService_UpdateUserPofile_FullMethodName       = "/auth.AuthService/UpdateUserPofile"
-	AuthService_UploadUserPhotoProfile_FullMethodName = "/auth.AuthService/UploadUserPhotoProfile"
+	AuthService_Login_FullMethodName       = "/auth.AuthService/Login"
+	AuthService_Register_FullMethodName    = "/auth.AuthService/Register"
+	AuthService_GetSekolah_FullMethodName  = "/auth.AuthService/GetSekolah"
+	AuthService_GetUserByID_FullMethodName = "/auth.AuthService/GetUserByID"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -36,9 +33,6 @@ type AuthServiceClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	GetSekolah(ctx context.Context, in *GetSekolahRequest, opts ...grpc.CallOption) (*GetSekolahResponse, error)
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
-	GetUserPofile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
-	UpdateUserPofile(ctx context.Context, in *UpdateUserProfileRequest, opts ...grpc.CallOption) (*UpdateUserProfileResponse, error)
-	UploadUserPhotoProfile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadUserPhotoRequest, UploadUserPhotoResponse], error)
 }
 
 type authServiceClient struct {
@@ -89,39 +83,6 @@ func (c *authServiceClient) GetUserByID(ctx context.Context, in *GetUserByIDRequ
 	return out, nil
 }
 
-func (c *authServiceClient) GetUserPofile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserProfileResponse)
-	err := c.cc.Invoke(ctx, AuthService_GetUserPofile_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) UpdateUserPofile(ctx context.Context, in *UpdateUserProfileRequest, opts ...grpc.CallOption) (*UpdateUserProfileResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateUserProfileResponse)
-	err := c.cc.Invoke(ctx, AuthService_UpdateUserPofile_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) UploadUserPhotoProfile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadUserPhotoRequest, UploadUserPhotoResponse], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &AuthService_ServiceDesc.Streams[0], AuthService_UploadUserPhotoProfile_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[UploadUserPhotoRequest, UploadUserPhotoResponse]{ClientStream: stream}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type AuthService_UploadUserPhotoProfileClient = grpc.ClientStreamingClient[UploadUserPhotoRequest, UploadUserPhotoResponse]
-
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -130,9 +91,6 @@ type AuthServiceServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	GetSekolah(context.Context, *GetSekolahRequest) (*GetSekolahResponse, error)
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
-	GetUserPofile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
-	UpdateUserPofile(context.Context, *UpdateUserProfileRequest) (*UpdateUserProfileResponse, error)
-	UploadUserPhotoProfile(grpc.ClientStreamingServer[UploadUserPhotoRequest, UploadUserPhotoResponse]) error
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -154,15 +112,6 @@ func (UnimplementedAuthServiceServer) GetSekolah(context.Context, *GetSekolahReq
 }
 func (UnimplementedAuthServiceServer) GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserByID not implemented")
-}
-func (UnimplementedAuthServiceServer) GetUserPofile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserPofile not implemented")
-}
-func (UnimplementedAuthServiceServer) UpdateUserPofile(context.Context, *UpdateUserProfileRequest) (*UpdateUserProfileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserPofile not implemented")
-}
-func (UnimplementedAuthServiceServer) UploadUserPhotoProfile(grpc.ClientStreamingServer[UploadUserPhotoRequest, UploadUserPhotoResponse]) error {
-	return status.Errorf(codes.Unimplemented, "method UploadUserPhotoProfile not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -257,49 +206,6 @@ func _AuthService_GetUserByID_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_GetUserPofile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserProfileRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).GetUserPofile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_GetUserPofile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).GetUserPofile(ctx, req.(*GetUserProfileRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_UpdateUserPofile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserProfileRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).UpdateUserPofile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_UpdateUserPofile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).UpdateUserPofile(ctx, req.(*UpdateUserProfileRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_UploadUserPhotoProfile_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(AuthServiceServer).UploadUserPhotoProfile(&grpc.GenericServerStream[UploadUserPhotoRequest, UploadUserPhotoResponse]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type AuthService_UploadUserPhotoProfileServer = grpc.ClientStreamingServer[UploadUserPhotoRequest, UploadUserPhotoResponse]
-
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -323,20 +229,257 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetUserByID",
 			Handler:    _AuthService_GetUserByID_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "auth.proto",
+}
+
+const (
+	UserProfileService_GetUserProfile_FullMethodName           = "/auth.UserProfileService/GetUserProfile"
+	UserProfileService_UpdateUserProfile_FullMethodName        = "/auth.UserProfileService/UpdateUserProfile"
+	UserProfileService_GetUserProfilePhoto_FullMethodName      = "/auth.UserProfileService/GetUserProfilePhoto"
+	UserProfileService_UploadUserPhotoProfile_FullMethodName   = "/auth.UserProfileService/UploadUserPhotoProfile"
+	UserProfileService_DownloadUserPhotoProfile_FullMethodName = "/auth.UserProfileService/DownloadUserPhotoProfile"
+)
+
+// UserProfileServiceClient is the client API for UserProfileService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type UserProfileServiceClient interface {
+	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
+	UpdateUserProfile(ctx context.Context, in *UpdateUserProfileRequest, opts ...grpc.CallOption) (*UpdateUserProfileResponse, error)
+	GetUserProfilePhoto(ctx context.Context, in *GetUserProfilePhotoRequest, opts ...grpc.CallOption) (*GetUserProfilePhotoResponse, error)
+	UploadUserPhotoProfile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadUserPhotoProfileRequest, UploadUserPhotoProfileResponse], error)
+	DownloadUserPhotoProfile(ctx context.Context, in *DownloadUserPhotoProfileRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadUserPhotoProfileResponse], error)
+}
+
+type userProfileServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewUserProfileServiceClient(cc grpc.ClientConnInterface) UserProfileServiceClient {
+	return &userProfileServiceClient{cc}
+}
+
+func (c *userProfileServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserProfileResponse)
+	err := c.cc.Invoke(ctx, UserProfileService_GetUserProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userProfileServiceClient) UpdateUserProfile(ctx context.Context, in *UpdateUserProfileRequest, opts ...grpc.CallOption) (*UpdateUserProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateUserProfileResponse)
+	err := c.cc.Invoke(ctx, UserProfileService_UpdateUserProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userProfileServiceClient) GetUserProfilePhoto(ctx context.Context, in *GetUserProfilePhotoRequest, opts ...grpc.CallOption) (*GetUserProfilePhotoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserProfilePhotoResponse)
+	err := c.cc.Invoke(ctx, UserProfileService_GetUserProfilePhoto_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userProfileServiceClient) UploadUserPhotoProfile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadUserPhotoProfileRequest, UploadUserPhotoProfileResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &UserProfileService_ServiceDesc.Streams[0], UserProfileService_UploadUserPhotoProfile_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[UploadUserPhotoProfileRequest, UploadUserPhotoProfileResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type UserProfileService_UploadUserPhotoProfileClient = grpc.ClientStreamingClient[UploadUserPhotoProfileRequest, UploadUserPhotoProfileResponse]
+
+func (c *userProfileServiceClient) DownloadUserPhotoProfile(ctx context.Context, in *DownloadUserPhotoProfileRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadUserPhotoProfileResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &UserProfileService_ServiceDesc.Streams[1], UserProfileService_DownloadUserPhotoProfile_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[DownloadUserPhotoProfileRequest, DownloadUserPhotoProfileResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type UserProfileService_DownloadUserPhotoProfileClient = grpc.ServerStreamingClient[DownloadUserPhotoProfileResponse]
+
+// UserProfileServiceServer is the server API for UserProfileService service.
+// All implementations must embed UnimplementedUserProfileServiceServer
+// for forward compatibility.
+type UserProfileServiceServer interface {
+	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
+	UpdateUserProfile(context.Context, *UpdateUserProfileRequest) (*UpdateUserProfileResponse, error)
+	GetUserProfilePhoto(context.Context, *GetUserProfilePhotoRequest) (*GetUserProfilePhotoResponse, error)
+	UploadUserPhotoProfile(grpc.ClientStreamingServer[UploadUserPhotoProfileRequest, UploadUserPhotoProfileResponse]) error
+	DownloadUserPhotoProfile(*DownloadUserPhotoProfileRequest, grpc.ServerStreamingServer[DownloadUserPhotoProfileResponse]) error
+	mustEmbedUnimplementedUserProfileServiceServer()
+}
+
+// UnimplementedUserProfileServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedUserProfileServiceServer struct{}
+
+func (UnimplementedUserProfileServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
+}
+func (UnimplementedUserProfileServiceServer) UpdateUserProfile(context.Context, *UpdateUserProfileRequest) (*UpdateUserProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserProfile not implemented")
+}
+func (UnimplementedUserProfileServiceServer) GetUserProfilePhoto(context.Context, *GetUserProfilePhotoRequest) (*GetUserProfilePhotoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfilePhoto not implemented")
+}
+func (UnimplementedUserProfileServiceServer) UploadUserPhotoProfile(grpc.ClientStreamingServer[UploadUserPhotoProfileRequest, UploadUserPhotoProfileResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method UploadUserPhotoProfile not implemented")
+}
+func (UnimplementedUserProfileServiceServer) DownloadUserPhotoProfile(*DownloadUserPhotoProfileRequest, grpc.ServerStreamingServer[DownloadUserPhotoProfileResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method DownloadUserPhotoProfile not implemented")
+}
+func (UnimplementedUserProfileServiceServer) mustEmbedUnimplementedUserProfileServiceServer() {}
+func (UnimplementedUserProfileServiceServer) testEmbeddedByValue()                            {}
+
+// UnsafeUserProfileServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserProfileServiceServer will
+// result in compilation errors.
+type UnsafeUserProfileServiceServer interface {
+	mustEmbedUnimplementedUserProfileServiceServer()
+}
+
+func RegisterUserProfileServiceServer(s grpc.ServiceRegistrar, srv UserProfileServiceServer) {
+	// If the following call pancis, it indicates UnimplementedUserProfileServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&UserProfileService_ServiceDesc, srv)
+}
+
+func _UserProfileService_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserProfileServiceServer).GetUserProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserProfileService_GetUserProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserProfileServiceServer).GetUserProfile(ctx, req.(*GetUserProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserProfileService_UpdateUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserProfileServiceServer).UpdateUserProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserProfileService_UpdateUserProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserProfileServiceServer).UpdateUserProfile(ctx, req.(*UpdateUserProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserProfileService_GetUserProfilePhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserProfilePhotoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserProfileServiceServer).GetUserProfilePhoto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserProfileService_GetUserProfilePhoto_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserProfileServiceServer).GetUserProfilePhoto(ctx, req.(*GetUserProfilePhotoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserProfileService_UploadUserPhotoProfile_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(UserProfileServiceServer).UploadUserPhotoProfile(&grpc.GenericServerStream[UploadUserPhotoProfileRequest, UploadUserPhotoProfileResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type UserProfileService_UploadUserPhotoProfileServer = grpc.ClientStreamingServer[UploadUserPhotoProfileRequest, UploadUserPhotoProfileResponse]
+
+func _UserProfileService_DownloadUserPhotoProfile_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(DownloadUserPhotoProfileRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserProfileServiceServer).DownloadUserPhotoProfile(m, &grpc.GenericServerStream[DownloadUserPhotoProfileRequest, DownloadUserPhotoProfileResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type UserProfileService_DownloadUserPhotoProfileServer = grpc.ServerStreamingServer[DownloadUserPhotoProfileResponse]
+
+// UserProfileService_ServiceDesc is the grpc.ServiceDesc for UserProfileService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var UserProfileService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "auth.UserProfileService",
+	HandlerType: (*UserProfileServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetUserPofile",
-			Handler:    _AuthService_GetUserPofile_Handler,
+			MethodName: "GetUserProfile",
+			Handler:    _UserProfileService_GetUserProfile_Handler,
 		},
 		{
-			MethodName: "UpdateUserPofile",
-			Handler:    _AuthService_UpdateUserPofile_Handler,
+			MethodName: "UpdateUserProfile",
+			Handler:    _UserProfileService_UpdateUserProfile_Handler,
+		},
+		{
+			MethodName: "GetUserProfilePhoto",
+			Handler:    _UserProfileService_GetUserProfilePhoto_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "UploadUserPhotoProfile",
-			Handler:       _AuthService_UploadUserPhotoProfile_Handler,
+			Handler:       _UserProfileService_UploadUserPhotoProfile_Handler,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "DownloadUserPhotoProfile",
+			Handler:       _UserProfileService_DownloadUserPhotoProfile_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "auth.proto",

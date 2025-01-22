@@ -28,23 +28,6 @@ func NewSchemaService(s repositories.SchemaRepository, sTT repositories.SekolahT
 	}
 }
 
-// func (s *schemaServiceImpl) RegistrasiSekolah(schemaName string) error {
-// 	// Call the schema repository to register the schema
-// 	wd, err := os.Getwd()
-// 	if err != nil {
-// 		log.Fatalf("Failed to get working directory: %v", err)
-// 	}
-// 	schemaFile := filepath.Join(wd, "migrations", "schema_template.sql")
-// 	tes := s.schemaRepo.InitializeDatabase(schemaFile, schemaName)
-// 	if tes != nil {
-// 		return errors.New("gagal membuat schema")
-// 	}
-
-// 	// Simpan sekolah ke tabel `SekolahTabelTenant`
-
-// 	return nil
-// }
-
 func (s *schemaServiceImpl) RegistrasiSekolah(ctx context.Context, schemaName string) error {
 	// 1️ Ambil path direktori kerja
 	wd, err := os.Getwd()

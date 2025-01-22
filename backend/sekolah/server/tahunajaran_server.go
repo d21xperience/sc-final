@@ -18,15 +18,16 @@ type TahunAjaranServiceServer struct {
 // **CreateTahunAjaran**
 func (s *TahunAjaranServiceServer) CreateTahunAjaran(ctx context.Context, req *pb.CreateTahunAjaranRequest) (*pb.CreateTahunAjaranResponse, error) {
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"schemaname", "tahun_ajaran"}
+	requiredFields := []string{"SchemaName", "TahunAjaran"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaname()
+	schemaName := "ref" //req.GetSchemaName()
 	tahunAjaran := req.GetTahunAjaran()
 	tahunAjaranModel := &models.TahunAjaran{
+		TahunAjaranID:  tahunAjaran.TahunAjaranId,
 		Nama:           tahunAjaran.Nama,
 		PeriodeAktif:   tahunAjaran.PeriodeAktif,
 		TanggalMulai:   tahunAjaran.TanggalMulai,
@@ -47,21 +48,44 @@ func (s *TahunAjaranServiceServer) CreateTahunAjaran(ctx context.Context, req *p
 
 // **GetTahunAjaran**
 func (s *TahunAjaranServiceServer) GetTahunAjaran(ctx context.Context, req *pb.GetTahunAjaranRequest) (*pb.GetTahunAjaranResponse, error) {
-	schemaName := req.GetSchemaname()
-	tahunAjaranID := req.GetTahunAjaranId()
-
-	tahunAjaranModel, err := s.TahunAjaranService.FindByID(ctx, tahunAjaranID, schemaName)
-	if err != nil {
-		log.Printf("Gagal menemukan tahun ajaran: %v", err)
-		return nil, fmt.Errorf("gagal menemukan tahun ajaran: %w", err)
+	// Validasi SchemaName
+	schemaName := "ref" //req.GetSchemaName()
+	if schemaName == "" {
+		return nil, fmt.Errorf("schema name is required")
 	}
 
+	// Cek apakah harus mengambil semua data atau data spesifik berdasarkan TahunAjaranId
+	tahunAjaranID := req.GetTahunAjaranId()
+	findAll := tahunAjaranID == ""
+
+	if findAll {
+		// Ambil semua Tahun Ajaran
+		tahunAjaranModels, err := s.TahunAjaranService.FindAll(ctx, schemaName, int(req.GetLimit()), int(req.GetOffset()))
+		if err != nil {
+			log.Printf("[ERROR] Gagal menemukan tahun ajaran di schema '%s': %v", schemaName, err)
+			return nil, fmt.Errorf("gagal menemukan tahun ajaran di schema '%s': %w", schemaName, err)
+		}
+
+		// Konversi hasil ke response protobuf
+		tahunAjaranList := convertModelsToPB(tahunAjaranModels)
+
+		// Return response
+		return &pb.GetTahunAjaranResponse{
+			TahunAjaran: tahunAjaranList,
+		}, nil
+	}
+
+	// Ambil data spesifik berdasarkan TahunAjaranId
+	tahunAjaranModel, err := s.TahunAjaranService.FindByID(ctx, tahunAjaranID, schemaName)
+	if err != nil {
+		log.Printf("[ERROR] Gagal menemukan tahun ajaran dengan ID '%s' di schema '%s': %v", tahunAjaranID, schemaName, err)
+		return nil, fmt.Errorf("gagal menemukan tahun ajaran dengan ID '%s': %w", tahunAjaranID, err)
+	}
+
+	// Return response untuk satu data
 	return &pb.GetTahunAjaranResponse{
-		TahunAjaran: &pb.TahunAjaran{
-			Nama:           tahunAjaranModel.Nama,
-			PeriodeAktif:   tahunAjaranModel.PeriodeAktif,
-			TanggalMulai:   tahunAjaranModel.TanggalMulai,
-			TanggalSelesai: tahunAjaranModel.TanggalSelesai,
+		TahunAjaran: []*pb.TahunAjaran{
+			convertModelToPB(tahunAjaranModel),
 		},
 	}, nil
 }
@@ -75,7 +99,7 @@ func (s *TahunAjaranServiceServer) UpdateTahunAjaran(ctx context.Context, req *p
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaname()
+	schemaName := req.GetSchemaName()
 	tahunAjaranReq := req.GetTahunAjaran()
 	tahunAjaranModel := &models.TahunAjaran{
 		Nama:           tahunAjaranReq.Nama,
@@ -96,7 +120,7 @@ func (s *TahunAjaranServiceServer) UpdateTahunAjaran(ctx context.Context, req *p
 
 // // **DeleteTahunAjaran**
 func (s *TahunAjaranServiceServer) DeleteTahunAjaran(ctx context.Context, req *pb.DeleteTahunAjaranRequest) (*pb.DeleteTahunAjaranResponse, error) {
-	schemaName := req.GetSchemaname()
+	schemaName := req.GetSchemaName()
 	tahunAjaranID := req.GetTahunAjaranId()
 
 	err := s.TahunAjaranService.Delete(ctx, tahunAjaranID, schemaName)
@@ -109,4 +133,21 @@ func (s *TahunAjaranServiceServer) DeleteTahunAjaran(ctx context.Context, req *p
 		Message: "Tahun ajaran berhasil dihapus",
 		Status:  true,
 	}, nil
+}
+
+func convertModelToPB(model *models.TahunAjaran) *pb.TahunAjaran {
+	return &pb.TahunAjaran{
+		TahunAjaranId:  model.TahunAjaranID,
+		Nama:           model.Nama,
+		PeriodeAktif:   model.PeriodeAktif,
+		TanggalMulai:   model.TanggalMulai,
+		TanggalSelesai: model.TanggalSelesai,
+	}
+}
+func convertModelsToPB(models []*models.TahunAjaran) []*pb.TahunAjaran {
+	var pbList []*pb.TahunAjaran
+	for _, model := range models {
+		pbList = append(pbList, convertModelToPB(model))
+	}
+	return pbList
 }

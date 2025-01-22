@@ -14,7 +14,7 @@ func main() {
 	// Inisialisasi database
 	config.InitDatabase(cfg)
 	// Migrasi model
-	config.DB.AutoMigrate(&models.SekolahTabelTenant{})
+	config.DB.AutoMigrate(&models.SekolahTabelTenant{}, &models.SchemaLog{})
 	// =========================Inisialisasi Awal =======
 	sekolahRepo := repositories.NewSekolahRepository(config.DB)
 	sekolahService := services.NewSekolahService(sekolahRepo)
@@ -28,6 +28,12 @@ func main() {
 	// =============================================================================
 	pesertaDidikRepo := repositories.NewpesertaDidikRepository(config.DB)
 	pesertaDidikService := services.NewPesertaDidikService(pesertaDidikRepo)
+	rombonganBelajarRepo := repositories.NewrombonganBelajarRepository(config.DB)
+	rombonganBelajarService := services.NewRombonganBelajarService(rombonganBelajarRepo)
+	rombelAnggotaRepo := repositories.NewRombelAnggotaRepository(config.DB)
+	rombelAnggotaService := services.NewRombelAnggotaService(rombelAnggotaRepo)
+	nilaiAkhirRepo := repositories.NewNilaiAkhirRepository(config.DB)
+	nilaiAkhirService := services.NewNilaiAkhirService(nilaiAkhirRepo)
 
-	server.StartGRPCServer(schemaService, sekolahService, tahunAjaranService, semesterService, pesertaDidikService)
+	server.StartGRPCServer(schemaService, sekolahService, tahunAjaranService, semesterService, pesertaDidikService, rombonganBelajarService, rombelAnggotaService, nilaiAkhirService)
 }

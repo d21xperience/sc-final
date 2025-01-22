@@ -33,7 +33,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import ProgressSpinner from 'primevue/progressspinner';
-// 🔥 Deklarasi emit untuk mengirim event ke parent
+//  Deklarasi emit untuk mengirim event ke parent
 import { useStore } from "vuex";
 const emit = defineEmits(["profileFetched", "fetchError"]);
 const store = useStore();
@@ -57,13 +57,13 @@ onMounted(async() => {
         // const tes = store.getters["sekolahService/getTabeltenant"]
         console.log(tes)
         if (tes) {
-            // 🔥 Emit event ke parent bahwa data berhasil diambil
+            //  Emit event ke parent bahwa data berhasil diambil
             emit("profileFetched", true);
         } else {
             fetchSekolah(sekolahID)
         }
     } catch (error) {
-        // 🔥 Emit event ke parent bahwa ada error
+        //  Emit event ke parent bahwa ada error
         emit("fetchError", false);
     }
 

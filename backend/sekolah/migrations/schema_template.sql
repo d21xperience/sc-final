@@ -21,17 +21,8 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_sekolah (
 	status_kepemilikan_id NUMERIC(1,0) NOT NULL,
 	kode_aktivasi VARCHAR(30) NULL DEFAULT NULL,
 	jenjang VARCHAR(20) NULL DEFAULT NULL,
-	bentuk_pendidikan_id SMALLINT NULL DEFAULT NULL
-);
-
-CREATE TABLE IF NOT EXISTS {{schema_name}}.semester (
-	semester_id VARCHAR(5) NOT NULL,
-	tahun_ajaran_id VARCHAR(4) NOT NULL,
-	nama_semester VARCHAR(20) NOT NULL,
-	semester NUMERIC(1,0) NOT NULL,
-	periode_aktif VARCHAR(1) NOT NULL,
-	tanggal_mulai DATE NOT NULL,
-	tanggal_selesai DATE NOT NULL
+	bentuk_pendidikan_id SMALLINT NULL DEFAULT NULL,
+	PRIMARY KEY (sekolah_id)
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_siswa (
@@ -51,7 +42,8 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_siswa (
 	pekerjaan_ayah VARCHAR(30) NULL DEFAULT NULL,
 	pekerjaan_ibu VARCHAR(30) NULL DEFAULT NULL,
 	nm_wali VARCHAR(100) NULL DEFAULT NULL,
-	pekerjaan_wali VARCHAR(30) NULL DEFAULT NULL
+	pekerjaan_wali VARCHAR(30) NULL DEFAULT NULL,
+	PRIMARY KEY (peserta_didik_id)
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_siswa_pelengkap (
@@ -65,7 +57,8 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_siswa_pelengkap (
 	telepon_ortu VARCHAR(20) NULL DEFAULT NULL,
 	alamat_wali TEXT NULL DEFAULT NULL,
 	telepon_wali VARCHAR(20) NULL DEFAULT NULL,
-	foto_siswa VARCHAR(100) NULL DEFAULT NULL
+	foto_siswa VARCHAR(100) NULL DEFAULT NULL,
+	PRIMARY KEY (pelengkap_siswa_id)
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_ptk (
@@ -79,7 +72,8 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_ptk (
 	nuptk VARCHAR(16) NULL DEFAULT NULL,
 	alamat_jalan VARCHAR(80) NOT NULL,
 	status_keaktifan_id NUMERIC(2,0) NOT NULL,
-	soft_delete NUMERIC(1,0) NOT NULL
+	soft_delete NUMERIC(1,0) NOT NULL,
+	PRIMARY KEY (ptk_id)
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_ptk_terdaftar (
@@ -87,7 +81,8 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_ptk_terdaftar (
 	ptk_id UUID NOT NULL,
 	tahun_ajaran_id VARCHAR(4) NULL DEFAULT NULL,
 	jenis_keluar_id CHAR(1) NULL DEFAULT NULL,
-	soft_delete NUMERIC(1,0) NOT NULL
+	soft_delete NUMERIC(1,0) NOT NULL,
+	PRIMARY KEY (ptk_terdaftar_id)
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_kelas (
@@ -101,25 +96,16 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_kelas (
 	jenis_rombel NUMERIC(2,0) NULL DEFAULT NULL,
 	nama_jurusan_sp VARCHAR(100) NULL DEFAULT NULL,
 	jurusan_sp_id UUID NULL DEFAULT NULL,
-	kurikulum_id SMALLINT NOT NULL
+	kurikulum_id SMALLINT NOT NULL,
+	PRIMARY KEY (rombongan_belajar_id)
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_anggotakelas (
 	anggota_rombel_id UUID NOT NULL,
 	peserta_didik_id UUID NOT NULL,
 	rombongan_belajar_id UUID NOT NULL,
-	semester_id VARCHAR(5) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_mapel (
-	mata_pelajaran_id INTEGER NOT NULL,
-	nm_mapel VARCHAR(100) NULL DEFAULT NULL,
-	kelompok VARCHAR(2) NULL DEFAULT NULL,
-	semester NUMERIC(1,0) NULL DEFAULT NULL,
-	jurusan_id VARCHAR(25) NULL DEFAULT NULL,
-	urut_rapor INTEGER NULL DEFAULT NULL,
-	nm_lokal VARCHAR(60) NULL DEFAULT NULL,
-	nm_ringkas VARCHAR(10) NULL DEFAULT NULL
+	semester_id VARCHAR(5) NOT NULL,
+	PRIMARY KEY (anggota_rombel_id)
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_pembelajaran (
@@ -131,7 +117,8 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_pembelajaran (
 	status_di_kurikulum NUMERIC(2,0) NULL DEFAULT NULL,
 	nama_mata_pelajaran VARCHAR(50) NULL DEFAULT NULL,
 	induk_pembelajaran UUID NULL DEFAULT NULL,
-	is_dapo NUMERIC(1,0) NULL DEFAULT '1'
+	is_dapo NUMERIC(1,0) NULL DEFAULT '1',
+	PRIMARY KEY (pembelajaran_id)
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_nilaiakhir (
@@ -149,29 +136,6 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_nilaiakhir (
 	predikat_siksos VARCHAR(15) NULL DEFAULT NULL,
 	peserta_didik_id UUID NULL DEFAULT NULL,
 	id_minat VARCHAR(2) NULL DEFAULT NULL,
-	semester NUMERIC(1,0) NULL DEFAULT NULL
+	semester NUMERIC(1,0) NULL DEFAULT NULL,
+	PRIMARY KEY (id_nilai_akhir)
 );
-
-CREATE TABLE semester (
-	semester_id VARCHAR(5) NOT NULL,
-	tahun_ajaran_id VARCHAR(4) NOT NULL,
-	nama_semester VARCHAR(20) NOT NULL,
-	semester NUMERIC(1,0) NOT NULL,
-	periode_aktif VARCHAR(1) NOT NULL,
-	tanggal_mulai DATE NOT NULL,
-	tanggal_selesai DATE NOT NULL
-);
-
-CREATE TABLE tahun_ajaran (
-	tahun_ajaran_id NUMERIC(4,0) NOT NULL,
-	nama VARCHAR(10) NOT NULL,
-	periode_aktif NUMERIC(1,0) NOT NULL,
-	tanggal_mulai DATE NOT NULL,
-	tanggal_selesai DATE NOT NULL,
-	create_date TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:59.628052',
-	last_update TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:59.628052',
-	expired_date TIMESTAMP NULL DEFAULT NULL,
-	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
-	PRIMARY KEY (tahun_ajaran_id),
-	UNIQUE INDEX tahun_ajaran_pk (tahun_ajaran_id)
-)

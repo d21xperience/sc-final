@@ -8,6 +8,7 @@ import (
 	pb "sekolah/generated"
 	"sekolah/models"
 	"sekolah/services"
+	"sekolah/utils"
 
 	"gorm.io/gorm"
 )
@@ -19,31 +20,21 @@ type SekolahServiceServer struct {
 	sekolahService services.SekolahService
 }
 
-// // Constructor untuk AuthServiceServer dengan Redis
-// func NewAuthServiceServer() *SekolahServiceServer {
-// 	return &SekolahServiceServer{}
-// }
-
 func (s *SekolahServiceServer) RegistrasiSekolah(ctx context.Context, req *pb.TabelSekolahRequest) (*pb.TabelSekolahResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
-
-	// Cek apakah req atau req.Sekolah kosong
-	if req == nil {
-		log.Println("Request is nil")
-		return nil, errors.New("invalid request: request is nil")
+	requiredFields := []string{"Sekolah"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
 	}
 
-	if req.Sekolah == nil {
-		log.Println("Sekolah is nil in request")
-		return nil, errors.New("invalid request: sekolah is nil")
-	}
 	sekolah := req.GetSekolah()
-	namaSchema := sekolah.SekolahIdEnkrip
+	schemaName := sekolah.SekolahIdEnkrip
 	existingSchema, err := s.schemaService.GetSchemaBySekolahID(int(sekolah.SekolahId))
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Printf("Lanjutkan pendaftaran: %v", err)
-		// return nil, errors.New("gagal mengecek pendaftaran sekolah")
 	}
 
 	if existingSchema != nil {
@@ -53,15 +44,20 @@ func (s *SekolahServiceServer) RegistrasiSekolah(ctx context.Context, req *pb.Ta
 		}, nil
 	}
 
-	cek := s.schemaService.RegistrasiSekolah(ctx, namaSchema)
-	if errors.Is(cek, gorm.ErrInvalidData) {
-		return nil, errors.New("gagal total")
+	cek := s.schemaService.RegistrasiSekolah(ctx, schemaName)
+	if cek != nil {
+		// Tangani error spesifik jika error adalah gorm.ErrInvalidData
+		if errors.Is(cek, gorm.ErrInvalidData) {
+			return nil, errors.New("registrasi sekolah gagal: data tidak valid")
+		}
+		// Tangani error lainnya
+		return nil, fmt.Errorf("registrasi sekolah gagal: %w", cek)
 	}
 	// 2 Simpan informasi schema sekolah
 	err = s.schemaService.SimpanSchemaSekolah(&models.SekolahTabelTenant{
-		SekolahID:  int(sekolah.SekolahId),
-		NamaSchema: namaSchema,
-		Nama:       sekolah.NamaSekolah,
+		SekolahID:   int(sekolah.SekolahId),
+		SchemaName:  schemaName,
+		NamaSekolah: sekolah.NamaSekolah,
 	})
 	if err != nil {
 		log.Printf("Gagal menyimpan schema sekolah: %v", err)
@@ -83,17 +79,25 @@ func (s *SekolahServiceServer) GetSekolahTabelTenant(ctx context.Context, req *p
 	}
 
 	return &pb.SekolahTabelTenantResponse{
-		SekolahId:  int32(sekolahTerdaftar.SekolahID),
-		Nama:       sekolahTerdaftar.Nama,
-		NamaSchema: sekolahTerdaftar.NamaSchema, // nama schema
+		SekolahId:   int32(sekolahTerdaftar.SekolahID),
+		NamaSekolah: sekolahTerdaftar.NamaSekolah,
+		SchemaName:  sekolahTerdaftar.SchemaName, // nama schema
 	}, err
 
 }
 
+// SCHEMA TABLE SEKOLAH---------------------input informasi sekolah yang telah terdaftar
 // ================================================================================//
-// Tenant table
 func (s *SekolahServiceServer) CreateSekolah(ctx context.Context, req *pb.CreateSekolahRequest) (*pb.CreateSekolahResponse, error) {
-	schemaName := req.GetSchemaname()
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	requiredFields := []string{"SchemaName", "Sekolah"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
 	sekolah := req.GetSekolah()
 	// sekolahID, _ := uuid.Parse(sekolah.SekolahId)
 	sekolahModel := &models.Sekolah{
@@ -133,18 +137,18 @@ func (s *SekolahServiceServer) CreateSekolah(ctx context.Context, req *pb.Create
 }
 
 func (s *SekolahServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
-	// 🔥 Ambil schema dari request
-	schemaName := req.GetSchemaname()
-	// sekolahID := req.GetSekolahId()
+	//  Ambil schema dari request
+	schemaName := req.GetSchemaName()
+	sekolahID := req.GetSekolahId()
 
-	// 🔥 Cari sekolah berdasarkan ID dan schema
-	sekolah, err := s.sekolahService.Find(ctx, schemaName)
+	//  Cari sekolah berdasarkan ID dan schema
+	sekolah, err := s.sekolahService.FindByID(ctx, sekolahID, schemaName)
 	if err != nil {
 		log.Printf("Gagal menemukan sekolah: %v", err)
 		return nil, fmt.Errorf("gagal menemukan sekolah: %w", err)
 	}
 
-	// 🔥 Return response dalam format protobuf
+	//  Return response dalam format protobuf
 	return &pb.GetSekolahResponse{
 		Sekolah: &pb.SekolahDapo{
 			SekolahId:           sekolah.SekolahID,
@@ -170,3 +174,5 @@ func (s *SekolahServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekola
 		},
 	}, nil
 }
+
+// Tambahkan fitur tambahan DELET, UPDATE , dan LIST digunakan untuk SUPER ADMIN

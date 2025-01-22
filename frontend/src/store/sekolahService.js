@@ -1,7 +1,7 @@
 import axios from "axios";
 // const baseURL = "http://localhost:8080/api/v1";
 const api = axios.create({
-  baseURL: "http://localhost:8081/api/v1", // Pastikan menggunakan protokol HTTPS
+  baseURL: "http://localhost:8081/api/v1/ss", // Pastikan menggunakan protokol HTTPS
   withCredentials: true, // Untuk mengirim cookie atau credensial
   headers: {
     "Content-Type": "application/json",
@@ -26,40 +26,6 @@ const mutations = {
     state.tabelTenant = tabelTenant;
     localStorage.setItem("tabelTenant", JSON.stringify(tabelTenant));
   },
-  //   setUser(state, user) {
-  //     state.user = user;
-  //     localStorage.setItem("user", JSON.stringify(user)); // Simpan user ke localStorage
-  //   },
-  //   setUserRole(state, userRole) {
-  //     state.userRole = userRole;
-  //     localStorage.setItem("userRole", userRole);
-  //   },
-  //   setUserProfile(state, userProfile) {
-  //     state.userProfile = userProfile;
-  //     localStorage.setItem("userProfile", JSON.stringify(userProfile));
-  //   },
-
-  //   setToken(state, token) {
-  //     state.token = token;
-  //     localStorage.setItem("token", token);
-  //   },
-  //   setRefreshToken(state, refreshToken) {
-  //     state.refreshToken = refreshToken;
-  //   },
-  //   clearAuthData(state) {
-  //     state.token = null;
-  //     state.refreshToken = null;
-  //     state.user = null;
-  //     localStorage.removeItem("token"); // Hapus token saat logout
-  //     localStorage.removeItem("userRole"); // Hapus userRole saat logout
-  //     localStorage.removeItem("userProfile"); // Hapus userProfile saat logout
-  //     localStorage.removeItem("user");
-  //     localStorage.removeItem("sekolah");
-  //   },
-  //   SET_SEKOLAH(state, sekolah) {
-  //     state.sekolah = sekolah;
-  //     localStorage.setItem("sekolah", JSON.stringify(sekolah));
-  //   },
 };
 
 const actions = {
@@ -104,6 +70,30 @@ const actions = {
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal membuat tabel tenant:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
+  async getSemester({ commit }, payload) {
+    let limit = payload.limit || 10;
+    let offset = payload.offset || 0;
+    let semester_id = payload.semester_id || null;
+    commit("SET_LOADING", true);
+    commit("SET_ERROR", null);
+    try {
+      const response = await api.get(`/semester`, {
+        params: {
+          semester_id: semester_id,
+          limit: limit,
+          offset: offset,
+        },
+      });
+      // commit("SET_TABELTENANT", response.data);
+      return response.data; // Mengembalikan data sekolah
+    } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal membuat semester:", error);
       return null;
     } finally {
       commit("SET_LOADING", false);

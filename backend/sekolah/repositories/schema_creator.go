@@ -82,18 +82,45 @@ func (r *schemaRepositoryImpl) LoadSQLFile(filePath, schemaName string) (string,
 }
 
 // InitializeDatabase menjalankan script SQL dari file dengan nama schema dinamis
-func (r *schemaRepositoryImpl) InitializeDatabase(ctx context.Context, schemaFile, schemaName string) error {
-	sqlContent, err := r.LoadSQLFile(schemaFile, schemaName)
-	if err != nil {
-		return fmt.Errorf("failed to load SQL file: %w", err)
-	}
+// func (r *schemaRepositoryImpl) InitializeDatabase(ctx context.Context, schemaFile, schemaName string) error {
+// 	sqlContent, err := r.LoadSQLFile(schemaFile, schemaName)
+// 	if err != nil {
+// 		return fmt.Errorf("failed to load SQL file: %w", err)
+// 	}
 
-	if err := r.ExecuteSQL(sqlContent); err != nil {
-		return fmt.Errorf("failed to execute SQL: %w", err)
-	}
-	// simpan informasi ke database
-	log.Printf("Schema and tables created successfully: %s", schemaName)
-	return nil
+//		if err := r.ExecuteSQL(sqlContent); err != nil {
+//			return fmt.Errorf("failed to execute SQL: %w", err)
+//		}
+//		// simpan informasi ke database
+//		log.Printf("Schema and tables created successfully: %s", schemaName)
+//		return nil
+//	}
+func (r *schemaRepositoryImpl) InitializeDatabase(ctx context.Context, schemaFile, schemaName string) error {
+	// Mulai transaction
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// Muat isi file SQL
+		sqlContent, err := r.LoadSQLFile(schemaFile, schemaName)
+		if err != nil {
+			log.Printf("Error loading SQL file: %v", err)
+			return fmt.Errorf("failed to load SQL file: %w", err)
+		}
+
+		// Eksekusi SQL
+		if err := tx.Exec(sqlContent).Error; err != nil {
+			log.Printf("Error executing SQL: %v", err)
+			return fmt.Errorf("failed to execute SQL: %w", err)
+		}
+
+		// (Opsional) Simpan informasi schema ke database
+		if err := tx.Exec("INSERT INTO schema_logs (schema_name, created_at) VALUES (?, NOW())", schemaName).Error; err != nil {
+			log.Printf("Error saving schema log: %v", err)
+			return fmt.Errorf("failed to save schema log: %w", err)
+		}
+
+		// Commit transaction
+		log.Printf("Schema %s successfully initialized", schemaName)
+		return nil
+	})
 }
 
 // Fungsi untuk mengganti schema dinamis

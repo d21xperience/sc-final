@@ -2,39 +2,50 @@ package services
 
 import (
 	"context"
-	"errors"
 	"sekolah/models"
 	"sekolah/repositories"
 )
 
 type NilaiAkhirService interface {
-	Save(ctx context.Context, pd *models.TabelNilaiAkhir, schemaName string) error
-	FindByID(ctx context.Context, NilaiAkhirID string, schemaName string) (*models.TabelNilaiAkhir, error)
-	Update(ctx context.Context, NilaiAkhir *models.TabelNilaiAkhir, schemaName string) error
+	Save(ctx context.Context, pd *models.NilaiAkhir, schemaName string) error
+	FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.NilaiAkhir, error)
+	FindByID(ctx context.Context, NilaiAkhirID string, schemaName string) (*models.NilaiAkhir, error)
+	// Update(ctx context.Context, schemaName string, pd *models.NilaiAkhir) error
 	Delete(ctx context.Context, NilaiAkhirID string, schemaName string) error
+	SaveMany(ctx context.Context, schemaName string, banyakKelas []*models.NilaiAkhir) error
+	FindAllByConditions(ctx context.Context, schemaName string, conditions map[string]interface{}, limit, offset int) ([]*models.NilaiAkhir, error)
 }
 
 type NilaiAkhirServiceImpl struct {
-	NilaiAkhirRepo repositories.NilaiAkhirRepository
+	repo *repositories.GenericRepository[models.NilaiAkhir]
+	// Batch upload
 }
 
-func NewNilaiAkhirService(sr repositories.NilaiAkhirRepository) NilaiAkhirService {
-	return &NilaiAkhirServiceImpl{NilaiAkhirRepo: sr}
+func NewNilaiAkhirService(s *repositories.GenericRepository[models.NilaiAkhir]) NilaiAkhirService {
+	return &NilaiAkhirServiceImpl{repo: s}
 }
 
-func (s *NilaiAkhirServiceImpl) Save(ctx context.Context, nilaiAkhirModel *models.TabelNilaiAkhir, schemaName string) error {
-	err := s.NilaiAkhirRepo.Save(ctx, nilaiAkhirModel, schemaName)
-	if err != nil {
-		return errors.New("gagal menyimpan NilaiAkhir")
-	}
-	return err
+func (s *NilaiAkhirServiceImpl) Save(ctx context.Context, NilaiAkhir *models.NilaiAkhir, schemaName string) error {
+	return s.repo.Save(ctx, NilaiAkhir, schemaName)
 }
-func (s *NilaiAkhirServiceImpl) FindByID(ctx context.Context, NilaiAkhirID string, schemaName string) (*models.TabelNilaiAkhir, error) {
-	return s.NilaiAkhirRepo.FindByID(ctx, NilaiAkhirID, schemaName)
+func (s *NilaiAkhirServiceImpl) FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.NilaiAkhir, error) {
+	return s.repo.FindAll(ctx, schemaName, limit, offset)
 }
-func (s *NilaiAkhirServiceImpl) Update(ctx context.Context, nilaiAkhirModel *models.TabelNilaiAkhir, schemaName string) error {
-	return s.NilaiAkhirRepo.Update(ctx, nilaiAkhirModel, schemaName)
+func (s *NilaiAkhirServiceImpl) FindByID(ctx context.Context, NilaiAkhirId string, schemaName string) (*models.NilaiAkhir, error) {
+	return s.repo.FindByID(ctx, NilaiAkhirId, schemaName, "rombongan_belajar_id")
 }
+
+//	func (s *NilaiAkhirServiceImpl) Update(ctx context.Context, schemaName string, NilaiAkhir *models.NilaiAkhir) error {
+//		return s.repo.Update(ctx, NilaiAkhir, schemaName, "rombongan_belajar_id", NilaiAkhir.ID)
+//	}
 func (s *NilaiAkhirServiceImpl) Delete(ctx context.Context, NilaiAkhirID string, schemaName string) error {
-	return s.NilaiAkhirRepo.Delete(ctx, NilaiAkhirID, schemaName)
+	return s.repo.Delete(ctx, NilaiAkhirID, schemaName, "rombongan_belajar_id")
+}
+func (s *NilaiAkhirServiceImpl) SaveMany(ctx context.Context, schemaName string, banyakNilaiAkhir []*models.NilaiAkhir) error {
+	// Batasi batch size agar operasi lebih efisien (misalnya 100 record per batch)
+	batchSize := 100
+	return s.repo.SaveMany(ctx, schemaName, banyakNilaiAkhir, batchSize)
+}
+func (s *NilaiAkhirServiceImpl) FindAllByConditions(ctx context.Context, schemaName string, conditions map[string]interface{}, limit, offset int) ([]*models.NilaiAkhir, error) {
+	return s.repo.FindAllByConditions(ctx, schemaName, conditions, limit, offset)
 }
