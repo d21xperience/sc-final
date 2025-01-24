@@ -1,43 +1,47 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"sekolah/models"
 	"strings"
+
+	"github.com/xuri/excelize/v2"
 )
 
 type UploadHandler struct {
-	service *PesertaDidikService
+	service PesertaDidikService
 }
 
 // NewUploadHandler membuat instance baru UploadHandler.
-func NewUploadHandler(service *PesertaDidikService) *UploadHandler {
+func NewUploadHandler(service PesertaDidikService) *UploadHandler {
 	return &UploadHandler{service: service}
 }
 
 // HandleUpload adalah HTTP handler untuk upload file.
-// func (h *UploadHandler) HandleUpload(w http.ResponseWriter, r *http.Request) {
 func (h *UploadHandler) HandleBinaryFileUpload(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	// Parse form data
 	// Parse form data
 	err := r.ParseMultipartForm(10 << 20) // Batas ukuran file 10MB
 	if err != nil {
-		http.Error(w, "Gagal mem-parsing form data", http.StatusBadRequest)
+		http.Error(w, "Gagal mem-parsing form data: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	// Ambil parameter dan file
-	// uploadType := r.FormValue("upload_type")
+	uploadType := r.FormValue("upload_type")
+	schemaName := r.FormValue("schema_name")
 	fileHeader := r.MultipartForm.File["file"]
 	if len(fileHeader) == 0 {
-		http.Error(w, "File tidak ditemukan", http.StatusBadRequest)
+		http.Error(w, "File tidak ditemukan dalam request", http.StatusBadRequest)
 		return
 	}
 	file, err := fileHeader[0].Open()
 	if err != nil {
-		http.Error(w, "Gagal membuka file", http.StatusInternalServerError)
+		http.Error(w, "Gagal membuka file: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer file.Close()
@@ -52,7 +56,7 @@ func (h *UploadHandler) HandleBinaryFileUpload(w http.ResponseWriter, r *http.Re
 	// Simpan file sementara
 	tempFile, err := os.CreateTemp("", "upload-*.xlsx")
 	if err != nil {
-		http.Error(w, "Gagal membuat file sementara", http.StatusInternalServerError)
+		http.Error(w, "Gagal membuat file sementara: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer tempFile.Close()
@@ -60,238 +64,208 @@ func (h *UploadHandler) HandleBinaryFileUpload(w http.ResponseWriter, r *http.Re
 
 	_, err = io.Copy(tempFile, file)
 	if err != nil {
-		http.Error(w, "Gagal menyimpan file sementara", http.StatusInternalServerError)
+		http.Error(w, "Gagal menyimpan file sementara: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	// Proses file (gunakan service jika diperlukan)
-	// data, err := h.sekolahService.ProcessExcel(context.Background(), tempFile.Name(), uploadType)
-	// if err != nil {
-	// 	http.Error(w, fmt.Sprintf("Gagal memproses file: %v", err), http.StatusInternalServerError)
-	// 	return
-	// }
+	data, err := uploadData[*models.PesertaDidik](tempFile.Name(), uploadType)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Gagal memproses file: %v", err), http.StatusInternalServerError)
+		return
+	}
 
+	ctx := context.Background()
+	// Anda harus implementasikan metode pada service
+	// ptrData := toPointerSlice(data) // Konversi ke []*models.PesertaDidik
+
+	err = h.service.SaveMany(ctx, schemaName, data)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Gagal menyimpan data: %v", err), http.StatusInternalServerError)
+		return
+	}
 	// Berikan respon
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"message": "File berhasil diproses",
-		// "data":    data,
+		"data":    data,
 	})
 }
 
-// import (
-// 	"context"
-// 	"fmt"
-// 	"io"
-// 	"os"
-// 	"sekolah/models"
+func uploadData[T any](filePath, uploadType string) ([]T, error) {
+	f, err := excelize.OpenFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("gagal membaca file Excel: %w", err)
+	}
+	defer f.Close()
 
-// 	"github.com/xuri/excelize/v2"
-// )
+	sheets := f.GetSheetList()
+	if len(sheets) == 0 {
+		return nil, fmt.Errorf("file Excel tidak memiliki sheet")
+	}
 
-// type Repository interface {
-// 	UploadDataSekolah(ctx context.Context, tempFilePath, uploadType, schemaName string) error
+	rows, err := f.GetRows(sheets[0]) // Ambil data dari sheet pertama
+	if err != nil {
+		return nil, fmt.Errorf("gagal mengambil data dari sheet: %w", err)
+	}
+
+	if len(rows) < 2 { // Pastikan setidaknya ada header + 1 baris data
+		return nil, fmt.Errorf("file Excel kosong atau tidak memiliki data yang valid")
+	}
+
+	var result []T
+	switch uploadType {
+	case "siswa":
+		// return parseSiswa(rows), nil
+		result = castToGeneric[T](parseSiswa(rows))
+	case "guru":
+		result = castToGeneric[T](parseGuru(rows))
+	case "kelas":
+		result = castToGeneric[T](parseKelas(rows))
+	case "nilaiAkhir":
+		result = castToGeneric[T](parseNilaiAkhir(rows))
+	default:
+		return nil, fmt.Errorf("jenis unggahan tidak dikenali: %s", uploadType)
+	}
+
+	return result, nil
+}
+
+// Helper untuk casting generik
+func castToGeneric[T any](input interface{}) []T {
+	if v, ok := input.([]T); ok {
+		return v
+	}
+	return nil
+}
+
+// Fungsi parsing untuk siswa
+func parseSiswa(rows [][]string) []*models.PesertaDidik {
+	var siswaList []*models.PesertaDidik
+	for i, row := range rows[1:] {
+		if len(row) < 7 {
+			fmt.Printf("Baris %d memiliki data yang tidak lengkap\n", i+2)
+			continue
+		}
+		// // Konversi tanggal lahir
+		// tanggalLahirExcel, err := strconv.Atoi(row[5]) // Baris 5 adalah tanggal lahir
+		// if err != nil {
+		// 	fmt.Printf("Baris %d memiliki tanggal lahir tidak valid: %v\n", i+2, err)
+		// 	continue
+		// }
+		// // Konversi tanggal diterima
+		// tanggalDiterimaExcel, err := strconv.Atoi(row[10]) // Baris 5 adalah tanggal lahir
+		// if err != nil {
+		// 	fmt.Printf("Baris %d memiliki tanggal lahir tidak valid: %v\n", i+2, err)
+		// 	continue
+		// }
+
+		// tanggalLahir, err := parseExcelDate(tanggalLahirExcel)
+		// if err != nil {
+		// 	fmt.Printf("Baris %d gagal mengonversi tanggal lahir: %v\n", i+2, err)
+		// 	continue
+		// }
+		// tanggaDiterima, err := parseExcelDate(tanggalDiterimaExcel)
+		// if err != nil {
+		// 	fmt.Printf("Baris %d gagal mengonversi tanggal lahir: %v\n", i+2, err)
+		// 	continue
+		// }
+		// FORMAT TANGGAL YYYY-MM-DD
+		siswa := &models.PesertaDidik{
+			PesertaDidikID: row[0],
+			Nis:            row[1],
+			Nisn:           row[2],
+			NmSiswa:        row[3],
+			TempatLahir:    row[4],
+			TanggalLahir:   row[5],
+			JenisKelamin:   row[6],
+			Agama:          row[7],
+			AlamatSiswa:    parseNullable(row, 8),
+			// TeleponSiswa:    parseNullable(row, 9),
+			DiterimaTanggal: row[10],
+		}
+		siswaList = append(siswaList, siswa)
+	}
+	return siswaList
+}
+
+// Helper untuk kolom opsional
+func parseNullable(row []string, index int) *string {
+	if len(row) > index && strings.TrimSpace(row[index]) != "" {
+		value := row[index]
+		return &value
+	}
+	return nil
+}
+
+// Fungsi parsing untuk guru
+func parseGuru(rows [][]string) []*models.TabelPTK {
+	var guruList []*models.TabelPTK
+	for _, row := range rows[1:] {
+		if len(row) < 3 {
+			continue
+		}
+		guru := &models.TabelPTK{
+			// Nama:   row[0],
+			// Mapel:  row[1],
+			// Alamat: row[2],
+		}
+		guruList = append(guruList, guru)
+	}
+	return guruList
+}
+
+// Fungsi parsing untuk kelas
+func parseKelas(rows [][]string) []*models.RombonganBelajar {
+	var kelasList []*models.RombonganBelajar
+	for _, row := range rows[1:] {
+		if len(row) < 2 {
+			continue
+		}
+		kelas := &models.RombonganBelajar{
+			// NamaKelas:  row[0],
+			// JumlahSiswa: parseInt(row[1]),
+		}
+		kelasList = append(kelasList, kelas)
+	}
+	return kelasList
+}
+
+// Fungsi parsing untuk kelas
+func parseNilaiAkhir(rows [][]string) []*models.NilaiAkhir {
+	var kelasList []*models.NilaiAkhir
+	for _, row := range rows[1:] {
+		if len(row) < 2 {
+			continue
+		}
+		kelas := &models.NilaiAkhir{
+			// AnggotaRombelID: (uuid.UUID).row[0],
+			// NamaKelas:  row[0],
+			// JumlahSiswa: parseInt(row[1]),
+			// NilaiPeng: int32(parseInt(row[2])),
+		}
+		kelasList = append(kelasList, kelas)
+	}
+	return kelasList
+}
+
+// // Konversi dari angka Excel ke waktu Go
+// func parseExcelDate(serial int) (string, error) {
+// 	// Referensi tanggal Excel (1 Januari 1900) minus offset 2 hari
+// 	referenceDate := time.Date(1899, 12, 30, 0, 0, 0, 0, time.UTC)
+// 	// Tambahkan jumlah hari ke referensi
+// 	parsedDate := referenceDate.AddDate(0, 0, serial)
+// 	return parsedDate.Format("2006-01-02"), nil
 // }
-// type UploadService struct {
-// 	repo Repository
-// }
-
-// func NewUploadDataSekolah(repo Repository) *UploadService {
-// 	return &UploadService{repo: repo}
-// }
-
-// // ProcessUpload menangani proses upload dan penyimpanan data.
-// func (s *UploadService) ProcessUpload(ctx context.Context, file io.Reader, uploadType string) error {
-// 	// Simpan file ke lokasi sementara
-// 	tempFile, err := os.CreateTemp("", "upload-*.xlsx")
-// 	if err != nil {
-// 		return fmt.Errorf("gagal membuat file sementara: %w", err)
+// func toPointerSlice(data []models.PesertaDidik) []*models.PesertaDidik {
+// 	ptrSlice := make([]*models.PesertaDidik, len(data))
+// 	for i := range data {
+// 		ptrSlice[i] = &data[i]
 // 	}
-// 	defer tempFile.Close()
-// 	defer os.Remove(tempFile.Name()) // Hapus file setelah selesai
-
-// 	// Salin konten file yang diunggah ke file sementara
-// 	if _, err := io.Copy(tempFile, file); err != nil {
-// 		return fmt.Errorf("gagal menyimpan file sementara: %w", err)
-// 	}
-
-// 	// Proses file Excel
-// 	data, err := s.parseExcel(tempFile.Name(), uploadType)
-// 	if err != nil {
-// 		return fmt.Errorf("gagal memproses file Excel: %w", err)
-// 	}
-
-// 	// Simpan data ke database
-// 	if err := s.repo.SaveData(ctx, data); err != nil {
-// 		return fmt.Errorf("gagal menyimpan data ke database: %w", err)
-// 	}
-
-// 	return nil
-// }
-// // parseExcel membaca dan memproses file Excel berdasarkan uploadType.
-// func (s *UploadService) parseExcel(filePath, uploadType string) (interface{}, error) {
-// 	f, err := excelize.OpenFile(filePath)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal membuka file Excel: %w", err)
-// 	}
-// 	defer f.Close()
-
-// 	rows, err := f.GetRows(f.GetSheetName(0))
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal membaca data dari sheet: %w", err)
-// 	}
-
-// 	switch uploadType {
-// 	case "siswa":
-// 		return parseSiswa(rows), nil
-// 	case "guru":
-// 		return parseGuru(rows), nil
-// 	case "kelas":
-// 		return parseKelas(rows), nil
-// 	case "nilaiAkhir":
-// 		return parseNilaiAkhir(rows), nil
-// 	default:
-// 		return nil, fmt.Errorf("jenis unggahan tidak dikenali: %s", uploadType)
-// 	}
-// }
-
-// // Helper functions for parsing (contoh sederhana)
-// func parseSiswa(rows [][]string) []map[string]string {
-// 	var result []map[string]string
-// 	for _, row := range rows[1:] { // Skip header
-// 		if len(row) < 2 {
-// 			continue
-// 		}
-// 		result = append(result, map[string]string{
-// 			"Nama": row[0],
-// 			"NIS":  row[1],
-// 		})
-// 	}
-// 	return result
-// }
-
-// Fungsi generik untuk membaca file Excel dan memproses data berdasarkan jenis
-// func uploadData[T any](ctx context.Context, filePath, uploadType, schemaName string) ([]T, error) {
-// func uploadData[T any](filePath, uploadType string) ([]T, error) {
-// 	f, err := excelize.OpenFile(filePath)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal membaca file Excel: %w", err)
-// 	}
-// 	defer f.Close()
-
-// 	rows, err := f.GetRows(f.GetSheetName(0))
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal mengambil data dari sheet: %w", err)
-// 	}
-
-// 	if len(rows) < 2 {
-// 		return nil, fmt.Errorf("file Excel kosong atau tidak memiliki data yang valid")
-// 	}
-
-// 	// Parsing data berdasarkan uploadType
-// 	switch uploadType {
-// 	case "siswa":
-// 		if v, ok := any(parseSiswa(rows)).([]T); ok {
-// 			return v, nil
-// 		}
-// 	case "guru":
-// 		if v, ok := any(parseGuru(rows)).([]T); ok {
-// 			return v, nil
-// 		}
-// 	case "kelas":
-// 		if v, ok := any(parseKelas(rows)).([]T); ok {
-// 			return v, nil
-// 		}
-// 	case "nilaiAkhir":
-// 		if v, ok := any(parseNilaiAkhir(rows)).([]T); ok {
-// 			return v, nil
-// 		}
-// 	default:
-// 		return nil, fmt.Errorf("jenis unggahan tidak dikenali: %s", uploadType)
-// 	}
-
-// 	return nil, fmt.Errorf("gagal memproses data dengan tipe yang diberikan")
-// }
-
-// // Fungsi parsing untuk siswa
-// func parseSiswa(rows [][]string) []*models.PesertaDidik {
-// 	var siswaList []*models.PesertaDidik
-// 	for _, row := range rows[1:] {
-// 		if len(row) < 3 {
-// 			continue
-// 		}
-// 		siswa := &models.PesertaDidik{
-// 			PesertaDidikID:  row[0],
-// 			Nis:             row[1],
-// 			Nisn:            row[2],
-// 			NmSiswa:         row[3],
-// 			TempatLahir:     row[4],
-// 			TanggalLahir:    row[5],
-// 			JenisKelamin:    row[6],
-// 			Agama:           row[7],
-// 			AlamatSiswa:     &row[8],
-// 			TeleponSiswa:    row[9],
-// 			DiterimaTanggal: row[10],
-// 			// Umur:   parseInt(row[1]), // Fungsi parseInt bisa digunakan untuk mengubah string ke int
-// 			// Alamat: row[2],
-// 		}
-// 		siswaList = append(siswaList, siswa)
-// 	}
-// 	return siswaList
-// }
-
-// // Fungsi parsing untuk guru
-// func parseGuru(rows [][]string) []*models.TabelPTK {
-// 	var guruList []*models.TabelPTK
-// 	for _, row := range rows[1:] {
-// 		if len(row) < 3 {
-// 			continue
-// 		}
-// 		guru := &models.TabelPTK{
-// 			// Nama:   row[0],
-// 			// Mapel:  row[1],
-// 			// Alamat: row[2],
-// 		}
-// 		guruList = append(guruList, guru)
-// 	}
-// 	return guruList
+// 	return ptrSlice
 // }
 
-// // Fungsi parsing untuk kelas
-// func parseKelas(rows [][]string) []*models.RombonganBelajar {
-// 	var kelasList []*models.RombonganBelajar
-// 	for _, row := range rows[1:] {
-// 		if len(row) < 2 {
-// 			continue
-// 		}
-// 		kelas := &models.RombonganBelajar{
-// 			// NamaKelas:  row[0],
-// 			// JumlahSiswa: parseInt(row[1]),
-// 		}
-// 		kelasList = append(kelasList, kelas)
-// 	}
-// 	return kelasList
-// }
-
-// // Fungsi parsing untuk kelas
-// func parseNilaiAkhir(rows [][]string) []*models.NilaiAkhir {
-// var kelasList []*models.NilaiAkhir
-// for _, row := range rows[1:] {
-// 	if len(row) < 2 {
-// 		continue
-// 	}
-// 	kelas := &models.NilaiAkhir{
-// 		// AnggotaRombelID: (uuid.UUID).row[0],
-// 		// NamaKelas:  row[0],
-// 		// JumlahSiswa: parseInt(row[1]),
-// 		// NilaiPeng: int32(parseInt(row[2])),
-// 	}
-// 	kelasList = append(kelasList, kelas)
-// }
-// return kelasList
-// }
-
-// Fungsi helper untuk mengubah string ke int
+// // Fungsi helper untuk mengubah string ke int
 // func parseInt(value string) int {
 // 	i, _ := strconv.Atoi(value)
 // 	return i
@@ -301,4 +275,12 @@ func (h *UploadHandler) HandleBinaryFileUpload(w http.ResponseWriter, r *http.Re
 // func parseUuid(value *string) uuid.UUID {
 // 	i, _ := uuid.Parse(*value)
 // 	return i
+// }
+// Helper untuk kolom opsional
+// func parseNullable(row []string, index int) *string {
+// 	if len(row) > index && strings.TrimSpace(row[index]) != "" {
+// 		value := row[index]
+// 		return &value
+// 	}
+// 	return nil
 // }

@@ -53,7 +53,7 @@ func (s *GRPCServer) run() {
 	}
 	// HTTP Gateway
 	// =========================================
-	handleUpload := services.NewUploadHandler(&s.pesertaDidikService)
+	handleUpload := services.NewUploadHandler(s.pesertaDidikService)
 
 	// =========================================
 
