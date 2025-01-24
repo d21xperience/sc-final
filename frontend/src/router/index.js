@@ -45,8 +45,10 @@ const router = createRouter({
       component: () => import("../views/AboutView.vue"),
     },
     {
-      path: "/admin",
+      // path: "/main",
+      path: "/:username",
       component: () => import("../views/admin/Main.vue"),
+      props: true,
       // meta: { requiresAuth: true },
       children: [
         {
@@ -108,6 +110,61 @@ const router = createRouter({
               name: "scIjazah",
               component: () => import("../views/sc_ijazah/SCIjazah.vue"),
             },
+            {
+              path: "daftar-trx",
+              name: "daftarTrx",
+              component: () => import("../views/sc_ijazah/ListTrx.vue"),
+            },
+          ],
+        },
+        {
+          path: "ipfs-network",
+          name: "ipfs",
+          component: () => import("../views/ipfs_ijazah/Main.vue"),
+          children: [
+            {
+              path: "setting",
+              name: "ipfsNetwork",
+              meta: {
+                title: "IPFS setting",
+                requiresAuth: true,
+                role: "admin",
+              },
+              component: () =>
+                import("../views/sc_ijazah/BlockchainSettings.vue"),
+              children: [
+                {
+                  path: "send-krypto",
+                  name: "sendKrypto",
+                  component: () => import("../views/sc_ijazah/SendTrx.vue"),
+                },
+              ],
+            },
+            {
+              path: "list-bcnetwork",
+              name: "listBCNetwork",
+              meta: {
+                title: "Daftar Blockhain",
+                requiresAuth: true,
+                role: "admin",
+              },
+              component: () => import("../views/sc_ijazah/ListBCNetwork.vue"),
+            },
+            {
+              path: "add-ipfsnetworks",
+              name: "addIPFSNetworks",
+              component: () => import("../views/sc_ijazah/AddBCNetwork.vue"),
+            },
+            {
+              path: "ipfs-ijazah",
+              name: "ipfsIjazah",
+              component: () => import("../views/ipfs_ijazah/IPFSIjazah.vue"),
+            },
+            // {
+            //   path: "daftar-trx",
+            //   name: "daftarTrx",
+            //   component: () => import("../views/sc_ijazah/ListTrx.vue"),
+            // },
           ],
         },
 
@@ -187,12 +244,12 @@ const router = createRouter({
 //   }
 // });
 
-router.beforeEach((to, from, next) => {
-  document.title = to.meta.title || "Default Title";
+router.beforeEach(async(to, from, next) => {
+  document.title = to.meta.title || "Verifikasi Ijazah App";
 
   // Ambil informasi autentikasi dan peran pengguna dari store
-  const isAuthenticated = store.getters["authService/isAuthenticated"];
-  const userRole = store.getters["authService/userRole"]; // 'admin' atau 'siswa'
+  const isAuthenticated = await store.getters["authService/isAuthenticated"];
+  const userRole = await store.getters["authService/userRole"]; // 'admin' atau 'siswa'
   // console.log(userRole);
   if (to.meta.requiresAuth && !isAuthenticated) {
     // Redirect ke Login jika tidak login

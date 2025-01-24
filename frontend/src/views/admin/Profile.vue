@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+        <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
             <div class="flex justify-end">
                 <button @click="editProfile" class="hover:text-red-500" :class="{ editProfileClass: isProfileEdit }"><i
                         class="pi pi-user-edit" style="font-size: 1.5rem;"></i></button>

@@ -19,21 +19,21 @@ type SemesterRepository interface {
 	Delete(ctx context.Context, SemesterID string, schemaName string) error
 }
 
-type SemesterRepositoryImpl struct {
+type semesterRepositoryImpl struct {
 	// schemaRepository SchemaRepository
 	db *gorm.DB
 }
 
 // NewSemesterRepository membuat instance baru dari SemesterRepository
 func NewSemesterRepository(dB *gorm.DB) SemesterRepository {
-	return &SemesterRepositoryImpl{
+	return &semesterRepositoryImpl{
 		db: dB,
 	}
 }
 
 var tabelSemester = "semester"
 
-func (r *SemesterRepositoryImpl) Save(ctx context.Context, semesterModel *models.Semester, schemaName string) error {
+func (r *semesterRepositoryImpl) Save(ctx context.Context, semesterModel *models.Semester, schemaName string) error {
 	// Gunakan transaksi agar atomic
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		//  Pastikan schema diubah dalam transaksi
@@ -47,7 +47,7 @@ func (r *SemesterRepositoryImpl) Save(ctx context.Context, semesterModel *models
 		return nil
 	})
 }
-func (r *SemesterRepositoryImpl) FindByID(ctx context.Context, SemesterID string, schemaName string) (*models.Semester, error) {
+func (r *semesterRepositoryImpl) FindByID(ctx context.Context, SemesterID string, schemaName string) (*models.Semester, error) {
 	var Semester models.Semester
 
 	//  Pastikan schema diubah sebelum query
@@ -66,7 +66,7 @@ func (r *SemesterRepositoryImpl) FindByID(ctx context.Context, SemesterID string
 }
 
 // Update (Memperbarui Data Semester)
-func (r *SemesterRepositoryImpl) Update(ctx context.Context, Semester *models.Semester, schemaName string) error {
+func (r *semesterRepositoryImpl) Update(ctx context.Context, Semester *models.Semester, schemaName string) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		//  Set schema sebelum query
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
@@ -85,7 +85,7 @@ func (r *SemesterRepositoryImpl) Update(ctx context.Context, Semester *models.Se
 }
 
 // Delete (Menghapus Data Semester berdasarkan ID)
-func (r *SemesterRepositoryImpl) Delete(ctx context.Context, SemesterID string, schemaName string) error {
+func (r *semesterRepositoryImpl) Delete(ctx context.Context, SemesterID string, schemaName string) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		//  Set schema sebelum query
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
@@ -102,7 +102,7 @@ func (r *SemesterRepositoryImpl) Delete(ctx context.Context, SemesterID string, 
 		return nil // Commit transaksi jika tidak ada error
 	})
 }
-func (r *SemesterRepositoryImpl) FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.Semester, error) {
+func (r *semesterRepositoryImpl) FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.Semester, error) {
 	var SemesterList []*models.Semester
 
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)

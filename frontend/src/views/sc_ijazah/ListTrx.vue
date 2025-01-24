@@ -15,24 +15,24 @@
                             <div class="mb-2">
                                 <Toolbar>
                                     <template #start>
-                                        <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
+                                        <!-- <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
                                             :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2"
                                             class="mr-2" />
                                         <Button icon="pi pi-trash" severity="danger" class="mr-2"
                                             @click="confirmDeleteSelected"
-                                            :disabled="!dataLulusan || !dataLulusan.length" />
+                                            :disabled="!dataLulusan || !dataLulusan.length" /> -->
                                         <!-- <Button label="Lulus" severity="warn" class="mr-2" @click="dialogStatus = true"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
                                         <Button label="Naik" severity="warn" class="mr-2" @click="openNew"
                                             :disabled="!dataLulusan || !dataLulusan.length" /> -->
                                     </template>
                                     <template #end>
-                                        <FileUpload mode="basic" accept="xlsx/*" :maxFileSize="1000000" label="Import"
-                                            chooseLabel="Import" class="mr-2" auto />
+                                        <!-- <FileUpload mode="basic" accept="xlsx/*" :maxFileSize="1000000" label="Import"
+                                            chooseLabel="Import" class="mr-2" auto /> -->
                                         <Button label="Export" icon="pi pi-upload" severity="help"
                                             @click="exportCSV($event)" class="mr-2" />
-                                        <Button label="Kirim Blockchain" icon="pi pi-send" severity="help"
-                                            @click="exportCSV($event)" />
+                                        <!-- <Button label="Kirim Blockchain" icon="pi pi-send" severity="help"
+                                            @click="exportCSV($event)" /> -->
                                     </template>
 
                                 </Toolbar>
@@ -44,8 +44,8 @@
                                         <div class="flex">
                                             <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
                                                 placeholder="Rombel" class="w-full md:w-56 mr-2" />
-                                            <!-- <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                                placeholder="Tingkat" class="mr-2" /> -->
+                                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                                placeholder="Jaringan Blockchain" class="mr-2" />
                                         </div>
                                     </div>
                                 </template>
@@ -70,14 +70,14 @@
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56">
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
                     <Column field="name" header="Nama" sortable></Column>
-                    <Column field="name" header="JK"></Column>
                     <Column field="code" header="NISN"></Column>
-                    <Column field="code" header="NIS" sortable></Column>
-                    <Column field="code" header="Rombel" sortable></Column>
+                    <!-- <Column field="code" header="NIS" sortable></Column>
+                    <Column field="code" header="Rombel" sortable></Column> -->
                     <Column field="code" header="No. Ijazah" sortable></Column>
                     <Column field="name" header="Rerata Nilai"></Column>
-                    <!--<Column field="name" header="Tgl.Lahir"></Column>
-                    <Column field="name" header="Agama"></Column>
+                    <Column field="name" header="No TRX"></Column>
+                    <Column field="name" header="IPFS URI"></Column>
+                    <!--<Column field="name" header="Agama"></Column>
                     <Column field="category" header="Ayah"></Column>
                     <Column field="category" header="Ibu"></Column> -->
                     <!-- <Column field="category" header="Pekerjaan Ayah"></Column>

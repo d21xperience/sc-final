@@ -981,6 +981,185 @@ var SiswaService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	UploadDataSekolahService_UploadDataSekolahWithMultipart_FullMethodName  = "/sekolah.UploadDataSekolahService/UploadDataSekolahWithMultipart"
+	UploadDataSekolahService_UploadDataSekolahWithBase64_FullMethodName     = "/sekolah.UploadDataSekolahService/UploadDataSekolahWithBase64"
+	UploadDataSekolahService_UploadDataSekolahWithStreamGrpc_FullMethodName = "/sekolah.UploadDataSekolahService/UploadDataSekolahWithStreamGrpc"
+)
+
+// UploadDataSekolahServiceClient is the client API for UploadDataSekolahService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// =======================================
+// UPLOAD SERVICE
+type UploadDataSekolahServiceClient interface {
+	UploadDataSekolahWithMultipart(ctx context.Context, in *UploadDataSekolahMultipartRequest, opts ...grpc.CallOption) (*UploadDataSekolahMultipartResponse, error)
+	UploadDataSekolahWithBase64(ctx context.Context, in *UploadDataSekolahBase64Request, opts ...grpc.CallOption) (*UploadDataSekolahBase64Response, error)
+	UploadDataSekolahWithStreamGrpc(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse], error)
+}
+
+type uploadDataSekolahServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewUploadDataSekolahServiceClient(cc grpc.ClientConnInterface) UploadDataSekolahServiceClient {
+	return &uploadDataSekolahServiceClient{cc}
+}
+
+func (c *uploadDataSekolahServiceClient) UploadDataSekolahWithMultipart(ctx context.Context, in *UploadDataSekolahMultipartRequest, opts ...grpc.CallOption) (*UploadDataSekolahMultipartResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UploadDataSekolahMultipartResponse)
+	err := c.cc.Invoke(ctx, UploadDataSekolahService_UploadDataSekolahWithMultipart_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *uploadDataSekolahServiceClient) UploadDataSekolahWithBase64(ctx context.Context, in *UploadDataSekolahBase64Request, opts ...grpc.CallOption) (*UploadDataSekolahBase64Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UploadDataSekolahBase64Response)
+	err := c.cc.Invoke(ctx, UploadDataSekolahService_UploadDataSekolahWithBase64_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *uploadDataSekolahServiceClient) UploadDataSekolahWithStreamGrpc(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &UploadDataSekolahService_ServiceDesc.Streams[0], UploadDataSekolahService_UploadDataSekolahWithStreamGrpc_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type UploadDataSekolahService_UploadDataSekolahWithStreamGrpcClient = grpc.ClientStreamingClient[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]
+
+// UploadDataSekolahServiceServer is the server API for UploadDataSekolahService service.
+// All implementations must embed UnimplementedUploadDataSekolahServiceServer
+// for forward compatibility.
+//
+// =======================================
+// UPLOAD SERVICE
+type UploadDataSekolahServiceServer interface {
+	UploadDataSekolahWithMultipart(context.Context, *UploadDataSekolahMultipartRequest) (*UploadDataSekolahMultipartResponse, error)
+	UploadDataSekolahWithBase64(context.Context, *UploadDataSekolahBase64Request) (*UploadDataSekolahBase64Response, error)
+	UploadDataSekolahWithStreamGrpc(grpc.ClientStreamingServer[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]) error
+	mustEmbedUnimplementedUploadDataSekolahServiceServer()
+}
+
+// UnimplementedUploadDataSekolahServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedUploadDataSekolahServiceServer struct{}
+
+func (UnimplementedUploadDataSekolahServiceServer) UploadDataSekolahWithMultipart(context.Context, *UploadDataSekolahMultipartRequest) (*UploadDataSekolahMultipartResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadDataSekolahWithMultipart not implemented")
+}
+func (UnimplementedUploadDataSekolahServiceServer) UploadDataSekolahWithBase64(context.Context, *UploadDataSekolahBase64Request) (*UploadDataSekolahBase64Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadDataSekolahWithBase64 not implemented")
+}
+func (UnimplementedUploadDataSekolahServiceServer) UploadDataSekolahWithStreamGrpc(grpc.ClientStreamingServer[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method UploadDataSekolahWithStreamGrpc not implemented")
+}
+func (UnimplementedUploadDataSekolahServiceServer) mustEmbedUnimplementedUploadDataSekolahServiceServer() {
+}
+func (UnimplementedUploadDataSekolahServiceServer) testEmbeddedByValue() {}
+
+// UnsafeUploadDataSekolahServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UploadDataSekolahServiceServer will
+// result in compilation errors.
+type UnsafeUploadDataSekolahServiceServer interface {
+	mustEmbedUnimplementedUploadDataSekolahServiceServer()
+}
+
+func RegisterUploadDataSekolahServiceServer(s grpc.ServiceRegistrar, srv UploadDataSekolahServiceServer) {
+	// If the following call pancis, it indicates UnimplementedUploadDataSekolahServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&UploadDataSekolahService_ServiceDesc, srv)
+}
+
+func _UploadDataSekolahService_UploadDataSekolahWithMultipart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadDataSekolahMultipartRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithMultipart(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UploadDataSekolahService_UploadDataSekolahWithMultipart_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithMultipart(ctx, req.(*UploadDataSekolahMultipartRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UploadDataSekolahService_UploadDataSekolahWithBase64_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadDataSekolahBase64Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithBase64(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UploadDataSekolahService_UploadDataSekolahWithBase64_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithBase64(ctx, req.(*UploadDataSekolahBase64Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UploadDataSekolahService_UploadDataSekolahWithStreamGrpc_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithStreamGrpc(&grpc.GenericServerStream[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type UploadDataSekolahService_UploadDataSekolahWithStreamGrpcServer = grpc.ClientStreamingServer[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]
+
+// UploadDataSekolahService_ServiceDesc is the grpc.ServiceDesc for UploadDataSekolahService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var UploadDataSekolahService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sekolah.UploadDataSekolahService",
+	HandlerType: (*UploadDataSekolahServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "UploadDataSekolahWithMultipart",
+			Handler:    _UploadDataSekolahService_UploadDataSekolahWithMultipart_Handler,
+		},
+		{
+			MethodName: "UploadDataSekolahWithBase64",
+			Handler:    _UploadDataSekolahService_UploadDataSekolahWithBase64_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "UploadDataSekolahWithStreamGrpc",
+			Handler:       _UploadDataSekolahService_UploadDataSekolahWithStreamGrpc_Handler,
+			ClientStreams: true,
+		},
+	},
+	Metadata: "sekolah.proto",
+}
+
+const (
 	MapelService_CreateMapel_FullMethodName       = "/sekolah.MapelService/CreateMapel"
 	MapelService_CreateBanyakMapel_FullMethodName = "/sekolah.MapelService/CreateBanyakMapel"
 	MapelService_GetMapel_FullMethodName          = "/sekolah.MapelService/GetMapel"
@@ -2462,210 +2641,6 @@ var PTKTerdaftarService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeletePTKTerdaftar",
 			Handler:    _PTKTerdaftarService_DeletePTKTerdaftar_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "sekolah.proto",
-}
-
-const (
-	UploadService_UploadFile_FullMethodName = "/sekolah.UploadService/UploadFile"
-)
-
-// UploadServiceClient is the client API for UploadService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UploadServiceClient interface {
-	UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error)
-}
-
-type uploadServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewUploadServiceClient(cc grpc.ClientConnInterface) UploadServiceClient {
-	return &uploadServiceClient{cc}
-}
-
-func (c *uploadServiceClient) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UploadFileResponse)
-	err := c.cc.Invoke(ctx, UploadService_UploadFile_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// UploadServiceServer is the server API for UploadService service.
-// All implementations must embed UnimplementedUploadServiceServer
-// for forward compatibility.
-type UploadServiceServer interface {
-	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
-	mustEmbedUnimplementedUploadServiceServer()
-}
-
-// UnimplementedUploadServiceServer must be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedUploadServiceServer struct{}
-
-func (UnimplementedUploadServiceServer) UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
-}
-func (UnimplementedUploadServiceServer) mustEmbedUnimplementedUploadServiceServer() {}
-func (UnimplementedUploadServiceServer) testEmbeddedByValue()                       {}
-
-// UnsafeUploadServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UploadServiceServer will
-// result in compilation errors.
-type UnsafeUploadServiceServer interface {
-	mustEmbedUnimplementedUploadServiceServer()
-}
-
-func RegisterUploadServiceServer(s grpc.ServiceRegistrar, srv UploadServiceServer) {
-	// If the following call pancis, it indicates UnimplementedUploadServiceServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&UploadService_ServiceDesc, srv)
-}
-
-func _UploadService_UploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadFileRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UploadServiceServer).UploadFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UploadService_UploadFile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UploadServiceServer).UploadFile(ctx, req.(*UploadFileRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// UploadService_ServiceDesc is the grpc.ServiceDesc for UploadService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var UploadService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "sekolah.UploadService",
-	HandlerType: (*UploadServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "UploadFile",
-			Handler:    _UploadService_UploadFile_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "sekolah.proto",
-}
-
-const (
-	TemplateService_GetTemplate_FullMethodName = "/sekolah.TemplateService/GetTemplate"
-)
-
-// TemplateServiceClient is the client API for TemplateService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type TemplateServiceClient interface {
-	GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateResponse, error)
-}
-
-type templateServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewTemplateServiceClient(cc grpc.ClientConnInterface) TemplateServiceClient {
-	return &templateServiceClient{cc}
-}
-
-func (c *templateServiceClient) GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTemplateResponse)
-	err := c.cc.Invoke(ctx, TemplateService_GetTemplate_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// TemplateServiceServer is the server API for TemplateService service.
-// All implementations must embed UnimplementedTemplateServiceServer
-// for forward compatibility.
-type TemplateServiceServer interface {
-	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error)
-	mustEmbedUnimplementedTemplateServiceServer()
-}
-
-// UnimplementedTemplateServiceServer must be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedTemplateServiceServer struct{}
-
-func (UnimplementedTemplateServiceServer) GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTemplate not implemented")
-}
-func (UnimplementedTemplateServiceServer) mustEmbedUnimplementedTemplateServiceServer() {}
-func (UnimplementedTemplateServiceServer) testEmbeddedByValue()                         {}
-
-// UnsafeTemplateServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to TemplateServiceServer will
-// result in compilation errors.
-type UnsafeTemplateServiceServer interface {
-	mustEmbedUnimplementedTemplateServiceServer()
-}
-
-func RegisterTemplateServiceServer(s grpc.ServiceRegistrar, srv TemplateServiceServer) {
-	// If the following call pancis, it indicates UnimplementedTemplateServiceServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&TemplateService_ServiceDesc, srv)
-}
-
-func _TemplateService_GetTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTemplateRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TemplateServiceServer).GetTemplate(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TemplateService_GetTemplate_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplateServiceServer).GetTemplate(ctx, req.(*GetTemplateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// TemplateService_ServiceDesc is the grpc.ServiceDesc for TemplateService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var TemplateService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "sekolah.TemplateService",
-	HandlerType: (*TemplateServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetTemplate",
-			Handler:    _TemplateService_GetTemplate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

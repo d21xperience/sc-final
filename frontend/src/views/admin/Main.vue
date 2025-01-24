@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
+defineProps(['username']); // Parameter username dari route diterima sebagai props
 import PanelMenu from 'primevue/panelmenu';
 // import router from "@/router";
 // import store from "@/store";
@@ -34,6 +35,7 @@ const menuItems = ref([
         icon: 'pi pi-objects-column',
         command: () => {
             router.push({ name: 'admin' })
+            // router.push(`${username}`)
         }
 
     },
@@ -74,69 +76,6 @@ const menuItems = ref([
         ]
     },
     {
-        label: 'Blockchain',
-        icon: 'pi pi-ethereum',
-        items: [
-            {
-                label: 'Seting',
-                icon: 'pi pi-cog',
-                command: () => {
-                    router.push({ name: 'setingBlockchain' })
-                }
-            },
-            {
-                label: 'Daftar Jaringan',
-                icon: 'pi pi-cloud',
-                command: () => {
-                    router.push({ name: 'listBCNetwork' })
-                }
-            },
-            {
-                label: 'SC-Ijazah',
-                icon: 'pi pi-file',
-                command: () => {
-                    router.push({ name: 'scIjazah' })
-                }
-            },
-            {
-                label: 'Transaksi',
-                icon: 'pi pi-chart-line',
-                command: () => {
-                    router.push({ name: 'scIjazah' })
-                }
-            },
-
-        ]
-    },
-    {
-        label: 'IPFS',
-        icon: 'pi pi-desktop',
-        items: [
-            {
-                label: 'Seting',
-                icon: 'pi pi-cog',
-                command: () => {
-                    router.push({ name: 'setingBlockchain' })
-                }
-            },
-            {
-                label: 'URI Ijazah',
-                icon: 'pi pi-file',
-                command: () => {
-                    router.push({ name: 'scIjazah' })
-                }
-            },
-            {
-                label: 'Transaksi',
-                icon: 'pi pi-chart-line',
-                command: () => {
-                    router.push({ name: 'scIjazah' })
-                }
-            },
-
-        ]
-    },
-    {
         label: 'Data Dapodik',
         icon: 'pi pi-tag',
         items: [
@@ -171,26 +110,89 @@ const menuItems = ref([
                 }
             },
             {
-                label: 'Data Mata Pelajaran',
+                label: 'Data Mapel',
                 icon: 'pi pi-angle-double-right'
             },
+            // {
+            //     label: 'Sync Dapodik',
+            //     icon: 'pi pi-refresh',
+            //     command: () => {
+            //         router.push({ name: 'syncDapodik' })
+            //     }
+            // },
+
+        ]
+    },
+    {
+        label: 'IPFS',
+        icon: 'pi pi-desktop',
+        items: [
             {
-                label: 'Sync Dapodik',
-                icon: 'pi pi-refresh',
+                label: 'Seting',
+                icon: 'pi pi-cog',
                 command: () => {
-                    router.push({ name: 'syncDapodik' })
+                    router.push({ name: 'setingBlockchain' })
+                }
+            },
+            {
+                label: 'URI Ijazah',
+                icon: 'pi pi-file',
+                command: () => {
+                    router.push({ name: 'ipfsIjazah' })
+                }
+            },
+            {
+                label: 'Transaksi',
+                icon: 'pi pi-chart-line',
+                command: () => {
+                    router.push({ name: 'scIjazah' })
                 }
             },
 
         ]
     },
-    // {
-    //     label: 'Sign Out',
-    //     icon: 'pi pi-sign-out',
-    //     command: () => {
-    //         dialogSignOut.value = !dialogSignOut.value
-    //     }
-    // }
+    {
+        label: 'Blockchain',
+        icon: 'pi pi-ethereum',
+        items: [
+            {
+                label: 'Seting',
+                icon: 'pi pi-cog',
+                command: () => {
+                    router.push({ name: 'setingBlockchain' })
+                }
+            },
+            {
+                label: 'Daftar Jaringan',
+                icon: 'pi pi-cloud',
+                command: () => {
+                    router.push({ name: 'listBCNetwork' })
+                }
+            },
+            {
+                label: 'SC-Ijazah',
+                icon: 'pi pi-file',
+                command: () => {
+                    router.push({ name: 'scIjazah' })
+                }
+            },
+            {
+                label: 'Transaksi',
+                icon: 'pi pi-chart-line',
+                command: () => {
+                    router.push({ name: 'daftarTrx' })
+                }
+            },
+
+        ]
+    },
+    {
+        label: 'Sign Out',
+        icon: 'pi pi-sign-out',
+        command: () => {
+            dialogSignOut.value = !dialogSignOut.value
+        }
+    }
 ]);
 
 // Filter menu berdasarkan role
@@ -225,54 +227,31 @@ const onLogout = async () => {
 
 
 <template>
-    <div>
-        <nav
-            class="h-screen fixed top-0 left-0 min-w-[250px] py-1 px-4 hidden lg:block border-r-2 overflow-y-auto overflow-x-hidden">
-            <div class="py-2">
-                <ul class="space-y-1">
-                    <li>
-                        <PanelMenu :model="items" multiple class="w-full" />
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <div class="ml-0 lg:ml-[250px] pl-4 pt-2 pr-4 ">
-            <div class="container">
-                <RouterView></RouterView>
-            </div>
+    <nav
+        class="fixed top-0 w-[250px] h-screen py-1 px-4 hidden lg:block border-r-2 overflow-y-auto overflow-x-hidden z-30">
+        <div class="mt-2">
+            <PanelMenu :model="items" multiple class="" />
+        </div>
+    </nav>
+    <div class="lg:ml-[250px]">
+        <div class="container mt-2">
+            <RouterView></RouterView>
         </div>
     </div>
 
-    <footer class="bg-gray-100 text-gray-600 p-4 fixed bottom-0 w-full">
-        <button type="button" @click="dialogSignOut = true" class="w-[150px] hover:text-blue-400"><i
-                class="pi pi-sign-out mr-2"></i>Logout</button>
-    </footer>
 
     <!-- Dialog start -->
-    <Dialog v-model:visible="dialogSignOut" :style="{ width: '450px' }" header="Sign Out" :modal="true" position="top">
+    <Dialog v-model:visible="dialogSignOut" :style="{ width: '450px' }" header="Keluar" :modal="true" position="top">
         <div class="flex items-center gap-4">
             <i class="pi pi-exclamation-triangle !text-3xl" />
-            <span>Yakin akan ke luar?</span>
+            <span>Yakin akan keluar?</span>
         </div>
         <template #footer>
             <Button label="Tidak" icon="pi pi-times" text @click="dialogSignOut = false" severity="warn" />
             <Button label="Ya" icon="pi pi-check" text @click="signOut" />
         </template>
     </Dialog>
-
     <!-- Dialog end -->
-
-
-
-
-
 </template>
 
-<style scoped>
-/* .p-accordionheader {
-    font-weight: lighter;
-    color: black;
-    padding-bottom: 12px;
-    padding-top: 12px;
-} */
-</style>
+<style scoped></style>

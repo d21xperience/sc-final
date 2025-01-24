@@ -284,7 +284,7 @@ const copyText = async () => {
 
 
 <template>
-    <div class="w-full bg-white shadow-md mt-4 p-2">
+    <div class="w-full bg-white shadow-md p-2">
         <div class="flex justify-between p-2">
             <div class="">
                 <button @click="dialogSelectNetwork = true"

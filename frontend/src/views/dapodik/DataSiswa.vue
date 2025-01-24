@@ -1,103 +1,95 @@
 <template>
 
-    <div class="container mx-auto p-8">
-
+    <div class="">
         <div class="card">
-            <div class="flex flex-wrap justify-between my-2">
-                <h4 class="font-bold text-2xl lg:text-lg my-2">Data Siswa </h4>
-            </div>
             <div v-if="dataConnected">
-                <Toolbar class="mb-6">
-                    <template #end>
-                        <!-- <Select v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Tahun Pelajaran"
-                            class="w-full md:w-56 mr-2" /> -->
-                        <Select v-model="selectedCity" :options="cities" optionLabel="name"
-                            placeholder="Tahun Pelajaran" class="w-full md:w-56 mr-2" />
+                <div class="fixed top-0 w-full left-0 z-20 bg-white">
+                    <div class="lg:ml-[250px] my-2 ">
+                        <div class="container ">
+                            <div class="flex flex-wrap justify-between items-center mb-2">
+                                <h4 class="font-bold text-xl md:text-2xl">Data Siswa </h4>
+                                <Select v-model="selectedCity" :options="cities" optionLabel="name"
+                                    placeholder="Tahun Pelajaran" class="md:w-52 mr-2" />
 
-                    </template>
-                    <template #start>
-                        <!-- <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" /> -->
-                        <Button label="Edit" icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
-                            :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2" class="mr-2" />
-                        <Button label="Delete" icon="pi pi-trash" severity="danger" class="mr-2"
-                            @click="confirmDeleteSelected" :disabled="!dataLulusan || !dataLulusan.length" />
+                            </div>
+                            <div class="mb-2">
+                                <Toolbar>
+                                    <template #start>
+                                        <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
+                                            :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2"
+                                            class="mr-2" />
+                                        <Button icon="pi pi-trash" severity="danger" class="mr-2"
+                                            @click="confirmDeleteSelected"
+                                            :disabled="!dataLulusan || !dataLulusan.length" />
+                                        <Button label="Lulus" severity="warn" class="mr-2" @click="dialogStatus = true"
+                                            :disabled="!dataLulusan || !dataLulusan.length" />
+                                        <Button label="Naik" severity="warn" class="mr-2" @click="openNew"
+                                            :disabled="!dataLulusan || !dataLulusan.length" />
+                                    </template>
+                                    <template #end>
+                                        <FileUpload mode="basic" accept="xlsx/*" :maxFileSize="1000000" label="Import"
+                                            chooseLabel="Import" class="mr-2" auto />
+                                        <Button label="Export" icon="pi pi-upload" severity="help"
+                                            @click="exportCSV($event)" class="mr-2" />
+                                        <Button label="Proses" icon="pi pi-send" severity="info"
+                                            @click="exportCSV($event)" />
+                                    </template>
 
-                        <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
-                            class="mr-2" auto /> -->
-                        <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
-                            class="mr-2" />
-                        <Button label="Kirim Blockchain" icon="pi pi-send" severity="help" @click="exportCSV($event)" />
-                    </template>
-                </Toolbar>
-
-                <DataTable ref="dt" v-model:selection="dataLulusan" :value="products" dataKey="id" :paginator="true"
-                    :rows="10" :filters="filters"
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
-                    <template #header>
-                        <div class="flex flex-wrap gap-2 items-center justify-between">
-                            <div class="flex">
-                                <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                    placeholder="Rombel" class="w-full md:w-56 mr-2" />
-                                <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                    placeholder="Kompetensi Keahlian" class="w-full md:w-56 mr-2" />
-                                <IconField>
-                                    <InputIcon>
-                                        <i class="pi pi-search" />
-                                    </InputIcon>
-                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                </IconField>
+                                </Toolbar>
                             </div>
 
+                            <Toolbar>
+                                <template #start>
+                                    <div class="flex flex-wrap gap-2 items-center justify-between">
+                                        <div class="flex">
+                                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                                placeholder="Rombel" class="w-full md:w-56 mr-2" />
+                                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                                placeholder="Tingkat" class="mr-2" />
+                                        </div>
+                                    </div>
+                                </template>
+                                <template #end>
+                                    <IconField>
+                                        <InputIcon>
+                                            <i class="pi pi-search" />
+                                        </InputIcon>
+                                        <InputText v-model="filters['global'].value" placeholder="Search..." />
+                                    </IconField>
+                                </template>
+                            </Toolbar>
                         </div>
-                    </template>
+                    </div>
+                </div>
 
-                    <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+
+                <DataTable ref="dt" v-model:selection="dataLulusan" stripedRows size="small" :value="products"
+                    dataKey="id" :paginator="true" :rows="5" :filters="filters"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    :rowsPerPageOptions="[5, 10, 25]"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56">
+                    <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
+                    <Column field="name" header="Nama" sortable></Column>
                     <Column field="code" header="NISN"></Column>
                     <Column field="code" header="NIS" sortable></Column>
                     <Column field="code" header="Tingkat" sortable></Column>
                     <Column field="code" header="Rombel" sortable></Column>
-                    <Column field="name" header="Nama" sortable></Column>
                     <Column field="name" header="JK"></Column>
-                    <Column field="name" header="Tpt.Lahir"></Column>
+                    <!-- <Column field="name" header="Tpt.Lahir"></Column>
                     <Column field="name" header="Tgl.Lahir"></Column>
                     <Column field="name" header="Agama"></Column>
-                    <!-- <Column field="price" header="Nilai Rerata">
-                        <template #body="slotProps">
-                            {{ formatCurrency(slotProps.data.price) }}
-                        </template>
-                    </Column> -->
                     <Column field="category" header="Ayah"></Column>
-                    <Column field="category" header="Ibu"></Column>
-                    <Column field="category" header="Pekerjaan Ayah"></Column>
-                    <Column field="category" header="Pekerjaan Ibu"></Column>
-                    <Column field="category" header="Alamat"></Column>
-                    <!-- <Column header="Image">
-                        <template #body="slotProps">
-                            <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                                :alt="slotProps.data.image" class="rounded" style="width: 64px" />
-                        </template>
-                    </Column> -->
-                    <!--<Column field="rating" header="Reviews" sortable style="min-width: 12rem">
-                        <template #body="slotProps">
-                            <Rating :modelValue="slotProps.data.rating" :readonly="true" />
-                        </template>
-                    </Column>-->
+                    <Column field="category" header="Ibu"></Column> -->
+                    <!-- <Column field="category" header="Pekerjaan Ayah"></Column>
+                    <Column field="category" header="Pekerjaan Ibu"></Column> -->
+                    <!-- <Column field="category" header="Alamat"></Column> -->
+
                     <Column field="inventoryStatus" header="Status" sortable>
                         <template #body="slotProps">
                             <Tag :value="slotProps.data.inventoryStatus"
                                 :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
                         </template>
                     </Column>
-                    <!-- <Column header="Aksi" :exportable="false" style="min-width: 12rem">
-                        <template #body="slotProps">
-                            <Button icon="pi pi-pencil" outlined rounded class="mr-2"
-                                @click="editProduct(slotProps.data)" />
-                            <Button icon="pi pi-trash" outlined rounded severity="danger"
-                                @click="confirmDeleteProduct(slotProps.data)" />
-                        </template>
-                    </Column> -->
                 </DataTable>
 
             </div>
@@ -111,8 +103,6 @@
         <Dialog v-model:visible="productDialog" :style="{ height: '650px', width: '450px' }" header="Edit Data"
             :modal="true">
             <div class="flex flex-wrap gap-6">
-                <!-- <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`"
-                    :alt="product.image" class="block m-auto pb-4" /> -->
                 <div>
                     <label for="name" class="block font-bold">NISN</label>
                     <InputText id="name" v-model.trim="product.code" required="true" autofocus
@@ -137,51 +127,6 @@
                         :invalid="submitted && !product.category" fluid />
                     <small v-if="submitted && !product.category" class="text-red-500">Thn lulus is required.</small>
                 </div>
-                <!-- <div>
-                    <label for="description" class="block font-bold mb-3">Description</label>
-                    <Textarea id="description" v-model="product.description" required="true" rows="3" cols="20" fluid />
-                </div> -->
-                <!-- <div>
-                    <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
-                    <Select id="inventoryStatus" v-model="product.inventoryStatus" :options="statuses"
-                        optionLabel="label" placeholder="Select a Status" fluid></Select>
-                </div> -->
-
-                <!-- <div>
-                    <span class="block font-bold mb-4">Category</span>
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category1" v-model="product.category" name="category"
-                                value="Accessories" />
-                            <label for="category1">Accessories</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category2" v-model="product.category" name="category" value="Clothing" />
-                            <label for="category2">Clothing</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category3" v-model="product.category" name="category"
-                                value="Electronics" />
-                            <label for="category3">Electronics</label>
-                        </div>
-                        <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category4" v-model="product.category" name="category" value="Fitness" />
-                            <label for="category4">Fitness</label>
-                        </div>
-                    </div>
-                </div> -->
-
-                <!-- <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-6">
-                        <label for="price" class="block font-bold mb-3">Price</label>
-                        <InputNumber id="price" v-model="product.price" mode="currency" currency="USD" locale="en-US"
-                            fluid />
-                    </div>
-                    <div class="col-span-6">
-                        <label for="quantity" class="block font-bold mb-3">Quantity</label>
-                        <InputNumber id="quantity" v-model="product.quantity" integeronly fluid />
-                    </div>
-                </div> -->
             </div>
 
             <template #footer>
@@ -208,6 +153,18 @@
             </div>
             <template #footer>
                 <Button label="Tidak" icon="pi pi-times" text @click="deleteProductsDialog = false" />
+                <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
+            </template>
+        </Dialog>
+
+        <!-- Dialog Status kenaikan/ lulus -->
+        <Dialog v-model:visible="dialogStatus" :style="{ width: '450px' }" header="Confirm" :modal="true">
+            <div class="flex items-center gap-4">
+                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <span v-if="product">Apakah siswa akan diluluskan?</span>
+            </div>
+            <template #footer>
+                <Button label="Tidak" icon="pi pi-times" text @click="dialogStatus = false" />
                 <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
             </template>
         </Dialog>
@@ -244,7 +201,7 @@ onMounted(() => {
     DataLulusanService.getProducts().then((data) => (products.value = data));
 });
 
-const dataConnected = ref(false)
+const dataConnected = ref(true)
 const toast = useToast();
 const dt = ref();
 const products = ref();
@@ -369,7 +326,8 @@ import EmptyData from '@/components/EmptyData.vue';
 // select tahun ijazah
 const selectedCity = ref();
 const cities = ref([
-    { name: '2023/2024', code: '20232' },
+    { name: '2023/2024 Ganjil', code: '20231' },
+    { name: '2023/2024 Genap', code: '20232' },
     { name: '2022/2023', code: '20222' },
     { name: '2021/2022', code: '20212' },
     { name: '2022/2021', code: '20202' },
@@ -394,4 +352,7 @@ const handleFetchError = (error) => {
     dataConnected.value = data;
     console.error("Error diterima di parent:", error);
 };
+
+// status siswa naik atau lulus
+const dialogStatus = ref(false)
 </script>

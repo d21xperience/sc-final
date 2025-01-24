@@ -34,6 +34,6 @@ func main() {
 	rombelAnggotaService := services.NewRombelAnggotaService(rombelAnggotaRepo)
 	nilaiAkhirRepo := repositories.NewNilaiAkhirRepository(config.DB)
 	nilaiAkhirService := services.NewNilaiAkhirService(nilaiAkhirRepo)
-
+	
 	server.StartGRPCServer(schemaService, sekolahService, tahunAjaranService, semesterService, pesertaDidikService, rombonganBelajarService, rombelAnggotaService, nilaiAkhirService)
 }

@@ -73,6 +73,8 @@ const mutations = {
 const actions = {
   async login({ commit }, credentials) {
     try {
+      commit("SET_LOADING", true);
+      commit("SET_ERROR", null);
       const response = await api.post("/auth/login", credentials);
       if (response.data.ok) {
         commit("setToken", response.data.token);
@@ -81,8 +83,12 @@ const actions = {
         return true;
       }
     } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Login failed:", error.response ? error.response.data : error.message);
-      return false; // Menghindari mengembalikan error langsung
+      return error; // Menghindari mengembalikan error langsung
+      // return false; // Menghindari mengembalikan error langsung
+    } finally {
+      commit("SET_LOADING", false);
     }
   },
   async logout({ commit }) {

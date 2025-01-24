@@ -31,6 +31,7 @@ type GRPCServer struct {
 	rombonganBelajarService services.RombonganBelajarService
 	rombelAnggotaService    services.RombelAnggotaService
 	nilaiAkhirService       services.NilaiAkhirService
+	uploadHandler           services.UploadHandler
 }
 
 // Jalankan gRPC Server
@@ -51,7 +52,13 @@ func (s *GRPCServer) run() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 	// HTTP Gateway
+	// =========================================
+	handleUpload := services.NewUploadHandler(&s.pesertaDidikService)
+
+	// =========================================
+
 	mux := runtime.NewServeMux()
+	mux.HandlePath("POST", "/api/v1/ss/upload", handleUpload.HandleBinaryFileUpload)
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	err = pb.RegisterSekolahServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
@@ -84,6 +91,10 @@ func (s *GRPCServer) run() {
 	if err != nil {
 		log.Fatalf("Failed to register gRPC Nilai akhir Gateway: %v", err)
 	}
+	err = pb.RegisterUploadDataSekolahServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Upload data Sekolah Gateway: %v", err)
+	}
 
 	// HTTP Listener
 	httpListener, err := net.Listen("tcp", ":8081")
@@ -93,6 +104,9 @@ func (s *GRPCServer) run() {
 
 	// Middleware CORS
 	corsHandler := corsMiddleware(mux)
+	// Mengurutkan middleware sehingga mereka bekerja secara berantai.
+	// multipartHandler := multipartMiddleware(corsHandler)
+	// loggingHandler := logMiddleware(multipartHandler)
 
 	// Sync WaitGroup
 	var wg sync.WaitGroup
@@ -181,6 +195,10 @@ func StartGRPCServer(schemaServices services.SchemaService, sekolahService servi
 	pb.RegisterNilaiAkhirServiceServer(server.grpcServer, &NilaiAkhirServiceServer{
 		NilaiAkhirService: server.nilaiAkhirService,
 	})
+	// // REGISTER UPLOAD SERVICE
+	// pb.RegisterUploadDataSekolahServiceServer(server.grpcServer, &UploadDataSekolahServiceServer{
+	// 	pd: server.pesertaDidikService,
+	// })
 
 	// Jalankan server
 	server.run()
@@ -201,3 +219,75 @@ func corsMiddleware(h http.Handler) http.Handler {
 		h.ServeHTTP(w, r)
 	})
 }
+
+// func handleBinaryFileUpload(w http.ResponseWriter, r *http.Request, params map[string]string) {
+// 	// Parse form data
+// 	err := r.ParseMultipartForm(10 << 20) // Limit file size to 10MB
+// 	if err != nil {
+// 		http.Error(w, "Unable to parse form", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	// Extract parameters
+// 	// uploadType := r.FormValue("upload_type")
+// 	// schemaName := r.FormValue("schemaname")
+// 	fileHeader := r.MultipartForm.File["file"]
+// 	if len(fileHeader) == 0 {
+// 		http.Error(w, "File is required", http.StatusBadRequest)
+// 		return
+// 	}
+// 	file, err := fileHeader[0].Open()
+// 	if err != nil {
+// 		http.Error(w, "Unable to open file", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer file.Close()
+
+// 	fileName := fileHeader[0].Filename
+// 	if !strings.HasSuffix(fileName, ".xlsx") {
+// 		http.Error(w, "Only Excel files (.xlsx) are allowed", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	// Save the uploaded file to a temporary location
+// 	tempFile, err := os.CreateTemp("", "upload-*.xlsx")
+// 	if err != nil {
+// 		http.Error(w, "Unable to create temp file", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer tempFile.Close()
+
+// 	// Write uploaded file content to temporary file
+// 	_, err = io.Copy(tempFile, file)
+// 	if err != nil {
+// 		http.Error(w, "Unable to save file", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	// Process the Excel file
+// 	// ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+// 	// defer cancel() // Pastikan untuk membatalkan konteks setelah selesai
+// 	// tempFilePath := tempFile.Name()
+// 	// if uploadType == "siswa" {
+// 	// 	excelData, err := services.UploadData[*models.PesertaDidik](tempFilePath, uploadType, schemaName)
+// 	// 	if err != nil {
+// 	// 		http.Error(w, fmt.Sprintf("Failed to process Excel file: %v", err), http.StatusInternalServerError)
+// 	// 		return
+// 	// 	}
+// 	// 	// services.
+// 	// 	// Return processed data as JSON response
+// 	// 	w.Header().Set("Content-Type", "application/json")
+// 	// 	json.NewEncoder(w).Encode(map[string]interface{}{
+// 	// 		"message":   "File processed successfully",
+// 	// 		"file_name": excelData,
+// 	// 		// "data":      excelData,
+// 	// 	})
+// 	// }
+// 	// Return processed data as JSON response
+// 	w.Header().Set("Content-Type", "application/json")
+// 	json.NewEncoder(w).Encode(map[string]interface{}{
+// 		"message":   "File processed successfully",
+// 		"file_name": fileName,
+// 		// "data":      excelData,
+// 	})
+// }
