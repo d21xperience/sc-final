@@ -31,7 +31,6 @@ type GRPCServer struct {
 	rombonganBelajarService services.RombonganBelajarService
 	rombelAnggotaService    services.RombelAnggotaService
 	nilaiAkhirService       services.NilaiAkhirService
-	uploadHandler           services.UploadHandler
 }
 
 // Jalankan gRPC Server
@@ -53,12 +52,14 @@ func (s *GRPCServer) run() {
 	}
 	// HTTP Gateway
 	// =========================================
-	handleUpload := services.NewUploadHandler(s.pesertaDidikService)
+	multiparthandle := services.NewMultipartHandler(s.pesertaDidikService, s.rombonganBelajarService, s.rombelAnggotaService)
 
 	// =========================================
 
 	mux := runtime.NewServeMux()
-	mux.HandlePath("POST", "/api/v1/ss/upload", handleUpload.HandleBinaryFileUpload)
+	mux.HandlePath("POST", "/api/v1/ss/upload", multiparthandle.HandleBinaryFileUpload)
+	mux.HandlePath("GET", "/api/v1/ss/download", multiparthandle.HandleBinaryFileDownload)
+
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	err = pb.RegisterSekolahServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
