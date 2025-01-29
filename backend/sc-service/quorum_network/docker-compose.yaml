@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  node_sekolah:
+    image: quorumengineering/quorum:latest
+    container_name: node_sekolah
+    networks:
+      - quorum_network
+    ports:
+      - "21020:21000"  # DevP2P Port
+      - "8545:8545"    # JSON-RPC API Port
+    volumes:
+      - ./data_sekolah:/qdata  # Data directory
+    command: ["--datadir", "/qdata", "--networkid", "12345"]
+
+  node_kementerian:
+    image: quorumengineering/quorum:latest
+    container_name: node_kementerian
+    networks:
+      - quorum_network
+    ports:
+      - "21021:21000"  # DevP2P Port
+      - "8546:8545"    # JSON-RPC API Port
+    volumes:
+      - ./data_kementerian:/qdata  # Data directory
+    command: ["--datadir", "/qdata", "--networkid", "12345"]
+
+  node_lpmp:
+    image: quorumengineering/quorum:latest
+    container_name: node_lpmp
+    networks:
+      - quorum_network
+    ports:
+      - "21022:21000"  # DevP2P Port
+      - "8547:8545"    # JSON-RPC API Port
+    volumes:
+      - ./data_lpmp:/qdata  # Data directory
+    command: ["--datadir", "/qdata", "--networkid", "12345"]
+
+  node_perusahaan:
+    image: quorumengineering/quorum:latest
+    container_name: node_perusahaan
+    networks:
+      - quorum_network
+    ports:
+      - "21023:21000"  # DevP2P Port
+      - "8548:8545"    # JSON-RPC API Port
+    volumes:
+      - ./data_perusahaan:/qdata  # Data directory
+    command: ["--datadir", "/qdata", "--networkid", "12345"]
+
+networks:
+  quorum_network:
+    driver: bridge

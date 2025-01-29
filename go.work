@@ -1,5 +1,0 @@
-go 1.22.3
-
-use ./backend/auth_service
-
-use ./backend/sekolah

@@ -340,6 +340,38 @@ func request_UserProfileService_DownloadUserPhotoProfile_0(ctx context.Context, 
 	return stream, metadata, nil
 }
 
+var filter_SekolahIndonesiaService_GetSekolahIndonesia_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
+func request_SekolahIndonesiaService_GetSekolahIndonesia_0(ctx context.Context, marshaler runtime.Marshaler, client SekolahIndonesiaServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetSekolahIndonesiaRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_SekolahIndonesiaService_GetSekolahIndonesia_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.GetSekolahIndonesia(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_SekolahIndonesiaService_GetSekolahIndonesia_0(ctx context.Context, marshaler runtime.Marshaler, server SekolahIndonesiaServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetSekolahIndonesiaRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_SekolahIndonesiaService_GetSekolahIndonesia_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.GetSekolahIndonesia(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 // RegisterAuthServiceHandlerServer registers the http handlers for service AuthService to "mux".
 // UnaryRPC     :call AuthServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -509,6 +541,36 @@ func RegisterUserProfileServiceHandlerServer(ctx context.Context, mux *runtime.S
 		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 		return
+	})
+
+	return nil
+}
+
+// RegisterSekolahIndonesiaServiceHandlerServer registers the http handlers for service SekolahIndonesiaService to "mux".
+// UnaryRPC     :call SekolahIndonesiaServiceServer directly.
+// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterSekolahIndonesiaServiceHandlerFromEndpoint instead.
+// GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
+func RegisterSekolahIndonesiaServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server SekolahIndonesiaServiceServer) error {
+	mux.Handle(http.MethodGet, pattern_SekolahIndonesiaService_GetSekolahIndonesia_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/auth.SekolahIndonesiaService/GetSekolahIndonesia", runtime.WithHTTPPathPattern("/api/v1/sekolah-indonesia"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_SekolahIndonesiaService_GetSekolahIndonesia_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_SekolahIndonesiaService_GetSekolahIndonesia_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -773,4 +835,68 @@ var (
 	forward_UserProfileService_GetUserProfilePhoto_0      = runtime.ForwardResponseMessage
 	forward_UserProfileService_UploadUserPhotoProfile_0   = runtime.ForwardResponseMessage
 	forward_UserProfileService_DownloadUserPhotoProfile_0 = runtime.ForwardResponseStream
+)
+
+// RegisterSekolahIndonesiaServiceHandlerFromEndpoint is same as RegisterSekolahIndonesiaServiceHandler but
+// automatically dials to "endpoint" and closes the connection when "ctx" gets done.
+func RegisterSekolahIndonesiaServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+	conn, err := grpc.NewClient(endpoint, opts...)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+			return
+		}
+		go func() {
+			<-ctx.Done()
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+		}()
+	}()
+	return RegisterSekolahIndonesiaServiceHandler(ctx, mux, conn)
+}
+
+// RegisterSekolahIndonesiaServiceHandler registers the http handlers for service SekolahIndonesiaService to "mux".
+// The handlers forward requests to the grpc endpoint over "conn".
+func RegisterSekolahIndonesiaServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterSekolahIndonesiaServiceHandlerClient(ctx, mux, NewSekolahIndonesiaServiceClient(conn))
+}
+
+// RegisterSekolahIndonesiaServiceHandlerClient registers the http handlers for service SekolahIndonesiaService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "SekolahIndonesiaServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "SekolahIndonesiaServiceClient"
+// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
+// "SekolahIndonesiaServiceClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterSekolahIndonesiaServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client SekolahIndonesiaServiceClient) error {
+	mux.Handle(http.MethodGet, pattern_SekolahIndonesiaService_GetSekolahIndonesia_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/auth.SekolahIndonesiaService/GetSekolahIndonesia", runtime.WithHTTPPathPattern("/api/v1/sekolah-indonesia"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_SekolahIndonesiaService_GetSekolahIndonesia_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_SekolahIndonesiaService_GetSekolahIndonesia_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	return nil
+}
+
+var (
+	pattern_SekolahIndonesiaService_GetSekolahIndonesia_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sekolah-indonesia"}, ""))
+)
+
+var (
+	forward_SekolahIndonesiaService_GetSekolahIndonesia_0 = runtime.ForwardResponseMessage
 )

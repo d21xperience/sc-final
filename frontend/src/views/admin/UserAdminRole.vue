@@ -1,110 +1,54 @@
 <template>
 
+    <!-- <div class=""> -->
     <div class="">
-        <div class="card">
-            <div v-if="dataConnected">
-                <div class="fixed top-0 w-full left-0 z-20 bg-white">
-                    <div class="lg:ml-[250px] my-2 ">
-                        <div class="container ">
-                            <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Siswa </h4>
-                                <Select v-model="selectedCity" :options="cities" optionLabel="name"
-                                    placeholder="Tahun Pelajaran" class="w-full md:w-56 mr-2" />
+        <div class="my-2">
+            <Toolbar>
+                <template #start>
+                    <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
+                        :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2" class="mr-2" />
+                    <Button icon="pi pi-trash" severity="danger" class="mr-2" @click="confirmDeleteSelected"
+                        :disabled="!dataLulusan || !dataLulusan.length" />
+                </template>
+                <template #end>
 
-                            </div>
-                            <div class="mb-2">
-                                <Toolbar>
-                                    <template #start>
-                                        <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
-                                            :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2"
-                                            class="mr-2" />
-                                        <Button icon="pi pi-trash" severity="danger" class="mr-2"
-                                            @click="confirmDeleteSelected"
-                                            :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <!-- <Button label="Lulus" severity="warn" class="mr-2" @click="dialogStatus = true"
-                                            :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <Button label="Naik" severity="warn" class="mr-2" @click="openNew"
-                                            :disabled="!dataLulusan || !dataLulusan.length" /> -->
-                                    </template>
-                                    <template #end>
-                                        <!-- <FileUpload mode="basic" accept="xlsx/*" :maxFileSize="1000000" label="Import"
-                                            chooseLabel="Import" class="mr-2" auto /> -->
-                                        <Button label="Import" icon="pi pi-download" severity="contrast"
-                                            @click="exportCSV($event)" class="mr-2" />
-                                        <Button label="Export" icon="pi pi-upload" severity="contrast"
-                                            @click="exportCSV($event)" class="mr-2" />
-                                        <Button label="Kirim Blockchain" icon="pi pi-send" severity="help"
-                                            @click="exportCSV($event)" />
-                                    </template>
-
-                                </Toolbar>
-                            </div>
-
-                            <Toolbar>
-                                <template #start>
-                                    <div class="flex flex-wrap gap-2 items-center justify-between">
-                                        <div class="flex">
-                                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                                placeholder="Rombel" class="w-full md:w-56 mr-2" />
-                                            <!-- <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                                placeholder="Tingkat" class="mr-2" /> -->
-                                        </div>
-                                    </div>
-                                </template>
-                                <template #end>
-                                    <IconField>
-                                        <InputIcon>
-                                            <i class="pi pi-search" />
-                                        </InputIcon>
-                                        <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                    </IconField>
-                                </template>
-                            </Toolbar>
+                    <div class="flex flex-wrap gap-2 items-center justify-between">
+                        <div class="flex">
+                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                placeholder="Tahun Ajaran" class="md:w-56  mr-2" />
+                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name" placeholder="Rombel"
+                                class="w-full md:w-56 mr-2" />
                         </div>
                     </div>
-                </div>
-
-
-                <DataTable ref="dt" v-model:selection="dataLulusan" stripedRows size="small" :value="products"
-                    dataKey="id" :paginator="true" :rows="5" :filters="filters"
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56">
-                    <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                    <Column field="name" header="Gambar">
-                        <template #body="slotProps">
-                            <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                                :alt="slotProps.data.image" class="w-16 h-16" />
-                        </template>
-                    </Column>
-                    <Column field="name" header="Nama" sortable></Column>
-                    <Column field="name" header="JK"></Column>
-                    <Column field="code" header="NISN"></Column>
-                    <Column field="code" header="NIS" sortable></Column>
-                    <Column field="code" header="Rombel" sortable></Column>
-                    <Column field="code" header="No. Ijazah" sortable></Column>
-                    <Column field="name" header="Rerata Nilai"></Column>
-                    <!--<Column field="name" header="Tgl.Lahir"></Column>
-                    <Column field="name" header="Agama"></Column>
-                    <Column field="category" header="Ayah"></Column>
-                    <Column field="category" header="Ibu"></Column> -->
-                    <!-- <Column field="category" header="Pekerjaan Ayah"></Column>
-                    <Column field="category" header="Pekerjaan Ibu"></Column> -->
-                    <!-- <Column field="category" header="Alamat"></Column> -->
-
-                    <Column field="inventoryStatus" header="Status" sortable>
-                        <template #body="slotProps">
-                            <Tag :value="slotProps.data.inventoryStatus"
-                                :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                        </template>
-                    </Column>
-                </DataTable>
-
-            </div>
-            <div v-else>
-                <EmptyData @profileFetched="handleProfileFetched" @fetchError="handleFetchError" />
-            </div>
+                    <IconField>
+                        <InputIcon>
+                            <i class="pi pi-search" />
+                        </InputIcon>
+                        <InputText v-model="filters['global'].value" placeholder="Search..." />
+                    </IconField>
+                </template>
+            </Toolbar>
         </div>
+        <DataTable ref="dt" v-model:selection="dataLulusan" stripedRows size="small" :value="products" dataKey="id"
+            :paginator="true" :rows="5" :filters="filters"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            :rowsPerPageOptions="[5, 10, 25]"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Users" class="">
+            <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
+            <Column field="name" header="Username" sortable></Column>
+            <Column field="name" header="Nama user" sortable></Column>
+            <Column field="code" header="Login terakhir"></Column>
+            <Column field="code" header="Online" sortable></Column>
+            <Column field="code" header="Status" sortable></Column>
+            <!-- <Column field="inventoryStatus" header="Status" sortable>
+                <template #body="slotProps">
+                    <Tag :value="slotProps.data.inventoryStatus"
+                        :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
+                </template>
+            </Column> -->
+        </DataTable>
+
+
 
 
         <!-- DIALOGBOX FOR EDIT DATA -->
@@ -203,10 +147,7 @@ import InputIcon from 'primevue/inputicon';
 import RadioButton from 'primevue/radiobutton';
 import DataLulusanService from '@/service/ProductService.js';
 
-// =======fitur image========================
-import Image from 'primevue/image';
 
-// =======fitur image========================
 
 onMounted(() => {
     DataLulusanService.getProducts().then((data) => (products.value = data));
@@ -337,7 +278,8 @@ import EmptyData from '@/components/EmptyData.vue';
 // select tahun ijazah
 const selectedCity = ref();
 const cities = ref([
-    { name: '2023/2024', code: '20232' },
+    { name: '2023/2024 Ganjil', code: '20231' },
+    { name: '2023/2024 Genap', code: '20232' },
     { name: '2022/2023', code: '20222' },
     { name: '2021/2022', code: '20212' },
     { name: '2022/2021', code: '20202' },

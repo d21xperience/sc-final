@@ -46,7 +46,7 @@ const router = createRouter({
     },
     {
       // path: "/main",
-      path: "/:username",
+      path: "/admin",
       component: () => import("../views/admin/Main.vue"),
       props: true,
       // meta: { requiresAuth: true },
@@ -62,6 +62,26 @@ const router = createRouter({
           name: "profile",
           component: () => import("../views/admin/Profile.vue"),
           meta: { title: "Profile", requiresAuth: true },
+        },
+        {
+          path: "data-users",
+          name: "dataUsers",
+          component: () => import("../views/admin/DataUsers.vue"),
+          meta: { title: "Data User", requiresAuth: true, role: "admin" },
+          children: [
+            {
+              path: "admin",
+              name: "usersAdmin",
+              component: () => import("../views/admin/UserAdminRole.vue"),
+              meta: { title: "Admin role", requiresAuth: true, role: "admin" },
+            },
+            {
+              path: "siswa",
+              name: "usersSiswa",
+              component: () => import("../views/admin/UserSiswaRole.vue"),
+              meta: { title: "Admin role", requiresAuth: true, role: "admin" },
+            },
+          ],
         },
 
         // ----------------------------------------------------------
@@ -244,7 +264,7 @@ const router = createRouter({
 //   }
 // });
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   document.title = to.meta.title || "Verifikasi Ijazah App";
 
   // Ambil informasi autentikasi dan peran pengguna dari store

@@ -5,6 +5,7 @@ import (
 	"auth_service/repository"
 	"auth_service/utils"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -44,6 +45,11 @@ func (s *authServiceImpl) IsAdminExists(schoolID int) (bool, error) {
 func (s *authServiceImpl) Register(user *models.User) error {
 	// Cek apakah username sudah ada
 	existingUser, err := s.repository.FindByUsername(user.Username)
+	if err != nil {
+		// Tangani error jika terjadi kesalahan dalam mencari user
+		return fmt.Errorf("failed to check existing username: %w", err)
+	}
+
 	if existingUser != nil {
 		return errors.New("username already exists")
 	}

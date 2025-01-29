@@ -18,10 +18,10 @@ import (
 // AuthServiceServer dengan Redis Client sebagai Dependency Injection
 type AuthServiceServer struct {
 	pb.UnimplementedAuthServiceServer
-	RedisClient    *redis.Client // Tambahkan Redis sebagai field
-	sekolahService services.SekolahService
-	authService    services.AuthService
-	userProfile    services.UserProfileService
+	RedisClient      *redis.Client // Tambahkan Redis sebagai field
+	sekolahService   services.SekolahService
+	authService      services.AuthService
+	userProfile      services.UserProfileService
 }
 
 // Constructor untuk AuthServiceServer dengan Redis

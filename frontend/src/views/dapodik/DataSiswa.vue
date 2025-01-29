@@ -69,6 +69,12 @@
                     :rowsPerPageOptions="[5, 10, 25]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56">
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
+                    <Column field="name" header="Foto">
+                        <template #body="slotProps">
+                            <Image :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
+                                :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
+                        </template>
+                    </Column>
                     <Column field="name" header="Nama" sortable></Column>
                     <Column field="code" header="NISN"></Column>
                     <Column field="code" header="NIS" sortable></Column>
@@ -194,7 +200,9 @@ import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
 import RadioButton from 'primevue/radiobutton';
 import DataLulusanService from '@/service/ProductService.js';
-
+// =============UJI FITUR FOTO========================
+import Image from 'primevue/image';
+// =====================================
 
 
 onMounted(() => {

@@ -35,6 +35,8 @@ services:
       - "${AUTHDB_PORT}:5432"
     volumes:
       - auth_db_data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+
 
   auth_redis:
     image: redis:alpine

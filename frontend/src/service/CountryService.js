@@ -2,8 +2,7 @@ const CountryService = {
   getSekolahData() {
     return [
       {
-        sekolah_id_enkrip:
-          "5DC85EE014503F5A1EC6                                                                                ",
+        sekolah_id_enkrip:"5DC85EE014503F5A1EC6",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -16,8 +15,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "91EA1DD8D57426155D49                                                                                ",
+        sekolah_id_enkrip:"91EA1DD8D57426155D49",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -30,8 +28,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "9F169FE519BFCB013C6C                                                                                ",
+        sekolah_id_enkrip:"9F169FE519BFCB013C6C",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -44,8 +41,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "3D46DA597F61923F117E                                                                                ",
+        sekolah_id_enkrip:"3D46DA597F61923F117E",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -54,13 +50,11 @@ const CountryService = {
         kode_prop: "020000  ",
         nama_sekolah: "SMK TAMANSISWA RANCAEKEK",
         npsn: 20227966,
-        alamat_jalan:
-          "JL. RANCANILEM TERS. JL. CEMPAKA RAYA PERUM BUMI RANCAEKEK KENCANA",
+        alamat_jalan:"JL. RANCANILEM TERS. JL. CEMPAKA RAYA PERUM BUMI RANCAEKEK KENCANA",
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "A023C3FC2E80A39A8873                                                                                ",
+        sekolah_id_enkrip:"A023C3FC2E80A39A8873",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -69,13 +63,11 @@ const CountryService = {
         kode_prop: "020000  ",
         nama_sekolah: "SMA TAMAN SISWA RANCAEKEK",
         npsn: 20227920,
-        alamat_jalan:
-          "Jl. Rancanilem (Terusan Jl. Cempaka Raya, Bumi Rancaekek Kencana) ",
+        alamat_jalan:"Jl. Rancanilem (Terusan Jl. Cempaka Raya, Bumi Rancaekek Kencana) ",
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "A0BE180ACB2D52E973E1                                                                                ",
+        sekolah_id_enkrip:"A0BE180ACB2D52E973E1",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -88,8 +80,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "AFCF1860D75A61417144                                                                                ",
+        sekolah_id_enkrip:"AFCF1860D75A61417144",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -102,8 +93,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "CA8D813404D9229DBBCA                                                                                ",
+        sekolah_id_enkrip:"CA8D813404D9229DBBCA",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -116,8 +106,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "58253DCBF2A346468893                                                                                ",
+        sekolah_id_enkrip:"58253DCBF2A346468893",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -130,8 +119,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "ED5C71E4AF71C248BCCC                                                                                ",
+        sekolah_id_enkrip:"ED5C71E4AF71C248BCCC",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -144,8 +132,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "CB8185067F8498DB9A45                                                                                ",
+        sekolah_id_enkrip:"CB8185067F8498DB9A45",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -158,8 +145,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "E8F111F92BDA07921244                                                                                ",
+        sekolah_id_enkrip:"E8F111F92BDA07921244",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -172,8 +158,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "DB5DD6FFB7726695046A                                                                                ",
+        sekolah_id_enkrip:"DB5DD6FFB7726695046A",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -186,8 +171,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "2470A0F3E616BD6066F2                                                                                ",
+        sekolah_id_enkrip:"2470A0F3E616BD6066F2",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -200,8 +184,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "2B78491CFD1E34C0A0A7                                                                                ",
+        sekolah_id_enkrip:"2B78491CFD1E34C0A0A7",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -214,8 +197,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "D38755310E97EDFE8139                                                                                ",
+        sekolah_id_enkrip:"D38755310E97EDFE8139",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -228,8 +210,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "75BAD064F0ACE87F108D                                                                                ",
+        sekolah_id_enkrip:"75BAD064F0ACE87F108D",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -242,8 +223,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "666DCF2664D4CDF89396                                                                                ",
+        sekolah_id_enkrip:"666DCF2664D4CDF89396",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -256,8 +236,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "0129382F9014B6DC2468                                                                                ",
+        sekolah_id_enkrip:"0129382F9014B6DC2468",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -270,8 +249,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "6B0F15E4FB678857FA2D                                                                                ",
+        sekolah_id_enkrip:"6B0F15E4FB678857FA2D",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -284,8 +262,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "C7B206D139E282AA383C                                                                                ",
+        sekolah_id_enkrip:"C7B206D139E282AA383C",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -298,8 +275,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "7522EF9D58F055DFF900                                                                                ",
+        sekolah_id_enkrip:"7522EF9D58F055DFF900",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -312,8 +288,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "4B114606AC79DAB641F5                                                                                ",
+        sekolah_id_enkrip:"4B114606AC79DAB641F5",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -326,8 +301,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "2FF81159B253ED25259B                                                                                ",
+        sekolah_id_enkrip:"2FF81159B253ED25259B",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -340,8 +314,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "4B571AF904F2157CD912                                                                                ",
+        sekolah_id_enkrip:"4B571AF904F2157CD912",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -354,8 +327,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "18EC5648C160A1156CCE                                                                                ",
+        sekolah_id_enkrip:"18EC5648C160A1156CCE",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -368,8 +340,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "15C1CDD4E3ED8CEBEAED                                                                                ",
+        sekolah_id_enkrip:"15C1CDD4E3ED8CEBEAED",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -382,8 +353,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "E520148696DE2C9EE08A                                                                                ",
+        sekolah_id_enkrip:"E520148696DE2C9EE08A",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -396,8 +366,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "163E9CBD69CFD999B303                                                                                ",
+        sekolah_id_enkrip:"163E9CBD69CFD999B303",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -410,8 +379,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "30B6CB0397389C878899                                                                                ",
+        sekolah_id_enkrip:"30B6CB0397389C878899",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -424,8 +392,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "85028726ECACCBB0C0A4                                                                                ",
+        sekolah_id_enkrip:"85028726ECACCBB0C0A4",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -438,8 +405,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "DFF555F30DF1D756EFA6                                                                                ",
+        sekolah_id_enkrip:"DFF555F30DF1D756EFA6",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -452,8 +418,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "B31410CF9F7D87179ABC                                                                                ",
+        sekolah_id_enkrip:"B31410CF9F7D87179ABC",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -466,8 +431,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "7EFCF0C50DBD16D7C203                                                                                ",
+        sekolah_id_enkrip:"7EFCF0C50DBD16D7C203",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -480,8 +444,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "1DC45C5A51BDF4B9FC45                                                                                ",
+        sekolah_id_enkrip:"1DC45C5A51BDF4B9FC45",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -494,8 +457,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "E8DEA3F2C7005E4EE781                                                                                ",
+        sekolah_id_enkrip:"E8DEA3F2C7005E4EE781",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -508,8 +470,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "66F2C9677D247731560A                                                                                ",
+        sekolah_id_enkrip:"66F2C9677D247731560A",
         kecamatan: "Kec. Rancaekek",
         kabupaten: "Kab. Bandung",
         propinsi: "Prov. Jawa Barat",
@@ -1532,8 +1493,7 @@ const CountryService = {
         kode_prop: "030000",
         nama_sekolah: "SD NEGERI 2 BANDUNGSARI",
         npsn: 20314587,
-        alamat_jalan:
-          "Jl. Kyai Ahmad Yadahu Rt 02 Rw 01 Bandungsari Kec Ngaringan",
+        alamat_jalan:"Jl. Kyai Ahmad Yadahu Rt 02 Rw 01 Bandungsari Kec Ngaringan",
         status: "Negeri",
       },
       {
@@ -1715,8 +1675,7 @@ const CountryService = {
         kode_prop: "020000",
         nama_sekolah: "SMKS PRAKARYA INTERNASIONAL 1 BANDUNG",
         npsn: 20219151,
-        alamat_jalan:
-          "Jl. Inhoftank No. 46  - 146, Terusan Otista, Tegalega Kota Bandung",
+        alamat_jalan:"Jl. Inhoftank No. 46  - 146, Terusan Otista, Tegalega Kota Bandung",
         status: "Swasta",
       },
       {
@@ -2847,8 +2806,7 @@ const CountryService = {
         kode_prop: "030000",
         nama_sekolah: "SMP AL MAS`UDIYYAH BANDUNGAN",
         npsn: 69887368,
-        alamat_jalan:
-          "Dsn. Blater, Desa Jimbaran, Kec. Bandungan, Kab. Semarang 50661",
+        alamat_jalan:"Dsn. Blater, Desa Jimbaran, Kec. Bandungan, Kab. Semarang 50661",
         status: "Swasta",
       },
       {
@@ -7021,8 +6979,7 @@ const CountryService = {
         kode_prop: "100000",
         nama_sekolah: "SD NEGERI 131/VIII ULAK BANDUNG",
         npsn: 10503160,
-        alamat_jalan:
-          "Jalan tanjung Dani  Desa Tuo Sumay Rt. 11 Dusun Ulak Bandung",
+        alamat_jalan:"Jalan tanjung Dani  Desa Tuo Sumay Rt. 11 Dusun Ulak Bandung",
         status: "Negeri",
       },
       {
@@ -7646,8 +7603,7 @@ const CountryService = {
         kode_prop: "280000",
         nama_sekolah: "SMK T GLOBAL 2 BANDUNG",
         npsn: 20615941,
-        alamat_jalan:
-          "JLN. MODERN- SERDANG KP. CIWIRU DS. BABAKAN KEC BANDUNG SERANG",
+        alamat_jalan:"JLN. MODERN- SERDANG KP. CIWIRU DS. BABAKAN KEC BANDUNG SERANG",
         status: "Swasta",
       },
       {
@@ -8076,8 +8032,7 @@ const CountryService = {
         kode_prop: "130000",
         nama_sekolah: "TK LITTLE STAR KALIBANDUNG",
         npsn: 70036204,
-        alamat_jalan:
-          "Parit Teladan Darat Blok 1 No.01 Desa Kalibandung Kecamatan Sungai Raya Kabupate",
+        alamat_jalan:"Parit Teladan Darat Blok 1 No.01 Desa Kalibandung Kecamatan Sungai Raya Kabupate",
         status: "Swasta",
       },
       {
@@ -8480,8 +8435,7 @@ const CountryService = {
         kode_prop: "040000",
         nama_sekolah: "TK MASYITHOH AL IMAN BANDUNG",
         npsn: 20408914,
-        alamat_jalan:
-          "Bandung Jetis ngaglik Rt 33 Pendowoharjo Sewon Bantul Yogyakarta",
+        alamat_jalan:"Bandung Jetis ngaglik Rt 33 Pendowoharjo Sewon Bantul Yogyakarta",
         status: "Swasta",
       },
       {
@@ -10249,8 +10203,7 @@ const CountryService = {
         kode_prop: "280000",
         nama_sekolah: "SMAS PASUNDAN",
         npsn: 20600438,
-        alamat_jalan:
-          "Jl. Raya Labuan Km. 3,5 Majabarat Cidangiang Majasari Pandeglang 42217",
+        alamat_jalan:"Jl. Raya Labuan Km. 3,5 Majabarat Cidangiang Majasari Pandeglang 42217",
         status: "Swasta",
       },
       {
@@ -10692,8 +10645,7 @@ const CountryService = {
         kode_prop: "020000",
         nama_sekolah: "SMAS PASUNDAN CIKALONGKULON",
         npsn: 20203720,
-        alamat_jalan:
-          "JL. ARIA WIRATANUDATAR NO. 77 DESA NEGLASARI 01/02 KEC. CIKALONGKULON",
+        alamat_jalan:"JL. ARIA WIRATANUDATAR NO. 77 DESA NEGLASARI 01/02 KEC. CIKALONGKULON",
         status: "Swasta",
       },
       {
@@ -11239,8 +11191,7 @@ const CountryService = {
         kode_prop: "020000",
         nama_sekolah: "SMKS PARIWISATA BAMBU PASUNDAN",
         npsn: 20232428,
-        alamat_jalan:
-          "JL. VILLA MUTIARA LIDO NO. 699 KEC. CIGOMBONG KAB. BOGOR",
+        alamat_jalan:"JL. VILLA MUTIARA LIDO NO. 699 KEC. CIGOMBONG KAB. BOGOR",
         status: "Swasta",
       },
       {
@@ -11786,8 +11737,7 @@ const CountryService = {
         kode_prop: "120000",
         nama_sekolah: "SMA YADIKA PAGELARAN",
         npsn: 69892653,
-        alamat_jalan:
-          "Jl. Raya Gumuk Mas, Desa Gumuk Mas, Kecamatan Pagelaran Kabupaten Pringsewu",
+        alamat_jalan:"Jl. Raya Gumuk Mas, Desa Gumuk Mas, Kecamatan Pagelaran Kabupaten Pringsewu",
         status: "Swasta",
       },
       {
@@ -12125,8 +12075,7 @@ const CountryService = {
         kode_prop: "020000",
         nama_sekolah: "SMP YADIKA 13 TAMBUN",
         npsn: 20269203,
-        alamat_jalan:
-          "Jl Desa Mangunjaya perum Villa Makmur II Rt 009/31 Tambun Selatan Bekasi",
+        alamat_jalan:"Jl Desa Mangunjaya perum Villa Makmur II Rt 009/31 Tambun Selatan Bekasi",
         status: "Swasta",
       },
       {
@@ -12871,8 +12820,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "4E633D95AB2A3F3D6132                                                                                ",
+        sekolah_id_enkrip:"4E633D95AB2A3F3D6132",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -12885,8 +12833,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "C819575773A84FB827EC                                                                                ",
+        sekolah_id_enkrip:"C819575773A84FB827EC",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -12899,8 +12846,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "C89007DECC1B0CFCD238                                                                                ",
+        sekolah_id_enkrip:"C89007DECC1B0CFCD238",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -12913,8 +12859,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "3DE82D1280C50D240BF3                                                                                ",
+        sekolah_id_enkrip:"3DE82D1280C50D240BF3",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -12927,8 +12872,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "52030DF4379B75643901                                                                                ",
+        sekolah_id_enkrip:"52030DF4379B75643901",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -12937,13 +12881,11 @@ const CountryService = {
         kode_prop: "020000  ",
         nama_sekolah: "SD SEKOLAH ALAM JATINANGOR",
         npsn: 69960175,
-        alamat_jalan:
-          "Kompleks Al Assakir Islamic Center Jl. Kol. Achmad Syam No. 62",
+        alamat_jalan:"Kompleks Al Assakir Islamic Center Jl. Kol. Achmad Syam No. 62",
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "E9BE204C385A8DD0D950                                                                                ",
+        sekolah_id_enkrip:"E9BE204C385A8DD0D950",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -12956,8 +12898,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "6249BFFE95E01F501DEA                                                                                ",
+        sekolah_id_enkrip:"6249BFFE95E01F501DEA",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -12970,8 +12911,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "B0940B814AB9D72C6675                                                                                ",
+        sekolah_id_enkrip:"B0940B814AB9D72C6675",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -12984,8 +12924,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "4B6AE59AAE56818C6CBE                                                                                ",
+        sekolah_id_enkrip:"4B6AE59AAE56818C6CBE",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -12998,8 +12937,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "D3128C08937F1459D8AB                                                                                ",
+        sekolah_id_enkrip:"D3128C08937F1459D8AB",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13012,8 +12950,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "FAAF11EE8BFB7B103FCA                                                                                ",
+        sekolah_id_enkrip:"FAAF11EE8BFB7B103FCA",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13026,8 +12963,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "7F29E07501B8BA99F610                                                                                ",
+        sekolah_id_enkrip:"7F29E07501B8BA99F610",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13040,8 +12976,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "26489510303704E2C8D4                                                                                ",
+        sekolah_id_enkrip:"26489510303704E2C8D4",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13054,8 +12989,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "082C91C3CCA61E09ABE1                                                                                ",
+        sekolah_id_enkrip:"082C91C3CCA61E09ABE1",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13068,8 +13002,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "38B123FF5C27D90E0F4C                                                                                ",
+        sekolah_id_enkrip:"38B123FF5C27D90E0F4C",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13082,8 +13015,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "7FCD3F0D0D7C41ECE1D6                                                                                ",
+        sekolah_id_enkrip:"7FCD3F0D0D7C41ECE1D6",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13096,8 +13028,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "6EBA4F3AC18331463134                                                                                ",
+        sekolah_id_enkrip:"6EBA4F3AC18331463134",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13110,8 +13041,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "D4DA6B98FCFD71C58F5A                                                                                ",
+        sekolah_id_enkrip:"D4DA6B98FCFD71C58F5A",
         kecamatan: "Kec. Jatinangor",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13124,8 +13054,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "E6F5338A721552274B3F                                                                                ",
+        sekolah_id_enkrip:"E6F5338A721552274B3F",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13138,8 +13067,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "06EC8996237036EFD43B                                                                                ",
+        sekolah_id_enkrip:"06EC8996237036EFD43B",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13152,8 +13080,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "DFD4347E3FB7EEA132CF                                                                                ",
+        sekolah_id_enkrip:"DFD4347E3FB7EEA132CF",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13166,8 +13093,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "61E8122F4372D720A5A8                                                                                ",
+        sekolah_id_enkrip:"61E8122F4372D720A5A8",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13180,8 +13106,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "7AC51B6F45468B5CCE21                                                                                ",
+        sekolah_id_enkrip:"7AC51B6F45468B5CCE21",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13194,8 +13119,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "509A7824F11FEDE06825                                                                                ",
+        sekolah_id_enkrip:"509A7824F11FEDE06825",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13208,8 +13132,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "2EF1DD13741974807F5D                                                                                ",
+        sekolah_id_enkrip:"2EF1DD13741974807F5D",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13218,13 +13141,11 @@ const CountryService = {
         kode_prop: "020000  ",
         nama_sekolah: "SD NEGERI CIMANGGUNG III",
         npsn: 20233852,
-        alamat_jalan:
-          "Dusun Awilega RT 01 RW 07 Desa Tegalmanggung Kec. Cimanggung Kab. Sumedang",
+        alamat_jalan:"Dusun Awilega RT 01 RW 07 Desa Tegalmanggung Kec. Cimanggung Kab. Sumedang",
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "47A4099931F7CF70B9B1                                                                                ",
+        sekolah_id_enkrip:"47A4099931F7CF70B9B1",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13237,8 +13158,7 @@ const CountryService = {
         status: "Negeri",
       },
       {
-        sekolah_id_enkrip:
-          "E9415F0B85074A0BA974                                                                                ",
+        sekolah_id_enkrip:"E9415F0B85074A0BA974",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",
@@ -13251,8 +13171,7 @@ const CountryService = {
         status: "Swasta",
       },
       {
-        sekolah_id_enkrip:
-          "90C2D3F4375D3C8DBB0D                                                                                ",
+        sekolah_id_enkrip:"90C2D3F4375D3C8DBB0D",
         kecamatan: "Kec. Cimanggung",
         kabupaten: "Kab. Sumedang",
         propinsi: "Prov. Jawa Barat",

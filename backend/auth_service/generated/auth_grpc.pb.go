@@ -484,3 +484,106 @@ var UserProfileService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Metadata: "auth.proto",
 }
+
+const (
+	SekolahIndonesiaService_GetSekolahIndonesia_FullMethodName = "/auth.SekolahIndonesiaService/GetSekolahIndonesia"
+)
+
+// SekolahIndonesiaServiceClient is the client API for SekolahIndonesiaService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type SekolahIndonesiaServiceClient interface {
+	GetSekolahIndonesia(ctx context.Context, in *GetSekolahIndonesiaRequest, opts ...grpc.CallOption) (*GetSekolahIndonesiaResponse, error)
+}
+
+type sekolahIndonesiaServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewSekolahIndonesiaServiceClient(cc grpc.ClientConnInterface) SekolahIndonesiaServiceClient {
+	return &sekolahIndonesiaServiceClient{cc}
+}
+
+func (c *sekolahIndonesiaServiceClient) GetSekolahIndonesia(ctx context.Context, in *GetSekolahIndonesiaRequest, opts ...grpc.CallOption) (*GetSekolahIndonesiaResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSekolahIndonesiaResponse)
+	err := c.cc.Invoke(ctx, SekolahIndonesiaService_GetSekolahIndonesia_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SekolahIndonesiaServiceServer is the server API for SekolahIndonesiaService service.
+// All implementations must embed UnimplementedSekolahIndonesiaServiceServer
+// for forward compatibility.
+type SekolahIndonesiaServiceServer interface {
+	GetSekolahIndonesia(context.Context, *GetSekolahIndonesiaRequest) (*GetSekolahIndonesiaResponse, error)
+	mustEmbedUnimplementedSekolahIndonesiaServiceServer()
+}
+
+// UnimplementedSekolahIndonesiaServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedSekolahIndonesiaServiceServer struct{}
+
+func (UnimplementedSekolahIndonesiaServiceServer) GetSekolahIndonesia(context.Context, *GetSekolahIndonesiaRequest) (*GetSekolahIndonesiaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSekolahIndonesia not implemented")
+}
+func (UnimplementedSekolahIndonesiaServiceServer) mustEmbedUnimplementedSekolahIndonesiaServiceServer() {
+}
+func (UnimplementedSekolahIndonesiaServiceServer) testEmbeddedByValue() {}
+
+// UnsafeSekolahIndonesiaServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to SekolahIndonesiaServiceServer will
+// result in compilation errors.
+type UnsafeSekolahIndonesiaServiceServer interface {
+	mustEmbedUnimplementedSekolahIndonesiaServiceServer()
+}
+
+func RegisterSekolahIndonesiaServiceServer(s grpc.ServiceRegistrar, srv SekolahIndonesiaServiceServer) {
+	// If the following call pancis, it indicates UnimplementedSekolahIndonesiaServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&SekolahIndonesiaService_ServiceDesc, srv)
+}
+
+func _SekolahIndonesiaService_GetSekolahIndonesia_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSekolahIndonesiaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SekolahIndonesiaServiceServer).GetSekolahIndonesia(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SekolahIndonesiaService_GetSekolahIndonesia_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SekolahIndonesiaServiceServer).GetSekolahIndonesia(ctx, req.(*GetSekolahIndonesiaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// SekolahIndonesiaService_ServiceDesc is the grpc.ServiceDesc for SekolahIndonesiaService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var SekolahIndonesiaService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "auth.SekolahIndonesiaService",
+	HandlerType: (*SekolahIndonesiaServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetSekolahIndonesia",
+			Handler:    _SekolahIndonesiaService_GetSekolahIndonesia_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "auth.proto",
+}

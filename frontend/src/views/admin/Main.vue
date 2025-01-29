@@ -14,7 +14,7 @@ const store = useStore();
 
 const userRole = ref(store.state.authService.userRole); // Ambil role user dari Vuex
 
-import Menubar from 'primevue/menubar';
+// import Menubar from 'primevue/menubar';
 
 // computed({
 //     ...mapGetters("authService", ["userRole"]),
@@ -45,6 +45,14 @@ const menuItems = ref([
         command: () => {
             router.push({ name: 'profile' })
         }
+    },
+    {
+        label: 'Data User',
+        icon: 'pi pi-users',
+        command: () => {
+            router.push({ name: 'dataUsers' })
+        },
+        
     },
     {
         label: 'Data Akademik',
