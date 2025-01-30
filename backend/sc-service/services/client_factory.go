@@ -14,7 +14,12 @@ func CreateClientFactory(config *Config) (EthClient, error) {
 		}
 		return client, nil
 	case "quorum":
-		client, err := NewDefaultQuorumClient(config.RPCURL)
+		rpcURL := config.RPCURL
+		ETHclient, err := NewDefaultEthClient(rpcURL)
+		if err != nil {
+			return nil, err
+		}
+		client, err := NewDefaultQuorumClient(rpcURL, ETHclient)
 		if err != nil {
 			return nil, err
 		}

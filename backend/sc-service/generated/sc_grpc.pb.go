@@ -19,153 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	EthService_GetChainId_FullMethodName = "/sc_service.EthService/GetChainId"
-	EthService_GetBalance_FullMethodName = "/sc_service.EthService/GetBalance"
-)
-
-// EthServiceClient is the client API for EthService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type EthServiceClient interface {
-	// Mendapatkan Chain ID
-	GetChainId(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ChainIdResponse, error)
-	// Mendapatkan Saldo
-	GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error)
-}
-
-type ethServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewEthServiceClient(cc grpc.ClientConnInterface) EthServiceClient {
-	return &ethServiceClient{cc}
-}
-
-func (c *ethServiceClient) GetChainId(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ChainIdResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ChainIdResponse)
-	err := c.cc.Invoke(ctx, EthService_GetChainId_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *ethServiceClient) GetBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BalanceResponse)
-	err := c.cc.Invoke(ctx, EthService_GetBalance_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// EthServiceServer is the server API for EthService service.
-// All implementations must embed UnimplementedEthServiceServer
-// for forward compatibility.
-type EthServiceServer interface {
-	// Mendapatkan Chain ID
-	GetChainId(context.Context, *EmptyRequest) (*ChainIdResponse, error)
-	// Mendapatkan Saldo
-	GetBalance(context.Context, *BalanceRequest) (*BalanceResponse, error)
-	mustEmbedUnimplementedEthServiceServer()
-}
-
-// UnimplementedEthServiceServer must be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedEthServiceServer struct{}
-
-func (UnimplementedEthServiceServer) GetChainId(context.Context, *EmptyRequest) (*ChainIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetChainId not implemented")
-}
-func (UnimplementedEthServiceServer) GetBalance(context.Context, *BalanceRequest) (*BalanceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBalance not implemented")
-}
-func (UnimplementedEthServiceServer) mustEmbedUnimplementedEthServiceServer() {}
-func (UnimplementedEthServiceServer) testEmbeddedByValue()                    {}
-
-// UnsafeEthServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to EthServiceServer will
-// result in compilation errors.
-type UnsafeEthServiceServer interface {
-	mustEmbedUnimplementedEthServiceServer()
-}
-
-func RegisterEthServiceServer(s grpc.ServiceRegistrar, srv EthServiceServer) {
-	// If the following call pancis, it indicates UnimplementedEthServiceServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&EthService_ServiceDesc, srv)
-}
-
-func _EthService_GetChainId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EmptyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EthServiceServer).GetChainId(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EthService_GetChainId_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EthServiceServer).GetChainId(ctx, req.(*EmptyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EthService_GetBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BalanceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EthServiceServer).GetBalance(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EthService_GetBalance_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EthServiceServer).GetBalance(ctx, req.(*BalanceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// EthService_ServiceDesc is the grpc.ServiceDesc for EthService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var EthService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "sc_service.EthService",
-	HandlerType: (*EthServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetChainId",
-			Handler:    _EthService_GetChainId_Handler,
-		},
-		{
-			MethodName: "GetBalance",
-			Handler:    _EthService_GetBalance_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "sc.proto",
-}
-
-const (
-	BlockchainService_SetConfig_FullMethodName             = "/sc_service.BlockchainService/SetConfig"
-	BlockchainService_GetNetworkID_FullMethodName          = "/sc_service.BlockchainService/GetNetworkID"
-	BlockchainService_GetConsensusAlgorithm_FullMethodName = "/sc_service.BlockchainService/GetConsensusAlgorithm"
+	BlockchainService_SetConfig_FullMethodName                 = "/sc_service.BlockchainService/SetConfig"
+	BlockchainService_GetNetworkID_FullMethodName              = "/sc_service.BlockchainService/GetNetworkID"
+	BlockchainService_SendETH_FullMethodName                   = "/sc_service.BlockchainService/SendETH"
+	BlockchainService_GetTokenBalance_FullMethodName           = "/sc_service.BlockchainService/GetTokenBalance"
+	BlockchainService_TransferToken_FullMethodName             = "/sc_service.BlockchainService/TransferToken"
+	BlockchainService_ApproveToken_FullMethodName              = "/sc_service.BlockchainService/ApproveToken"
+	BlockchainService_GetTokenAllowance_FullMethodName         = "/sc_service.BlockchainService/GetTokenAllowance"
+	BlockchainService_DeployContract_FullMethodName            = "/sc_service.BlockchainService/DeployContract"
+	BlockchainService_GetContract_FullMethodName               = "/sc_service.BlockchainService/GetContract"
+	BlockchainService_CallContractMethod_FullMethodName        = "/sc_service.BlockchainService/CallContractMethod"
+	BlockchainService_SendTransactionToContract_FullMethodName = "/sc_service.BlockchainService/SendTransactionToContract"
+	BlockchainService_GetContractOwner_FullMethodName          = "/sc_service.BlockchainService/GetContractOwner"
+	BlockchainService_GetGasPrice_FullMethodName               = "/sc_service.BlockchainService/GetGasPrice"
+	BlockchainService_GetNonce_FullMethodName                  = "/sc_service.BlockchainService/GetNonce"
+	BlockchainService_GetTransactionStatus_FullMethodName      = "/sc_service.BlockchainService/GetTransactionStatus"
+	BlockchainService_GetContractEvents_FullMethodName         = "/sc_service.BlockchainService/GetContractEvents"
 )
 
 // BlockchainServiceClient is the client API for BlockchainService service.
@@ -174,12 +43,28 @@ const (
 //
 // =======================================
 type BlockchainServiceClient interface {
-	// Mengatur konfigurasi blockchain (Ethereum atau Quorum)
+	// Konfigurasi Blockchain
 	SetConfig(ctx context.Context, in *SetConfigRequest, opts ...grpc.CallOption) (*SetConfigResponse, error)
-	// Mendapatkan informasi network ID
 	GetNetworkID(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NetworkIDResponse, error)
-	// Jika Quorum, dapatkan algoritma konsensus
-	GetConsensusAlgorithm(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ConsensusAlgorithmResponse, error)
+	// Transaksi ETH & Token
+	SendETH(ctx context.Context, in *SendETHRequest, opts ...grpc.CallOption) (*SendETHResponse, error)
+	GetTokenBalance(ctx context.Context, in *GetTokenBalanceRequest, opts ...grpc.CallOption) (*GetTokenBalanceResponse, error)
+	TransferToken(ctx context.Context, in *TransferTokenRequest, opts ...grpc.CallOption) (*TransferTokenResponse, error)
+	// // Informasi Jaringan
+	// rpc GetGasPrice(Empty) returns (GetGasPriceResponse);
+	// rpc GetNonce(GetNonceRequest) returns (GetNonceResponse);
+	ApproveToken(ctx context.Context, in *ApproveTokenRequest, opts ...grpc.CallOption) (*ApproveTokenResponse, error)
+	GetTokenAllowance(ctx context.Context, in *GetTokenAllowanceRequest, opts ...grpc.CallOption) (*GetTokenAllowanceResponse, error)
+	// Interaksi Smart Contract
+	DeployContract(ctx context.Context, in *DeployContractRequest, opts ...grpc.CallOption) (*DeployContractResponse, error)
+	GetContract(ctx context.Context, in *GetContractRequest, opts ...grpc.CallOption) (*GetContractResponse, error)
+	CallContractMethod(ctx context.Context, in *CallContractMethodRequest, opts ...grpc.CallOption) (*CallContractMethodResponse, error)
+	SendTransactionToContract(ctx context.Context, in *SendTransactionToContractRequest, opts ...grpc.CallOption) (*SendTransactionToContractResponse, error)
+	GetContractOwner(ctx context.Context, in *GetContractOwnerRequest, opts ...grpc.CallOption) (*GetContractOwnerResponse, error)
+	GetGasPrice(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetGasPriceResponse, error)
+	GetNonce(ctx context.Context, in *GetNonceRequest, opts ...grpc.CallOption) (*GetNonceResponse, error)
+	GetTransactionStatus(ctx context.Context, in *GetTransactionStatusRequest, opts ...grpc.CallOption) (*GetTransactionStatusResponse, error)
+	GetContractEvents(ctx context.Context, in *GetContractEventsRequest, opts ...grpc.CallOption) (*GetContractEventsResponse, error)
 }
 
 type blockchainServiceClient struct {
@@ -210,10 +95,140 @@ func (c *blockchainServiceClient) GetNetworkID(ctx context.Context, in *Empty, o
 	return out, nil
 }
 
-func (c *blockchainServiceClient) GetConsensusAlgorithm(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ConsensusAlgorithmResponse, error) {
+func (c *blockchainServiceClient) SendETH(ctx context.Context, in *SendETHRequest, opts ...grpc.CallOption) (*SendETHResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ConsensusAlgorithmResponse)
-	err := c.cc.Invoke(ctx, BlockchainService_GetConsensusAlgorithm_FullMethodName, in, out, cOpts...)
+	out := new(SendETHResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_SendETH_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) GetTokenBalance(ctx context.Context, in *GetTokenBalanceRequest, opts ...grpc.CallOption) (*GetTokenBalanceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTokenBalanceResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_GetTokenBalance_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) TransferToken(ctx context.Context, in *TransferTokenRequest, opts ...grpc.CallOption) (*TransferTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransferTokenResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_TransferToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) ApproveToken(ctx context.Context, in *ApproveTokenRequest, opts ...grpc.CallOption) (*ApproveTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ApproveTokenResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_ApproveToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) GetTokenAllowance(ctx context.Context, in *GetTokenAllowanceRequest, opts ...grpc.CallOption) (*GetTokenAllowanceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTokenAllowanceResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_GetTokenAllowance_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) DeployContract(ctx context.Context, in *DeployContractRequest, opts ...grpc.CallOption) (*DeployContractResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeployContractResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_DeployContract_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) GetContract(ctx context.Context, in *GetContractRequest, opts ...grpc.CallOption) (*GetContractResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetContractResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_GetContract_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) CallContractMethod(ctx context.Context, in *CallContractMethodRequest, opts ...grpc.CallOption) (*CallContractMethodResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CallContractMethodResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_CallContractMethod_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) SendTransactionToContract(ctx context.Context, in *SendTransactionToContractRequest, opts ...grpc.CallOption) (*SendTransactionToContractResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SendTransactionToContractResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_SendTransactionToContract_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) GetContractOwner(ctx context.Context, in *GetContractOwnerRequest, opts ...grpc.CallOption) (*GetContractOwnerResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetContractOwnerResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_GetContractOwner_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) GetGasPrice(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetGasPriceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGasPriceResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_GetGasPrice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) GetNonce(ctx context.Context, in *GetNonceRequest, opts ...grpc.CallOption) (*GetNonceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetNonceResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_GetNonce_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) GetTransactionStatus(ctx context.Context, in *GetTransactionStatusRequest, opts ...grpc.CallOption) (*GetTransactionStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTransactionStatusResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_GetTransactionStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockchainServiceClient) GetContractEvents(ctx context.Context, in *GetContractEventsRequest, opts ...grpc.CallOption) (*GetContractEventsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetContractEventsResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_GetContractEvents_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -226,12 +241,28 @@ func (c *blockchainServiceClient) GetConsensusAlgorithm(ctx context.Context, in 
 //
 // =======================================
 type BlockchainServiceServer interface {
-	// Mengatur konfigurasi blockchain (Ethereum atau Quorum)
+	// Konfigurasi Blockchain
 	SetConfig(context.Context, *SetConfigRequest) (*SetConfigResponse, error)
-	// Mendapatkan informasi network ID
 	GetNetworkID(context.Context, *Empty) (*NetworkIDResponse, error)
-	// Jika Quorum, dapatkan algoritma konsensus
-	GetConsensusAlgorithm(context.Context, *Empty) (*ConsensusAlgorithmResponse, error)
+	// Transaksi ETH & Token
+	SendETH(context.Context, *SendETHRequest) (*SendETHResponse, error)
+	GetTokenBalance(context.Context, *GetTokenBalanceRequest) (*GetTokenBalanceResponse, error)
+	TransferToken(context.Context, *TransferTokenRequest) (*TransferTokenResponse, error)
+	// // Informasi Jaringan
+	// rpc GetGasPrice(Empty) returns (GetGasPriceResponse);
+	// rpc GetNonce(GetNonceRequest) returns (GetNonceResponse);
+	ApproveToken(context.Context, *ApproveTokenRequest) (*ApproveTokenResponse, error)
+	GetTokenAllowance(context.Context, *GetTokenAllowanceRequest) (*GetTokenAllowanceResponse, error)
+	// Interaksi Smart Contract
+	DeployContract(context.Context, *DeployContractRequest) (*DeployContractResponse, error)
+	GetContract(context.Context, *GetContractRequest) (*GetContractResponse, error)
+	CallContractMethod(context.Context, *CallContractMethodRequest) (*CallContractMethodResponse, error)
+	SendTransactionToContract(context.Context, *SendTransactionToContractRequest) (*SendTransactionToContractResponse, error)
+	GetContractOwner(context.Context, *GetContractOwnerRequest) (*GetContractOwnerResponse, error)
+	GetGasPrice(context.Context, *Empty) (*GetGasPriceResponse, error)
+	GetNonce(context.Context, *GetNonceRequest) (*GetNonceResponse, error)
+	GetTransactionStatus(context.Context, *GetTransactionStatusRequest) (*GetTransactionStatusResponse, error)
+	GetContractEvents(context.Context, *GetContractEventsRequest) (*GetContractEventsResponse, error)
 	mustEmbedUnimplementedBlockchainServiceServer()
 }
 
@@ -248,8 +279,47 @@ func (UnimplementedBlockchainServiceServer) SetConfig(context.Context, *SetConfi
 func (UnimplementedBlockchainServiceServer) GetNetworkID(context.Context, *Empty) (*NetworkIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNetworkID not implemented")
 }
-func (UnimplementedBlockchainServiceServer) GetConsensusAlgorithm(context.Context, *Empty) (*ConsensusAlgorithmResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetConsensusAlgorithm not implemented")
+func (UnimplementedBlockchainServiceServer) SendETH(context.Context, *SendETHRequest) (*SendETHResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendETH not implemented")
+}
+func (UnimplementedBlockchainServiceServer) GetTokenBalance(context.Context, *GetTokenBalanceRequest) (*GetTokenBalanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTokenBalance not implemented")
+}
+func (UnimplementedBlockchainServiceServer) TransferToken(context.Context, *TransferTokenRequest) (*TransferTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransferToken not implemented")
+}
+func (UnimplementedBlockchainServiceServer) ApproveToken(context.Context, *ApproveTokenRequest) (*ApproveTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApproveToken not implemented")
+}
+func (UnimplementedBlockchainServiceServer) GetTokenAllowance(context.Context, *GetTokenAllowanceRequest) (*GetTokenAllowanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTokenAllowance not implemented")
+}
+func (UnimplementedBlockchainServiceServer) DeployContract(context.Context, *DeployContractRequest) (*DeployContractResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeployContract not implemented")
+}
+func (UnimplementedBlockchainServiceServer) GetContract(context.Context, *GetContractRequest) (*GetContractResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetContract not implemented")
+}
+func (UnimplementedBlockchainServiceServer) CallContractMethod(context.Context, *CallContractMethodRequest) (*CallContractMethodResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CallContractMethod not implemented")
+}
+func (UnimplementedBlockchainServiceServer) SendTransactionToContract(context.Context, *SendTransactionToContractRequest) (*SendTransactionToContractResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendTransactionToContract not implemented")
+}
+func (UnimplementedBlockchainServiceServer) GetContractOwner(context.Context, *GetContractOwnerRequest) (*GetContractOwnerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetContractOwner not implemented")
+}
+func (UnimplementedBlockchainServiceServer) GetGasPrice(context.Context, *Empty) (*GetGasPriceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGasPrice not implemented")
+}
+func (UnimplementedBlockchainServiceServer) GetNonce(context.Context, *GetNonceRequest) (*GetNonceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetNonce not implemented")
+}
+func (UnimplementedBlockchainServiceServer) GetTransactionStatus(context.Context, *GetTransactionStatusRequest) (*GetTransactionStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionStatus not implemented")
+}
+func (UnimplementedBlockchainServiceServer) GetContractEvents(context.Context, *GetContractEventsRequest) (*GetContractEventsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetContractEvents not implemented")
 }
 func (UnimplementedBlockchainServiceServer) mustEmbedUnimplementedBlockchainServiceServer() {}
 func (UnimplementedBlockchainServiceServer) testEmbeddedByValue()                           {}
@@ -308,20 +378,254 @@ func _BlockchainService_GetNetworkID_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlockchainService_GetConsensusAlgorithm_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BlockchainService_SendETH_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendETHRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).SendETH(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_SendETH_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).SendETH(ctx, req.(*SendETHRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_GetTokenBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTokenBalanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).GetTokenBalance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_GetTokenBalance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).GetTokenBalance(ctx, req.(*GetTokenBalanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_TransferToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransferTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).TransferToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_TransferToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).TransferToken(ctx, req.(*TransferTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_ApproveToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApproveTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).ApproveToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_ApproveToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).ApproveToken(ctx, req.(*ApproveTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_GetTokenAllowance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTokenAllowanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).GetTokenAllowance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_GetTokenAllowance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).GetTokenAllowance(ctx, req.(*GetTokenAllowanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_DeployContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeployContractRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).DeployContract(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_DeployContract_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).DeployContract(ctx, req.(*DeployContractRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_GetContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetContractRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).GetContract(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_GetContract_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).GetContract(ctx, req.(*GetContractRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_CallContractMethod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CallContractMethodRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).CallContractMethod(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_CallContractMethod_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).CallContractMethod(ctx, req.(*CallContractMethodRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_SendTransactionToContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendTransactionToContractRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).SendTransactionToContract(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_SendTransactionToContract_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).SendTransactionToContract(ctx, req.(*SendTransactionToContractRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_GetContractOwner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetContractOwnerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).GetContractOwner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_GetContractOwner_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).GetContractOwner(ctx, req.(*GetContractOwnerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_GetGasPrice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BlockchainServiceServer).GetConsensusAlgorithm(ctx, in)
+		return srv.(BlockchainServiceServer).GetGasPrice(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BlockchainService_GetConsensusAlgorithm_FullMethodName,
+		FullMethod: BlockchainService_GetGasPrice_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).GetConsensusAlgorithm(ctx, req.(*Empty))
+		return srv.(BlockchainServiceServer).GetGasPrice(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_GetNonce_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetNonceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).GetNonce(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_GetNonce_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).GetNonce(ctx, req.(*GetNonceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_GetTransactionStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTransactionStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).GetTransactionStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_GetTransactionStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).GetTransactionStatus(ctx, req.(*GetTransactionStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlockchainService_GetContractEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetContractEventsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).GetContractEvents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_GetContractEvents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).GetContractEvents(ctx, req.(*GetContractEventsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -342,8 +646,60 @@ var BlockchainService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BlockchainService_GetNetworkID_Handler,
 		},
 		{
-			MethodName: "GetConsensusAlgorithm",
-			Handler:    _BlockchainService_GetConsensusAlgorithm_Handler,
+			MethodName: "SendETH",
+			Handler:    _BlockchainService_SendETH_Handler,
+		},
+		{
+			MethodName: "GetTokenBalance",
+			Handler:    _BlockchainService_GetTokenBalance_Handler,
+		},
+		{
+			MethodName: "TransferToken",
+			Handler:    _BlockchainService_TransferToken_Handler,
+		},
+		{
+			MethodName: "ApproveToken",
+			Handler:    _BlockchainService_ApproveToken_Handler,
+		},
+		{
+			MethodName: "GetTokenAllowance",
+			Handler:    _BlockchainService_GetTokenAllowance_Handler,
+		},
+		{
+			MethodName: "DeployContract",
+			Handler:    _BlockchainService_DeployContract_Handler,
+		},
+		{
+			MethodName: "GetContract",
+			Handler:    _BlockchainService_GetContract_Handler,
+		},
+		{
+			MethodName: "CallContractMethod",
+			Handler:    _BlockchainService_CallContractMethod_Handler,
+		},
+		{
+			MethodName: "SendTransactionToContract",
+			Handler:    _BlockchainService_SendTransactionToContract_Handler,
+		},
+		{
+			MethodName: "GetContractOwner",
+			Handler:    _BlockchainService_GetContractOwner_Handler,
+		},
+		{
+			MethodName: "GetGasPrice",
+			Handler:    _BlockchainService_GetGasPrice_Handler,
+		},
+		{
+			MethodName: "GetNonce",
+			Handler:    _BlockchainService_GetNonce_Handler,
+		},
+		{
+			MethodName: "GetTransactionStatus",
+			Handler:    _BlockchainService_GetTransactionStatus_Handler,
+		},
+		{
+			MethodName: "GetContractEvents",
+			Handler:    _BlockchainService_GetContractEvents_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -11,43 +11,19 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 )
 
-// QuorumClientService adalah implementasi untuk fitur Quorum
-type QuorumClientService struct {
-	client QuorumClient
-}
-
-// Constructor untuk QuorumClientService
-func NewQuorumClientService(client QuorumClient) *QuorumClientService {
-	return &QuorumClientService{client: client}
-}
-
-// Fungsi untuk mengirim transaksi privat
-func (s *QuorumClientService) SendPrivateTransaction(ctx context.Context, tx *types.Transaction) (string, error) {
-	return s.client.SendPrivateTransaction(ctx, tx)
-}
-
-// Fungsi untuk membaca kontrak privat
-func (s *QuorumClientService) GetPrivateContract(ctx context.Context, address string, payload []byte) ([]byte, error) {
-	return s.client.GetPrivateContract(ctx, address, payload)
-}
-
-// Fungsi untuk mendapatkan algoritma konsensus
-func (s *QuorumClientService) GetConsensusAlgorithm(ctx context.Context) (string, error) {
-	return s.client.GetConsensusAlgorithm(ctx)
-}
-
 // Default implementasi QuorumClient menggunakan go-ethereum dan RPC
 type DefaultQuorumClient struct {
 	rpcClient *rpc.Client
+	ethClient EthClient
 }
 
 // Constructor untuk DefaultQuorumClient
-func NewDefaultQuorumClient(rawUrl string) (*DefaultQuorumClient, error) {
+func NewDefaultQuorumClient(rawUrl string, ethClient EthClient) (*DefaultQuorumClient, error) {
 	client, err := rpc.Dial(rawUrl)
 	if err != nil {
 		return nil, err
 	}
-	return &DefaultQuorumClient{rpcClient: client}, err
+	return &DefaultQuorumClient{rpcClient: client, ethClient: ethClient}, nil
 }
 
 // Implementasi NetworkID (inherit dari Ethereum)
@@ -107,4 +83,29 @@ func (c *DefaultQuorumClient) GenerateNewAccount() (string, string, error) {
 	privateKeyHex := hexutil.Encode(crypto.FromECDSA(privateKey))
 	publicAddress := crypto.PubkeyToAddress(privateKey.PublicKey).Hex()
 	return privateKeyHex, publicAddress, nil
+}
+
+// Implement CallContractMethod agar memenuhi EthClient
+func (c *DefaultQuorumClient) CallContractMethod(ctx context.Context, contractAddress, abi, method string, params []string) (string, error) {
+	return c.ethClient.CallContractMethod(ctx, contractAddress, abi, method, params)
+}
+
+// Implement GetTokenBalance
+func (c *DefaultQuorumClient) GetTokenBalance(ctx context.Context, tokenAddress, ownerAddress string) (string, error) {
+	return c.ethClient.GetTokenBalance(ctx, tokenAddress, ownerAddress)
+}
+func (c *DefaultQuorumClient) DeployContract(ctx context.Context, bytecode string, privateKey string, gasLimit uint64) (string, string, error) {
+	return c.ethClient.DeployContract(ctx, bytecode, privateKey, gasLimit)
+}
+func (c *DefaultQuorumClient) GetContractEvents(ctx context.Context, contractAddress, abi, eventName string, fromBlock, toBlock uint64) ([]string, error) {
+	return c.ethClient.GetContractEvents(ctx, contractAddress, abi, eventName, fromBlock, toBlock)
+}
+func (c *DefaultQuorumClient) SendETH(ctx context.Context, privateKeyHex, toAddress string, amount *big.Int) (string, error) {
+	return c.ethClient.SendETH(ctx, privateKeyHex, toAddress, amount)
+}
+func (c *DefaultQuorumClient) SendTransactionToContract(ctx context.Context, contractAddress, abi, method string, params []string, privateKey string, gasLimit uint64) (string, error) {
+	return c.ethClient.SendTransactionToContract(ctx, contractAddress, abi, method, params, privateKey, gasLimit)
+}
+func (c *DefaultQuorumClient) TransferToken(ctx context.Context, tokenAddress, from, to string, amount string, privateKey string, gasLimit uint64) (string, error) {
+	return c.ethClient.TransferToken(ctx, tokenAddress, from, to, amount, privateKey, gasLimit)
 }
