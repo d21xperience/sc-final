@@ -1,10 +1,14 @@
 package model
 
+import "gorm.io/gorm"
+
 type WalletTable struct {
-	UrlWallet  string
-	Password   string
-	Address    string
-	PrivateKey string
-	PublicKey  string
-	Username   string
+	gorm.Model
+	UserId   string
+	Password string
+	Address   string
+	Name      string //Nama wallet
+	// UrlWallet  string
+	// PrivateKey string
+	// PublicKey string
 }

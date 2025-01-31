@@ -2,12 +2,10 @@ package services
 
 import (
 	"context"
-	"fmt"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/rpc"
 )
 
@@ -75,14 +73,8 @@ func (c *DefaultQuorumClient) GetConsensusAlgorithm(ctx context.Context) (string
 	return result, err
 }
 
-func (c *DefaultQuorumClient) GenerateNewAccount() (string, string, error) {
-	privateKey, err := crypto.GenerateKey()
-	if err != nil {
-		return "", "", fmt.Errorf("failed to generate key: %v", err)
-	}
-	privateKeyHex := hexutil.Encode(crypto.FromECDSA(privateKey))
-	publicAddress := crypto.PubkeyToAddress(privateKey.PublicKey).Hex()
-	return privateKeyHex, publicAddress, nil
+func (c *DefaultQuorumClient) GenerateNewAccount(username, password string) (string, error) {
+	return c.ethClient.GenerateNewAccount(username, password)
 }
 
 // Implement CallContractMethod agar memenuhi EthClient
@@ -91,9 +83,14 @@ func (c *DefaultQuorumClient) CallContractMethod(ctx context.Context, contractAd
 }
 
 // Implement GetTokenBalance
-func (c *DefaultQuorumClient) GetTokenBalance(ctx context.Context, tokenAddress, ownerAddress string) (string, error) {
+//
+//	func (c *DefaultQuorumClient) GetTokenBalance(ctx context.Context, tokenAddress, ownerAddress string) (string, error) {
+//		return c.ethClient.GetTokenBalance(ctx, tokenAddress, ownerAddress)
+//	}
+func (c *DefaultQuorumClient) GetTokenBalance(ctx context.Context, tokenAddress, ownerAddress string) (*big.Int, error) {
 	return c.ethClient.GetTokenBalance(ctx, tokenAddress, ownerAddress)
 }
+
 func (c *DefaultQuorumClient) DeployContract(ctx context.Context, bytecode string, privateKey string, gasLimit uint64) (string, string, error) {
 	return c.ethClient.DeployContract(ctx, bytecode, privateKey, gasLimit)
 }
@@ -103,9 +100,18 @@ func (c *DefaultQuorumClient) GetContractEvents(ctx context.Context, contractAdd
 func (c *DefaultQuorumClient) SendETH(ctx context.Context, privateKeyHex, toAddress string, amount *big.Int) (string, error) {
 	return c.ethClient.SendETH(ctx, privateKeyHex, toAddress, amount)
 }
-func (c *DefaultQuorumClient) SendTransactionToContract(ctx context.Context, contractAddress, abi, method string, params []string, privateKey string, gasLimit uint64) (string, error) {
-	return c.ethClient.SendTransactionToContract(ctx, contractAddress, abi, method, params, privateKey, gasLimit)
-}
+
 func (c *DefaultQuorumClient) TransferToken(ctx context.Context, tokenAddress, from, to string, amount string, privateKey string, gasLimit uint64) (string, error) {
 	return c.ethClient.TransferToken(ctx, tokenAddress, from, to, amount, privateKey, gasLimit)
+}
+
+func (c *DefaultQuorumClient) PendingNonceAt(ctx context.Context, account common.Address) (uint64, error) {
+	return c.ethClient.PendingNonceAt(ctx, account)
+}
+func (c *DefaultQuorumClient) SendTransaction(ctx context.Context, tx *types.Transaction) error {
+	return c.ethClient.SendTransaction(ctx, tx)
+}
+func (c *DefaultQuorumClient) GetContract(ctx context.Context, contractAddress string) (string, string, error) {
+	return c.ethClient.GetContract(ctx, contractAddress)
+
 }

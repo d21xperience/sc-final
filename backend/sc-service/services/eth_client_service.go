@@ -3,15 +3,20 @@ package services
 import (
 	"context"
 	"crypto/ecdsa"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"log"
 	"math"
 	"math/big"
+	"os"
+	"path/filepath"
+	"sc-service/utils"
 	"strings"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -26,13 +31,24 @@ type DefaultEthClient struct {
 	client    *ethclient.Client
 }
 
-// Constructor untuk DefaultEthClient
 func NewDefaultEthClient(rawUrl string) (*DefaultEthClient, error) {
-	client, err := rpc.Dial(rawUrl)
+	// Buat koneksi RPC
+	rpcClient, err := rpc.Dial(rawUrl)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("gagal menghubungkan ke RPC: %v", err)
 	}
-	return &DefaultEthClient{rpcClient: client}, nil
+
+	// Gunakan ethclient sebagai wrapper untuk RPC
+	client := ethclient.NewClient(rpcClient)
+
+	return &DefaultEthClient{
+		rpcClient: rpcClient,
+		client:    client, // Sekarang client diinisialisasi
+	}, nil
+}
+
+func (c *DefaultEthClient) SendTransaction(ctx context.Context, tx *types.Transaction) error {
+	return c.client.SendTransaction(ctx, tx)
 }
 
 // Implementasi NetworkID
@@ -57,27 +73,26 @@ func (c *DefaultEthClient) SuggestGasPrice(ctx context.Context) (*big.Int, error
 	return &result, nil
 }
 
-func (c *DefaultEthClient) GenerateNewAccount() (string, string, error) {
-	privateKey, err := crypto.GenerateKey()
+func (c *DefaultEthClient) GenerateNewAccount(username, password string) (string, error) {
+	key := keystore.NewKeyStore("./wallet", keystore.StandardScryptN, keystore.StandardScryptP)
+	pass, err := utils.EncryptPassword(password)
 	if err != nil {
-		return "", "", fmt.Errorf("failed to generate key: %v", err)
+		return "", err
 	}
-	privateKeyHex := hexutil.Encode(crypto.FromECDSA(privateKey))
-	publicAddress := crypto.PubkeyToAddress(privateKey.PublicKey).Hex()
-	return privateKeyHex, publicAddress, nil
+	a, err := key.NewAccount(pass)
+	if err != nil {
+		return "", err
+	}
+	return string(a.Address.Hex()), nil
+	// privateKey, err := crypto.GenerateKey()
+	// if err != nil {
+	// 	return "", "", fmt.Errorf("failed to generate key: %v", err)
+	// }
+	// privateKeyHex := hexutil.Encode(crypto.FromECDSA(privateKey))
+	// publicAddress := crypto.PubkeyToAddress(privateKey.PublicKey).Hex()
+	// return privateKeyHex, publicAddress, nil
 }
 
-func (c *DefaultEthClient) ImportPrivateKey(privateKeyHex string) (*ecdsa.PrivateKey, common.Address, error) {
-	privateKey, err := crypto.HexToECDSA(privateKeyHex)
-	if err != nil {
-		return nil, common.Address{}, fmt.Errorf("failed to import private key: %v", err)
-	}
-	publicAddress := crypto.PubkeyToAddress(privateKey.PublicKey)
-	return privateKey, publicAddress, nil
-}
-func (c *DefaultEthClient) GetAddressFromPublicKey(publicKey ecdsa.PublicKey) common.Address {
-	return crypto.PubkeyToAddress(publicKey)
-}
 func (c *DefaultEthClient) GetBalance(address string) (*big.Float, error) {
 	account := common.HexToAddress(address)
 	balance, err := c.client.BalanceAt(context.Background(), account, nil)
@@ -96,7 +111,8 @@ func (c *DefaultEthClient) GetLatestBlock() (*big.Int, error) {
 	return block.Number(), nil
 }
 func (c *DefaultEthClient) SendETH(ctx context.Context, privateKeyHex, toAddress string, amount *big.Int) (string, error) {
-	privateKey, err := crypto.HexToECDSA(privateKeyHex)
+	privateKey, err := GetECDSAPrivateKey(privateKeyHex)
+	// privateKey, err := crypto.HexToECDSA(privateKeyHex)
 	if err != nil {
 		return "", err
 	}
@@ -125,26 +141,6 @@ func (c *DefaultEthClient) SendETH(ctx context.Context, privateKeyHex, toAddress
 	return signedTx.Hash().Hex(), nil
 }
 
-//	func (c *DefaultEthClient) CallSmartContract(client *ethclient, contractAddress, dataID string) (string, error) {
-//		contractAddr := common.HexToAddress(contractAddress)
-//		// Replace with your contract binding
-//		instance, err := verval_ijazah.NewVervalIjazah(contractAddr, client)
-//		if err != nil {
-//			return "", err
-//		}
-//		result, err := instance.SomeFunction(&bind.CallOpts{
-//			From: contractAddr,
-//		}, dataID)
-//		if err != nil {
-//			return "", err
-//		}
-//		return result, nil
-//	}
-//
-//	func (c *DefaultEthClient) DeploySmartContract(client *ethclient, privateKeyHex string) (common.Address, string, error) {
-//		res, add, err := DeploySmartContract(client, privateKeyHex)
-//		return res, add, err
-//	}
 func (c *DefaultEthClient) SubscribeToEvents(contractAddress string) {
 	query := ethereum.FilterQuery{
 		Addresses: []common.Address{common.HexToAddress(contractAddress)},
@@ -165,12 +161,7 @@ func (c *DefaultEthClient) SubscribeToEvents(contractAddress string) {
 		}
 	}
 }
-func (c *DefaultEthClient) WeiToEther(wei *big.Int) *big.Float {
-	return new(big.Float).Quo(new(big.Float).SetInt(wei), big.NewFloat(math.Pow10(18)))
-}
-func (c *DefaultEthClient) IsValidAddress(address string) bool {
-	return common.IsHexAddress(address)
-}
+
 func (c *DefaultEthClient) DeployContract(ctx context.Context, bytecode string, privateKey string, gasLimit uint64) (string, string, error) {
 	if c.client == nil {
 		return "", "", errors.New("ethereum client tidak dikonfigurasi")
@@ -229,27 +220,6 @@ func GetAddressFromPrivateKey(privateKey string) (common.Address, error) {
 	// Konversi public key menjadi Ethereum address
 	address := crypto.PubkeyToAddress(*publicKeyECDSA)
 	return address, nil
-}
-
-// SignTransaction: Menandatangani transaksi menggunakan private key
-func SignTransaction(privateKeyHex string, tx *types.Transaction) (*types.Transaction, error) {
-	// Dekode private key dari hex string
-	privateKey, err := crypto.HexToECDSA(privateKeyHex)
-	if err != nil {
-		return nil, errors.New("gagal mengonversi private key ke ECDSA")
-	}
-
-	// Buat signer sesuai dengan chain ID
-	chainID := big.NewInt(1) // Gantilah dengan chain ID yang sesuai
-	signer := types.LatestSignerForChainID(chainID)
-
-	// Tandatangani transaksi
-	signedTx, err := types.SignTx(tx, signer, privateKey)
-	if err != nil {
-		return nil, errors.New("gagal menandatangani transaksi")
-	}
-
-	return signedTx, nil
 }
 
 // SendTransactionToContract mengirim transaksi ke smart contract
@@ -313,15 +283,6 @@ func (c *DefaultEthClient) SendTransactionToContract(ctx context.Context, contra
 	return signedTx.Hash().Hex(), nil
 }
 
-// convertParams mengonversi string params ke tipe data sesuai untuk ABI
-func convertParams(params []string) []interface{} {
-	converted := make([]interface{}, len(params))
-	for i, param := range params {
-		converted[i] = param // Bisa dikembangkan untuk tipe data lain
-	}
-	return converted
-}
-
 // TransferToken mengirim token ERC-20 ke alamat lain
 func (c *DefaultEthClient) TransferToken(ctx context.Context, tokenAddress, from, to, amountStr, privateKeyHex string, gasLimit uint64) (string, error) {
 	//  Konversi private key dari hex ke ECDSA
@@ -338,7 +299,6 @@ func (c *DefaultEthClient) TransferToken(ctx context.Context, tokenAddress, from
 	if !strings.EqualFold(fromAddress.Hex(), from) {
 		return "", errors.New("private key tidak cocok dengan alamat pengirim")
 	}
-	
 
 	//  Dapatkan nonce akun pengirim
 	nonce, err := c.client.PendingNonceAt(ctx, fromAddress)
@@ -436,39 +396,60 @@ func (c *DefaultEthClient) CallContractMethod(ctx context.Context, contractAddre
 	return hexutil.Encode(result), nil
 }
 
-func (c *DefaultEthClient) GetTokenBalance(ctx context.Context, tokenAddress, ownerAddress string) (string, error) {
-	// ERC-20 ABI (minimal)
-	const erc20ABI = `[{"constant":true,"inputs":[{"name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]`
+func (c *DefaultEthClient) GetTokenBalance(ctx context.Context, tokenAddress, ownerAddress string) (*big.Int, error) {
+	// ABI ERC20 standar untuk balanceOf
+	erc20ABI := `[{"constant":true,"inputs":[{"name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]`
 
-	// Parse ABI
+	// Load ABI
 	parsedABI, err := abi.JSON(strings.NewReader(erc20ABI))
 	if err != nil {
-		return "", fmt.Errorf("failed to parse ERC-20 ABI: %w", err)
+		return nil, fmt.Errorf("gagal memparsing ABI: %v", err)
 	}
 
-	// Pack balanceOf(owner)
+	// Encode data untuk memanggil balanceOf(owner)
 	data, err := parsedABI.Pack("balanceOf", common.HexToAddress(ownerAddress))
 	if err != nil {
-		return "", fmt.Errorf("failed to pack balanceOf: %w", err)
+		return nil, fmt.Errorf("gagal mengkodekan data: %v", err)
 	}
 
-	// Prepare contract call message
-	tokenAdd := common.HexToAddress(tokenAddress) // Buat variabel terlebih dahulu
-	msg := ethereum.CallMsg{
-		To:   &tokenAdd,
+	// Panggil kontrak ERC20
+	callMsg := ethereum.CallMsg{
+		To:   &common.Address{},
 		Data: data,
 	}
 
-	// Call contract method
-	result, err := c.client.CallContract(ctx, msg, nil)
-	if err != nil {
-		return "", fmt.Errorf("failed to get token balance: %w", err)
+	if callMsg.To == nil || callMsg.To.Hex() == "0x0000000000000000000000000000000000000000" {
+		return nil, fmt.Errorf("alamat kontrak tidak valid")
+	}
+	if len(callMsg.Data) == 0 {
+		return nil, fmt.Errorf("data transaksi kosong, pastikan ABI dan parameter benar")
 	}
 
-	// Decode the balance from result
-	balance := new(big.Int).SetBytes(result)
-	return balance.String(), nil
+	copy(callMsg.To[:], common.HexToAddress(tokenAddress).Bytes())
+	if c.client == nil {
+		return nil, fmt.Errorf("ethereum client belum dikonfigurasi")
+	}
+	// Eksekusi call ke kontrak
+	result, err := c.client.CallContract(ctx, callMsg, nil)
+	if err != nil {
+		return nil, fmt.Errorf("gagal memanggil kontrak: %v", err)
+	}
+	log.Printf("🔍 Debug: CallContract result = %x", result) // Log hasil CallContract
+
+	if len(result) == 0 {
+		return nil, fmt.Errorf("gagal mendapatkan saldo: hasil kosong, pastikan kontrak valid dan alamat benar")
+	}
+	// Decode hasil
+	outputs, err := parsedABI.Unpack("balanceOf", result)
+	if err != nil {
+		return nil, fmt.Errorf("gagal mendekode hasil: %v", err)
+	}
+
+	// Konversi hasil ke *big.Int
+	balance := outputs[0].(*big.Int)
+	return balance, nil
 }
+
 func (c *DefaultEthClient) GetContractEvents(ctx context.Context, contractAddress, abiStr, eventName string, fromBlock, toBlock uint64) ([]string, error) {
 	// Parse ABI
 	parsedABI, err := abi.JSON(strings.NewReader(abiStr))
@@ -509,3 +490,52 @@ func (c *DefaultEthClient) GetContractEvents(ctx context.Context, contractAddres
 
 	return events, nil
 }
+
+func (c *DefaultEthClient) PendingNonceAt(ctx context.Context, account common.Address) (uint64, error) {
+	return c.client.PendingNonceAt(ctx, account)
+}
+
+// Belum jalan
+func (c *DefaultEthClient) GetContract(ctx context.Context, contractAddress string) (string, string, error) {
+	// Ambil bytecode dari contract
+	bytecode, err := c.client.CodeAt(ctx, common.HexToAddress(contractAddress), nil)
+	if err != nil {
+		return "", "", err
+	}
+
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("Failed to get working directory: %v", err)
+	}
+
+	// Menggunakan filepath.Join agar sesuai dengan OS
+	abiFile := filepath.Join(wd, "smartcontract", "ethbc", "build", "VervalIjazah.abi")
+	//  Load ABI contract
+	abi, err := GetABIFromFile(abiFile)
+	if err != nil {
+		return "", "", errors.New("gagal mem-parsing ABI: " + err.Error())
+	}
+
+	return hex.EncodeToString(bytecode), abi, nil
+}
+
+//	func (c *DefaultEthClient) CallSmartContract(client *ethclient, contractAddress, dataID string) (string, error) {
+//		contractAddr := common.HexToAddress(contractAddress)
+//		// Replace with your contract binding
+//		instance, err := verval_ijazah.NewVervalIjazah(contractAddr, client)
+//		if err != nil {
+//			return "", err
+//		}
+//		result, err := instance.SomeFunction(&bind.CallOpts{
+//			From: contractAddr,
+//		}, dataID)
+//		if err != nil {
+//			return "", err
+//		}
+//		return result, nil
+//	}
+//
+//	func (c *DefaultEthClient) DeploySmartContract(client *ethclient, privateKeyHex string) (common.Address, string, error) {
+//		res, add, err := DeploySmartContract(client, privateKeyHex)
+//		return res, add, err
+//	}

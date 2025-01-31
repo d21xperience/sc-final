@@ -76,17 +76,6 @@ type Block struct {
 	TransactionCount int           `json:"transaction_count"`
 	Transactions     []Transaction `gorm:"foreignKey:BlockID;constraint:OnDelete:CASCADE" json:"transactions"`
 }
-// type User struct {
-// 	UserID      uint      `gorm:"primaryKey;autoIncrement" json:"user_id"`
-// 	Username    string    `gorm:"size:50;unique" json:"username"`
-// 	Email       string    `gorm:"size:100;unique" json:"email"`
-// 	Role        string    `gorm:"size:100" json:"role"`
-// 	TenantID    string    `gorm:"size:100" json:"tenant_id"`
-// 	Phone       string    `gorm:"size:100" json:"phone"`
-// 	AlamatJalan string    `gorm:"size:100" json:"alamat_jalan"`
-// 	Desa        string    `gorm:"size:100" json:"desa"`
-// 	CreatedAt   time.Time `gorm:"autoCreateTime" json:"created_at"`
-// }
 
 type Transaction struct {
 	TransactionID   string    `gorm:"type:uuid;default:uuid_generate_v4();primaryKey" json:"transaction_id"`
@@ -106,3 +95,15 @@ type AuditLog struct {
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UserID    uint      `json:"user_id"`
 }
+
+// type User struct {
+// 	UserID      uint      `gorm:"primaryKey;autoIncrement" json:"user_id"`
+// 	Username    string    `gorm:"size:50;unique" json:"username"`
+// 	Email       string    `gorm:"size:100;unique" json:"email"`
+// 	Role        string    `gorm:"size:100" json:"role"`
+// 	TenantID    string    `gorm:"size:100" json:"tenant_id"`
+// 	Phone       string    `gorm:"size:100" json:"phone"`
+// 	AlamatJalan string    `gorm:"size:100" json:"alamat_jalan"`
+// 	Desa        string    `gorm:"size:100" json:"desa"`
+// 	CreatedAt   time.Time `gorm:"autoCreateTime" json:"created_at"`
+// }

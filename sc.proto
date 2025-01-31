@@ -1,0 +1,299 @@
+syntax = "proto3";
+
+package sc_service;
+
+option go_package = "sc_service/sc_service;sc_service";
+import "google/api/annotations.proto";
+
+// =======================================
+service BlockchainService {
+  // Konfigurasi Blockchain
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/blockchain/config"
+      body: "*"
+    };
+  }
+  rpc GetNetworkID(Empty) returns (NetworkIDResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/blockchain/network_id"
+    };
+  }
+  
+  // Transaksi ETH & Token
+  rpc SendETH(SendETHRequest) returns (SendETHResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/blockchain/send_eth"
+      body: "*"
+    };
+  }
+  // Tidak berlaku di Ganache
+  rpc GetTokenBalance(GetTokenBalanceRequest) returns (GetTokenBalanceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/blockchain/token_balance"
+    };
+  }
+  rpc TransferToken(TransferTokenRequest) returns (TransferTokenResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/blockchain/transfer_token"
+      body: "*"
+    };
+  }
+  // rpc ApproveToken(ApproveTokenRequest) returns (ApproveTokenResponse);
+  // rpc GetTokenAllowance(GetTokenAllowanceRequest) returns (GetTokenAllowanceResponse);
+  // // Interaksi Smart Contract
+  // rpc DeployContract(DeployContractRequest) returns (DeployContractResponse);
+  // rpc GetContract(GetContractRequest) returns (GetContractResponse);
+  // rpc CallContractMethod(CallContractMethodRequest) returns (CallContractMethodResponse);
+  // rpc SendTransactionToContract(SendTransactionToContractRequest) returns (SendTransactionToContractResponse);
+  // rpc GetContractOwner(GetContractOwnerRequest) returns (GetContractOwnerResponse);
+  
+  // // Informasi Jaringan
+  // rpc GetGasPrice(Empty) returns (GetGasPriceResponse);
+  // rpc GetNonce(GetNonceRequest) returns (GetNonceResponse);
+  rpc ApproveToken(ApproveTokenRequest) returns (ApproveTokenResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/token/approve"
+      body: "*"
+    };
+  }
+
+  rpc GetTokenAllowance(GetTokenAllowanceRequest) returns (GetTokenAllowanceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/token/allowance"
+    };
+  }
+ // Interaksi Smart Contract
+  rpc DeployIjazahContract(DeployIjazahContractRequest) returns (DeployIjazahContractResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/contract/deploy"
+      body: "*"
+    };
+  }
+  rpc GenerateETHAccount(GenerateETHAccountRequest) returns (GenerateETHAccountResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/account/generate"
+      body: "*"
+    };
+  }
+
+  rpc GetContract(GetContractRequest) returns (GetContractResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/contract/{contract_address}"
+    };
+  }
+
+  rpc CallContractMethod(CallContractMethodRequest) returns (CallContractMethodResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/contract/call"
+      body: "*"
+    };
+  }
+
+  rpc SendTransactionToContract(SendTransactionToContractRequest) returns (SendTransactionToContractResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/contract/send"
+      body: "*"
+    };
+  }
+
+  rpc GetContractOwner(GetContractOwnerRequest) returns (GetContractOwnerResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/contract/{contract_address}/owner"
+    };
+  }
+
+  rpc GetContractEvents(GetContractEventsRequest) returns (GetContractEventsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/contract/{contract_address}/events"
+    };
+  }
+  rpc GetGasPrice(Empty) returns (GetGasPriceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/gas/price"
+    };
+  }
+
+  rpc GetNonce(GetNonceRequest) returns (GetNonceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/nonce/{address}"
+    };
+  }
+  rpc GetTransactionStatus(GetTransactionStatusRequest) returns (GetTransactionStatusResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/transaction/{tx_hash}/status"
+    };
+  }
+
+
+}
+
+// Definisi pesan-pesan yang digunakan dalam request & response
+
+message Empty {}
+
+message SetConfigRequest {
+  string blockchain_type = 1;
+  string rpc_url = 2;
+}
+
+message SetConfigResponse {
+  string message = 1;
+}
+
+message NetworkIDResponse {
+  string network_id = 1;
+}
+
+message SendETHRequest {
+  string from = 1;
+  string to = 2;
+  string amount = 3;
+  string private_key = 4;
+}
+
+message SendETHResponse {
+  string tx_hash = 1;
+}
+
+message GetTokenBalanceRequest {
+  string token_address = 1;
+  string owner_address = 2;
+}
+
+message GetTokenBalanceResponse {
+  string balance = 1;
+}
+
+message TransferTokenRequest {
+  string token_address = 1;
+  string from = 2;
+  string to = 3;
+  string amount = 4;
+  string private_key = 5;
+  uint64 gas_limit = 6;
+}
+
+message TransferTokenResponse {
+  string tx_hash = 1;
+}
+
+message ApproveTokenRequest {
+  string token_address = 1;
+  string spender = 2;
+  string amount = 3;
+  string private_key = 4;
+  uint64 gas_limit = 5;
+}
+
+message ApproveTokenResponse {
+  string tx_hash = 1;
+}
+
+message GetTokenAllowanceRequest {
+  string token_address = 1;
+  string owner = 2;
+  string spender = 3;
+}
+
+message GetTokenAllowanceResponse {
+  string allowance = 1;
+}
+
+message DeployIjazahContractRequest {
+  string address = 1; 
+  string password = 2;
+  // string private_key = 2;
+  // uint64 gas_limit = 3;
+}
+
+message DeployIjazahContractResponse {
+  string contract_address = 1;
+  string tx_hash = 2;
+}
+
+message GetContractRequest {
+  string contract_address = 1;
+}
+
+message GetContractResponse {
+  string contract_address = 1;
+  string bytecode = 2;
+  string abi = 3;
+}
+
+message CallContractMethodRequest {
+  string contract_address = 1;
+  string abi = 2;
+  string method = 3;
+  repeated string params = 4;
+}
+
+message CallContractMethodResponse {
+  string result = 1;
+}
+
+message SendTransactionToContractRequest {
+  string contract_address = 1;
+  string abi = 2;
+  string method = 3;
+  repeated string params = 4;
+  string private_key = 5;
+  uint64 gas_limit = 6;
+}
+
+message SendTransactionToContractResponse {
+  string tx_hash = 1;
+}
+
+message GetContractOwnerRequest {
+  string contract_address = 1;
+  string abi = 2;
+}
+
+message GetContractOwnerResponse {
+  string owner_address = 1;
+}
+
+message GetGasPriceResponse {
+  string gas_price = 1;
+}
+
+message GetNonceRequest {
+  string address = 1;
+}
+
+message GetNonceResponse {
+  uint64 nonce = 1;
+}
+
+message GetTransactionStatusRequest {
+  string tx_hash = 1;
+}
+
+message GetTransactionStatusResponse {
+  string status = 1;
+}
+
+message GetContractEventsRequest {
+  string contract_address = 1;
+  string abi = 2;
+  string event_name = 3;
+  uint64 from_block = 4;
+  uint64 to_block = 5;
+}
+
+message GetContractEventsResponse {
+  repeated string events = 1;
+}
+
+message GenerateETHAccountRequest {
+  string user_id = 1;
+  string password = 2;
+}
+
+message GenerateETHAccountResponse {
+  bool status = 1;
+  string contract_address = 2;
+  string tx_hash = 3;
+}

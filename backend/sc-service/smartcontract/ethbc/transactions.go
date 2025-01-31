@@ -8,7 +8,7 @@ import (
 	"log"
 	"math"
 	"math/big"
-	verval_ijazah "sc-service/smartcontract/ethbc/gen/verval_ijazah"
+	// verval_ijazah "sc-service/smartcontract/ethbc/gen/verval_ijazah"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -132,27 +132,27 @@ func (cbc ETH_Client) CekBlock() *big.Int {
 	return block.Number()
 }
 
-func (cbc ETH_Client) DeployContract() (common.Address, *big.Int, error) {
-	auth := cbc.AuthOfSC()
-	contractAddress, tx, _, err := verval_ijazah.DeployVervalIjazah(auth, cbc.Client.EthClient)
-	if err != nil {
-		return common.Address{}, nil, err
-	}
-	fmt.Printf("Contract deployed at: %s, tx hash: %s\n", contractAddress.Hex(), tx.Hash().Hex())
-	return contractAddress, tx.Hash().Big(), nil
-}
+// func (cbc ETH_Client) DeployContract() (common.Address, *big.Int, error) {
+// 	auth := cbc.AuthOfSC()
+// 	contractAddress, tx, _, err := verval_ijazah.DeployVervalIjazah(auth, cbc.Client.EthClient)
+// 	if err != nil {
+// 		return common.Address{}, nil, err
+// 	}
+// 	fmt.Printf("Contract deployed at: %s, tx hash: %s\n", contractAddress.Hex(), tx.Hash().Hex())
+// 	return contractAddress, tx.Hash().Big(), nil
+// }
 
-// Fungsi untuk Interaksi Kontrak
-func (cbc ETH_Client) InteractWithContract(dataID string) (string, string, error) {
-	cAdd := common.HexToAddress("0x1e2f4432bfef9e9ad39da6d272f4aff33629c770")
-	ver, err := verval_ijazah.NewVervalIjazah(cAdd, cbc.Client.EthClient)
-	if err != nil {
-		return "", "", err
-	}
+// // Fungsi untuk Interaksi Kontrak
+// func (cbc ETH_Client) InteractWithContract(dataID string) (string, string, error) {
+// 	cAdd := common.HexToAddress("0x1e2f4432bfef9e9ad39da6d272f4aff33629c770")
+// 	ver, err := verval_ijazah.NewVervalIjazah(cAdd, cbc.Client.EthClient)
+// 	if err != nil {
+// 		return "", "", err
+// 	}
 
-	_, nama, _, noIjazah, _, _, err := ver.Get(&bind.CallOpts{From: cbc.Client.PubAddressKey}, dataID)
-	if err != nil {
-		return "", "", err
-	}
-	return nama, noIjazah, nil
-}
+// 	_, nama, _, noIjazah, _, _, err := ver.Get(&bind.CallOpts{From: cbc.Client.PubAddressKey}, dataID)
+// 	if err != nil {
+// 		return "", "", err
+// 	}
+// 	return nama, noIjazah, nil
+// }

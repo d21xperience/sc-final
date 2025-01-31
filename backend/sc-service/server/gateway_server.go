@@ -19,9 +19,4 @@ func RunHTTPGateway(ctx context.Context, mux *runtime.ServeMux, grpcServerEndpoi
 	if err != nil {
 		log.Fatalf("Failed to register HTTP gateway: %v", err)
 	}
-
-	// // log.Printf("HTTP gateway running on port %s", httpPort)
-	// if err := http.ListenAndServe(":"+httpPort, mux); err != nil {
-	// 	log.Fatalf("Failed to serve HTTP gateway: %v", err)
-	// }
 }

@@ -7,8 +7,9 @@ import (
 	"log"
 	"math"
 	"math/big"
+	"sc-service/smartcontract/gen/verval_ijazah"
 
-	"sc-service/smartcontract/ethbc/gen/verval_ijazah"
+	// "sc-service/smartcontract/ethbc/gen/verval_ijazah"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
