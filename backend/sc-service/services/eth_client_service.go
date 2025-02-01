@@ -11,8 +11,13 @@ import (
 	"math/big"
 	"os"
 	"path/filepath"
+	"sc-service/config"
+	"sc-service/models"
+	"sc-service/repositories"
 	"sc-service/utils"
 	"strings"
+
+	verifikasiIjazah "sc-service/smartcontract/gen"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -29,6 +34,7 @@ import (
 type DefaultEthClient struct {
 	rpcClient *rpc.Client
 	client    *ethclient.Client
+	repo      *repositories.GenericRepository[models.WalletTable]
 }
 
 func NewDefaultEthClient(rawUrl string) (*DefaultEthClient, error) {
@@ -37,13 +43,14 @@ func NewDefaultEthClient(rawUrl string) (*DefaultEthClient, error) {
 	if err != nil {
 		return nil, fmt.Errorf("gagal menghubungkan ke RPC: %v", err)
 	}
-
+	repo := repositories.NewWalletTableRepository(config.DB)
 	// Gunakan ethclient sebagai wrapper untuk RPC
 	client := ethclient.NewClient(rpcClient)
 
 	return &DefaultEthClient{
 		rpcClient: rpcClient,
 		client:    client, // Sekarang client diinisialisasi
+		repo:      repo,
 	}, nil
 }
 
@@ -71,26 +78,6 @@ func (c *DefaultEthClient) SuggestGasPrice(ctx context.Context) (*big.Int, error
 		return nil, err
 	}
 	return &result, nil
-}
-
-func (c *DefaultEthClient) GenerateNewAccount(username, password string) (string, error) {
-	key := keystore.NewKeyStore("./wallet", keystore.StandardScryptN, keystore.StandardScryptP)
-	pass, err := utils.EncryptPassword(password)
-	if err != nil {
-		return "", err
-	}
-	a, err := key.NewAccount(pass)
-	if err != nil {
-		return "", err
-	}
-	return string(a.Address.Hex()), nil
-	// privateKey, err := crypto.GenerateKey()
-	// if err != nil {
-	// 	return "", "", fmt.Errorf("failed to generate key: %v", err)
-	// }
-	// privateKeyHex := hexutil.Encode(crypto.FromECDSA(privateKey))
-	// publicAddress := crypto.PubkeyToAddress(privateKey.PublicKey).Hex()
-	// return privateKeyHex, publicAddress, nil
 }
 
 func (c *DefaultEthClient) GetBalance(address string) (*big.Float, error) {
@@ -201,25 +188,6 @@ func (c *DefaultEthClient) DeployContract(ctx context.Context, bytecode string, 
 	// Kembalikan alamat contract & tx hash
 	contractAddress := crypto.CreateAddress(fromAddress, nonce) // Buat alamat contract dari nonce
 	return contractAddress.Hex(), signedTx.Hash().Hex(), nil
-}
-
-func GetAddressFromPrivateKey(privateKey string) (common.Address, error) {
-	// Dekode private key dari string hex
-	privKey, err := crypto.HexToECDSA(privateKey)
-	if err != nil {
-		return common.Address{}, errors.New("gagal mengonversi private key ke ECDSA")
-	}
-
-	// Ambil public key dari private key
-	publicKey := privKey.Public()
-	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
-	if !ok {
-		return common.Address{}, errors.New("gagal mendapatkan public key dari private key")
-	}
-
-	// Konversi public key menjadi Ethereum address
-	address := crypto.PubkeyToAddress(*publicKeyECDSA)
-	return address, nil
 }
 
 // SendTransactionToContract mengirim transaksi ke smart contract
@@ -539,3 +507,103 @@ func (c *DefaultEthClient) GetContract(ctx context.Context, contractAddress stri
 //		res, add, err := DeploySmartContract(client, privateKeyHex)
 //		return res, add, err
 //	}
+//
+// =============================
+// =============Akun============
+func (c *DefaultEthClient) GenerateNewAccount(ctx context.Context, userId, password string) (string, error) {
+	key := keystore.NewKeyStore("./wallet", keystore.StandardScryptN, keystore.StandardScryptP)
+
+	a, err := key.NewAccount(password)
+	if err != nil {
+		return "", err
+	}
+	// simpan ke database
+	pass, err := utils.EncryptPassword(password)
+	if err != nil {
+		return "", err
+	}
+	simpan := c.repo.Save(ctx, &models.WalletTable{
+		UserId:         userId,
+		Name:           "eth-network",
+		Password:       pass,
+		Address:        a.Address.Hex(),
+		WalletFilename: filepath.Base(a.URL.Path),
+	}, "public")
+	if simpan != nil {
+		return "", simpan
+	}
+
+	return string(a.Address.Hex()), nil
+}
+func (c *DefaultEthClient) DeployIjazahContract(ctx context.Context, userId, password string) (contracAddress string, txHash string, err error) {
+	akun, err := c.GetAccounts(ctx, userId)
+	if err != nil {
+		return "","", err
+	}
+	// baca file utc
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("Failed to get working directory: %v", err)
+	}
+
+	// Menggunakan filepath.Join agar sesuai dengan OS
+	path := filepath.Join(wd, "wallet", akun[0].WalletFilename)
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return "","", err
+	}
+
+	pas := utils.VerifyPassword(password, akun[0].Password)
+	if pas {
+		key, err := keystore.DecryptKey(b, password)
+		if err != nil {
+			return "","", err
+		}
+		add := crypto.PubkeyToAddress(key.PrivateKey.PublicKey)
+		nonce, err := c.client.PendingNonceAt(ctx, add)
+		if err != nil {
+			return "","", err
+		}
+		gasPrice, err := c.client.SuggestGasPrice(ctx)
+		if err != nil {
+			return "","", err
+		}
+		chainId, err := c.client.ChainID(ctx)
+		if err != nil {
+			return "","", err
+		}
+		gasLimit := uint64(3000000)
+		auth := TransactOptsAuth(key, chainId, gasPrice, nonce, gasLimit)
+		a, tx, _, err := verifikasiIjazah.DeployVerifikasiIjazah(auth, c.client)
+		if err != nil {
+			return "","", err
+		}
+		fmt.Println(tx.Hash().Hex())
+		return a.Hex(), tx.Hash().Hex(), nil
+
+	}
+	return "", "",nil
+}
+
+func (c *DefaultEthClient) GetAccounts(ctx context.Context, userId string) ([]*models.WalletTable, error) {
+	var modelTableWallet []*models.WalletTable
+	var err error
+	if userId == "" {
+		modelTableWallet, err = c.repo.FindAll(ctx, "public", 100, 0)
+		if err != nil {
+			return nil, err
+		}
+		return modelTableWallet, nil
+	}
+
+	var condition = map[string]interface{}{
+		"user_id": userId,
+	}
+	modelTableWallet, err = c.repo.FindAllByConditions(ctx, "public", condition, 100, 0)
+	if err != nil {
+		return nil, err
+	}
+	return modelTableWallet, nil
+}
+
+// =============================

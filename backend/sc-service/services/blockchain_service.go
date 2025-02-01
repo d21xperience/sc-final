@@ -3,9 +3,12 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
+	"log"
 	"math/big"
 
 	pb "sc-service/generated"
+	"sc-service/models"
 
 	"sc-service/utils"
 )
@@ -225,18 +228,52 @@ func (s *BlockchainService) GenerateETHAccount(ctx context.Context, req *pb.Gene
 	if req.GetUserId() == "\"\"" || req.GetPassword() == "\"\"" {
 		return nil, errors.New("user dan password tidak boleh kosong")
 	}
-
-	// var walInfo = ethbc.WalletInfo{
-	// 	Pwd: req.Password,
-	// 	PathDir: "wallet",
-	// }
-	// ethbc.NewETHClient()
-	contractAddress := ""
-	txHash := ""
+	cek, err := s.client.GetAccounts(ctx, req.GetUserId())
+	if err != nil {
+		return &pb.GenerateETHAccountResponse{
+			Status:          false,
+			ContractAddress: fmt.Sprintf("terjadi error %v", err),
+		}, nil
+	}
+	if len(cek) > 0 {
+		return &pb.GenerateETHAccountResponse{
+			Status:          false,
+			ContractAddress: "user sudah terdaftar",
+		}, nil
+	}
+	contractAddress, err := s.client.GenerateNewAccount(ctx, req.GetUserId(), req.GetPassword())
+	if err != nil {
+		log.Printf("Gagal membuat akun: %v", err)
+		return nil, fmt.Errorf("gagal membuat akun: %w", err)
+	}
+	// txHash := ""
 	return &pb.GenerateETHAccountResponse{
 		Status:          true,
 		ContractAddress: contractAddress,
-		TxHash:          txHash,
+	}, nil
+}
+
+func (s *BlockchainService) GetETHAccount(ctx context.Context, req *pb.GetETHAccountRequest) (*pb.GetETHAccountResponse, error) {
+	if s.client == nil {
+		return nil, errors.New("client belum dikonfigurasi")
+	}
+	accounts, err := s.client.GetAccounts(ctx, req.GetUserId())
+	if err != nil {
+		log.Printf("Gagal mendapatkan akun: %v", err)
+		return nil, fmt.Errorf("gagal mendapatkan akun: %w", err)
+	}
+
+	results := utils.ConvertModelsToPB(accounts, func(model *models.WalletTable) *pb.Account {
+		return &pb.Account{
+			UserId:         model.UserId,
+			Address:        model.Address,
+			WalletFilename: model.WalletFilename,
+		}
+	})
+
+	return &pb.GetETHAccountResponse{
+		Status:   true,
+		Accounts: results,
 	}, nil
 }
 
@@ -251,15 +288,18 @@ func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.De
 	if err != nil {
 		return nil, err
 	}
-	if req.GetAddress() == "\"\"" || req.GetPassword() == "\"\"" {
+
+	if req.GetUserId() == "\"\"" || req.GetPassword() == "\"\"" {
 		return nil, errors.New("user dan password tidak boleh kosong")
 	}
-	contractAddress := ""
-	txtHash := ""
 
+	contractAddress, txHash, err := s.client.DeployIjazahContract(ctx, req.GetUserId(), req.GetPassword())
+	if err != nil {
+		return nil, err
+	}
 	return &pb.DeployIjazahContractResponse{
 		ContractAddress: contractAddress,
-		TxHash:          txtHash,
+		TxHash:          txHash,
 	}, nil
 
 }
@@ -363,4 +403,24 @@ func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.De
 // 	return &pb.GetNonceResponse{
 // 		Nonce: nonce,
 // 	}, nil
+// }
+
+// func (s *BlockchainService) validateRequest(req any, requiredFields []string, checkEmptyFields map[string]func() string) error {
+// 	if s.client == nil {
+// 		return errors.New("client belum dikonfigurasi")
+// 	}
+
+// 	// Validasi apakah field-field wajib ada
+// 	if err := utils.ValidateFields(req, requiredFields); err != nil {
+// 		return err
+// 	}
+
+// 	// Validasi apakah field wajib kosong ("" atau nilai lain yang dianggap kosong)
+// 	for field, getter := range checkEmptyFields {
+// 		if getter() == "" || getter() == "\"\"" { // Sesuaikan dengan format yang mungkin terjadi
+// 			return fmt.Errorf("%s tidak boleh kosong", field)
+// 		}
+// 	}
+
+// 	return nil
 // }

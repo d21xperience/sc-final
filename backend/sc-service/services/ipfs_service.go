@@ -3,7 +3,7 @@ package services
 import (
 	"net/http"
 	"os/exec"
-	"sc-service/model"
+	"sc-service/models"
 	"strings"
 	"time"
 
@@ -22,7 +22,7 @@ func NewIPFSController(db *gorm.DB) *IPFSController {
 
 // get metadata
 func (ac *IPFSController) GetMetadata(c *gin.Context) {
-	var metadata []model.IPFSMetadata
+	var metadata []models.IPFSMetadata
 	if err := ac.DB.Find(&metadata).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -32,7 +32,7 @@ func (ac *IPFSController) GetMetadata(c *gin.Context) {
 
 // post metadata
 func (ac *IPFSController) PostMetadata(c *gin.Context) {
-	var metadata model.IPFSMetadata
+	var metadata models.IPFSMetadata
 	if err := c.ShouldBindJSON(&metadata); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -46,7 +46,7 @@ func (ac *IPFSController) PostMetadata(c *gin.Context) {
 
 // Get node
 func (ac *IPFSController) GetNode(c *gin.Context) {
-	var nodes []model.IPFSNode
+	var nodes []models.IPFSNode
 	if err := ac.DB.Preload("Files").Find(&nodes).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -56,7 +56,7 @@ func (ac *IPFSController) GetNode(c *gin.Context) {
 
 // Post node
 func (ac *IPFSController) PostNode(c *gin.Context) {
-	var node model.IPFSNode
+	var node models.IPFSNode
 	if err := c.ShouldBindJSON(&node); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -93,7 +93,7 @@ func (ac *IPFSController) UploadIjazah(c *gin.Context) {
 
 	// Simpan metadata file ke PostgreSQL
 	db := c.MustGet("db").(*gorm.DB)
-	newMetadata := model.IPFSMetadata{
+	newMetadata := models.IPFSMetadata{
 		IPFSCID:    cid,
 		Size:       int(file.Size),
 		FileName:   file.Filename,

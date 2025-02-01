@@ -1,46 +1,41 @@
 package config
 
 import (
-	"fmt"
 	"log"
-	"sc-service/model"
+	"os"
+	"strconv"
+	"time"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/joho/godotenv"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = ""
-	dbName   = "postgres"
-)
-
-var DB *gorm.DB
-
-func InitDatabase() {
-	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbName)
-	var err error
-	DB, err = gorm.Open(postgres.Open(sqlInfo), &gorm.Config{})
-	if err != nil {
-		log.Fatal("Terjadi error dg error sbb: ", err)
-	}
-	DB.AutoMigrate(
-		&model.BlockchainNetwork{},
-		&model.EthereumQuorumSetting{},
-		&model.HyperledgerFabricSetting{},
-		&model.Node{},
-		&model.NetworkParticipant{},
-		&model.Block{},
-		&model.Transaction{},
-		&model.AuditLog{},
-		&model.Account{},
-	)
-	DB.AutoMigrate(&model.IPFSMetadata{}, &model.IPFSNode{}, &model.IPFSFile{}, &model.IPFSTransaction{}, &model.IPFSPinningService{})
-
-	DB.AutoMigrate(&model.Student{}, &model.Certificate{})
-	log.Println("Database connected successfully!")
+type Config struct {
+	Host            string
+	Port            int
+	User            string
+	Password        string
+	DBName          string
+	MaxIdleConns    int
+	MaxOpenConns    int
+	ConnMaxLifetime time.Duration
 }
 
-//
+func LoadConfig() Config {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
+	port, _ := strconv.Atoi(os.Getenv("SC_PORT"))
+
+	return Config{
+		Host:            os.Getenv("SC_HOST"),
+		Password:        os.Getenv("SC_PASSWORD"),
+		Port:            port,
+		User:            os.Getenv("SC_USER"),
+		DBName:          os.Getenv("SC_DB"),
+		MaxIdleConns:    10,
+		MaxOpenConns:    100,
+		ConnMaxLifetime: 30 * time.Minute,
+	}
+}

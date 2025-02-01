@@ -28,6 +28,7 @@ const (
 	BlockchainService_GetTokenAllowance_FullMethodName         = "/sc_service.BlockchainService/GetTokenAllowance"
 	BlockchainService_DeployIjazahContract_FullMethodName      = "/sc_service.BlockchainService/DeployIjazahContract"
 	BlockchainService_GenerateETHAccount_FullMethodName        = "/sc_service.BlockchainService/GenerateETHAccount"
+	BlockchainService_GetETHAccount_FullMethodName             = "/sc_service.BlockchainService/GetETHAccount"
 	BlockchainService_GetContract_FullMethodName               = "/sc_service.BlockchainService/GetContract"
 	BlockchainService_CallContractMethod_FullMethodName        = "/sc_service.BlockchainService/CallContractMethod"
 	BlockchainService_SendTransactionToContract_FullMethodName = "/sc_service.BlockchainService/SendTransactionToContract"
@@ -59,7 +60,9 @@ type BlockchainServiceClient interface {
 	GetTokenAllowance(ctx context.Context, in *GetTokenAllowanceRequest, opts ...grpc.CallOption) (*GetTokenAllowanceResponse, error)
 	// Interaksi Smart Contract
 	DeployIjazahContract(ctx context.Context, in *DeployIjazahContractRequest, opts ...grpc.CallOption) (*DeployIjazahContractResponse, error)
+	// ====================akun====================
 	GenerateETHAccount(ctx context.Context, in *GenerateETHAccountRequest, opts ...grpc.CallOption) (*GenerateETHAccountResponse, error)
+	GetETHAccount(ctx context.Context, in *GetETHAccountRequest, opts ...grpc.CallOption) (*GetETHAccountResponse, error)
 	GetContract(ctx context.Context, in *GetContractRequest, opts ...grpc.CallOption) (*GetContractResponse, error)
 	CallContractMethod(ctx context.Context, in *CallContractMethodRequest, opts ...grpc.CallOption) (*CallContractMethodResponse, error)
 	SendTransactionToContract(ctx context.Context, in *SendTransactionToContractRequest, opts ...grpc.CallOption) (*SendTransactionToContractResponse, error)
@@ -168,6 +171,16 @@ func (c *blockchainServiceClient) GenerateETHAccount(ctx context.Context, in *Ge
 	return out, nil
 }
 
+func (c *blockchainServiceClient) GetETHAccount(ctx context.Context, in *GetETHAccountRequest, opts ...grpc.CallOption) (*GetETHAccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetETHAccountResponse)
+	err := c.cc.Invoke(ctx, BlockchainService_GetETHAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *blockchainServiceClient) GetContract(ctx context.Context, in *GetContractRequest, opts ...grpc.CallOption) (*GetContractResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetContractResponse)
@@ -269,7 +282,9 @@ type BlockchainServiceServer interface {
 	GetTokenAllowance(context.Context, *GetTokenAllowanceRequest) (*GetTokenAllowanceResponse, error)
 	// Interaksi Smart Contract
 	DeployIjazahContract(context.Context, *DeployIjazahContractRequest) (*DeployIjazahContractResponse, error)
+	// ====================akun====================
 	GenerateETHAccount(context.Context, *GenerateETHAccountRequest) (*GenerateETHAccountResponse, error)
+	GetETHAccount(context.Context, *GetETHAccountRequest) (*GetETHAccountResponse, error)
 	GetContract(context.Context, *GetContractRequest) (*GetContractResponse, error)
 	CallContractMethod(context.Context, *CallContractMethodRequest) (*CallContractMethodResponse, error)
 	SendTransactionToContract(context.Context, *SendTransactionToContractRequest) (*SendTransactionToContractResponse, error)
@@ -314,6 +329,9 @@ func (UnimplementedBlockchainServiceServer) DeployIjazahContract(context.Context
 }
 func (UnimplementedBlockchainServiceServer) GenerateETHAccount(context.Context, *GenerateETHAccountRequest) (*GenerateETHAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenerateETHAccount not implemented")
+}
+func (UnimplementedBlockchainServiceServer) GetETHAccount(context.Context, *GetETHAccountRequest) (*GetETHAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetETHAccount not implemented")
 }
 func (UnimplementedBlockchainServiceServer) GetContract(context.Context, *GetContractRequest) (*GetContractResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetContract not implemented")
@@ -522,6 +540,24 @@ func _BlockchainService_GenerateETHAccount_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BlockchainService_GetETHAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetETHAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockchainServiceServer).GetETHAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlockchainService_GetETHAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockchainServiceServer).GetETHAccount(ctx, req.(*GetETHAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _BlockchainService_GetContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetContractRequest)
 	if err := dec(in); err != nil {
@@ -708,6 +744,10 @@ var BlockchainService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GenerateETHAccount",
 			Handler:    _BlockchainService_GenerateETHAccount_Handler,
+		},
+		{
+			MethodName: "GetETHAccount",
+			Handler:    _BlockchainService_GetETHAccount_Handler,
 		},
 		{
 			MethodName: "GetContract",

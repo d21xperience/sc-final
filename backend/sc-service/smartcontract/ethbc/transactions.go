@@ -8,9 +8,9 @@ import (
 	"log"
 	"math"
 	"math/big"
+
 	// verval_ijazah "sc-service/smartcontract/ethbc/gen/verval_ijazah"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -109,18 +109,6 @@ func (cbc ETH_Client) CheckBalance(pubAddress string) (*big.Float, error) {
 	fBalance.SetString(balance.String())
 	value := new(big.Float).Quo(fBalance, big.NewFloat(math.Pow10(18)))
 	return value, nil
-}
-
-func (cbc ETH_Client) AuthOfSC() *bind.TransactOpts {
-	auth, err := bind.NewKeyedTransactorWithChainID(cbc.Client.PvKey, cbc.Client.ChainID)
-	if err != nil {
-		log.Fatal("Gagal membuat Transactor karena ", err.Error())
-	}
-	auth.Nonce = big.NewInt(int64(cbc.Client.Nonce))
-	auth.Value = big.NewInt(0)
-	auth.GasLimit = cbc.Client.GasLimit
-	auth.GasPrice = cbc.Client.GasPrice
-	return auth
 }
 
 // Check Block

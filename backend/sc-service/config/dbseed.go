@@ -2,14 +2,14 @@ package config
 
 import (
 	"log"
-	"sc-service/model"
+	"sc-service/models"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 func SeedBCNetworks() {
-	networks := []model.BlockchainNetwork{
+	networks := []models.BlockchainNetwork{
 		{
 			NetworkName:    "Hyperledger fabric",
 			BlockchainType: "Private",
@@ -110,7 +110,7 @@ func SeedBCNetworks() {
 	log.Println("Seeding completed!")
 }
 func SeedAccountBC() {
-	accounts := []model.Account{
+	accounts := []models.Account{
 		{
 			Address:      "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
 			Name:         "account - 2",
@@ -161,7 +161,7 @@ func SeedAccountBC() {
 
 func SeedStudent() {
 	// Students Data
-	students := []model.Student{
+	students := []models.Student{
 		{
 			StudentID:   1,
 			Nama:        "John Doe",
@@ -189,7 +189,7 @@ func SeedStudent() {
 	}
 
 	// Certificates Data
-	certificates := []model.Certificate{
+	certificates := []models.Certificate{
 		{
 			CertificateID:   1,
 			StudentID:       1,
@@ -244,28 +244,28 @@ func SeedStudent() {
 
 //func dbSeed() {
 // 	// Dummy data (tambahkan jika database kosong)
-// 	DB.Create(&model.BlockchainNetwork{
+// 	DB.Create(&models.BlockchainNetwork{
 // 		NetworkName: "Ethereum-Local",
 // 		Unit:        "ETH",
-// 		Account: []model.Account{
+// 		Account: []models.Account{
 // 			{Name: "Account 1", Address: "39TqcPQbBh9bXvSkuxJC1Gi8GnGtAf41xCHevt85PgTp", Amount: 100, NetworkID: 1},
 // 			{Name: "Account 2", Address: "9TqcPQbBh9bXvSkuxJC1Gi8GnGtAf41xCHevt85PgTpU", Amount: 200, NetworkID: 1},
 // 		},
 // 	})
 
-// 	DB.Create(&model.BlockchainNetwork{
+// 	DB.Create(&models.BlockchainNetwork{
 // 		NetworkName: "Quorum",
 // 		Unit:        "ETH",
-// 		Account: []model.Account{
+// 		Account: []models.Account{
 // 			{Name: "quo 1", Address: "quuro9TqcPQbBh9bXvSkuxJC1Gi8GnGtAf41xCHevt85PgTp", Amount: 500, NetworkID: 2},
 // 			{Name: "quo 2", Address: "quuro2TqcPQbBh9bXvSkuxJC1Gi8GnGtAf41xCHevt85PgTpU", Amount: 120, NetworkID: 2},
 // 		},
 // 	})
 
-// 	DB.Create(&model.BlockchainNetwork{
+// 	DB.Create(&models.BlockchainNetwork{
 // 		NetworkName: "Hyperledger Fabric",
 // 		Unit:        "No limit",
-// 		Account: []model.Account{
+// 		Account: []models.Account{
 // 			{Name: "HF-01", Address: "39TqcPQbBh9bXvSkuxJC1Gi8GnGtAf41xCHevt85PgTp", Amount: 350, NetworkID: 3},
 // 			{Name: "HF-02", Address: "10TqcPQbBh9bXvSkuxJC1Gi8GnGtAf41xCHevt85PgTpU", Amount: 130, NetworkID: 3},
 // 		},

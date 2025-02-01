@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"math"
 	"math/big"
 	"net/http"
@@ -14,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -198,4 +200,34 @@ func GetABIFromFile(filename string) (string, error) {
 	}
 
 	return string(abiJSON), nil
+}
+func GetAddressFromPrivateKey(privateKey string) (common.Address, error) {
+	// Dekode private key dari string hex
+	privKey, err := crypto.HexToECDSA(privateKey)
+	if err != nil {
+		return common.Address{}, errors.New("gagal mengonversi private key ke ECDSA")
+	}
+
+	// Ambil public key dari private key
+	publicKey := privKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		return common.Address{}, errors.New("gagal mendapatkan public key dari private key")
+	}
+
+	// Konversi public key menjadi Ethereum address
+	address := crypto.PubkeyToAddress(*publicKeyECDSA)
+	return address, nil
+}
+
+func TransactOptsAuth(key *keystore.Key, chainID, gasPrice *big.Int, nonce, gasLimit uint64) *bind.TransactOpts {
+	auth, err := bind.NewKeyedTransactorWithChainID(key.PrivateKey, chainID)
+	if err != nil {
+		log.Fatal("Gagal membuat Transactor karena ", err.Error())
+	}
+	auth.Nonce = big.NewInt(int64(nonce))
+	auth.Value = big.NewInt(0)
+	auth.GasLimit = gasLimit
+	auth.GasPrice = gasPrice
+	return auth
 }

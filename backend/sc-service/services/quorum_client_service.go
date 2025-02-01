@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"math/big"
+	"sc-service/models"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -73,8 +74,8 @@ func (c *DefaultQuorumClient) GetConsensusAlgorithm(ctx context.Context) (string
 	return result, err
 }
 
-func (c *DefaultQuorumClient) GenerateNewAccount(username, password string) (string, error) {
-	return c.ethClient.GenerateNewAccount(username, password)
+func (c *DefaultQuorumClient) GenerateNewAccount(ctx context.Context, username, password string) (string, error) {
+	return c.ethClient.GenerateNewAccount(ctx, username, password)
 }
 
 // Implement CallContractMethod agar memenuhi EthClient
@@ -113,5 +114,13 @@ func (c *DefaultQuorumClient) SendTransaction(ctx context.Context, tx *types.Tra
 }
 func (c *DefaultQuorumClient) GetContract(ctx context.Context, contractAddress string) (string, string, error) {
 	return c.ethClient.GetContract(ctx, contractAddress)
+
+}
+func (c *DefaultQuorumClient) GetAccounts(ctx context.Context, userId string) ([]*models.WalletTable, error) {
+	return c.ethClient.GetAccounts(ctx, userId)
+
+}
+func (c *DefaultQuorumClient) DeployIjazahContract(ctx context.Context, userId, password string) (contracAddress string, txHash string, err error) {
+	return c.ethClient.DeployIjazahContract(ctx, userId, password)
 
 }

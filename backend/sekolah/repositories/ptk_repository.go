@@ -34,12 +34,12 @@ var tabelPTK = "tabel_ptk"
 func (r *PTKRepositoryImpl) Save(ctx context.Context, PTK *models.TabelPTK, schemaName string) error {
 	// Gunakan transaksi agar atomic
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		// 🔥 Pastikan schema diubah dalam transaksi
+		// Pastikan schema diubah dalam transaksi
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
 			return fmt.Errorf("failed to set schema: %w", err)
 		}
 
-		// 🔥 Gunakan `tx.Table(schemaName + ".PTKs")` agar GORM tahu schema yang benar
+		// Gunakan `tx.Table(schemaName + ".PTKs")` agar GORM tahu schema yang benar
 		if err := tx.Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelPTK)).Create(PTK).Error; err != nil {
 			return fmt.Errorf("failed to save school in schema %s: %w", schemaName, err)
 		}
@@ -51,12 +51,12 @@ func (r *PTKRepositoryImpl) Save(ctx context.Context, PTK *models.TabelPTK, sche
 func (r *PTKRepositoryImpl) FindByID(ctx context.Context, PTKID string, schemaName string) (*models.TabelPTK, error) {
 	var PTK models.TabelPTK
 
-	// 🔥 Pastikan schema diubah sebelum query
+	// Pastikan schema diubah sebelum query
 	if err := r.db.WithContext(ctx).Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
 		return nil, fmt.Errorf("failed to set schema: %w", err)
 	}
 
-	// 🔥 Gunakan `tx.Table(schemaName + ".tabel_PTK")` agar GORM tahu schema yang benar
+	// Gunakan `tx.Table(schemaName + ".tabel_PTK")` agar GORM tahu schema yang benar
 	if err := r.db.WithContext(ctx).
 		Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelPTK)).
 		First(&PTK, "ptk_id = ?", PTKID).Error; err != nil {
@@ -69,12 +69,12 @@ func (r *PTKRepositoryImpl) FindByID(ctx context.Context, PTKID string, schemaNa
 // Update (Memperbarui Data PTK)
 func (r *PTKRepositoryImpl) Update(ctx context.Context, PTK *models.TabelPTK, schemaName string) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		// 🔥 Set schema sebelum query
+		// Set schema sebelum query
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
 			return fmt.Errorf("failed to set schema: %w", err)
 		}
 
-		// 🔥 Lakukan update dalam transaksi
+		// Lakukan update dalam transaksi
 		if err := tx.Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelPTK)).
 			Where("ptk_id = ?", PTK.PTKID).
 			Updates(PTK).Error; err != nil {
@@ -88,12 +88,12 @@ func (r *PTKRepositoryImpl) Update(ctx context.Context, PTK *models.TabelPTK, sc
 // Delete (Menghapus Data PTK berdasarkan ID)
 func (r *PTKRepositoryImpl) Delete(ctx context.Context, PTKID string, schemaName string) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		// 🔥 Set schema sebelum query
+		// Set schema sebelum query
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
 			return fmt.Errorf("failed to set schema: %w", err)
 		}
 
-		// 🔥 Hapus data dalam transaksi
+		// Hapus data dalam transaksi
 		if err := tx.Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelPTK)).
 			Where("PTK_id = ?", PTKID).
 			Delete(nil).Error; err != nil {
