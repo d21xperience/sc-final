@@ -27,7 +27,7 @@
             </template>
         </Toolbar>
 
-        <DataTable ref="dt" v-model:selection="selectedBCNetworks" :value="BCNetworks" dataKey="network_id"
+        <DataTable ref="dt" v-model:selection="selectedBCNetworks" :value="BCNetworks" dataKey="ChainId"
             :paginator="true" :rows="10" :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25]"
@@ -51,10 +51,10 @@
             </template>
 
             <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-            <Column field="network_name" header="Nama Jaringan">
-                <template #body="slotProps">
-                    {{ slotProps.data.network_name }}
-                </template>
+            <Column field="Name" header="Nama Jaringan">
+                <!-- <template #body="slotProps">
+                    {{ slotProps.data.name }}
+                </template> -->
             </Column>
             <Column field="activate" header="Active" sortable>
                 <template #body="slotProps">
@@ -65,51 +65,10 @@
 
                 </template>
             </Column>
-            <Column field="blockchain_type" header="Tipe Jaringan" sortable>
-                <template #body="slotProps">
-                    {{ slotProps.data.blockchain_type }}
-                </template>
-            </Column>
-            <Column field="chain_id" header="Chain ID">
-                <template #body="slotProps">
-                    {{ slotProps.data.chain_id }}
-                </template>
-            </Column>
-            <Column field="rpc_url" header="RPC URL">
-                <template #body="slotProps">
-                    {{ slotProps.data.rpc_url }}
-                </template>
-            </Column>
-            <Column field="block_explorer" header="Explorer URL">
-                <template #body="slotProps">
-                    {{ slotProps.data.block_explorer }}
-                </template>
-            </Column>
-            <!-- <Column header="Image">
-                    <template #body="slotProps">
-                        <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                            :alt="slotProps.data.image" class="rounded" style="width: 64px" />
-                    </template>
-                </Column> -->
-            <!--<Column field="rating" header="Reviews" sortable style="min-width: 12rem">
-                    <template #body="slotProps">
-                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />
-                    </template>
-                </Column>-->
-            <!-- <Column field="inventoryStatus" header="Status" sortable>
-                <template #body="slotProps">
-                    <Tag :value="slotProps.data.inventoryStatus"
-                        :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                </template>
-            </Column> -->
-            <!-- <Column header="Aksi" :exportable="false" style="min-width: 12rem">
-                    <template #body="slotProps">
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2"
-                            @click="editProduct(slotProps.data)" />
-                        <Button icon="pi pi-trash" outlined rounded severity="danger"
-                            @click="confirmDeleteProduct(slotProps.data)" />
-                    </template>
-                </Column> -->
+            <Column field="Type" header="Tipe Jaringan" sortable></Column>
+            <Column field="ChainId" header="Chain ID"></Column>
+            <Column field="RPCURL" header="RPC URL"></Column>
+            <Column field="ExplorerURL" header="Explorer URL"></Column>
         </DataTable>
     </div>
 
@@ -255,7 +214,8 @@ import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-
+import { useStore } from "vuex";
+const store = useStore();
 const toast = useToast();
 // import BCNetworkService from '@/service/BCNetworkService.js';
 // const BCNetworks = ref([
@@ -355,24 +315,23 @@ const toast = useToast();
 
 
 const BCNetworks = ref(null)
-import axios from 'axios';
 
 // Membuat instance Axios
 // Pindahkan ke vuex
-const api = axios.create({
-    baseURL: 'http://localhost:8081', // URL utama API
-    timeout: 5000, // Waktu maksimal request (ms)
-    headers: {
-        'Content-Type': 'application/json', // Header default
-    },
-});
+// const api = axios.create({
+//     baseURL: 'http://localhost:8081', // URL utama API
+//     timeout: 5000, // Waktu maksimal request (ms)
+//     headers: {
+//         'Content-Type': 'application/json', // Header default
+//     },
+// });
 
 const fetchData = async () => {
     try {
-        const { data } = await api.get('/api/v1/blockchain-networks'); // Destructuring response
-        // console.log(data);
-        //BCNetworks.value = data.filter(item => !item.activate)
-        BCNetworks.value = data
+        const { network } = await store.dispatch("scService/fetchBlockchainNetworks"); // Destructuring response
+        console.log(network);
+        // BCNetworks.value = data.filter(item => !item.activate)
+        BCNetworks.value = network
 
         // let obj ={...data}
         // console.log(obj)

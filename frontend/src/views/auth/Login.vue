@@ -33,29 +33,57 @@ const resolver = ref(zodResolver(
 const isLoading = ref(false)
 const isError = ref(false)
 const errorMessage = ref(null)
+// const onFormSubmit = async ({ valid, values }) => {
+//     if (valid) {
+//         isLoading.value = true
+//         try {
+//             const success = await store.dispatch('authService/login', { username: values.username, password: values.password });
+//             if (!success) {
+//                 // alert(success.message)
+//                 // error.value = 'Invalid login credentials';
+//                 // alert("Invalid login credentials")
+//             } else {
+//                 router.push({ name: 'admin' })
+//             }
+//         } catch (error) {
+//             console.log(error)
+//         } finally {
+//             // errorMessage.value = await store.getters["authService/getError"]
+//             isError.value = true
+//             isLoading.value = false
+//         }
+//     }
+// }
+import { nextTick } from 'vue'
+
 const onFormSubmit = async ({ valid, values }) => {
-    if (valid) {
-        isLoading.value = true
-        try {
-            const success = await store.dispatch('authService/login', { username: values.username, password: values.password });
-            if (!success) {
-                // alert(success.message)
-                // error.value = 'Invalid login credentials';
-                // alert("Invalid login credentials")
-            } else {
-                router.push({ name: 'admin' })
-            }
-        } catch (error) {
-            console.log(error)
-        } finally {
-            errorMessage.value = await store.getters["authService/getError"]
-            isError.value = true
-            isLoading.value = false
+    if (!valid) return;
+
+    isLoading.value = true;
+    isError.value = false; // Reset error state
+
+    try {
+        const response = await store.dispatch('authService/login', {
+            username: values.username,
+            password: values.password
+        });
+        // console.log(response)
+        // if (response?.success) {
+        if (response) {
+            await nextTick(); // Pastikan state sudah diperbarui sebelum redirect
+            router.push({ name: 'admin' });
+        } else {
+            isError.value = true;
+            errorMessage.value = response?.message || 'Invalid login credentials';
         }
-
-
+    } catch (error) {
+        console.error('Login error:', error);
+        isError.value = true;
+        errorMessage.value = 'Something went wrong. Please try again.';
+    } finally {
+        isLoading.value = false;
     }
-}
+};
 
 </script>
 

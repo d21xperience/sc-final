@@ -1,7 +1,9 @@
 <script setup>
-import store from '@/store';
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useStore } from "vuex";
+const store = useStore();
 const cek = ref(false)
+const isAuthenticated = store.getters["authService/isAuthenticated"]
 
 // Emit event ke parent
 // const emit = defineEmits(['scrollStateChange']);
@@ -23,7 +25,6 @@ const cek = ref(false)
 //     window.removeEventListener('scroll', handleScroll);
 // });
 
-const isAuthenticated = store.getters["authService/isAuthenticated"]
 </script>
 
 

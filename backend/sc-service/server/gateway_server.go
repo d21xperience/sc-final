@@ -17,6 +17,14 @@ func RunHTTPGateway(ctx context.Context, mux *runtime.ServeMux, grpcServerEndpoi
 	// Register gRPC service ke HTTP Gateway
 	err := pb.RegisterBlockchainServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 	if err != nil {
-		log.Fatalf("Failed to register HTTP gateway: %v", err)
+		log.Fatalf("Failed to register BlockchainService on HTTP gateway: %v", err)
+	}
+	err = pb.RegisterBlockchainNetworkServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register BlockcahainNetwork on HTTP gateway: %v", err)
+	}
+	err = pb.RegisterBlockchainAccountServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register BlockcahainAccount on HTTP gateway: %v", err)
 	}
 }

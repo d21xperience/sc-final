@@ -77,16 +77,16 @@ type Block struct {
 	Transactions     []Transaction `gorm:"foreignKey:BlockID;constraint:OnDelete:CASCADE" json:"transactions"`
 }
 
-type Transaction struct {
-	TransactionID   string    `gorm:"type:uuid;default:uuid_generate_v4();primaryKey" json:"transaction_id"`
-	BlockID         uint      `gorm:"index" json:"block_id"`
-	SenderAddress   string    `gorm:"size:64" json:"sender_address"`
-	ReceiverAddress string    `gorm:"size:64" json:"receiver_address"`
-	Amount          float64   `gorm:"type:numeric(20,8)" json:"amount"`
-	Timestamp       time.Time `gorm:"autoCreateTime" json:"timestamp"`
-	TransactionHash string    `gorm:"size:64;unique" json:"transaction_hash"`
-	Metadata        string    `gorm:"type:jsonb" json:"metadata,omitempty"`
-}
+// type Transaction struct {
+// 	TransactionID   string    `gorm:"type:uuid;default:uuid_generate_v4();primaryKey" json:"transaction_id"`
+// 	BlockID         uint      `gorm:"index" json:"block_id"`
+// 	SenderAddress   string    `gorm:"size:64" json:"sender_address"`
+// 	ReceiverAddress string    `gorm:"size:64" json:"receiver_address"`
+// 	Amount          float64   `gorm:"type:numeric(20,8)" json:"amount"`
+// 	Timestamp       time.Time `gorm:"autoCreateTime" json:"timestamp"`
+// 	TransactionHash string    `gorm:"size:64;unique" json:"transaction_hash"`
+// 	Metadata        string    `gorm:"type:jsonb" json:"metadata,omitempty"`
+// }
 
 type AuditLog struct {
 	LogID     uint      `gorm:"primaryKey;autoIncrement" json:"log_id"`

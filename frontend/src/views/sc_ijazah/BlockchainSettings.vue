@@ -9,13 +9,18 @@ import { useDialog } from 'primevue/usedialog';
 const dialog = useDialog();
 
 import Button from 'primevue/button';
-import { computed, ref, watch, onMounted } from 'vue';
+import { computed, ref, toRaw, onMounted } from 'vue';
 
 // Ambil dari database
-const BCPlatform = ref()
-const dialogSelectNetwork = ref(false)
+const BCPlatform = ref(null)
+const BCPlatformAvailable = ref([])
+const BCPlatformActivate = ref({})
 
+const dialogSelectNetwork = ref(false)
+import { useStore } from "vuex";
+const store = useStore();
 // Akun
+const doesntHaveAccount = ref(true)
 const akunBC = ref(null)
 const dialogListAccounts = ref(false)
 const dialogCreateAccount = ref(false)
@@ -25,7 +30,6 @@ const dialogImportAccount = ref(false)
 import Tes from "./Tes.vue"
 import router from '@/router';
 import QrCodeAccount from './QrCodeAccount.vue';
-import axios from 'axios';
 
 
 function openDialog() {
@@ -112,57 +116,50 @@ const addBCNetwork = () => {
 }
 
 const networkActive = ref(false)
-const networkName = ref(null)
+// const networkName = ref(null)
 const networkIndex = ref(0)
+// const networkAvailable = ref(null)
 const selectNetwork = (e) => {
+    let index = e.target.value
     // console.log(e.target.value)
     networkIndex.value = e.target.value
-    // console.log(networkIndex.value)
-    const text = e.target.textContent.trim();
-    // console.log(text);
-    networkName.value = text
+    BCPlatformActivate.value = BCPlatformAvailable.value[index]
+    // simpan ke state
+    store.dispatch("scService/updateBCPlatformActivate", BCPlatformActivate.value)
     networkActive.value = true
     dialogSelectNetwork.value = false
-    setActiveCurrentBC(BCPlatform.value[networkIndex.value].network_id)
-
-    // ambil data akun dari backend
-    // set aktive blockhain network
-    // getBcPlatform()
+    // Ambil akun sesuai denga nama blockahain yang dipilih
+    getAccount(BCPlatformActivate.value)
 }
 onMounted(() => {
-    getAccount()
     fetchBlockchainNetworks();
+    // getAccount()
+    user.value = toRaw(store.getters["authService/getUserProfile"])
+    sekolah.value = toRaw(store.getters["authService/getSekolah"])
 });
 
-const api = axios.create({
-    baseURL: 'http://localhost:8081', // URL utama API
-    timeout: 5000, // Waktu maksimal request (ms)
-    headers: {
-        'Content-Type': 'application/json', // Header default
-    },
-});
+const user = ref(null)
+const sekolah = ref({})
 // Mengambil bcplatform dari backend
 const fetchBlockchainNetworks = async () => {
-    // menggunakan axios
     try {
-        const result = await api.get('/api/v1/accounts')
-            .then(response => {
-                // console.log(response.data)
-                BCPlatform.value = response.data
-                BCPlatform.value.forEach((bc, i) => {
-                    // console.log(bc.applicable)
-                    if (bc.activate) {
-                        if (bc.applicable) {
-                            console.log(i)
-                            networkActive.value = true
-                            networkIndex.value = i
-                        }
-                    }
-                })
-            })
+        const response = await store.dispatch("scService/fetchBlockchainNetworks");
+        if (!response) {
+            return;
+        }
+        const { network } = response;
+        BCPlatform.value = network
+        network.forEach((bc, i) => {
+            if (bc.Available) {
+                BCPlatformAvailable.value.push(bc)
+                if (bc.Activate) {
+                    BCPlatformActivate.value = bc
+                    networkActive.value = true
+                }
+            }
+        });
     } catch (error) {
-        console.error('Error connecting to blockchain network:', error);
-
+        console.error("Error connecting to blockchain network:", error);
     }
 }
 
@@ -180,47 +177,61 @@ const setActiveCurrentBC = async (id) => {
 }
 // Set diaktive current Blockchain network
 const networkDiactive = async () => {
-    networkActive.value = false
-    let id = BCPlatform.value[networkIndex.value].network_id
-    // console.log(id)
+    BCPlatformActivate.value = {}
+    doesntHaveAccount.value = false
+}
+const pVKey = ref('')
+const importAccount = async () => {
     try {
-        const resp = await api.put(`/api/v1/blockchain-networks/${id}`, {
-            Applicable: false
-        })
-        console.log(resp)
+        let payload = {
+            admin: {
+                sekolah_id: sekolah.sekolahData.sekolah_id,
+                user_id: user.userId,
+                // password: ,
+                nama_sekolah: sekolah.nama,
+                sekolah_id_enkrip: sekolah.sekolahData.sekolah_id_enkrip
+
+            },
+            network: toRaw(store.getters["scService/getBCPlatformActivate"]),
+            private_key: pVKey.value,
+            schemaname: sekolah.sekolahData.sekolah_id_enkrip
+        }
+        // console.log(payload)
+        // let schemaname =
+        //     let network = 
+        // console.log(network)
+        // console.log(pVKey)
+        const response = await store.dispatch("scService/importBCAccount", JSON.parse(JSON.stringify(payload)));
+        console.log(response)
+        dialogImportAccount.value = false
+    } catch (error) {
+        console.log(error)
+    }
+}
+const akun = computed(() => store.getters["scService/getBCAccount"])
+// Dapatkan akun
+const getAccount = async (network) => {
+    try {
+        doesntHaveAccount.value = true
+        let payload = {
+            user_id: user.value.userId,
+            schemaname: sekolah.value.sekolahData.sekolah_id_enkrip,
+            network_id: toRaw(store.getters["scService/getBCPlatformActivate"]).Id
+        }
+        const response = await store.dispatch("scService/fetchBCAccount", payload);
+        console.log(response)
+        if (response.code == 2) {
+            // Jika schema belum dibuat, tampilkan pilihan buat akun
+            doesntHaveAccount.value = true
+            return;
+        } else if (response.status = true) {
+            doesntHaveAccount.value = false
+        }
+
     } catch (error) {
         console.log('error', error)
     }
 }
-
-const currentAccount = ref(0)
-// Buat akun
-const getAccount = async (id) => {
-    try {
-        const resp = await api.get(`/api/v1/accounts`)
-        akunBC.value = resp
-    } catch (error) {
-        console.log('error', error)
-    }
-}
-
-const createAccount = async (id) => {
-    try {
-        const resp = await api.post(`/api/v1/account`, {
-            netword_id: id,
-            name: 'test',
-            organization: '',
-            isActive: false,
-        })
-
-        console.log(resp)
-    } catch (error) {
-        console.log("error", error)
-    }
-}
-
-
-
 
 // -------------------------------------------------------------------------------
 
@@ -228,7 +239,7 @@ const createAccount = async (id) => {
 // Mempersingkat address
 const shortenText = (text) => {
     if (text.length <= 10) return text; // Tidak dipersingkat jika terlalu pendek
-    return `0x${text.slice(0, 5)}...${text.slice(-5)}`;
+    return `${text.slice(0, 5)}...${text.slice(-5)}`;
 };
 
 // Fungsi untuk mengonversi ETH ke Fiat (USD)
@@ -246,17 +257,6 @@ async function convertToFiatCurrency(amount) {
         return null;
     }
 }
-
-// Watcher untuk memperbarui fiatAmount saat networkIndex berubah
-// watch(networkIndex, async () => {
-//     const amount = BCPlatform[networkIndex.value].account[0].amount;
-//     fiatAmount.value = await convertToFiatCurrency(amount);
-// });
-
-// Inisialisasi nilai awal
-// (async () => {
-//   const amount = BCPlatform[0].account[0].amount;
-//   fiatAm
 
 // copy to clipboard
 const textToCopy = ref(null); // Reference for the text element
@@ -279,6 +279,23 @@ const copyText = async () => {
     }
 };
 
+const dialogBuildSmartContract = ref(false)
+const buildSmartContract = async () => {
+    try {
+        const payload = {
+            // ambil akun
+            account_type : akun.value.type,
+            gas_limit : 300000,
+            // private_key: 
+        }
+        
+        const response = await store.dispatch("scService/deployIjazahContract", payload)
+        
+        
+    } catch (error) {
+        
+    }
+}
 
 </script>
 
@@ -289,38 +306,46 @@ const copyText = async () => {
             <div class="">
                 <button @click="dialogSelectNetwork = true"
                     class="rounded-full bg-slate-300 py-2 px-4 hover:opacity-80">
-                    <span v-if="!networkActive">Pilih Jaringan</span>
-                    <span v-else>{{ BCPlatform[networkIndex].network_name }}</span>
+                    <span v-if="BCPlatformActivate">{{ BCPlatformActivate?.Name ?? "Pilih Jaringan" }}</span>
                     <i class="ml-2 pi pi-angle-up "></i></button>
             </div>
-            <div v-show="networkActive" class="flex items-center">
+            <div v-show="BCPlatformActivate?.Name" class="flex items-center">
                 <button class="bg-red-400 py-2 px-3 rounded-full hover:opacity-70 flex items-center gap-2"
                     @click="networkDiactive"><i class="pi pi-times"></i> Disconect</button>
             </div>
         </div>
     </div>
     <div class="p-4">
-        <template v-if="networkActive">
-            <h3 class="text-center font-bold text-3xl">{{ BCPlatform[networkIndex].network_name }} </h3>
+        <div v-show="networkActive">
+            <h3 class="text-center font-bold text-3xl">{{ BCPlatformActivate?.Name }} </h3>
             <div>
-                <template v-if="BCPlatform[networkIndex].accounts.length > 1">
+                <template v-if="doesntHaveAccount">
+                    <h2 class="text-center text-2xl">Anda belum mempunyai akun, silakan buat akun terlebih dahulu
+                    </h2>
+                    <div class="flex justify-center mt-6">
+                        <Button @click="dialogCreateAccount = true" icon="pi pi-user" aria-label="addAccount"
+                            label="Buat Akun" rounded style="background-color:orange;border: none; color:black" />
+                    </div>
+                </template>
+
+                <template v-else>
                     <div class="text-center">
                         <button type="button" @click="openDialog" class="hover:opacity-70 border-b-2 shadow-sm">
                             <!--   <span>{{ BCPlatform[networkIndex].accounts[0].name }}</span> <i class="pi pi-angle-up "></i>-->
                         </button>
                         <div class=" text-center">
-                            <select name="bc-account" id="bc-account" v-model="currentAccount" class="outline-none">
-                                <option v-for="(bc, index) in BCPlatform[networkIndex].accounts" :key="index"
-                                    :value="index" class="text-3xl text-slate-600">
-                                    {{ bc.name }}
+                            <select name="bc-account" id="bc-account" class="outline-none">
+                                <option v-for="(bc, index) in akun" :key="index" :value="index"
+                                    class="text-3xl text-slate-600">
+                                    {{ shortenText(bc.Address) }}
                                 </option>
                             </select>
                             <div class="text-sm text-gray-500  flex items-center justify-center my-2">
-                                <p>{{ shortenText(BCPlatform[networkIndex].accounts[currentAccount].address) }}</p>
+                                <!-- <p>{{ shortenText(BCPlatform[networkIndex].accounts[currentAccount].address) }}</p> -->
                                 <button @click="copyText"><i class="pi pi-copy "></i></button>
                                 <div class="relative">
-                                    <p class="hidden" ref="textToCopy"> {{
-                                        BCPlatform[networkIndex].accounts[currentAccount].address }}</p>
+                                    <p class="hidden" ref="textToCopy">
+                                    </p>
                                     <p v-if="isCopied"
                                         class="font-bold text-green-500 w-32 mt-2 absolute top-0 transition ease-in-out duration-500">
                                         Text copied!</p>
@@ -328,7 +353,7 @@ const copyText = async () => {
                             </div>
                         </div>
                         <h3 class="text-3xl font-bold mt-2">
-                            <p> {{ BCPlatform[networkIndex].accounts[0].amount }} ETH</p>
+                            <!-- <p> {{ BCPlatform[networkIndex].accounts[0].amount }} ETH</p> -->
                         </h3>
                         <p class="text-gray-500">
 
@@ -338,12 +363,12 @@ const copyText = async () => {
                         </p>
                     </div>
                     <div class="flex justify-center space-x-4 mt-4 pb-2 border-b-2">
-                        <div class="flex flex-col items-center">
+                        <!-- <div class="flex flex-col items-center">
                             <Button icon="pi pi-plus" severity="info" aria-label="User" rounded />
                             <p class="text-sm mt-1">
                                 Jual &amp;...
                             </p>
-                        </div>
+                        </div> -->
                         <div class="flex flex-col items-center">
                             <Button icon="pi pi-arrow-right" severity="info" aria-label="Send" rounded
                                 @click="sendKrypto" />
@@ -352,9 +377,9 @@ const copyText = async () => {
                             </p>
                         </div>
                         <div class="flex flex-col items-center">
-                            <Button icon="pi pi-exchange" severity="info" aria-label="pertukaran" rounded />
+                            <Button icon="pi pi-exchange" severity="info" aria-label="pertukaran" rounded @click="dialogBuildSmartContract = true"/>
                             <p class="text-xs mt-1">
-                                Smartcontract
+                                Smart contract
                             </p>
                         </div>
                         <!-- <div class="flex flex-col items-center">
@@ -363,12 +388,12 @@ const copyText = async () => {
                                 Bridge
                             </p>
                         </div> -->
-                        <div class="flex flex-col items-center">
+                        <!-- <div class="flex flex-col items-center">
                             <Button icon="pi pi-briefcase" severity="info" aria-label="User" rounded />
                             <p class="text-sm mt-1">
                                 Portofolio
                             </p>
-                        </div>
+                        </div> -->
                         <!-- <div v-show="networkIndex <= 1" class="flex flex-col items-center">
                             <Button icon="pi pi-qrcode" severity="info" aria-label="User" rounded
                                 @click="func_openMyQrCodeAccount" />
@@ -462,17 +487,13 @@ const copyText = async () => {
                 </div> -->
                     </div>
                 </template>
-                <template v-else>
-                    <h2 class="text-center text-2xl">Anda belum mempunyai akun, silakan buat akun terlebih dahulu
-                    </h2>
-                    <div class="flex justify-center mt-6">
-                        <Button @click="dialogCreateAccount = true" icon="pi pi-user" aria-label="addAccount"
-                            label="Buat Akun" rounded style="background-color:orange;border: none; color:black" />
-                    </div>
-                </template>
             </div>
-        </template>
-        <template v-else>
+        </div>
+
+
+
+
+        <div v-show="!BCPlatformActivate?.Name">
             <div class="text-center">
                 <h2 class="text-3xl uppercase">Anda Belum terhubung ke jaringan Blockahain</h2>
                 <p class="my-3">Silahkankan <span class="font-semibold">pilih jaringan</span> yang ingin digunakan</p>
@@ -481,13 +502,33 @@ const copyText = async () => {
                 <Button @click="router.push({ name: 'listBCNetwork' })" icon="pi pi-cloud" label="Daftar Jaringan"
                     severity="warn" />
             </div>
-        </template>
+        </div>
         <!-- </div> -->
     </div>
 
     <!-- <Dialog v-model:visible="dialogListAccounts" modal header="Pilih Akun" :style="{ width: '25rem' }" position="top">
        
     </Dialog> -->
+    <Dialog v-model:visible="dialogBuildSmartContract" modal header="Buat Validasi Ijazah" :style="{ width: '35rem' }"
+        position="top">
+        <div class="flex flex-col">
+            <h1>Anda akan membangun smart contract Verifikasi Ijazah</h1>
+            <button @click="buildSmartContract">
+                <i class="pi pi-plus mr-2">
+                </i>
+                Deploy kontrak Verifikasi ijazah
+            </button>
+            <!-- <ul>
+                <li class="mb-2 hover:text-blue-500 py-2 rounded-sm ">
+                </li>
+                <li @click="dialogImportAccount = true" class="mb-2 hover:text-blue-500 py-2 rounded-sm"><button>
+                        <i class="pi pi-cloud-download mr-2">
+                        </i>
+                        Impor akun
+                    </button></li>
+            </ul> -->
+        </div>
+    </Dialog>
     <Dialog v-model:visible="dialogCreateAccount" modal header="Tambahkan Akun" :style="{ width: '25rem' }"
         position="top">
         <div class="flex flex-col">
@@ -545,7 +586,7 @@ const copyText = async () => {
             <div class="flex flex-col mb-4">
                 <label for="string-kunci">Tempel string kunci</label>
                 <div>
-                    <input name="string-kunci" id="string-kunci" class="p-2 w-full border border-solid">
+                    <input v-model="pVKey" name="string-kunci" id="string-kunci" class="p-2 w-full border border-solid">
                     </input>
                 </div>
             </div>
@@ -553,7 +594,7 @@ const copyText = async () => {
             <div class="flex justify-between gap-2 mt-2">
                 <Button label="Batal" icon="pi pi-times" class="w-full hover:opacity-75"
                     style="background-color: white; color: black;" @click="dialogImportAccount = false" />
-                <Button label="Impor" icon="pi pi-check" class="w-full" />
+                <Button label="Impor" icon="pi pi-check" class="w-full" @click="importAccount" />
             </div>
         </div>
     </Dialog>
@@ -561,50 +602,33 @@ const copyText = async () => {
     <!-- ########################################### -->
     <!-- Dialog Select Network -->
     <Dialog v-model:visible="dialogSelectNetwork" modal header="Pilih Jaringan" position="top">
-        <ul v-show="BCPlatform !== undefined">
-            <li class="text-sm text-slate-400">Public Network</li>
-            <template v-for="(bc, index) in BCPlatform" :key="index">
-                <li v-if="bc.blockchain_type === 'Public' && bc.activate === true"
+        <ul>
+            <li class="text-sm text-slate-400">Mainnet Network</li>
+            <template v-for="(bc, index) in BCPlatformAvailable" :key="index">
+                <li v-if="bc.Type === 'mainnet' && bc.Available === true"
                     class="my-2 hover:bg-slate-500 p-2 cursor-pointer hover:text-white  items-center" :value="index"
                     @click="selectNetwork($event)">
-                    {{ bc.network_name }}
+                    {{ bc.Name }}
+                </li>
+            </template>
+            <li class="text-sm text-slate-400">Testnet Network</li>
+            <template v-for="(bc, index) in BCPlatformAvailable" :key="index">
+                <li v-if="bc.Type === 'testnet' && bc.Available === true"
+                    class="my-2 hover:bg-slate-500 p-2 cursor-pointer hover:text-white  items-center" :value="index"
+                    @click="selectNetwork($event)">
+                    {{ bc.Name }}
                 </li>
             </template>
             <li class="text-sm text-slate-400">Private Network</li>
-            <template v-for="(bc, index) in BCPlatform" :key="index">
-                <li v-if="bc.blockchain_type === 'Private' && bc.activate === true"
+            <template v-for="(bc, index) in BCPlatformAvailable" :key="index">
+                <li v-if="bc.Type === 'private' && bc.Available === true"
                     class="my-2 hover:bg-slate-500 p-2 cursor-pointer hover:text-white  items-center" :value="index"
                     @click="selectNetwork($event)">
-                    {{ bc.network_name }}
+                    {{ bc.Name }}
                 </li>
             </template>
-            <!-- <li v-for="(bc, index) in BCPlatform" :key="index"
-                class="my-2 hover:bg-slate-500 p-2 cursor-pointer hover:text-white  items-center" :value="index"
-                @click="selectNetwork($event)">
-                <template v-if="bc.blockchain_type === 'private'">
-                    {{ bc.network_name }}
-
-                </template>
-            </li> -->
         </ul>
-
         <ul>
-            <!-- <li v-for="(bc, index) in BCPlatform" :key="index"
-                class="my-2 hover:bg-slate-500 p-2 cursor-pointer hover:text-white  items-center"
-                :value="index" @click="selectNetwork($event)">
-                <template v-if="bc.blockchain_type == 'public'">
-                        <p>Public Network</p>                    
-                        {{ bc.network_name }}
-
-                </template>
-                <template></template>
-            </li> -->
-            <!-- <li v-for="(bc, index) in BCPlatform" :key="index"
-                class="my-2 hover:bg-slate-500 p-2 cursor-pointer hover:text-white flex justify-between items-center"
-                :value="index" @click="selectNetwork($event)">
-                    <span>Private</span>
-                {{
-                    bc.network_name }} </li> -->
             <li class=""><button @click="addBCNetwork"
                     class="px-4 py-2 hover:bg-blue-600 hover:text-white border  rounded-lg text-blue-600 font-bold"><i
                         class="pi pi-plus"></i>Tambahkan Jaringan</button></li>

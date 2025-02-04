@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"math/big"
-	"sc-service/models"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -74,10 +73,6 @@ func (c *DefaultQuorumClient) GetConsensusAlgorithm(ctx context.Context) (string
 	return result, err
 }
 
-func (c *DefaultQuorumClient) GenerateNewAccount(ctx context.Context, username, password string) (string, error) {
-	return c.ethClient.GenerateNewAccount(ctx, username, password)
-}
-
 // Implement CallContractMethod agar memenuhi EthClient
 func (c *DefaultQuorumClient) CallContractMethod(ctx context.Context, contractAddress, abi, method string, params []string) (string, error) {
 	return c.ethClient.CallContractMethod(ctx, contractAddress, abi, method, params)
@@ -116,11 +111,15 @@ func (c *DefaultQuorumClient) GetContract(ctx context.Context, contractAddress s
 	return c.ethClient.GetContract(ctx, contractAddress)
 
 }
-func (c *DefaultQuorumClient) GetAccounts(ctx context.Context, userId string) ([]*models.WalletTable, error) {
-	return c.ethClient.GetAccounts(ctx, userId)
-
+func (c *DefaultQuorumClient) GenerateNewAccount(ctx context.Context, userId int32, password string) (map[string]interface{}, error) {
+	return c.ethClient.GenerateNewAccount(ctx, userId, password)
 }
-func (c *DefaultQuorumClient) DeployIjazahContract(ctx context.Context, userId, password string) (contracAddress string, txHash string, err error) {
-	return c.ethClient.DeployIjazahContract(ctx, userId, password)
+
+// func (c *DefaultQuorumClient) GetAccounts(ctx context.Context, userId int32, schemaname string) ([]*models.Account, error) {
+// 	return c.ethClient.GetAccounts(ctx, userId, schemaname)
+
+// }
+func (c *DefaultQuorumClient) DeployIjazahContract(ctx context.Context, pvKey string) (contracAddress string, txHash string, err error) {
+	return c.ethClient.DeployIjazahContract(ctx, pvKey)
 
 }

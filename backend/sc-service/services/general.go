@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"crypto/ecdsa"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,6 +13,7 @@ import (
 	"math/big"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -97,14 +99,6 @@ func SendTransactionToContract(ctx context.Context, client EthClient, contractAd
 
 	//  Kembalikan hash transaksi
 	return signedTx.Hash().Hex(), nil
-}
-func ImportPrivateKey(privateKeyHex string) (*ecdsa.PrivateKey, common.Address, error) {
-	privateKey, err := crypto.HexToECDSA(privateKeyHex)
-	if err != nil {
-		return nil, common.Address{}, fmt.Errorf("failed to import private key: %v", err)
-	}
-	publicAddress := crypto.PubkeyToAddress(privateKey.PublicKey)
-	return privateKey, publicAddress, nil
 }
 
 func GetAddressFromPublicKey(publicKey ecdsa.PublicKey) common.Address {
@@ -230,4 +224,82 @@ func TransactOptsAuth(key *keystore.Key, chainID, gasPrice *big.Int, nonce, gasL
 	auth.GasLimit = gasLimit
 	auth.GasPrice = gasPrice
 	return auth
+}
+
+// ImportPrivateKey mengimpor private key dan mengonversinya menjadi alamat Ethereum
+// func ImportPrivateKey(hexKey string) (common.Address, error) {
+// 	// Hapus "0x" jika ada di awal
+// 	hexKey = strings.TrimPrefix(hexKey, "0x")
+
+// 	// Validasi panjang private key
+// 	if len(hexKey) != 64 {
+// 		return common.Address{}, fmt.Errorf("panjang private key tidak valid: %d karakter (harus 64 karakter)", len(hexKey))
+// 	}
+// 	// Dekode private key dari hex ke byte array
+// 	privateKeyBytes, err := hex.DecodeString(hexKey)
+// 	if err != nil {
+// 		return common.Address{}, fmt.Errorf("gagal mendekode private key: %v", err)
+// 	}
+
+// 	// Parse private key menjadi objek ECDSA
+// 	privateKey, err := crypto.ToECDSA(privateKeyBytes)
+// 	if err != nil {
+// 		return common.Address{}, fmt.Errorf("private key tidak valid: %v", err)
+// 	}
+
+// 	// Ambil public key dari private key
+// 	publicKey := privateKey.Public().(*ecdsa.PublicKey)
+
+// 	// Hitung alamat Ethereum dari public key
+// 	address := crypto.PubkeyToAddress(*publicKey)
+
+//		return address, nil
+//	}
+func ImportPrivateKey(hexKey string) (common.Address, error) {
+	//  Hapus spasi yang tidak diinginkan
+	hexKey = strings.TrimSpace(hexKey)
+
+	//  Hapus "0x" jika ada di awal
+	hexKey = strings.TrimPrefix(hexKey, "0x")
+
+	//  Validasi panjang private key
+	if len(hexKey) != 64 {
+		return common.Address{}, errors.New("panjang private key tidak valid: harus 64 karakter")
+	}
+
+	//  Validasi format hanya berisi karakter hex
+	matched, _ := regexp.MatchString("^[0-9a-fA-F]+$", hexKey)
+	if !matched {
+		return common.Address{}, errors.New("private key mengandung karakter tidak valid")
+	}
+
+	//  Dekode private key dari hex ke byte array
+	privateKeyBytes, err := hex.DecodeString(hexKey)
+	if err != nil {
+		return common.Address{}, fmt.Errorf("gagal mendekode private key: %v", err)
+	}
+
+	//  Parse private key menjadi objek ECDSA
+	privateKey, err := crypto.ToECDSA(privateKeyBytes)
+	if err != nil {
+		return common.Address{}, fmt.Errorf("private key tidak valid: %v", err)
+	}
+
+	//  Ambil public key dari private key
+	publicKey := privateKey.Public().(*ecdsa.PublicKey)
+
+	//  Hitung alamat Ethereum dari public key
+	address := crypto.PubkeyToAddress(*publicKey)
+
+	log.Printf("Private key berhasil diimpor, menghasilkan address: %s", address.Hex())
+
+	return address, nil
+}
+func ConvertStringPrivateKey(privateKeyHex string) (*ecdsa.PrivateKey, common.Address, error) {
+	privateKey, err := crypto.HexToECDSA(privateKeyHex)
+	if err != nil {
+		return nil, common.Address{}, fmt.Errorf("failed to import private key: %v", err)
+	}
+	publicAddress := crypto.PubkeyToAddress(privateKey.PublicKey)
+	return privateKey, publicAddress, nil
 }

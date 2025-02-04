@@ -11,7 +11,7 @@
             <div>
                 <label for="tipe-jaringan" class="font-bold">Tipe Jaringan</label>
                 <select name="tipe-jaringan" id="tip-jaringan" class="block border p-2 w-full  rounded-lg">
-                    <option value="0" selected disabled><span>Pilih tipe jaringan</span></option>
+                    <option value="0" selected disabled>Pilih tipe jaringan</option>
                     <option value="public">Public</option>
                     <option value="private">Private</option>
                 </select>

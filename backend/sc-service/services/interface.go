@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"math/big"
-	"sc-service/models"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -13,7 +12,6 @@ import (
 type EthClient interface {
 	NetworkID(ctx context.Context) (*big.Int, error)
 	SuggestGasPrice(ctx context.Context) (*big.Int, error)
-	GenerateNewAccount(ctx context.Context, userId, password string) (string, error)
 	DeployContract(ctx context.Context, bytecode string, privateKey string, gasLimit uint64) (string, string, error)
 	// SendTransactionToContract(ctx context.Context, contractAddress, abi, method string, params []string, privateKey string, gasLimit uint64) (string, error)
 	SendTransaction(ctx context.Context, tx *types.Transaction) error
@@ -25,8 +23,9 @@ type EthClient interface {
 	SendETH(ctx context.Context, privateKeyHex, toAddress string, amount *big.Int) (string, error)
 	PendingNonceAt(ctx context.Context, account common.Address) (uint64, error)
 	GetContract(ctx context.Context, contractAddress string) (string, string, error)
-	GetAccounts(ctx context.Context, userId string) ([]*models.WalletTable, error)
-	DeployIjazahContract(ctx context.Context, userId, password string) (contracAddress string, txHash string, err error)
+	GenerateNewAccount(ctx context.Context, userId int32, password string) (map[string]interface{}, error)
+	DeployIjazahContract(ctx context.Context, privateKeyHex string) (contracAddress string, txHash string, err error)
+	// GetAccounts(ctx context.Context, userId int32, schemaname string) ([]*models.Account, error)
 }
 
 // Antarmuka untuk fitur Quorum tambahan

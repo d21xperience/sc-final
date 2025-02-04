@@ -7,6 +7,7 @@ import (
 
 // Config untuk menentukan jenis blockchain dan URL
 type Config struct {
+	NetworkId      uint32
 	BlockchainType string // "ethereum" atau "quorum"
 	RPCURL         string // URL RPC node
 }

@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -80,17 +81,31 @@ func (r *GenericRepository[T]) FindAllByConditions(
 	var entities []*T
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
+	// Pastikan koneksi database aktif
+	sqlDB, err := r.db.DB()
+	if err != nil {
+		log.Fatal("Gagal mendapatkan koneksi database:", err)
+	}
+	if err = sqlDB.Ping(); err != nil {
+		log.Fatal("Database tidak terhubung:", err)
+	}
 
-	// Query ke database dengan kondisi WHERE
 	query := r.db.WithContext(ctx).
 		Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
 		Limit(limit).
 		Offset(offset)
 
+	// Debug: Lihat kondisi yang dikirim
+	fmt.Println("Kondisi Query:", conditions)
+
 	// Tambahkan kondisi WHERE jika ada
 	if len(conditions) > 0 {
 		query = query.Where(conditions)
 	}
+
+	// Debug: Lihat query sebelum eksekusi
+	dryRunQuery := query.Session(&gorm.Session{DryRun: true}).Find(&entities)
+	fmt.Println("Generated SQL:", dryRunQuery.Statement.SQL.String())
 
 	// Eksekusi query
 	if err := query.Find(&entities).Error; err != nil {

@@ -20,6 +20,7 @@ const state = {
   refreshToken: null,
   loading: false,
   error: null,
+  schemaname: ''
 };
 
 const mutations = {
@@ -53,6 +54,8 @@ const mutations = {
     localStorage.removeItem("user");
     localStorage.removeItem("sekolah");
     localStorage.removeItem("tabelTenant");
+    localStorage.removeItem("BCNETWORK");
+    localStorage.removeItem("BCACCOUNT");
   },
   SET_SEKOLAH(state, sekolah) {
     state.sekolah = sekolah;

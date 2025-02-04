@@ -3,12 +3,9 @@ package services
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log"
 	"math/big"
 
 	pb "sc-service/generated"
-	"sc-service/models"
 
 	"sc-service/utils"
 )
@@ -214,86 +211,26 @@ func (s *BlockchainService) GetContract(ctx context.Context, req *pb.GetContract
 	}, nil
 }
 
-func (s *BlockchainService) GenerateETHAccount(ctx context.Context, req *pb.GenerateETHAccountRequest) (*pb.GenerateETHAccountResponse, error) {
-	if s.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
-	// Daftar field yang wajib diisi
-	requiredFields := []string{"UserId", "Password"}
-	// Validasi request
-	err := utils.ValidateFields(req, requiredFields)
-	if err != nil {
-		return nil, err
-	}
-	if req.GetUserId() == "\"\"" || req.GetPassword() == "\"\"" {
-		return nil, errors.New("user dan password tidak boleh kosong")
-	}
-	cek, err := s.client.GetAccounts(ctx, req.GetUserId())
-	if err != nil {
-		return &pb.GenerateETHAccountResponse{
-			Status:          false,
-			ContractAddress: fmt.Sprintf("terjadi error %v", err),
-		}, nil
-	}
-	if len(cek) > 0 {
-		return &pb.GenerateETHAccountResponse{
-			Status:          false,
-			ContractAddress: "user sudah terdaftar",
-		}, nil
-	}
-	contractAddress, err := s.client.GenerateNewAccount(ctx, req.GetUserId(), req.GetPassword())
-	if err != nil {
-		log.Printf("Gagal membuat akun: %v", err)
-		return nil, fmt.Errorf("gagal membuat akun: %w", err)
-	}
-	// txHash := ""
-	return &pb.GenerateETHAccountResponse{
-		Status:          true,
-		ContractAddress: contractAddress,
-	}, nil
-}
-
-func (s *BlockchainService) GetETHAccount(ctx context.Context, req *pb.GetETHAccountRequest) (*pb.GetETHAccountResponse, error) {
-	if s.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
-	accounts, err := s.client.GetAccounts(ctx, req.GetUserId())
-	if err != nil {
-		log.Printf("Gagal mendapatkan akun: %v", err)
-		return nil, fmt.Errorf("gagal mendapatkan akun: %w", err)
-	}
-
-	results := utils.ConvertModelsToPB(accounts, func(model *models.WalletTable) *pb.Account {
-		return &pb.Account{
-			UserId:         model.UserId,
-			Address:        model.Address,
-			WalletFilename: model.WalletFilename,
-		}
-	})
-
-	return &pb.GetETHAccountResponse{
-		Status:   true,
-		Accounts: results,
-	}, nil
-}
-
 func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.DeployIjazahContractRequest) (*pb.DeployIjazahContractResponse, error) {
 	if s.client == nil {
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"UserId", "Password"}
+	requiredFields := []string{"AccountType", "PrivateKey",}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
+	// if req.AcountType == pb.AccountType_IMPORTED{
 
-	if req.GetUserId() == "\"\"" || req.GetPassword() == "\"\"" {
-		return nil, errors.New("user dan password tidak boleh kosong")
-	}
+	// }
 
-	contractAddress, txHash, err := s.client.DeployIjazahContract(ctx, req.GetUserId(), req.GetPassword())
+	// if req.GetUserId() == "\"\"" || req.GetPassword() == "\"\"" {
+	// 	return nil, errors.New("user dan password tidak boleh kosong")
+	// }
+
+	contractAddress, txHash, err := s.client.DeployIjazahContract(ctx, req.PrivateKey)
 	if err != nil {
 		return nil, err
 	}

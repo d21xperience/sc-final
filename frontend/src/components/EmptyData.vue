@@ -35,8 +35,8 @@ import { ref, onMounted, computed } from "vue";
 import ProgressSpinner from 'primevue/progressspinner';
 //  Deklarasi emit untuk mengirim event ke parent
 import { useStore } from "vuex";
-const emit = defineEmits(["profileFetched", "fetchError"]);
 const store = useStore();
+const emit = defineEmits(["profileFetched", "fetchError"]);
 const sekolah = ref(null)
 const fetchSekolah = async (sekolahID) => {
     try {
