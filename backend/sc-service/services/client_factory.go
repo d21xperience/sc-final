@@ -2,50 +2,53 @@ package services
 
 import (
 	"errors"
+	"fmt"
 )
 
-// CreateClientFactory adalah factory untuk membuat Ethereum atau Quorum client
-func CreateClientFactory(config *Config) (EthClient, error) {
-	// switch config.BlockchainType {
-	// case "ethereum":
-	// 	client, err := NewDefaultEthClient(config.RPCURL)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	return client, nil
-	// case "quorum":
-	// 	rpcURL := config.RPCURL
-	// 	ETHclient, err := NewDefaultEthClient(rpcURL)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	client, err := NewDefaultQuorumClient(rpcURL, ETHclient)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	return client, nil
-	// default:
-	// 	return nil, errors.New("BlockchainType tidak dikenal: gunakan 'ethereum' atau 'quorum'")
-	// }
-	switch config.NetworkId {
-	case 37:
-		client, err := NewDefaultEthClient(config.RPCURL)
-		if err != nil {
-			return nil, err
-		}
-		return client, nil
-	case 38:
-		rpcURL := config.RPCURL
-		ETHclient, err := NewDefaultEthClient(rpcURL)
-		if err != nil {
-			return nil, err
-		}
-		client, err := NewDefaultQuorumClient(rpcURL, ETHclient)
-		if err != nil {
-			return nil, err
-		}
-		return client, nil
-	default:
-		return nil, errors.New("BlockchainType tidak dikenal: gunakan 'ethereum' atau 'quorum'")
-	}
+// BlockchainClient interface umum untuk semua blockchain
+type BlockchainClient interface {
+	Connect() error
 }
+
+// BlockchainClientFactory mendefinisikan factory function
+type BlockchainClientFactory func(cfg *Config) (BlockchainClient, error)
+
+// Peta blockchain factories
+var blockchainFactories = map[string]BlockchainClientFactory{
+	"ethereum": NewEthereumClient,
+	// "quorum":   NewQuorumClient,
+	// "hyperledger": NewHyperledgerFabricClient,
+}
+
+// CreateClientFactory memilih blockchain berdasarkan runtime config
+func CreateClientFactory(cfg *Config) (BlockchainClient, error) {
+	if cfg == nil {
+		return nil, errors.New("config tidak boleh nil")
+	}
+
+	factory, exists := blockchainFactories[cfg.BlockchainType]
+	if !exists {
+		return nil, fmt.Errorf("BlockchainType tidak dikenali: %s", cfg.BlockchainType)
+	}
+	return factory(cfg)
+}
+
+// // NewQuorumClient membuat client Quorum
+// func NewQuorumClient(cfg *Config) (BlockchainClient, error) {
+// 	if cfg.RPCURL == "" {
+// 		return nil, errors.New("Quorum node URL is required")
+// 	}
+// 	return &QuorumClient{cfg.RPCURL}, nil
+// }
+
+
+// // QuorumClient adalah implementasi BlockchainClient untuk Quorum
+// type QuorumClient struct {
+// 	NodeURL string
+// }
+
+// // Connect implementasi koneksi ke Quorum
+// func (q *QuorumClient) Connect() error {
+// 	fmt.Println("Connecting to Quorum node at", q.NodeURL)
+// 	return nil
+// }

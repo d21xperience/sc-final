@@ -2,11 +2,10 @@
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'network_type') THEN
-        CREATE TYPE network_type AS ENUM ('MAINNET', 'TESTNET', 'PRIVATE');
+        CREATE TYPE network_type AS ENUM ('mainnet', 'testnet', 'private');
     END IF;
 END $$ LANGUAGE plpgsql;
 
--- Buat tabel untuk menyimpan informasi jaringan blockchain
 CREATE TABLE IF NOT EXISTS networks (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,  -- Nama jaringan (Ethereum, Polygon, BSC, dll.)
@@ -14,38 +13,41 @@ CREATE TABLE IF NOT EXISTS networks (
     rpc_url TEXT NOT NULL,              -- URL RPC jaringan (Infura, Alchemy, dll.)
     explorer_url TEXT,                   -- URL block explorer (Opsional)
     symbol VARCHAR(10) NOT NULL,         -- Simbol token utama (ETH, MATIC, BNB, dll.)
-    type network_type DEFAULT 'MAINNET', -- ENUM untuk jenis jaringan
+    type network_type DEFAULT 'mainnet', -- ENUM untuk jenis jaringan
     created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+    updated_at TIMESTAMP DEFAULT NOW(),
+    activate BOOLEAN NULL DEFAULT ', false',
+	 available BOOLEAN NULL DEFAULT ', false',
+    architecture VARCHAR(100) NULL DEFAULT 'EVM'
 );
 
 -- Insert data jaringan blockchain utama & PRIVATE
-INSERT INTO networks (name, chain_id, rpc_url, explorer_url, symbol,type)
+INSERT INTO networks (name, chain_id, rpc_url, explorer_url, symbol,TYPE, activate, available,architecture)
 VALUES 
     -- 🌍 PUBLIC MAINNET NETWORKS
-    ('Ethereum MAINNET', 1, 'https://MAINNET.infura.io/v3/YOUR_INFURA_KEY', 'https://etherscan.io', 'ETH', 'MAINNET'),
-    ('Binance Smart Chain MAINNET', 56, 'https://bsc-dataseed.binance.org', 'https://bscscan.com', 'BNB', 'MAINNET'),
-    ('Polygon MAINNET', 137, 'https://polygon-rpc.com', 'https://polygonscan.com', 'MATIC', 'MAINNET'),
-    ('Avalanche C-Chain', 43114, 'https://api.avax.network/ext/bc/C/rpc', 'https://snowtrace.io', 'AVAX', 'MAINNET'),
-    ('Fantom Opera', 250, 'https://rpcapi.fantom.network', 'https://ftmscan.com', 'FTM', 'MAINNET'),
-    ('Arbitrum One', 42161, 'https://arb1.arbitrum.io/rpc', 'https://arbiscan.io', 'ETH', 'MAINNET'),
-    ('Optimism MAINNET', 10, 'https://MAINNET.optimism.io', 'https://optimistic.etherscan.io', 'ETH', 'MAINNET'),
-    ('Cronos MAINNET', 25, 'https://evm.cronos.org', 'https://cronoscan.com', 'CRO','MAINNET'),
+    ('Ethereum MAINNET', 1, 'https://MAINNET.infura.io/v3/YOUR_INFURA_KEY', 'https://etherscan.io', 'ETH', 'mainnet', false,false,'EVM'),
+    ('Binance Smart Chain MAINNET', 56, 'https://bsc-dataseed.binance.org', 'https://bscscan.com', 'BNB', 'mainnet', false,false,'EVM'),
+    ('Polygon MAINNET', 137, 'https://polygon-rpc.com', 'https://polygonscan.com', 'MATIC', 'mainnet', false,false,'EVM'),
+    ('Avalanche C-Chain', 43114, 'https://api.avax.network/ext/bc/C/rpc', 'https://snowtrace.io', 'AVAX', 'mainnet', false,false,'EVM'),
+    ('Fantom Opera', 250, 'https://rpcapi.fantom.network', 'https://ftmscan.com', 'FTM', 'mainnet', false,false,'EVM'),
+    ('Arbitrum One', 42161, 'https://arb1.arbitrum.io/rpc', 'https://arbiscan.io', 'ETH', 'mainnet', false,false,'EVM'),
+    ('Optimism MAINNET', 10, 'https://MAINNET.optimism.io', 'https://optimistic.etherscan.io', 'ETH', 'mainnet', false,false,'EVM'),
+    ('Cronos MAINNET', 25, 'https://evm.cronos.org', 'https://cronoscan.com', 'CRO','mainnet', false,false,'EVM'),
     
     -- 🔬 TESTNET NETWORKS
-    ('Ethereum Goerli', 5, 'https://goerli.infura.io/v3/YOUR_INFURA_KEY', 'https://goerli.etherscan.io', 'ETH','TESTNET'),
-    ('Ethereum Sepolia', 11155111, 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY', 'https://sepolia.etherscan.io', 'ETH','TESTNET'),
-    ('Polygon Mumbai', 80001, 'https://rpc-mumbai.maticvigil.com', 'https://mumbai.polygonscan.com', 'MATIC','TESTNET'),
-    ('Avalanche Fuji', 43113, 'https://api.avax-test.network/ext/bc/C/rpc', 'https://TESTNET.snowtrace.io', 'AVAX','TESTNET'),
-    ('Fantom TESTNET', 4002, 'https://rpc.TESTNET.fantom.network', 'https://TESTNET.ftmscan.com', 'FTM','TESTNET'),
-    ('Arbitrum Goerli', 421613, 'https://goerli-rollup.arbitrum.io/rpc', 'https://goerli.arbiscan.io', 'ETH','TESTNET'),
-    ('Optimism Goerli', 420, 'https://goerli.optimism.io', 'https://goerli-optimistic.etherscan.io', 'ETH','TESTNET'),
+    ('Ethereum Goerli', 5, 'https://goerli.infura.io/v3/YOUR_INFURA_KEY', 'https://goerli.etherscan.io', 'ETH','testnet', false,false,'EVM'),
+    ('Ethereum Sepolia', 11155111, 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY', 'https://sepolia.etherscan.io', 'ETH','testnet', false,false,'EVM'),
+    ('Polygon Mumbai', 80001, 'https://rpc-mumbai.maticvigil.com', 'https://mumbai.polygonscan.com', 'MATIC','testnet', false,false,'EVM'),
+    ('Avalanche Fuji', 43113, 'https://api.avax-test.network/ext/bc/C/rpc', 'https://TESTNET.snowtrace.io', 'AVAX','testnet', false,false,'EVM'),
+    ('Fantom TESTNET', 4002, 'https://rpc.TESTNET.fantom.network', 'https://TESTNET.ftmscan.com', 'FTM','testnet', false,false,'EVM'),
+    ('Arbitrum Goerli', 421613, 'https://goerli-rollup.arbitrum.io/rpc', 'https://goerli.arbiscan.io', 'ETH','testnet', false,false,'EVM'),
+    ('Optimism Goerli', 420, 'https://goerli.optimism.io', 'https://goerli-optimistic.etherscan.io', 'ETH','testnet', false,false,'EVM'),
 
     -- 🔐 PRIVATE NETWORKS (Quorum, Hyperledger Fabric, dll.)
-    ('Quorum PRIVATE Network', -1, 'http://127.0.0.1:8545', NULL, 'ETH', 'PRIVATE'),
-    ('Hyperledger Fabric PRIVATE', -2, 'grpc://127.0.0.1:7051', NULL, 'FABRIC', 'PRIVATE'),
-    ('Corda PRIVATE Network', -3, 'http://127.0.0.1:10050', NULL, 'CORDA', 'PRIVATE'),
-    ('Binance Smart Chain PRIVATE', -4, 'http://127.0.0.1:8545', NULL, 'BNB', 'PRIVATE'),
-    ('Polygon Edge PRIVATE', -5, 'http://127.0.0.1:10002', NULL, 'MATIC', 'PRIVATE'),
-    ('Avalanche Subnet PRIVATE', -6, 'http://127.0.0.1:9650/ext/bc/C/rpc', NULL, 'AVAX', 'PRIVATE')
+    ('Quorum PRIVATE Network', -1, 'http://127.0.0.1:8545', NULL, 'ETH', 'private', false,false,'EVM'),
+    ('Hyperledger Fabric PRIVATE', -2, 'grpc://127.0.0.1:7051', NULL, 'FABRIC', 'private', false,false,'NONEVM'),
+    ('Corda PRIVATE Network', -3, 'http://127.0.0.1:10050', NULL, 'CORDA', 'private', FALSE, FALSE,'NONEVM'),
+    ('Binance Smart Chain PRIVATE', -4, 'http://127.0.0.1:8545', NULL, 'BNB', 'private', false,false,'EVM'),
+    ('Polygon Edge PRIVATE', -5, 'http://127.0.0.1:10002', NULL, 'MATIC', 'private', false,false,'EVM'),
+    ('Avalanche Subnet PRIVATE', -6, 'http://127.0.0.1:9650/ext/bc/C/rpc', NULL, 'AVAX', 'private', false,false,'EVM')
 ON CONFLICT (chain_id) DO NOTHING;

@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
+	"log"
 	"math/big"
 
 	pb "sc-service/generated"
@@ -25,26 +27,70 @@ func NewBlockchainService() *BlockchainService {
 
 // SetConfig: Mengatur konfigurasi blockchain
 func (s *BlockchainService) SetConfig(ctx context.Context, req *pb.SetConfigRequest) (*pb.SetConfigResponse, error) {
-	// Validasi input
-	if req.BlockchainType != "ethereum" && req.BlockchainType != "quorum" {
-		return nil, errors.New("blockchain_type harus 'ethereum' atau 'quorum'")
-	}
-
-	// Update konfigurasi runtime
-	s.config.BlockchainType = req.BlockchainType
-	s.config.RPCURL = req.RpcUrl
-
-	// Buat client sesuai konfigurasi
-	client, err := CreateClientFactory(s.config)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Network"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	s.client = client
+	// Load konfigurasi dari environment variables
+	cfg, err := LoadConfig()
+	if err != nil {
+		log.Fatalf("Gagal memuat konfigurasi: %v", err)
+	}
+	// Overwrite dengan nilai dari request
+	network := req.Network
+	if network.Architecture == "EVM" {
+		cfg.BlockchainType = "ethereum"
+	} else if network.Architecture == "NONEVM" {
+		cfg.BlockchainType = "hyperledger"
+	} else {
+		return nil, errors.New("blockchain_type harus 'ethereum' atau 'quorum'")
+	}
+	// Overwrite RPCURL jika ada dalam request
+	if network.RPCURL != "" {
+		cfg.RPCURL = network.RPCURL
+	}
 
+	// Buat blockchain client sesuai config
+	client, err := CreateClientFactory(cfg)
+	if err != nil {
+		log.Fatalf("Gagal membuat klien: %v", err)
+	}
+
+	// Connect ke blockchain
+	if err := client.Connect(); err != nil {
+		log.Fatalf("Gagal terhubung ke blockchain: %v", err)
+	}
+
+	fmt.Println("Berhasil terhubung ke blockchain:", cfg.BlockchainType)
 	return &pb.SetConfigResponse{
 		Message: "Konfigurasi blockchain berhasil diperbarui",
 	}, nil
 }
+
+// func (s *BlockchainService) SetConfig(ctx context.Context, req *pb.SetConfigRequest) (*pb.SetConfigResponse, error) {
+// 	// Validasi input
+// 	if req.BlockchainType != "ethereum" && req.BlockchainType != "quorum" {
+// 		return nil, errors.New("blockchain_type harus 'ethereum' atau 'quorum'")
+// 	}
+
+// 	// Update konfigurasi runtime
+// 	s.config.BlockchainType = req.BlockchainType
+// 	s.config.RPCURL = req.RpcUrl
+
+// 	// Buat client sesuai konfigurasi
+// 	client, err := CreateClientFactory(s.config)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	s.client = client
+
+// 	return &pb.SetConfigResponse{
+// 		Message: "Konfigurasi blockchain berhasil diperbarui",
+// 	}, nil
+// }
 
 // GetNetworkID: Mendapatkan Network ID dari blockchain
 func (s *BlockchainService) GetNetworkID(ctx context.Context, _ *pb.Empty) (*pb.NetworkIDResponse, error) {
@@ -58,7 +104,7 @@ func (s *BlockchainService) GetNetworkID(ctx context.Context, _ *pb.Empty) (*pb.
 	}
 
 	return &pb.NetworkIDResponse{
-		NetworkId: networkID.String(),
+		NetworkId: uint32(networkID.Uint64()),
 	}, nil
 }
 
@@ -216,7 +262,7 @@ func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.De
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"AccountType", "PrivateKey",}
+	requiredFields := []string{"AccountType", "PrivateKey"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {

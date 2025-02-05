@@ -38,7 +38,6 @@ type WalletTransaction struct {
 // 	Address        string
 // 	Name           string //Nama wallet
 // 	WalletFilename string
-
 // 	// PrivateKey string
 // 	// PublicKey string
 // }
@@ -57,7 +56,9 @@ type Network struct {
 	// kolom Activate digunakan untuk menampilkan jaringan pada saat pemilihan jaringan
 	Activate bool `gorm:"default:false"`
 	// kolom NetworkAvailable digunakan jika logic bisnis sudah dibuat, saat ini baru tersedia ethereum, quorum dan hyperledger fabric
-	Available bool `gorm:"default:false"`
+	Available    bool   `gorm:"default:false"`
+	Architecture string `gorm:"size:100;not null"` // Nama jaringan (Ethereum, Polygon, BSC)
+
 	// Digunakan untuk menampilkan jaringan secara default
 }
 

@@ -38,7 +38,7 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 		pesertaDidikID, err := uuid.Parse(nilai.AnggotaRombelId)
 		if err != nil {
 			log.Printf("Invalid UUID for AnggotaRombelID: %v", err)
-		}
+		} 
 		return &models.NilaiAkhir{
 			IDNilaiAkhir:    uuid.New(),
 			AnggotaRombelID: &anggotaRombelID,

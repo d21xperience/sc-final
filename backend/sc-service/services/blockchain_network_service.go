@@ -15,7 +15,6 @@ import (
 type BlockchainNetworkService struct {
 	pb.UnimplementedBlockchainNetworkServiceServer
 	config *Config // Konfigurasi runtime
-	// client EthClient // Client yang digunakan (Ethereum/Quorum)
 	repo *repositories.GenericRepository[models.Network]
 }
 
@@ -122,13 +121,50 @@ func (s *BlockchainNetworkService) GetBCNetwork(ctx context.Context, req *pb.Get
 	}, nil
 }
 func (s *BlockchainNetworkService) UpdateBCNetwork(ctx context.Context, req *pb.UpdateBCNetworkRequest) (*pb.UpdateBCNetworkResponse, error) {
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"network"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	coba := req.GetNetwork()
+	modelAkun := utils.ConvertModelToPB(coba, func(model *pb.BCNetwork) *models.Network {
+		return &models.Network{
+			Name:        model.Name,
+			RPCURL:      model.RPCURL,
+			ExplorerURL: model.ExplorerURL,
+			Activate:    model.Activate,
+			Available:   model.Available,
+			Symbol:      model.Symbol,
+		}
+	})
 
+	str := utils.ConvertUintToString(req.Network.Id)
+	err = s.repo.Update(ctx, modelAkun, "public", "id", str)
+	if err != nil {
+		return nil, err
+	}
 	return &pb.UpdateBCNetworkResponse{
 		Status:  true,
 		Message: "sukses",
 	}, nil
 }
+
 func (s *BlockchainNetworkService) DeleteBCNetwork(ctx context.Context, req *pb.DeleteNetworkRequest) (*pb.DeleteNetworkResponse, error) {
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"NetworkId"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	id_network := utils.ConvertUintToString(req.NetworkId)
+
+	err = s.repo.Delete(ctx, id_network, "public", "id")
+	if err != nil {
+		return nil, err
+	}
 	return &pb.DeleteNetworkResponse{
 		Status:  true,
 		Message: "suskes",
