@@ -14,14 +14,16 @@ import (
 
 type BlockchainService struct {
 	pb.UnimplementedBlockchainServiceServer
-	config *Config   // Konfigurasi runtime
-	client EthClient // Client yang digunakan (Ethereum/Quorum)
+	config *Config // Konfigurasi runtime
+	client *EthereumClient
+	// client EthClient // Client yang digunakan (Ethereum/Quorum)
 }
 
 // Constructor untuk BlockchainService
 func NewBlockchainService() *BlockchainService {
 	return &BlockchainService{
 		config: &Config{},
+		client: &EthereumClient{},
 	}
 }
 
@@ -61,12 +63,13 @@ func (s *BlockchainService) SetConfig(ctx context.Context, req *pb.SetConfigRequ
 
 	// Connect ke blockchain
 	if err := client.Connect(); err != nil {
-		log.Fatalf("Gagal terhubung ke blockchain: %v", err)
+		return nil, errors.New("gagal terhubung ke blockhain")
+		// log.Fatalf("Gagal terhubung ke blockchain: %v", err)
 	}
-
-	fmt.Println("Berhasil terhubung ke blockchain:", cfg.BlockchainType)
+	// s.client = client.
 	return &pb.SetConfigResponse{
-		Message: "Konfigurasi blockchain berhasil diperbarui",
+		Message: fmt.Sprintf("berhasil terhubung ke blockchain:%s ", cfg.BlockchainType),
+		// Message: "Konfigurasi blockchain berhasil diperbarui",
 	}, nil
 }
 
@@ -110,7 +113,7 @@ func (s *BlockchainService) GetNetworkID(ctx context.Context, _ *pb.Empty) (*pb.
 
 // GetContractEvents: Mendapatkan daftar event dari smart contract
 func (s *BlockchainService) GetContractEvents(ctx context.Context, req *pb.GetContractEventsRequest) (*pb.GetContractEventsResponse, error) {
-	if s.client == nil {
+	if s.client.client == nil {
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 
@@ -127,7 +130,7 @@ func (s *BlockchainService) GetContractEvents(ctx context.Context, req *pb.GetCo
 
 // TransferToken: Mengirim token ERC20 dari satu alamat ke alamat lain
 func (s *BlockchainService) TransferToken(ctx context.Context, req *pb.TransferTokenRequest) (*pb.TransferTokenResponse, error) {
-	if s.client == nil {
+	if s.client.client == nil {
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 
@@ -144,7 +147,7 @@ func (s *BlockchainService) TransferToken(ctx context.Context, req *pb.TransferT
 
 // SendETH: Mengirim ETH dari satu alamat ke alamat lain
 func (s *BlockchainService) SendETH(ctx context.Context, req *pb.SendETHRequest) (*pb.SendETHResponse, error) {
-	if s.client == nil {
+	if s.client.client == nil {
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 	// Daftar field yang wajib diisi
@@ -173,7 +176,7 @@ func (s *BlockchainService) SendETH(ctx context.Context, req *pb.SendETHRequest)
 
 // GetTokenBalance: Mendapatkan saldo token ERC20 dari smart contract
 func (s *BlockchainService) GetTokenBalance(ctx context.Context, req *pb.GetTokenBalanceRequest) (*pb.GetTokenBalanceResponse, error) {
-	if s.client == nil {
+	if s.client.client == nil {
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 	// Daftar field yang wajib diisi
@@ -200,7 +203,7 @@ func (s *BlockchainService) GetTokenBalance(ctx context.Context, req *pb.GetToke
 
 // CallContractMethod: Memanggil fungsi read-only pada smart contract
 func (s *BlockchainService) CallContractMethod(ctx context.Context, req *pb.CallContractMethodRequest) (*pb.CallContractMethodResponse, error) {
-	if s.client == nil {
+	if s.client.client == nil {
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 
@@ -217,7 +220,7 @@ func (s *BlockchainService) CallContractMethod(ctx context.Context, req *pb.Call
 
 // GetContractOwner: Mendapatkan alamat pemilik dari smart contract (jika ada)
 func (s *BlockchainService) GetContractOwner(ctx context.Context, req *pb.GetContractOwnerRequest) (*pb.GetContractOwnerResponse, error) {
-	if s.client == nil {
+	if s.client.client == nil {
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 
@@ -234,7 +237,7 @@ func (s *BlockchainService) GetContractOwner(ctx context.Context, req *pb.GetCon
 
 // GetContract: Mendapatkan informasi contract dari blockchain
 func (s *BlockchainService) GetContract(ctx context.Context, req *pb.GetContractRequest) (*pb.GetContractResponse, error) {
-	if s.client == nil {
+	if s.client.client == nil {
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 	// Daftar field yang wajib diisi
@@ -258,7 +261,7 @@ func (s *BlockchainService) GetContract(ctx context.Context, req *pb.GetContract
 }
 
 func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.DeployIjazahContractRequest) (*pb.DeployIjazahContractResponse, error) {
-	if s.client == nil {
+	if s.client.client == nil {
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 	// Daftar field yang wajib diisi
@@ -289,7 +292,7 @@ func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.De
 
 // SendTransactionToContract: Mengirim data ke smart contract dengan memanggil fungsi tertentu
 // func (s *BlockchainService) SendTransactionToContract(ctx context.Context, req *pb.SendTransactionToContractRequest) (*pb.SendTransactionToContractResponse, error) {
-// 	if s.client == nil {
+// 	if s.client.client == nil {
 // 		return nil, errors.New("client belum dikonfigurasi")
 // 	}
 
@@ -324,7 +327,7 @@ func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.De
 
 // ApproveToken: Memberikan izin kepada smart contract lain untuk menggunakan token ERC20
 // func (s *BlockchainService) ApproveToken(ctx context.Context, req *pb.ApproveTokenRequest) (*pb.ApproveTokenResponse, error) {
-// 	if s.client == nil {
+// 	if s.client.client == nil {
 // 		return nil, errors.New("client belum dikonfigurasi")
 // 	}
 
@@ -340,7 +343,7 @@ func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.De
 // }
 // GetTokenAllowance: Mengecek jumlah token ERC20 yang telah diizinkan untuk digunakan oleh smart contract lain
 // func (s *BlockchainService) GetTokenAllowance(ctx context.Context, req *pb.GetTokenAllowanceRequest) (*pb.GetTokenAllowanceResponse, error) {
-// 	if s.client == nil {
+// 	if s.client.client == nil {
 // 		return nil, errors.New("client belum dikonfigurasi")
 // 	}
 
@@ -357,7 +360,7 @@ func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.De
 
 // // GetGasPrice: Mendapatkan harga gas saat ini di jaringan blockchain
 // func (s *BlockchainService) GetGasPrice(ctx context.Context, req *pb.GetGasPriceRequest) (*pb.GetGasPriceResponse, error) {
-// 	if s.client == nil {
+// 	if s.client.client == nil {
 // 		return nil, errors.New("client belum dikonfigurasi")
 // 	}
 
@@ -374,7 +377,7 @@ func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.De
 
 // // GetNonce: Mendapatkan nonce dari alamat tertentu
 // func (s *BlockchainService) GetNonce(ctx context.Context, req *pb.GetNonceRequest) (*pb.GetNonceResponse, error) {
-// 	if s.client == nil {
+// 	if s.client.client == nil {
 // 		return nil, errors.New("client belum dikonfigurasi")
 // 	}
 
@@ -389,7 +392,7 @@ func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.De
 // }
 
 // func (s *BlockchainService) validateRequest(req any, requiredFields []string, checkEmptyFields map[string]func() string) error {
-// 	if s.client == nil {
+// 	if s.client.client == nil {
 // 		return errors.New("client belum dikonfigurasi")
 // 	}
 

@@ -3,7 +3,7 @@ module sc-service
 go 1.22.3
 
 require (
-	github.com/ethereum/go-ethereum v1.14.11
+	github.com/ethereum/go-ethereum v1.14.13
 	github.com/gin-gonic/gin v1.10.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0
 	github.com/hyperledger/fabric-sdk-go v1.0.0
@@ -25,7 +25,6 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bits-and-blooms/bitset v1.13.0 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
-	github.com/btcsuite/btcd/btcec/v2 v2.3.4 // indirect
 	github.com/bytedance/sonic v1.12.5 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect

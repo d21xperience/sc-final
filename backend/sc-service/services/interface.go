@@ -28,9 +28,9 @@ type EthClient interface {
 	// GetAccounts(ctx context.Context, userId int32, schemaname string) ([]*models.Account, error)
 }
 
-// Antarmuka untuk fitur Quorum tambahan
-type QuorumClient interface {
-	SendPrivateTransaction(ctx context.Context, tx *types.Transaction) (string, error) // Menggunakan *types.Transaction
-	GetPrivateContract(ctx context.Context, address string, payload []byte) ([]byte, error)
-	GetConsensusAlgorithm(ctx context.Context) (string, error)
-}
+// // Antarmuka untuk fitur Quorum tambahan
+// type QuorumClient interface {
+// 	SendPrivateTransaction(ctx context.Context, tx *types.Transaction) (string, error) // Menggunakan *types.Transaction
+// 	GetPrivateContract(ctx context.Context, address string, payload []byte) ([]byte, error)
+// 	GetConsensusAlgorithm(ctx context.Context) (string, error)
+// }
