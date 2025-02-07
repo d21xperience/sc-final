@@ -6,6 +6,7 @@ BEGIN
     END IF;
 END $$ LANGUAGE plpgsql;
 
+
 CREATE TABLE IF NOT EXISTS networks (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,  -- Nama jaringan (Ethereum, Polygon, BSC, dll.)
@@ -16,8 +17,8 @@ CREATE TABLE IF NOT EXISTS networks (
     type network_type DEFAULT 'mainnet', -- ENUM untuk jenis jaringan
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
-    activate BOOLEAN NULL DEFAULT ', false',
-	 available BOOLEAN NULL DEFAULT ', false',
+    activate BOOLEAN NULL DEFAULT false,
+	 available BOOLEAN NULL DEFAULT false,
     architecture VARCHAR(100) NULL DEFAULT 'EVM'
 );
 

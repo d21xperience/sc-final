@@ -1,50 +1,17 @@
 package services
 
-import (
-	"context"
-	"fmt"
-	"log"
-	"math/big"
-	"strings"
-
-	"github.com/ethereum/go-ethereum/accounts/abi"
-)
-
 // ContractService adalah service untuk interaksi dengan smart contract
-type ContractService struct {
-	client EthClient
-}
+// type ContractService struct {
+// 	client EthClient
+// }
 
-type SenderInfo struct {
-}
+// type SenderInfo struct {
+// }
 
-// Constructor untuk ContractService
-func NewContractService(client EthClient) *ContractService {
-	return &ContractService{client: client}
-}
-
-// issueDegree mengeluarkan ijazah dengan dependency injection
-func (s *ContractService) IssueDegree(contractAddress string, degreeHash [32]byte, sekolah string, issueDate uint64, privateKey string, gasLimit uint64) {
-	//  Load ABI
-	parsedABI, err := abi.JSON(strings.NewReader(abiJSON))
-	if err != nil {
-		log.Fatalf("Error parsing ABI: %v", err)
-	}
-
-	//  Encode data untuk fungsi `issueDegree`
-	data, err := parsedABI.Pack("issueDegree", degreeHash, sekolah, big.NewInt(int64(issueDate)))
-	if err != nil {
-		log.Fatalf("Error packing data: %v", err)
-	}
-
-	//  Kirim transaksi menggunakan SendTransactionToContract
-	txHash, err := SendTransactionToContract(context.Background(), s.client, contractAddress, data, privateKey, gasLimit)
-	if err != nil {
-		log.Fatalf("Transaction failed: %v", err)
-	}
-
-	fmt.Printf("Ijazah berhasil dikeluarkan! TxHash: %s\n", txHash)
-}
+// // Constructor untuk ContractService
+// func NewContractService(client EthClient) *ContractService {
+// 	return &ContractService{client: client}
+// }
 
 // Fungsi untuk menambahkan transkrip nilai
 // func (s *ContractService) AddTranscript(degreeHash [32]byte, mataPelajaran []string, nilai []uint8) {

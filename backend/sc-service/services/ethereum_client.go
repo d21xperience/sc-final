@@ -39,6 +39,9 @@ type EthereumClient struct {
 }
 
 func NewEthereumClient(cfg *Config) (BlockchainClient, error) {
+	if cfg.RPCURL == "" {
+		return nil, fmt.Errorf("ethereum RPC URL tidak boleh kosong")
+	}
 	// Buat koneksi RPC
 	rpcClient, err := rpc.Dial(cfg.RPCURL)
 	if err != nil {
@@ -57,6 +60,10 @@ func NewEthereumClient(cfg *Config) (BlockchainClient, error) {
 
 // Connect menghubungkan ke jaringan Ethereum
 func (e *EthereumClient) Connect() error {
+	_, err := e.client.NetworkID(context.Background())
+	if err != nil {
+		return fmt.Errorf("gagal terhubung ke jaringan Ethereum: %w", err)
+	}
 	// Cek koneksi dengan mendapatkan block terbaru
 	header, err := e.client.HeaderByNumber(context.Background(), nil)
 	if err != nil {
@@ -645,6 +652,29 @@ func (c *EthereumClient) DeployIjazahContract(ctx context.Context, privateKeyHex
 // 	// Dapatkan alamat Ethereum dari public key
 // 	address := crypto.PubkeyToAddress(*publicKey)
 
-// 	return address, privateKey, nil
-// }
+//		return address, privateKey, nil
+//	}
+//
 // =============================
+// IssueDegree mengeluarkan ijazah di Ethereum
+func (e *EthereumClient) IssueDegree(ctx context.Context, contractAddress string, degreeHash [32]byte, sekolah string, issueDate uint64, privateKey string, gasLimit uint64) (string, error) {
+	//  Load ABI
+	parsedABI, err := abi.JSON(strings.NewReader(abiJSON))
+	if err != nil {
+		return "", fmt.Errorf("error parsing ABI: %v", err)
+	}
+
+	//  Encode data untuk fungsi `issueDegree`
+	data, err := parsedABI.Pack("issueDegree", degreeHash, sekolah, big.NewInt(int64(issueDate)))
+	if err != nil {
+		return "", fmt.Errorf("error packing data: %v", err)
+	}
+
+	//  Kirim transaksi menggunakan SendTransactionToContract
+	txHash, err := SendTransactionToContract(ctx, e, contractAddress, data, privateKey, gasLimit)
+	if err != nil {
+		return "", fmt.Errorf("transaction failed: %v", err)
+	}
+
+	return txHash, nil
+}

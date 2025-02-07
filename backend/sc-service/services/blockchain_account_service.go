@@ -16,7 +16,7 @@ import (
 type BlockchainAccountService struct {
 	pb.UnimplementedBlockchainAccountServiceServer
 	config   *Config   // Konfigurasi runtime
-	client   EthClient // Client yang digunakan (Ethereum/Quorum)
+	client   BlockchainClient // Client yang digunakan (Ethereum/Quorum)
 	schema   SchemaService
 	repoAkun *repositories.GenericRepository[models.Account]
 }

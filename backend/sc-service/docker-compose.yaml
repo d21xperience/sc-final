@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   sc_db:
     image: postgres:15-alpine
@@ -14,12 +13,12 @@ services:
       - sc_db_data:/var/lib/postgresql/data
       - ./db-init:/docker-entrypoint-initdb.d
 
-  sc_redis:
-    image: redis:alpine
-    container_name: sc_redis_container
-    restart: always
-    ports:
-      - "${SCREDIS_PORT}:6379"
+  # sc_redis:
+  #   image: redis:alpine
+  #   container_name: sc_redis_container
+  #   restart: always
+  #   ports:
+  #     - "${SCREDIS_PORT}:6379"
 
 volumes:
   sc_db_data:

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"math/big"
 
 	pb "sc-service/generated"
 
@@ -15,15 +14,14 @@ import (
 type BlockchainService struct {
 	pb.UnimplementedBlockchainServiceServer
 	config *Config // Konfigurasi runtime
-	client *EthereumClient
-	// client EthClient // Client yang digunakan (Ethereum/Quorum)
+	client BlockchainClient
 }
 
 // Constructor untuk BlockchainService
 func NewBlockchainService() *BlockchainService {
 	return &BlockchainService{
 		config: &Config{},
-		client: &EthereumClient{},
+		client: nil,
 	}
 }
 
@@ -60,40 +58,17 @@ func (s *BlockchainService) SetConfig(ctx context.Context, req *pb.SetConfigRequ
 	if err != nil {
 		log.Fatalf("Gagal membuat klien: %v", err)
 	}
-
 	// Connect ke blockchain
 	if err := client.Connect(); err != nil {
 		return nil, errors.New("gagal terhubung ke blockhain")
 		// log.Fatalf("Gagal terhubung ke blockchain: %v", err)
 	}
-	// s.client = client.
+	s.client = client
 	return &pb.SetConfigResponse{
 		Message: fmt.Sprintf("berhasil terhubung ke blockchain:%s ", cfg.BlockchainType),
 		// Message: "Konfigurasi blockchain berhasil diperbarui",
 	}, nil
 }
-
-// func (s *BlockchainService) SetConfig(ctx context.Context, req *pb.SetConfigRequest) (*pb.SetConfigResponse, error) {
-// 	// Validasi input
-// 	if req.BlockchainType != "ethereum" && req.BlockchainType != "quorum" {
-// 		return nil, errors.New("blockchain_type harus 'ethereum' atau 'quorum'")
-// 	}
-
-// 	// Update konfigurasi runtime
-// 	s.config.BlockchainType = req.BlockchainType
-// 	s.config.RPCURL = req.RpcUrl
-
-// 	// Buat client sesuai konfigurasi
-// 	client, err := CreateClientFactory(s.config)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	s.client = client
-
-// 	return &pb.SetConfigResponse{
-// 		Message: "Konfigurasi blockchain berhasil diperbarui",
-// 	}, nil
-// }
 
 // GetNetworkID: Mendapatkan Network ID dari blockchain
 func (s *BlockchainService) GetNetworkID(ctx context.Context, _ *pb.Empty) (*pb.NetworkIDResponse, error) {
@@ -112,183 +87,183 @@ func (s *BlockchainService) GetNetworkID(ctx context.Context, _ *pb.Empty) (*pb.
 }
 
 // GetContractEvents: Mendapatkan daftar event dari smart contract
-func (s *BlockchainService) GetContractEvents(ctx context.Context, req *pb.GetContractEventsRequest) (*pb.GetContractEventsResponse, error) {
-	if s.client.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
+// func (s *BlockchainService) GetContractEvents(ctx context.Context, req *pb.GetContractEventsRequest) (*pb.GetContractEventsResponse, error) {
+// 	if s.client == nil {
+// 		return nil, errors.New("client belum dikonfigurasi")
+// 	}
 
-	// Panggil client untuk mendapatkan event logs
-	events, err := s.client.GetContractEvents(ctx, req.ContractAddress, req.Abi, req.EventName, req.FromBlock, req.ToBlock)
-	if err != nil {
-		return nil, err
-	}
+// 	// Panggil client untuk mendapatkan event logs
+// 	events, err := s.client.GetContractEvents(ctx, req.ContractAddress, req.Abi, req.EventName, req.FromBlock, req.ToBlock)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &pb.GetContractEventsResponse{
-		Events: events,
-	}, nil
-}
+// 	return &pb.GetContractEventsResponse{
+// 		Events: events,
+// 	}, nil
+// }
 
-// TransferToken: Mengirim token ERC20 dari satu alamat ke alamat lain
-func (s *BlockchainService) TransferToken(ctx context.Context, req *pb.TransferTokenRequest) (*pb.TransferTokenResponse, error) {
-	if s.client.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
+// // TransferToken: Mengirim token ERC20 dari satu alamat ke alamat lain
+// func (s *BlockchainService) TransferToken(ctx context.Context, req *pb.TransferTokenRequest) (*pb.TransferTokenResponse, error) {
+// 	if s.client.client == nil {
+// 		return nil, errors.New("client belum dikonfigurasi")
+// 	}
 
-	// Panggil fungsi transfer pada smart contract ERC20
-	txHash, err := s.client.TransferToken(ctx, req.TokenAddress, req.From, req.To, req.Amount, req.PrivateKey, req.GasLimit)
-	if err != nil {
-		return nil, err
-	}
+// 	// Panggil fungsi transfer pada smart contract ERC20
+// 	txHash, err := s.client.TransferToken(ctx, req.TokenAddress, req.From, req.To, req.Amount, req.PrivateKey, req.GasLimit)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &pb.TransferTokenResponse{
-		TxHash: txHash,
-	}, nil
-}
+// 	return &pb.TransferTokenResponse{
+// 		TxHash: txHash,
+// 	}, nil
+// }
 
-// SendETH: Mengirim ETH dari satu alamat ke alamat lain
-func (s *BlockchainService) SendETH(ctx context.Context, req *pb.SendETHRequest) (*pb.SendETHResponse, error) {
-	if s.client.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
-	// Daftar field yang wajib diisi
-	requiredFields := []string{"From", "To", "Amount", "PrivateKey"}
-	// Validasi request
-	err := utils.ValidateFields(req, requiredFields)
-	if err != nil {
-		return nil, err
-	}
+// // SendETH: Mengirim ETH dari satu alamat ke alamat lain
+// func (s *BlockchainService) SendETH(ctx context.Context, req *pb.SendETHRequest) (*pb.SendETHResponse, error) {
+// 	if s.client.client == nil {
+// 		return nil, errors.New("client belum dikonfigurasi")
+// 	}
+// 	// Daftar field yang wajib diisi
+// 	requiredFields := []string{"From", "To", "Amount", "PrivateKey"}
+// 	// Validasi request
+// 	err := utils.ValidateFields(req, requiredFields)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	amount := new(big.Int)
-	amount, ok := amount.SetString(req.Amount, 10)
-	if !ok {
-		return nil, errors.New("gagal mengonversi amount ke *big.Int")
-	}
-	// Kirim transaksi ETH
-	txHash, err := s.client.SendETH(ctx, req.PrivateKey, req.To, amount)
-	if err != nil {
-		return nil, err
-	}
+// 	amount := new(big.Int)
+// 	amount, ok := amount.SetString(req.Amount, 10)
+// 	if !ok {
+// 		return nil, errors.New("gagal mengonversi amount ke *big.Int")
+// 	}
+// 	// Kirim transaksi ETH
+// 	txHash, err := s.client.SendETH(ctx, req.PrivateKey, req.To, amount)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &pb.SendETHResponse{
-		TxHash: txHash,
-	}, nil
-}
+// 	return &pb.SendETHResponse{
+// 		TxHash: txHash,
+// 	}, nil
+// }
 
-// GetTokenBalance: Mendapatkan saldo token ERC20 dari smart contract
-func (s *BlockchainService) GetTokenBalance(ctx context.Context, req *pb.GetTokenBalanceRequest) (*pb.GetTokenBalanceResponse, error) {
-	if s.client.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
-	// Daftar field yang wajib diisi
-	requiredFields := []string{"TokenAddress", "OwnerAddress"}
-	// Validasi request
-	err := utils.ValidateFields(req, requiredFields)
-	if err != nil {
-		return nil, err
-	}
-	if req.TokenAddress == "\"\"" || req.OwnerAddress == "\"\"" {
-		return nil, errors.New("token dan owner address tidak boleh kosong")
-	}
+// // GetTokenBalance: Mendapatkan saldo token ERC20 dari smart contract
+// func (s *BlockchainService) GetTokenBalance(ctx context.Context, req *pb.GetTokenBalanceRequest) (*pb.GetTokenBalanceResponse, error) {
+// 	if s.client.client == nil {
+// 		return nil, errors.New("client belum dikonfigurasi")
+// 	}
+// 	// Daftar field yang wajib diisi
+// 	requiredFields := []string{"TokenAddress", "OwnerAddress"}
+// 	// Validasi request
+// 	err := utils.ValidateFields(req, requiredFields)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	if req.TokenAddress == "\"\"" || req.OwnerAddress == "\"\"" {
+// 		return nil, errors.New("token dan owner address tidak boleh kosong")
+// 	}
 
-	// Panggil fungsi "balanceOf" dari kontrak ERC20
-	balance, err := s.client.GetTokenBalance(ctx, req.TokenAddress, req.OwnerAddress)
-	if err != nil {
-		return nil, err
-	}
+// 	// Panggil fungsi "balanceOf" dari kontrak ERC20
+// 	balance, err := s.client.GetTokenBalance(ctx, req.TokenAddress, req.OwnerAddress)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &pb.GetTokenBalanceResponse{
-		Balance: balance.String(),
-	}, nil
-}
+// 	return &pb.GetTokenBalanceResponse{
+// 		Balance: balance.String(),
+// 	}, nil
+// }
 
-// CallContractMethod: Memanggil fungsi read-only pada smart contract
-func (s *BlockchainService) CallContractMethod(ctx context.Context, req *pb.CallContractMethodRequest) (*pb.CallContractMethodResponse, error) {
-	if s.client.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
+// // CallContractMethod: Memanggil fungsi read-only pada smart contract
+// func (s *BlockchainService) CallContractMethod(ctx context.Context, req *pb.CallContractMethodRequest) (*pb.CallContractMethodResponse, error) {
+// 	if s.client.client == nil {
+// 		return nil, errors.New("client belum dikonfigurasi")
+// 	}
 
-	// Panggil client untuk membaca data dari smart contract
-	result, err := s.client.CallContractMethod(ctx, req.ContractAddress, req.Abi, req.Method, req.Params)
-	if err != nil {
-		return nil, err
-	}
+// 	// Panggil client untuk membaca data dari smart contract
+// 	result, err := s.client.CallContractMethod(ctx, req.ContractAddress, req.Abi, req.Method, req.Params)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &pb.CallContractMethodResponse{
-		Result: result,
-	}, nil
-}
+// 	return &pb.CallContractMethodResponse{
+// 		Result: result,
+// 	}, nil
+// }
 
-// GetContractOwner: Mendapatkan alamat pemilik dari smart contract (jika ada)
-func (s *BlockchainService) GetContractOwner(ctx context.Context, req *pb.GetContractOwnerRequest) (*pb.GetContractOwnerResponse, error) {
-	if s.client.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
+// // GetContractOwner: Mendapatkan alamat pemilik dari smart contract (jika ada)
+// func (s *BlockchainService) GetContractOwner(ctx context.Context, req *pb.GetContractOwnerRequest) (*pb.GetContractOwnerResponse, error) {
+// 	if s.client.client == nil {
+// 		return nil, errors.New("client belum dikonfigurasi")
+// 	}
 
-	// Panggil fungsi "owner()" pada smart contract
-	owner, err := s.client.CallContractMethod(ctx, req.ContractAddress, req.Abi, "owner", nil)
-	if err != nil {
-		return nil, err
-	}
+// 	// Panggil fungsi "owner()" pada smart contract
+// 	owner, err := s.client.CallContractMethod(ctx, req.ContractAddress, req.Abi, "owner", nil)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &pb.GetContractOwnerResponse{
-		OwnerAddress: owner,
-	}, nil
-}
+// 	return &pb.GetContractOwnerResponse{
+// 		OwnerAddress: owner,
+// 	}, nil
+// }
 
-// GetContract: Mendapatkan informasi contract dari blockchain
-func (s *BlockchainService) GetContract(ctx context.Context, req *pb.GetContractRequest) (*pb.GetContractResponse, error) {
-	if s.client.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
-	// Daftar field yang wajib diisi
-	requiredFields := []string{"ContractAddress"}
-	// Validasi request
-	err := utils.ValidateFields(req, requiredFields)
-	if err != nil {
-		return nil, err
-	}
-	// Panggil client untuk mendapatkan informasi contract
-	bytecode, abi, err := s.client.GetContract(ctx, req.ContractAddress)
-	if err != nil {
-		return nil, err
-	}
+// // GetContract: Mendapatkan informasi contract dari blockchain
+// func (s *BlockchainService) GetContract(ctx context.Context, req *pb.GetContractRequest) (*pb.GetContractResponse, error) {
+// 	if s.client.client == nil {
+// 		return nil, errors.New("client belum dikonfigurasi")
+// 	}
+// 	// Daftar field yang wajib diisi
+// 	requiredFields := []string{"ContractAddress"}
+// 	// Validasi request
+// 	err := utils.ValidateFields(req, requiredFields)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	// Panggil client untuk mendapatkan informasi contract
+// 	bytecode, abi, err := s.client.GetContract(ctx, req.ContractAddress)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &pb.GetContractResponse{
-		ContractAddress: req.ContractAddress,
-		Bytecode:        bytecode,
-		Abi:             abi,
-	}, nil
-}
+// 	return &pb.GetContractResponse{
+// 		ContractAddress: req.ContractAddress,
+// 		Bytecode:        bytecode,
+// 		Abi:             abi,
+// 	}, nil
+// }
 
-func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.DeployIjazahContractRequest) (*pb.DeployIjazahContractResponse, error) {
-	if s.client.client == nil {
-		return nil, errors.New("client belum dikonfigurasi")
-	}
-	// Daftar field yang wajib diisi
-	requiredFields := []string{"AccountType", "PrivateKey"}
-	// Validasi request
-	err := utils.ValidateFields(req, requiredFields)
-	if err != nil {
-		return nil, err
-	}
-	// if req.AcountType == pb.AccountType_IMPORTED{
+// func (s *BlockchainService) DeployIjazahContract(ctx context.Context, req *pb.DeployIjazahContractRequest) (*pb.DeployIjazahContractResponse, error) {
+// 	if s.client.client == nil {
+// 		return nil, errors.New("client belum dikonfigurasi")
+// 	}
+// 	// Daftar field yang wajib diisi
+// 	requiredFields := []string{"AccountType", "PrivateKey"}
+// 	// Validasi request
+// 	err := utils.ValidateFields(req, requiredFields)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	// if req.AcountType == pb.AccountType_IMPORTED{
 
-	// }
+// 	// }
 
-	// if req.GetUserId() == "\"\"" || req.GetPassword() == "\"\"" {
-	// 	return nil, errors.New("user dan password tidak boleh kosong")
-	// }
+// 	// if req.GetUserId() == "\"\"" || req.GetPassword() == "\"\"" {
+// 	// 	return nil, errors.New("user dan password tidak boleh kosong")
+// 	// }
 
-	contractAddress, txHash, err := s.client.DeployIjazahContract(ctx, req.PrivateKey)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.DeployIjazahContractResponse{
-		ContractAddress: contractAddress,
-		TxHash:          txHash,
-	}, nil
+// 	contractAddress, txHash, err := s.client.DeployIjazahContract(ctx, req.PrivateKey)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &pb.DeployIjazahContractResponse{
+// 		ContractAddress: contractAddress,
+// 		TxHash:          txHash,
+// 	}, nil
 
-}
+// }
 
 // SendTransactionToContract: Mengirim data ke smart contract dengan memanggil fungsi tertentu
 // func (s *BlockchainService) SendTransactionToContract(ctx context.Context, req *pb.SendTransactionToContractRequest) (*pb.SendTransactionToContractResponse, error) {

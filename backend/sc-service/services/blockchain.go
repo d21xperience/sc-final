@@ -1,13 +1,17 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"math/big"
 )
 
 // BlockchainClient interface umum untuk semua blockchain
 type BlockchainClient interface {
 	Connect() error
+	NetworkID(ctx context.Context) (*big.Int, error)
+	GenerateNewAccount(ctx context.Context, userId int32, password string) (map[string]interface{}, error)
 }
 
 // BlockchainClientFactory mendefinisikan factory function
@@ -33,22 +37,7 @@ func CreateClientFactory(cfg *Config) (BlockchainClient, error) {
 	return factory(cfg)
 }
 
-// // NewQuorumClient membuat client Quorum
-// func NewQuorumClient(cfg *Config) (BlockchainClient, error) {
-// 	if cfg.RPCURL == "" {
-// 		return nil, errors.New("Quorum node URL is required")
-// 	}
-// 	return &QuorumClient{cfg.RPCURL}, nil
-// }
-
-
-// // QuorumClient adalah implementasi BlockchainClient untuk Quorum
-// type QuorumClient struct {
-// 	NodeURL string
-// }
-
-// // Connect implementasi koneksi ke Quorum
-// func (q *QuorumClient) Connect() error {
-// 	fmt.Println("Connecting to Quorum node at", q.NodeURL)
-// 	return nil
-// }
+// SmartContractClient interface untuk semua blockchain yang mendukung smart contract
+type SmartContractClient interface {
+	IssueDegree(ctx context.Context, contractAddress string, degreeHash [32]byte, sekolah string, issueDate uint64, privateKey string, gasLimit uint64) (string, error)
+}

@@ -12,10 +12,17 @@ type Config struct {
 	BlockchainType string // "ethereum", "quorum", atau "hyperledger"
 	RPCURL         string // URL RPC untuk Ethereum/Quorum
 
-	// Untuk Hyperledger Fabric
-	FabricConfigPath string
-	FabricWallet     string
-	FabricIdentity   string
+	// WalletPath        string // Path untuk wallet Hyperledger Fabric
+	// ConnectionProfile string // Connection profile untuk Hyperledger Fabric
+	// // Untuk Hyperledger Fabric
+	// FabricConfigPath string
+	// FabricWallet     string
+	// FabricIdentity   string
+	CertPath         string
+	KeyPath          string
+	MSPID            string
+	PeerHostOverride string
+	Channel          string
 }
 
 // LoadConfig membaca environment variables
@@ -23,9 +30,12 @@ func LoadConfig() (*Config, error) {
 	blockchainType := os.Getenv("BLOCKCHAIN_TYPE")
 	rpcURL := os.Getenv("RPC_URL")
 	networkIDStr := os.Getenv("NETWORK_ID")
-	fabricConfigPath := os.Getenv("FABRIC_CONFIG_PATH")
-	fabricWallet := os.Getenv("FABRIC_WALLET")
-	fabricIdentity := os.Getenv("FABRIC_IDENTITY")
+
+	CertPath := os.Getenv("FABRIC_CONFIG_PATH")
+	PeerHostOverride := os.Getenv("PEER_Host_OVERRIDE")
+	// KeyPath := os.Getenv("FABRIC_CONFIG_PATH")
+	MSPID := os.Getenv("FABRIC_WALLET")
+	// fabricIdentity := os.Getenv("FABRIC_IDENTITY")
 	// network.
 	// Konversi Network ID ke uint32 (hanya untuk EVM-based)
 	var networkID uint32
@@ -44,9 +54,10 @@ func LoadConfig() (*Config, error) {
 			return nil, errors.New("RPC_URL harus diisi untuk Ethereum/Quorum")
 		}
 	case "hyperledger":
-		if fabricConfigPath == "" || fabricWallet == "" || fabricIdentity == "" {
+		if CertPath == "" || PeerHostOverride == "" || MSPID == "" {
 			return nil, errors.New("FABRIC_CONFIG_PATH, FABRIC_WALLET, dan FABRIC_IDENTITY harus diisi untuk Hyperledger Fabric")
 		}
+
 	default:
 		return nil, errors.New("BLOCKCHAIN_TYPE tidak valid: gunakan 'ethereum', 'quorum', atau 'hyperledger'")
 	}
@@ -55,8 +66,9 @@ func LoadConfig() (*Config, error) {
 		NetworkId:        networkID,
 		BlockchainType:   blockchainType,
 		RPCURL:           rpcURL,
-		FabricConfigPath: fabricConfigPath,
-		FabricWallet:     fabricWallet,
-		FabricIdentity:   fabricIdentity,
+		CertPath:         CertPath,
+		PeerHostOverride: PeerHostOverride,
+		// FabricWallet:     fabricWallet,
+		// FabricIdentity:   fabricIdentity,
 	}, nil
 }
