@@ -21,6 +21,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 // Struktur untuk menyimpan respons ABI dari Etherscan
@@ -58,7 +59,7 @@ func convertParams(params []string) []interface{} {
 }
 
 // SendTransactionToContract mengirim transaksi ke smart contract
-func SendTransactionToContract(ctx context.Context, client EthClient, contractAddress string, data []byte, privateKeyHex string, gasLimit uint64) (string, error) {
+func SendTransactionToContract(ctx context.Context, client *ethclient.Client, contractAddress string, data []byte, privateKeyHex string, gasLimit uint64) (string, error) {
 	//  Konversi private key
 	privateKey, err := crypto.HexToECDSA(privateKeyHex)
 	if err != nil {

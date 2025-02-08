@@ -671,7 +671,7 @@ func (e *EthereumClient) IssueDegree(ctx context.Context, contractAddress string
 	}
 
 	//  Kirim transaksi menggunakan SendTransactionToContract
-	txHash, err := SendTransactionToContract(ctx, e, contractAddress, data, privateKey, gasLimit)
+	txHash, err := SendTransactionToContract(ctx, e.client, contractAddress, data, privateKey, gasLimit)
 	if err != nil {
 		return "", fmt.Errorf("transaction failed: %v", err)
 	}

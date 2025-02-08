@@ -21,7 +21,7 @@ type BlockchainClientFactory func(cfg *Config) (BlockchainClient, error)
 var blockchainFactories = map[string]BlockchainClientFactory{
 	"ethereum": NewEthereumClient,
 	// "quorum":   NewQuorumClient,
-	// "hyperledger": NewHyperledgerFabricClient,
+	"hyperledger": NewHyperledgerFabricClient,
 }
 
 // CreateClientFactory memilih blockchain berdasarkan runtime config
