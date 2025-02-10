@@ -2,7 +2,9 @@
     <h1 class="text-2xl mb-2">Welcome back, <span class="font-bold ">{{ store.state.authService.user?.username
             }}</span> 🖐</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <card-info title="Total blocks" date="22 - 29 May 2016" :value="totalBlocks" :percentage="33.87"
+            @updateData="handleUpdate"></card-info>
+        <!-- <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-gray-600 text-lg font-semibold">
                     Total blocks
@@ -24,7 +26,7 @@
                     from last week
                 </span>
             </div>
-        </div>
+        </div> -->
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-gray-600 text-lg font-semibold">
@@ -71,6 +73,16 @@
                 </span>
             </div>
         </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <card-info title="Jumlah Siswa" date="22 - 29 May 2016" :value="totalSiswa" :percentage="33.87"
+            @updateData="handleUpdate" bgColor="bg-blue-100" routePath="/admin/data-siswa"></card-info>
+        <card-info title="Jumlah Guru Aktif" date="22 - 29 May 2016" :value="totalGuru" :percentage="33.87"
+            @updateData="handleUpdate" bgColor="bg-red-200"
+            routePath="/dashboard"></card-info>
+        <card-info title="Jumlah Kelas" date="22 - 29 May 2016" :value="totalKelas" :percentage="33.87"
+            @updateData="handleUpdate" bgColor="bg-blue-100"
+            routePath="/dashboard"></card-info>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-white p-6 rounded-lg shadow-md">
@@ -242,6 +254,7 @@ import Chart from 'primevue/chart';
 
 import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
+import CardInfo from '@/components/CardInfo.vue';
 
 const store = useStore();
 onMounted(() => {
@@ -301,4 +314,14 @@ const setChartOptions = () => {
         }
     };
 }
+
+
+const totalBlocks = ref(10215845);
+const totalSiswa = ref(800);
+const totalGuru = ref(50);
+const totalKelas = ref(28);
+
+const handleUpdate = (newValue) => {
+    totalBlocks.value = newValue;
+};
 </script>

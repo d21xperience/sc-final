@@ -12,54 +12,47 @@ import (
 
 type RombelServiceServer struct {
 	pb.UnimplementedKelasServiceServer
-	rombonganBelajarService services.RombonganBelajarService
+	service services.RombonganBelajarService
 }
 
 // **CreateKelas**
-// func (s *RombelServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKelasRequest) (*pb.CreateKelasResponse, error) {
-// 	// Debugging: Cek nilai request yang diterima
-// 	log.Printf("Received Sekolah data request: %+v\n", req)
-// 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "Kelas"}
-// 	// Validasi request
-// 	err := utils.ValidateFields(req, requiredFields)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	schemaName := req.GetSchemaName()
-// 	Kelas := req.Kelas
+func (s *RombelServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKelasRequest) (*pb.CreateKelasResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SchemaName", "Kelas"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	Kelas := req.Kelas
 
-// 	KelasModel := &models.PesertaDidik{
-// 		PesertaDidikID:  Kelas.PesertaDidikId,
-// 		Nis:             Kelas.Nis,
-// 		Nisn:            Kelas.Nisn,
-// 		NmKelas:         Kelas.NmKelas,
-// 		TempatLahir:     Kelas.TempatLahir,
-// 		TanggalLahir:    Kelas.TanggalLahir,
-// 		JenisKelamin:    Kelas.JenisKelamin,
-// 		Agama:           Kelas.Agama,
-// 		AlamatKelas:     &Kelas.AlamatKelas,
-// 		TeleponKelas:    Kelas.TeleponKelas,
-// 		DiterimaTanggal: Kelas.DiterimaTanggal,
-// 		NmAyah:          Kelas.NmAyah,
-// 		NmIbu:           Kelas.NmIbu,
-// 		PekerjaanAyah:   Kelas.PekerjaanAyah,
-// 		PekerjaanIbu:    Kelas.PekerjaanIbu,
-// 		NmWali:          &Kelas.NmWali,
-// 		PekerjaanWali:   &Kelas.PekerjaanWali,
-// 	}
+	KelasModel := &models.RombonganBelajar{
+		NmKelas:             Kelas.NmKelas,
+		SekolahId:           Kelas.SekolahId,
+		SemesterId:          Kelas.SemesterId,
+		JurusanId:           Kelas.JurusanId,
+		TingkatPendidikanId: Kelas.TingkatPendidikanId,
+		PtkId:               Kelas.PtkId,
+		JenisRombel:         Kelas.JenisRombel,
+		NamaJurusanSp:       Kelas.NamaJurusanSp,
+		JurusanSpId:         Kelas.JurusanSpId,
+		KurikulumId:         Kelas.KurikulumId,
+	}
 
-// 	err = s.pesertaDidikService.Save(ctx, KelasModel, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal menyimpan Kelas: %v", err)
-// 		return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
-// 	}
+	err = s.service.Save(ctx, KelasModel, schemaName)
+	if err != nil {
+		log.Printf("Gagal menyimpan Kelas: %v", err)
+		return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
+	}
 
-//		return &pb.CreateKelasResponse{
-//			Message: "Kelas berhasil ditambahkan",
-//			Status:  true,
-//		}, nil
-//	}
+	return &pb.CreateKelasResponse{
+		Message: "Kelas berhasil ditambahkan",
+		Status:  true,
+	}, nil
+}
 func (s *RombelServiceServer) CreateBanyakKelas(ctx context.Context, req *pb.CreateBanyakKelasRequest) (*pb.CreateBanyakKelasResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
@@ -88,7 +81,7 @@ func (s *RombelServiceServer) CreateBanyakKelas(ctx context.Context, req *pb.Cre
 			KurikulumId:         rom.KurikulumId,
 		}
 	})
-	err = s.rombonganBelajarService.SaveMany(ctx, schemaName, kelasModels)
+	err = s.service.SaveMany(ctx, schemaName, kelasModels)
 	if err != nil {
 		log.Printf("Gagal menyimpan Kelas: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
@@ -102,8 +95,15 @@ func (s *RombelServiceServer) CreateBanyakKelas(ctx context.Context, req *pb.Cre
 
 // **GetKelas**
 func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequest) (*pb.GetKelasResponse, error) {
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
 	schemaName := req.GetSchemaName()
-	if schemaName == "" {
+	if schemaName == "\"\"" {
 		return nil, fmt.Errorf("schema name is required")
 	}
 
@@ -115,8 +115,8 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	}
 
 	if kelasId != "" {
-		// Ambil data Kelas berdasarkan PesertaDidikId
-		rombel, err := s.rombonganBelajarService.FindByID(ctx, kelasId, schemaName)
+		// Ambil data Kelas berdasarkan RombonganBelajarId
+		rombel, err := s.service.FindByID(ctx, kelasId, schemaName)
 		if err != nil {
 			return nil, err
 		}
@@ -141,7 +141,15 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 		}, nil
 	}
 	// Ambil semua data Kelas
-	banyakKelas, err := s.rombonganBelajarService.FindAllByConditions(ctx, schemaName, conditions, int(req.GetLimit()), int(req.GetOffset()))
+	limit := req.GetLimit()
+	if limit == 0 {
+		limit = 100
+	}
+	// offset := req.GetOffset()
+	// if offset == 0 {
+	// 	offset = 0
+	// }
+	banyakKelas, err := s.service.FindAllByConditions(ctx, schemaName, conditions, int(limit), int(req.GetOffset()))
 	if err != nil {
 		log.Printf("[ERROR] Gagal menemukan Kelas di schema '%s': %v", schemaName, err)
 		return nil, fmt.Errorf("gagal menemukan Kelas di schema '%s': %w", schemaName, err)
@@ -167,74 +175,67 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 }
 
 // **UpdateKelas**
-// func (s *RombelServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKelasRequest) (*pb.UpdateKelasResponse, error) {
-// 	// Debugging: Cek nilai request yang diterima
-// 	log.Printf("Received UpdateUserProfile request: %+v\n", req)
-// 	schemaName := req.GetSchemaName()
-// 	KelasReq := req.GetKelas()
-// 	KelasPelenReq := req.GetKelasPelengkap()
-// 	Kelas := &models.PesertaDidik{
-// 		PesertaDidikID:  KelasReq.PesertaDidikID,
-// 		NIS:             KelasReq.NIS,
-// 		NISN:            KelasReq.NISN,
-// 		NamaKelas:       KelasReq.NamaKelas,
-// 		TempatLahir:     KelasReq.TempatLahir,
-// 		TanggalLahir:    KelasReq.TanggalLahir,
-// 		JenisKelamin:    KelasReq.JenisKelamin,
-// 		Agama:           KelasReq.Agama,
-// 		AlamatKelas:     &KelasReq.AlamatKelas,
-// 		TeleponKelas:    KelasReq.TeleponKelas,
-// 		DiterimaTanggal: KelasReq.DiterimaTanggal,
-// 		NamaAyah:        KelasReq.NamaAyah,
-// 		NamaIbu:         KelasReq.NamaIbu,
-// 		PekerjaanAyah:   KelasReq.PekerjaanAyah,
-// 		PekerjaanIbu:    KelasReq.PekerjaanIbu,
-// 		NamaWali:        &KelasReq.NamaWali,
-// 		PekerjaanWali:   &KelasReq.PekerjaanWali,
-// 	}
-// 	KelasPelenkap := &models.PesertaDidikPelengkap{
-// 		PelengkapKelasID: KelasPelenReq.PelengkapKelasID,
-// 		PesertaDidikID:   &KelasPelenReq.PesertaDidikID,
-// 		StatusDalamKel:   &KelasPelenReq.StatusDalamKel,
-// 		AnakKe:           &KelasPelenReq.AnakKe,
-// 		SekolahAsal:      KelasPelenReq.SekolahAsal,
-// 		DiterimaKelas:    &KelasPelenReq.DiterimaKelas,
-// 		AlamatOrtu:       &KelasPelenReq.AlamatOrtu,
-// 		TeleponOrtu:      &KelasPelenReq.TeleponOrtu,
-// 		AlamatWali:       &KelasPelenReq.AlamatWali,
-// 		TeleponWali:      &KelasPelenReq.TeleponWali,
-// 		FotoKelas:        &KelasPelenReq.FotoKelas,
-// 	}
-// 	err := s.pesertaDidikService.Update(ctx, Kelas, KelasPelenkap, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal memperbarui Kelas: %v", err)
-// 		return nil, fmt.Errorf("gagal memperbarui Kelas: %w", err)
-// 	}
+func (s *RombelServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKelasRequest) (*pb.UpdateKelasResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SchemaName", "Kelas"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	Kelas := req.Kelas
 
-// 	return &pb.UpdateKelasResponse{
-// 		Message: "Kelas berhasil diperbarui",
-// 		Status:  true,
-// 	}, nil
-// }
+	KelasModel := &models.RombonganBelajar{
+		NmKelas:             Kelas.NmKelas,
+		SekolahId:           Kelas.SekolahId,
+		SemesterId:          Kelas.SemesterId,
+		JurusanId:           Kelas.JurusanId,
+		TingkatPendidikanId: Kelas.TingkatPendidikanId,
+		PtkId:               Kelas.PtkId,
+		JenisRombel:         Kelas.JenisRombel,
+		NamaJurusanSp:       Kelas.NamaJurusanSp,
+		JurusanSpId:         Kelas.JurusanSpId,
+		KurikulumId:         Kelas.KurikulumId,
+	}
+	err = s.service.Update(ctx, schemaName, KelasModel)
+	if err != nil {
+		log.Printf("Gagal memperbaharui Kelas: %v", err)
+		return nil, fmt.Errorf("gagal memperbaharui Kelas: %w", err)
+	}
+	return &pb.UpdateKelasResponse{
+		Message: "Kelas berhasil diperbarui",
+		Status:  true,
+	}, nil
+}
 
-// // // **DeleteKelas**
-// func (s *RombelServiceServer) DeleteKelas(ctx context.Context, req *pb.DeleteKelasRequest) (*pb.DeleteKelasResponse, error) {
-// 	schemaName := req.GetSchemaName()
-// 	KelasID := req.GetKelasId()
+// **DeleteKelas**
+func (s *RombelServiceServer) DeleteKelas(ctx context.Context, req *pb.DeleteKelasRequest) (*pb.DeleteKelasResponse, error) {
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname", "KelasId"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	KelasID := req.GetKelasId()
 
-// 	err := s.pesertaDidikService.Delete(ctx, KelasID, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal menghapus Kelas: %v", err)
-// 		return nil, fmt.Errorf("gagal menghapus Kelas: %w", err)
-// 	}
+	err = s.service.Delete(ctx, KelasID, schemaName)
+	if err != nil {
+		log.Printf("Gagal menghapus Kelas: %v", err)
+		return nil, fmt.Errorf("gagal menghapus Kelas: %w", err)
+	}
 
-// 	return &pb.DeleteKelasResponse{
-// 		Message: "Kelas berhasil dihapus",
-// 		Status:  true,
-// 	}, nil
-// }
+	return &pb.DeleteKelasResponse{
+		Message: "Kelas berhasil dihapus",
+		Status:  true,
+	}, nil
+}
 
-// // UploadKelas mengunggah data Kelas dari file Excel
+// UploadKelas mengunggah data Kelas dari file Excel
 // func (s *RombelServiceServer) UploadKelas(ctx context.Context, req *pb.UploadKelasRequest) (*pb.UploadKelasResponse, error) {
 // 	schemaName := req.GetSchemaName()
 // 	fileData := req.GetFile() // File dalam bentuk byte array
@@ -272,7 +273,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 // 		}
 // 	}
 
-// 	var KelasList []*models.PesertaDidik
+// 	var KelasList []*models.RombonganBelajar
 
 // 	// Mulai dari baris kedua karena baris pertama adalah header
 // 	for _, row := range rows[1:] {
@@ -310,7 +311,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 // 		}
 
 // 		// Masukkan ke dalam list
-// 		Kelas := &models.PesertaDidik{
+// 		Kelas := &models.RombonganBelajar{
 // 			NIS:          strconv.Itoa(nisInt),
 // 			NISN:         strconv.Itoa(nisnInt),
 // 			NamaKelas:    namaKelas,
@@ -323,7 +324,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 // 	}
 
 // 	// Simpan ke database
-// 	err = s.pesertaDidikService.BatchSave(ctx, KelasList, schemaName)
+// 	err = s.service.BatchSave(ctx, KelasList, schemaName)
 // 	if err != nil {
 // 		return nil, fmt.Errorf("gagal menyimpan data Kelas ke database: %w", err)
 // 	}

@@ -13,6 +13,7 @@ const state = {
   loading: false,
   error: null,
   tabelTenant: JSON.parse(localStorage.getItem("tabelTenant")) || null,
+  tabelSemester: JSON.parse(localStorage.getItem("tabelSemester")) || null,
 };
 
 const mutations = {
@@ -25,6 +26,10 @@ const mutations = {
   SET_TABELTENANT(state, tabelTenant) {
     state.tabelTenant = tabelTenant;
     localStorage.setItem("tabelTenant", JSON.stringify(tabelTenant));
+  },
+  SET_TABELSEMESTER(state, tabelSemester) {
+    state.tabelSemester = tabelSemester;
+    localStorage.setItem("tabelSemester", JSON.stringify(tabelSemester));
   },
 };
 
@@ -75,22 +80,38 @@ const actions = {
       commit("SET_LOADING", false);
     }
   },
-  async getSemester({ commit }, payload) {
-    let limit = payload.limit || 10;
-    let offset = payload.offset || 0;
-    let semester_id = payload.semester_id || null;
+  async fetchSemester({ commit }, semester_id) {
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);
     try {
       const response = await api.get(`/semester`, {
         params: {
           semester_id: semester_id,
-          limit: limit,
-          offset: offset,
         },
       });
-      // commit("SET_TABELTENANT", response.data);
-      return response.data; // Mengembalikan data sekolah
+      // console.log(response.data.semester);
+      commit("SET_TABELSEMESTER", response.data.semester);
+      return true; // Mengembalikan data sekolah
+    } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal membuat semester:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
+  async fetchRombel({ commit }, payload) {
+    commit("SET_LOADING", true);
+    commit("SET_ERROR", null);
+    try {
+      const response = await api.get(`/semester`, {
+        params: {
+          semester_id: semester_id,
+        },
+      });
+      // console.log(response.data.semester);
+      commit("SET_TABELSEMESTER", response.data.semester);
+      return true; // Mengembalikan data sekolah
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal membuat semester:", error);
@@ -105,6 +126,7 @@ const getters = {
   isLoading: (state) => state.loading,
   getError: (state) => state.error,
   getTabeltenant: (state) => state.tabelTenant,
+  getSemester: (state) => state.tabelSemester,
 };
 
 export default {

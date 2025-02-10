@@ -1,0 +1,96 @@
+services:
+  node_sekolah:
+    image: quorumengineering/quorum:latest
+    container_name: node_sekolah
+    ports:
+      - "21000:21000"   # RPC Port
+      - "30303:30303"   # P2P Port
+    networks:
+      - quorum-net
+    volumes:
+      - ./data/node_sekolah:/qdata
+    command: [
+      "--nodiscover",
+      "--networkid", "10",
+      "--raft",
+      "--rpc",
+      "--rpcaddr", "0.0.0.0",
+      "--rpcport", "21000",
+      "--rpcapi", "admin,eth,debug,miner,net,txpool,personal,web3",
+      "--port", "30303"
+    ]
+
+  # node_disdik:
+    # image: quorumengineering/quorum:latest
+    # container_name: node_disdik
+    # ports:
+      # - "21001:21000"
+      # - "30304:30303"
+    # networks:
+      # - quorum-net
+    # volumes:
+      # - ./data/node_disdik:/qdata
+    # command: [
+      # "--nodiscover",
+      # "--networkid", "10",
+      # "--raft",
+      # "--rpc",
+      # "--rpcaddr", "0.0.0.0",
+      # "--rpcport", "21000",
+      # "--rpcapi", "admin,eth,debug,miner,net,txpool,personal,web3",
+      # "--port", "30303"
+    # ]
+
+  # node_lpms:
+    # image: quorumengineering/quorum:latest
+    # container_name: node_lpms
+    # ports:
+      # - "21002:21000"
+      # - "30305:30303"
+    # networks:
+      # - quorum-net
+    # volumes:
+      # - ./data/node_lpms:/qdata
+    # command: [
+      # "--nodiscover",
+      # "--networkid", "10",
+      # "--raft",
+      # "--rpc",
+      # "--rpcaddr", "0.0.0.0",
+      # "--rpcport", "21000",
+      # "--rpcapi", "admin,eth,debug,miner,net,txpool,personal,web3",
+      # "--port", "30303"
+    # ]
+
+  tessera_sekolah:
+    image: quorumengineering/tessera:latest
+    container_name: tessera_sekolah
+    ports:
+      - "9001:9001"
+    networks:
+      - quorum-net
+    volumes:
+      - ./data/tessera_sekolah:/qdata
+
+  # tessera_disdik:
+    # image: quorumengineering/tessera:latest
+    # container_name: tessera_disdik
+    # ports:
+      # - "9002:9001"
+    # networks:
+      # - quorum-net
+    # volumes:
+      # - ./data/tessera_disdik:/qdata
+
+  # tessera_lpms:
+    # image: quorumengineering/tessera:latest
+    # container_name: tessera_lpms
+    # ports:
+      # - "9003:9001"
+    # networks:
+      # - quorum-net
+    # volumes:
+      # - ./data/tessera_lpms:/qdata
+
+networks:
+  quorum-net:

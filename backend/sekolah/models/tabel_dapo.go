@@ -51,20 +51,22 @@ type MataPelajaran struct {
 	Jurusan         Jurusan `gorm:"foreignKey:JurusanID"`                // Relasi ke tabel jurusan
 }
 
-type Semester struct {
-	SemesterID     string `json:"semester_id"`
-	TahunAjaranID  string `json:"tahun_ajaran_id"`
-	Nama           string `json:"nama"`
-	Semester       int32  `json:"semester"`
-	PeriodeAktif   string `json:"periode_aktif"`
-	TanggalMulai   string `json:"tanggal_mulai"`
-	TanggalSelesai string `json:"tanggal_selesai"`
+type TahunAjaran struct {
+	TahunAjaranID  uint32 `gorm:"column:tahun_ajaran_id"`
+	Nama           string `gorm:"column:nama"`
+	PeriodeAktif   string `gorm:"column:periode_aktif"`
+	TanggalMulai   string `gorm:"column:tanggal_mulai"`
+	TanggalSelesai string `gorm:"column:tanggal_selesai"`
 }
 
-type TahunAjaran struct {
-	TahunAjaranID  string `json:"tahun_ajaran_id"`
-	Nama           string `json:"nama"`
-	PeriodeAktif   string `json:"periode_aktif"`
-	TanggalMulai   string `json:"tanggal_mulai"`
-	TanggalSelesai string `json:"tanggal_selesai"`
+type Semester struct {
+	SemesterID     string `gorm:"column:semester_id"`
+	TahunAjaranID  uint32 `gorm:"column:tahun_ajaran_id"`
+	Nama           string `gorm:"column:nama"`
+	Semester       int32  `gorm:"column:semester"`
+	PeriodeAktif   int32  `gorm:"column:periode_aktif"`
+	TanggalMulai   string `gorm:"column:tanggal_mulai"`
+	TanggalSelesai string `gorm:"column:tanggal_selesai"`
+	// Relasi ke TahunAjaran
+	TahunAjaran TahunAjaran `gorm:"foreignKey:TahunAjaranID;references:TahunAjaranID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }

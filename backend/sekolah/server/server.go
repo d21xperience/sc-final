@@ -186,7 +186,7 @@ func StartGRPCServer(schemaServices services.SchemaService, sekolahService servi
 	})
 	// REGISTER KELAS
 	pb.RegisterKelasServiceServer(server.grpcServer, &RombelServiceServer{
-		rombonganBelajarService: server.rombonganBelajarService,
+		service: server.rombonganBelajarService,
 	})
 	// REGISTER ANGGOTA KELAS
 	pb.RegisterAnggotaKelasServiceServer(server.grpcServer, &RombelAnggotaServiceServer{

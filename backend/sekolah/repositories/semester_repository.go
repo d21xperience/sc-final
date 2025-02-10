@@ -1,120 +1,119 @@
 package repositories
 
 import (
-	"context"
-	"fmt"
-	"strings"
-	"time"
-
 	"sekolah/models"
 
 	"gorm.io/gorm"
 )
 
-type SemesterRepository interface {
-	Save(ctx context.Context, Semester *models.Semester, schemaName string) error
-	FindByID(ctx context.Context, SemesterID string, schemaName string) (*models.Semester, error)
-	FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.Semester, error)
-	Update(ctx context.Context, Semester *models.Semester, schemaName string) error
-	Delete(ctx context.Context, SemesterID string, schemaName string) error
+func NewSemesterRepository(db *gorm.DB) *GenericRepository[models.Semester] {
+	return NewGenericRepository[models.Semester](db, "semester")
 }
 
-type semesterRepositoryImpl struct {
-	// schemaRepository SchemaRepository
-	db *gorm.DB
-}
+// type SemesterRepository interface {
+// 	Save(ctx context.Context, Semester *models.Semester, schemaName string) error
+// 	FindByID(ctx context.Context, SemesterID string, schemaName string) (*models.Semester, error)
+// 	FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.Semester, error)
+// 	Update(ctx context.Context, Semester *models.Semester, schemaName string) error
+// 	Delete(ctx context.Context, SemesterID string, schemaName string) error
+// }
 
-// NewSemesterRepository membuat instance baru dari SemesterRepository
-func NewSemesterRepository(dB *gorm.DB) SemesterRepository {
-	return &semesterRepositoryImpl{
-		db: dB,
-	}
-}
+// type semesterRepositoryImpl struct {
+// 	// schemaRepository SchemaRepository
+// 	db *gorm.DB
+// }
 
-var tabelSemester = "semester"
+// // NewSemesterRepository membuat instance baru dari SemesterRepository
+// func NewSemesterRepository(dB *gorm.DB) SemesterRepository {
+// 	return &semesterRepositoryImpl{
+// 		db: dB,
+// 	}
+// }
 
-func (r *semesterRepositoryImpl) Save(ctx context.Context, semesterModel *models.Semester, schemaName string) error {
-	// Gunakan transaksi agar atomic
-	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		//  Pastikan schema diubah dalam transaksi
-		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
-			return fmt.Errorf("failed to set schema: %w", err)
-		}
-		if err := tx.Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelSemester)).Create(semesterModel).Error; err != nil {
-			return fmt.Errorf("failed to save school in schema %s: %w", schemaName, err)
-		}
+// var tabelSemester = "semester"
 
-		return nil
-	})
-}
-func (r *semesterRepositoryImpl) FindByID(ctx context.Context, SemesterID string, schemaName string) (*models.Semester, error) {
-	var Semester models.Semester
+// func (r *semesterRepositoryImpl) Save(ctx context.Context, semesterModel *models.Semester, schemaName string) error {
+// 	// Gunakan transaksi agar atomic
+// 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+// 		//  Pastikan schema diubah dalam transaksi
+// 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+// 			return fmt.Errorf("failed to set schema: %w", err)
+// 		}
+// 		if err := tx.Table(fmt.Sprintf("%s.%v", strings.ToLower(schemaName), tabelSemester)).Create(semesterModel).Error; err != nil {
+// 			return fmt.Errorf("failed to save school in schema %s: %w", schemaName, err)
+// 		}
 
-	//  Pastikan schema diubah sebelum query
-	if err := r.db.WithContext(ctx).Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
-		return nil, fmt.Errorf("failed to set schema: %w", err)
-	}
+// 		return nil
+// 	})
+// }
+// func (r *semesterRepositoryImpl) FindByID(ctx context.Context, SemesterID string, schemaName string) (*models.Semester, error) {
+// 	var Semester models.Semester
 
-	//  Gunakan `tx.Table(schemaName + ".tabel_Semester")` agar GORM tahu schema yang benar
-	if err := r.db.WithContext(ctx).
-		Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), tabelSemester)).
-		First(&Semester, "Semester_id = ?", SemesterID).Error; err != nil {
-		return nil, fmt.Errorf("failed to find school in schema %s: %w", schemaName, err)
-	}
+// 	//  Pastikan schema diubah sebelum query
+// 	if err := r.db.WithContext(ctx).Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+// 		return nil, fmt.Errorf("failed to set schema: %w", err)
+// 	}
 
-	return &Semester, nil
-}
+// 	//  Gunakan `tx.Table(schemaName + ".tabel_Semester")` agar GORM tahu schema yang benar
+// 	if err := r.db.WithContext(ctx).
+// 		Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), tabelSemester)).
+// 		First(&Semester, "Semester_id = ?", SemesterID).Error; err != nil {
+// 		return nil, fmt.Errorf("failed to find school in schema %s: %w", schemaName, err)
+// 	}
 
-// Update (Memperbarui Data Semester)
-func (r *semesterRepositoryImpl) Update(ctx context.Context, Semester *models.Semester, schemaName string) error {
-	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		//  Set schema sebelum query
-		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
-			return fmt.Errorf("failed to set schema: %w", err)
-		}
+// 	return &Semester, nil
+// }
 
-		//  Lakukan update dalam transaksi
-		if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), tabelSemester)).
-			Where("Semester_id = ?", Semester.SemesterID).
-			Updates(Semester).Error; err != nil {
-			return fmt.Errorf("failed to update school in schema %s: %w", schemaName, err)
-		}
+// // Update (Memperbarui Data Semester)
+// func (r *semesterRepositoryImpl) Update(ctx context.Context, Semester *models.Semester, schemaName string) error {
+// 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+// 		//  Set schema sebelum query
+// 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+// 			return fmt.Errorf("failed to set schema: %w", err)
+// 		}
 
-		return nil // Commit transaksi jika tidak ada error
-	})
-}
+// 		//  Lakukan update dalam transaksi
+// 		if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), tabelSemester)).
+// 			Where("semester_id = ?", Semester.SemesterID).
+// 			Updates(Semester).Error; err != nil {
+// 			return fmt.Errorf("failed to update school in schema %s: %w", schemaName, err)
+// 		}
 
-// Delete (Menghapus Data Semester berdasarkan ID)
-func (r *semesterRepositoryImpl) Delete(ctx context.Context, SemesterID string, schemaName string) error {
-	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		//  Set schema sebelum query
-		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
-			return fmt.Errorf("failed to set schema: %w", err)
-		}
+// 		return nil // Commit transaksi jika tidak ada error
+// 	})
+// }
 
-		//  Hapus data dalam transaksi
-		if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), tabelSemester)).
-			Where("Semester_id = ?", SemesterID).
-			Delete(nil).Error; err != nil {
-			return fmt.Errorf("failed to delete school in schema %s: %w", schemaName, err)
-		}
+// // Delete (Menghapus Data Semester berdasarkan ID)
+// func (r *semesterRepositoryImpl) Delete(ctx context.Context, SemesterID string, schemaName string) error {
+// 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+// 		//  Set schema sebelum query
+// 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+// 			return fmt.Errorf("failed to set schema: %w", err)
+// 		}
 
-		return nil // Commit transaksi jika tidak ada error
-	})
-}
-func (r *semesterRepositoryImpl) FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.Semester, error) {
-	var SemesterList []*models.Semester
+// 		//  Hapus data dalam transaksi
+// 		if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), tabelSemester)).
+// 			Where("semester_id = ?", SemesterID).
+// 			Delete(nil).Error; err != nil {
+// 			return fmt.Errorf("failed to delete school in schema %s: %w", schemaName, err)
+// 		}
 
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
+// 		return nil // Commit transaksi jika tidak ada error
+// 	})
+// }
+// func (r *semesterRepositoryImpl) FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*models.Semester, error) {
+// 	var SemesterList []*models.Semester
 
-	if err := r.db.WithContext(ctx).
-		Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), tabelSemester)).
-		Limit(limit).
-		Offset(offset).
-		Find(&SemesterList).Error; err != nil {
-		return nil, fmt.Errorf("failed to find records in schema %s: %w", schemaName, err)
-	}
+// 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+// 	defer cancel()
 
-	return SemesterList, nil
-}
+// 	if err := r.db.WithContext(ctx).
+// 		Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), tabelSemester)).
+// 		Limit(limit).
+// 		Offset(offset).
+// 		Find(&SemesterList).Error; err != nil {
+// 		return nil, fmt.Errorf("failed to find records in schema %s: %w", schemaName, err)
+// 	}
+
+// 	return SemesterList, nil
+// }

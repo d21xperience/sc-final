@@ -3031,22 +3031,6 @@ func (x *DeleteNetworkResponse) GetMessage() string {
 	return ""
 }
 
-// Struktur Sekolah
-//
-//	message Sekolah {
-//	  int32 sekolah_id = 1;
-//	  string sekolah_id_enkrip = 2;
-//	  string kecamatan = 3;
-//	  string kabupaten = 4;
-//	  string propinsi = 5;
-//	  string kode_kecamatan = 6;
-//	  string kode_kab = 7;
-//	  string kode_prop = 8;
-//	  string nama_sekolah = 9;
-//	  string npsn = 10;
-//	  string alamat_jalan = 11;
-//	  string status = 12;
-//	}
 type SekolahTenant struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	NamaSekolah   string                 `protobuf:"bytes,1,opt,name=nama_sekolah,json=namaSekolah,proto3" json:"nama_sekolah,omitempty"`

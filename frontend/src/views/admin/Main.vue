@@ -7,11 +7,11 @@ import PanelMenu from 'primevue/panelmenu';
 import 'primeicons/primeicons.css'
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-const router = useRouter();
+// import { useRouter } from "vue-router";
 const store = useStore();
-
+import { useStore } from "vuex";
+// const router = useRouter();
+import router from "@/router";
 const userRole = ref(store.state.authService.userRole); // Ambil role user dari Vuex
 
 // import Menubar from 'primevue/menubar';
@@ -52,7 +52,7 @@ const menuItems = ref([
         command: () => {
             router.push({ name: 'dataUsers' })
         },
-        
+
     },
     {
         label: 'Data Akademik',
@@ -95,6 +95,18 @@ const menuItems = ref([
                     router.push({ name: 'dapodikSekolah' })
                 }
             },
+
+            {
+                label: 'Data Kelas',
+                icon: 'pi pi-building',
+                command: () => {
+                    router.push({ name: 'dapodikKelas' })
+                }
+            },
+            {
+                label: 'Data Mapel',
+                icon: 'pi pi-book'
+            },
             {
                 label: 'Data Guru',
                 icon: 'pi pi-graduation-cap',
@@ -102,24 +114,14 @@ const menuItems = ref([
                     router.push({ name: 'dapodikGuru' })
                 }
             },
+
             {
                 label: 'Data Siswa',
-                icon: 'pi pi-angle-double-right',
+                icon: 'pi pi-users',
 
                 command: () => {
                     router.push({ name: 'dapodikSiswa' })
                 }
-            },
-            {
-                label: 'Data Kelas',
-                icon: 'pi pi-angle-double-right',
-                command: () => {
-                    router.push({ name: 'dapodikKelas' })
-                }
-            },
-            {
-                label: 'Data Mapel',
-                icon: 'pi pi-angle-double-right'
             },
             // {
             //     label: 'Sync Dapodik',

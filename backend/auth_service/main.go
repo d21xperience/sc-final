@@ -2,7 +2,6 @@ package main
 
 import (
 	"auth_service/config"
-	"auth_service/models"
 	"auth_service/repository"
 	"auth_service/server"
 	"auth_service/services"
@@ -16,7 +15,7 @@ func main() {
 	config.InitDatabase(cfg)
 
 	// Migrasi model
-	config.DB.AutoMigrate(&models.User{}, &models.Sekolah{}, &models.UserProfile{}, &models.SekolahIndonesia{})
+	// config.DB.AutoMigrate(&models.User{}, &models.Sekolah{}, &models.UserProfile{}, &models.SekolahIndonesia{})
 	userRepo := repository.NewUserRepository(config.DB)
 	userService := services.NewAuthService(userRepo)
 	userProfileRepo := repository.NewUserProfileRepository(config.DB)
