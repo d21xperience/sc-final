@@ -1,12 +1,13 @@
-package server
+package services
 
 import (
 	"context"
 	"fmt"
 	"log"
+	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
-	"sekolah/services"
+	"sekolah/repositories"
 	"sekolah/utils"
 
 	"github.com/google/uuid"
@@ -14,7 +15,14 @@ import (
 
 type NilaiAkhirServiceServer struct {
 	pb.UnimplementedNilaiAkhirServiceServer
-	NilaiAkhirService services.NilaiAkhirService
+	repo repositories.GenericRepository[models.NilaiAkhir]
+}
+
+func NewNilaiAkhirServiceServer() *NilaiAkhirServiceServer {
+	repoNilaiAkhir := repositories.NewNilaiAkhirRepository(config.DB)
+	return &NilaiAkhirServiceServer{
+		repo: *repoNilaiAkhir,
+	}
 }
 
 func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.CreateNilaiAkhirRequest) (*pb.CreateNilaiAkhirResponse, error) {
@@ -38,7 +46,7 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 		pesertaDidikID, err := uuid.Parse(nilai.AnggotaRombelId)
 		if err != nil {
 			log.Printf("Invalid UUID for AnggotaRombelID: %v", err)
-		} 
+		}
 		return &models.NilaiAkhir{
 			IDNilaiAkhir:    uuid.New(),
 			AnggotaRombelID: &anggotaRombelID,
@@ -56,7 +64,7 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 			IDMinat:         nilai.IdMinat,
 		}
 	})
-	err = s.NilaiAkhirService.SaveMany(ctx, schemaName, nilaiAkhir)
+	err = s.repo.SaveMany(ctx, schemaName, nilaiAkhir, 100)
 	if err != nil {
 		log.Printf("Gagal menyimpan Nilai akhir: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan Nilai akhir: %w", err)
@@ -88,7 +96,7 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 
 // 	if Nilai akhirId != "" {
 // 		// Ambil data Nilai akhir berdasarkan PesertaDidikId
-// 		NilaiAkhir, err := s.NilaiAkhirService.FindByID(ctx, Nilai akhirId, schemaName)
+// 		NilaiAkhir, err := s.repo.FindByID(ctx, Nilai akhirId, schemaName)
 // 		if err != nil {
 // 			return nil, err
 // 		}
@@ -106,7 +114,7 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 // 		}, nil
 // 	}
 // 	// Ambil semua data Nilai akhir
-// 	NilaiAkhir, err := s.NilaiAkhirService.FindAllByConditions(ctx, schemaName, conditions, int(req.GetLimit()), int(req.GetOffset()))
+// 	NilaiAkhir, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(req.GetLimit()), int(req.GetOffset()))
 // 	if err != nil {
 // 		log.Printf("[ERROR] Gagal menemukan Nilai akhir di schema '%s': %v", schemaName, err)
 // 		return nil, fmt.Errorf("gagal menemukan Nilai akhir di schema '%s': %w", schemaName, err)

@@ -4,15 +4,23 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
-	"sekolah/services"
+	"sekolah/repositories"
 	"sekolah/utils"
 )
 
-type RombelAnggotaServiceServer struct {
+type RombelAnggotaService struct {
 	pb.UnimplementedAnggotaKelasServiceServer
-	rombelAnggotaService services.RombelAnggotaService
+	repo repositories.GenericRepository[models.RombelAnggota]
+}
+
+func NewRombelAnggotaService() *RombelAnggotaService {
+	repoAnggotaBelajar := repositories.NewRombelAnggotaRepository(config.DB)
+	return &RombelAnggotaService{
+		repo: *repoAnggotaBelajar,
+	}
 }
 
 // **CreateKelas**
@@ -60,7 +68,7 @@ type RombelAnggotaServiceServer struct {
 //			Status:  true,
 //		}, nil
 //	}
-func (s *RombelAnggotaServiceServer) CreateBanyakAnggotaKelas(ctx context.Context, req *pb.CreateBanyakAnggotaKelasRequest) (*pb.CreateBanyakAnggotaKelasResponse, error) {
+func (s *RombelAnggotaService) CreateBanyakAnggotaKelas(ctx context.Context, req *pb.CreateBanyakAnggotaKelasRequest) (*pb.CreateBanyakAnggotaKelasResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
@@ -81,7 +89,7 @@ func (s *RombelAnggotaServiceServer) CreateBanyakAnggotaKelas(ctx context.Contex
 			SemesterId:         anggota.SemesterId,
 		}
 	})
-	err = s.rombelAnggotaService.SaveMany(ctx, schemaName, anggotaRombel)
+	err = s.repo.SaveMany(ctx, schemaName, anggotaRombel, 100)
 	if err != nil {
 		log.Printf("Gagal menyimpan Kelas: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
@@ -94,7 +102,7 @@ func (s *RombelAnggotaServiceServer) CreateBanyakAnggotaKelas(ctx context.Contex
 }
 
 // **GetKelas**
-func (s *RombelAnggotaServiceServer) GetAnggotaKelas(ctx context.Context, req *pb.GetAnggotaKelasRequest) (*pb.GetAnggotaKelasResponse, error) {
+func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetAnggotaKelasRequest) (*pb.GetAnggotaKelasResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
@@ -113,7 +121,7 @@ func (s *RombelAnggotaServiceServer) GetAnggotaKelas(ctx context.Context, req *p
 
 	if kelasId != "" {
 		// Ambil data Kelas berdasarkan PesertaDidikId
-		RombelAnggota, err := s.rombelAnggotaService.FindByID(ctx, kelasId, schemaName)
+		RombelAnggota, err := s.repo.FindByID(ctx, kelasId, schemaName, "anggota_rombel_id")
 		if err != nil {
 			return nil, err
 		}
@@ -131,7 +139,7 @@ func (s *RombelAnggotaServiceServer) GetAnggotaKelas(ctx context.Context, req *p
 		}, nil
 	}
 	// Ambil semua data Kelas
-	banyakAnggotaKelas, err := s.rombelAnggotaService.FindAllByConditions(ctx, schemaName, conditions, int(req.GetLimit()), int(req.GetOffset()))
+	banyakAnggotaKelas, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(req.GetLimit()), int(req.GetOffset()))
 	if err != nil {
 		log.Printf("[ERROR] Gagal menemukan Kelas di schema '%s': %v", schemaName, err)
 		return nil, fmt.Errorf("gagal menemukan Kelas di schema '%s': %w", schemaName, err)

@@ -4,15 +4,23 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
-	"sekolah/services"
+	"sekolah/repositories"
 	"sekolah/utils"
 )
 
 type SemesterServiceServer struct {
 	pb.UnimplementedSemesterServiceServer
-	SemesterService services.SemesterService
+	repo repositories.GenericRepository[models.Semester]
+}
+
+func NewSemesterService() *SemesterServiceServer {
+	repoSemester := repositories.NewSemesterRepository(config.DB)
+	return &SemesterServiceServer{
+		repo: *repoSemester,
+	}
 }
 
 // **CreateSemester**
@@ -36,7 +44,7 @@ func (s *SemesterServiceServer) CreateSemester(ctx context.Context, req *pb.Crea
 		TanggalSelesai: semester.TanggalSelesai,
 	}
 
-	err = s.SemesterService.Save(ctx, semesterModel, "ref")
+	err = s.repo.Save(ctx, semesterModel, "ref")
 	if err != nil {
 		log.Printf("Gagal menyimpan semester: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan semester: %w", err)
@@ -59,7 +67,7 @@ func (s *SemesterServiceServer) GetSemester(ctx context.Context, req *pb.GetSeme
 		conditions := map[string]interface{}{
 			"periode_aktif": 1,
 		}
-		SemesterModels, err := s.SemesterService.FindAllByConditions(ctx, "ref", conditions, 100, 0)
+		SemesterModels, err := s.repo.FindAllByConditions(ctx, "ref", conditions, 100, 0)
 		if err != nil {
 			log.Printf("[ERROR] Gagal menemukan tahun ajaran di schema '%s': %v", "ref", err)
 			return nil, fmt.Errorf("gagal menemukan tahun ajaran di schema '%s': %w", "ref", err)
@@ -84,7 +92,7 @@ func (s *SemesterServiceServer) GetSemester(ctx context.Context, req *pb.GetSeme
 
 	// Ambil data spesifik berdasarkan SemesterId
 
-	SemesterModel, err := s.SemesterService.FindByID(ctx, SemesterID, "ref", "semester_id")
+	SemesterModel, err := s.repo.FindByID(ctx, SemesterID, "ref", "semester_id")
 	if err != nil {
 		log.Printf("[ERROR] Gagal menemukan tahun ajaran dengan ID '%s' di schema '%s': %v", SemesterID, "ref", err)
 		return nil, fmt.Errorf("gagal menemukan tahun ajaran dengan ID '%s': %w", SemesterID, err)
@@ -126,7 +134,7 @@ func (s *SemesterServiceServer) UpdateSemester(ctx context.Context, req *pb.Upda
 		TanggalMulai:   semesterReq.TanggalMulai,
 		TanggalSelesai: semesterReq.TanggalSelesai,
 	}
-	err = s.SemesterService.Update(ctx, SemesterModel, "ref", "semester_id", SemesterModel.SemesterID)
+	err = s.repo.Update(ctx, SemesterModel, "ref", "semester_id", SemesterModel.SemesterID)
 	if err != nil {
 		log.Printf("Gagal memperbarui tahun ajaran: %v", err)
 		return nil, fmt.Errorf("gagal memperbarui tahun ajaran: %w", err)
@@ -148,7 +156,7 @@ func (s *SemesterServiceServer) DeleteSemester(ctx context.Context, req *pb.Dele
 	}
 	SemesterID := req.GetSemesterId()
 
-	err = s.SemesterService.Delete(ctx, SemesterID, "ref", "semester_id")
+	err = s.repo.Delete(ctx, SemesterID, "ref", "semester_id")
 	if err != nil {
 		log.Printf("Gagal menghapus tahun ajaran: %v", err)
 		return nil, fmt.Errorf("gagal menghapus tahun ajaran: %w", err)

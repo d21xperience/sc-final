@@ -5,22 +5,34 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
-	"sekolah/services"
+	"sekolah/repositories"
 	"sekolah/utils"
 
 	"gorm.io/gorm"
 )
 
-type SekolahServiceServer struct {
+type SekolahService struct {
 	pb.UnimplementedSekolahServiceServer
 	// RedisClient    *redis.Client // Tambahkan Redis sebagai field
-	schemaService  services.SchemaService
-	sekolahService services.SekolahService
+	sekolahService repositories.SekolahRepository
+	schemaService  SchemaService
 }
 
-func (s *SekolahServiceServer) RegistrasiSekolah(ctx context.Context, req *pb.TabelSekolahRequest) (*pb.TabelSekolahResponse, error) {
+func NewSekolahService() *SekolahService {
+	sekolahRepo := repositories.NewSekolahRepository(config.DB)
+	schemaRepo := repositories.NewSchemaRepository(config.DB)
+	sekolahTabelTenant := repositories.NewsekolahTenantRepository(config.DB)
+	schemaService := NewSchemaService(schemaRepo, sekolahTabelTenant)
+	return &SekolahService{
+		sekolahService: sekolahRepo,
+		schemaService:  schemaService,
+	}
+}
+
+func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSekolahRequest) (*pb.TabelSekolahResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	requiredFields := []string{"Sekolah"}
@@ -71,7 +83,7 @@ func (s *SekolahServiceServer) RegistrasiSekolah(ctx context.Context, req *pb.Ta
 	}, nil
 }
 
-func (s *SekolahServiceServer) GetSekolahTabelTenant(ctx context.Context, req *pb.SekolahTabelTenantRequest) (*pb.SekolahTabelTenantResponse, error) {
+func (s *SekolahService) GetSekolahTabelTenant(ctx context.Context, req *pb.SekolahTabelTenantRequest) (*pb.SekolahTabelTenantResponse, error) {
 	sekolahID := req.GetSekolahId()
 	sekolahTerdaftar, err := s.schemaService.GetSchemaBySekolahID(int(sekolahID))
 	if err != nil {
@@ -88,7 +100,7 @@ func (s *SekolahServiceServer) GetSekolahTabelTenant(ctx context.Context, req *p
 
 // SCHEMA TABLE SEKOLAH---------------------input informasi sekolah yang telah terdaftar
 // ================================================================================//
-func (s *SekolahServiceServer) CreateSekolah(ctx context.Context, req *pb.CreateSekolahRequest) (*pb.CreateSekolahResponse, error) {
+func (s *SekolahService) CreateSekolah(ctx context.Context, req *pb.CreateSekolahRequest) (*pb.CreateSekolahResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	requiredFields := []string{"SchemaName", "Sekolah"}
@@ -136,7 +148,7 @@ func (s *SekolahServiceServer) CreateSekolah(ctx context.Context, req *pb.Create
 
 }
 
-func (s *SekolahServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
+func (s *SekolahService) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
 	//  Ambil schema dari request
 	schemaName := req.GetSchemaName()
 	sekolahID := req.GetSekolahId()

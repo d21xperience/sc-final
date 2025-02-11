@@ -4,15 +4,23 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
-	"sekolah/services"
+	"sekolah/repositories"
 	"sekolah/utils"
 )
 
 type SiswaServiceServer struct {
 	pb.UnimplementedSiswaServiceServer
-	pesertaDidikService services.PesertaDidikService
+	repo repositories.GenericRepository[models.PesertaDidik]
+}
+
+func NewSiswaServiceServer() *SiswaServiceServer {
+	repoSiswa := repositories.NewSiswaRepository(config.DB)
+	return &SiswaServiceServer{
+		repo: *repoSiswa,
+	}
 }
 
 // **CreateSiswa**
@@ -49,7 +57,7 @@ func (s *SiswaServiceServer) CreateSiswa(ctx context.Context, req *pb.CreateSisw
 		PekerjaanWali:   &siswa.PekerjaanWali,
 	}
 
-	err = s.pesertaDidikService.Save(ctx, siswaModel, schemaName)
+	err = s.repo.Save(ctx, siswaModel, schemaName)
 	if err != nil {
 		log.Printf("Gagal menyimpan siswa: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan siswa: %w", err)
@@ -94,7 +102,7 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 			PekerjaanWali:   &sis.PekerjaanWali,
 		}
 	})
-	err = s.pesertaDidikService.SaveMany(ctx, schemaName, siswaModels)
+	err = s.repo.SaveMany(ctx, schemaName, siswaModels, 100)
 	if err != nil {
 		log.Printf("Gagal menyimpan siswa: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan siswa: %w", err)
@@ -118,13 +126,13 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 	rombelID := req.GetRombelId()
 	if PesertaDidikId != "" {
 		// Ambil data siswa berdasarkan PesertaDidikId
-		
+
 	} else if rombelID != "" {
 		// Ambil data siswa berdasarkan SemesterId
 
 	}
 	// Ambil semua data siswa
-	banyakSiswa, err := s.pesertaDidikService.FindAll(ctx, schemaName, int(req.GetLimit()), int(req.GetOffset()))
+	banyakSiswa, err := s.repo.FindAll(ctx, schemaName, int(req.GetLimit()), int(req.GetOffset()))
 	if err != nil {
 		log.Printf("[ERROR] Gagal menemukan siswa di schema '%s': %v", schemaName, err)
 		return nil, fmt.Errorf("gagal menemukan siswa di schema '%s': %w", schemaName, err)
@@ -194,7 +202,7 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 // 		TeleponWali:      &siswaPelenReq.TeleponWali,
 // 		FotoSiswa:        &siswaPelenReq.FotoSiswa,
 // 	}
-// 	err := s.pesertaDidikService.Update(ctx, siswa, siswaPelenkap, schemaName)
+// 	err := s.repo.Update(ctx, siswa, siswaPelenkap, schemaName)
 // 	if err != nil {
 // 		log.Printf("Gagal memperbarui siswa: %v", err)
 // 		return nil, fmt.Errorf("gagal memperbarui siswa: %w", err)
@@ -211,7 +219,7 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 // 	schemaName := req.GetSchemaName()
 // 	siswaID := req.GetSiswaId()
 
-// 	err := s.pesertaDidikService.Delete(ctx, siswaID, schemaName)
+// 	err := s.repo.Delete(ctx, siswaID, schemaName)
 // 	if err != nil {
 // 		log.Printf("Gagal menghapus siswa: %v", err)
 // 		return nil, fmt.Errorf("gagal menghapus siswa: %w", err)
@@ -312,7 +320,7 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 // 	}
 
 // 	// Simpan ke database
-// 	err = s.pesertaDidikService.BatchSave(ctx, siswaList, schemaName)
+// 	err = s.repo.BatchSave(ctx, siswaList, schemaName)
 // 	if err != nil {
 // 		return nil, fmt.Errorf("gagal menyimpan data siswa ke database: %w", err)
 // 	}

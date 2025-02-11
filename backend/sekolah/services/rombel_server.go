@@ -6,13 +6,18 @@ import (
 	"log"
 	pb "sekolah/generated"
 	"sekolah/models"
-	"sekolah/services"
+	"sekolah/repositories"
 	"sekolah/utils"
 )
 
 type RombelServiceServer struct {
 	pb.UnimplementedKelasServiceServer
-	service services.RombonganBelajarService
+	repo repositories.GenericRepository[models.RombonganBelajar]
+	// service services.RombonganBelajarService
+}
+
+func NewRombelServiceServer() *RombelServiceServer {
+	return &RombelServiceServer{}
 }
 
 // **CreateKelas**
@@ -42,7 +47,7 @@ func (s *RombelServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKel
 		KurikulumId:         Kelas.KurikulumId,
 	}
 
-	err = s.service.Save(ctx, KelasModel, schemaName)
+	err = s.repo.Save(ctx, KelasModel, schemaName)
 	if err != nil {
 		log.Printf("Gagal menyimpan Kelas: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
@@ -81,7 +86,7 @@ func (s *RombelServiceServer) CreateBanyakKelas(ctx context.Context, req *pb.Cre
 			KurikulumId:         rom.KurikulumId,
 		}
 	})
-	err = s.service.SaveMany(ctx, schemaName, kelasModels)
+	err = s.repo.SaveMany(ctx, schemaName, kelasModels, 100)
 	if err != nil {
 		log.Printf("Gagal menyimpan Kelas: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
@@ -116,7 +121,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 
 	if kelasId != "" {
 		// Ambil data Kelas berdasarkan RombonganBelajarId
-		rombel, err := s.service.FindByID(ctx, kelasId, schemaName)
+		rombel, err := s.repo.FindByID(ctx, kelasId, schemaName, "semester_id")
 		if err != nil {
 			return nil, err
 		}
@@ -149,7 +154,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	// if offset == 0 {
 	// 	offset = 0
 	// }
-	banyakKelas, err := s.service.FindAllByConditions(ctx, schemaName, conditions, int(limit), int(req.GetOffset()))
+	banyakKelas, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(limit), int(req.GetOffset()))
 	if err != nil {
 		log.Printf("[ERROR] Gagal menemukan Kelas di schema '%s': %v", schemaName, err)
 		return nil, fmt.Errorf("gagal menemukan Kelas di schema '%s': %w", schemaName, err)
@@ -199,8 +204,9 @@ func (s *RombelServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKel
 		NamaJurusanSp:       Kelas.NamaJurusanSp,
 		JurusanSpId:         Kelas.JurusanSpId,
 		KurikulumId:         Kelas.KurikulumId,
+		// RombonganBelajarId:  kelas.RombonganBelajarId,
 	}
-	err = s.service.Update(ctx, schemaName, KelasModel)
+	err = s.repo.Update(ctx, KelasModel, schemaName, "rombongan_belajar_id", Kelas.SemesterId)
 	if err != nil {
 		log.Printf("Gagal memperbaharui Kelas: %v", err)
 		return nil, fmt.Errorf("gagal memperbaharui Kelas: %w", err)
@@ -223,7 +229,7 @@ func (s *RombelServiceServer) DeleteKelas(ctx context.Context, req *pb.DeleteKel
 	schemaName := req.GetSchemaName()
 	KelasID := req.GetKelasId()
 
-	err = s.service.Delete(ctx, KelasID, schemaName)
+	err = s.repo.Delete(ctx, KelasID, schemaName, "rombongan_belajar_id")
 	if err != nil {
 		log.Printf("Gagal menghapus Kelas: %v", err)
 		return nil, fmt.Errorf("gagal menghapus Kelas: %w", err)
@@ -324,7 +330,7 @@ func (s *RombelServiceServer) DeleteKelas(ctx context.Context, req *pb.DeleteKel
 // 	}
 
 // 	// Simpan ke database
-// 	err = s.service.BatchSave(ctx, KelasList, schemaName)
+// 	err = s.repo.BatchSave(ctx, KelasList, schemaName)
 // 	if err != nil {
 // 		return nil, fmt.Errorf("gagal menyimpan data Kelas ke database: %w", err)
 // 	}
