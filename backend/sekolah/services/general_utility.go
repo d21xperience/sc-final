@@ -1,4 +1,4 @@
-package server
+package services
 
 // // RequestRequirement digunakan untuk menyimpan dependensi service dan protobuf
 // type RequestRequirement[S any, P any] struct {

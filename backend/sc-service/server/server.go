@@ -18,7 +18,7 @@ import (
 func StartServer() {
 	grpcHost := "localhost"
 	gRPCPort := "50053"
-	httpPort := "8082"
+	httpPort := "8083"
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()

@@ -1,22 +1,30 @@
-package server
+package services
 
 import (
 	"context"
 	"fmt"
 	"log"
+	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
-	"sekolah/services"
+	"sekolah/repositories"
 	"sekolah/utils"
 )
 
-type TahunAjaranServiceServer struct {
+type TahunAjaranService struct {
 	pb.UnimplementedTahunAjaranServiceServer
-	TahunAjaranService services.TahunAjaranService
+	repo repositories.TahunAjaranRepository
+}
+
+func NewTahunAjararanService() *TahunAjaranService {
+	repoTahunAjaran := repositories.NewTahunAjaranRepository(config.DB)
+	return &TahunAjaranService{
+		repo: repoTahunAjaran,
+	}
 }
 
 // **CreateTahunAjaran**
-func (s *TahunAjaranServiceServer) CreateTahunAjaran(ctx context.Context, req *pb.CreateTahunAjaranRequest) (*pb.CreateTahunAjaranResponse, error) {
+func (s *TahunAjaranService) CreateTahunAjaran(ctx context.Context, req *pb.CreateTahunAjaranRequest) (*pb.CreateTahunAjaranResponse, error) {
 	// Daftar field yang wajib diisi
 	requiredFields := []string{"SchemaName", "TahunAjaran"}
 	// Validasi request
@@ -34,7 +42,7 @@ func (s *TahunAjaranServiceServer) CreateTahunAjaran(ctx context.Context, req *p
 		TanggalSelesai: tahunAjaran.TanggalSelesai,
 	}
 
-	err = s.TahunAjaranService.Save(ctx, tahunAjaranModel, schemaName)
+	err = s.repo.Save(ctx, tahunAjaranModel, schemaName)
 	if err != nil {
 		log.Printf("Gagal menyimpan tahun ajaran: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan tahun ajaran: %w", err)
@@ -47,7 +55,7 @@ func (s *TahunAjaranServiceServer) CreateTahunAjaran(ctx context.Context, req *p
 }
 
 // **GetTahunAjaran**
-func (s *TahunAjaranServiceServer) GetTahunAjaran(ctx context.Context, req *pb.GetTahunAjaranRequest) (*pb.GetTahunAjaranResponse, error) {
+func (s *TahunAjaranService) GetTahunAjaran(ctx context.Context, req *pb.GetTahunAjaranRequest) (*pb.GetTahunAjaranResponse, error) {
 	// Validasi SchemaName
 	schemaName := "ref" //req.GetSchemaName()
 	if schemaName == "" {
@@ -60,7 +68,7 @@ func (s *TahunAjaranServiceServer) GetTahunAjaran(ctx context.Context, req *pb.G
 
 	if findAll {
 		// Ambil semua Tahun Ajaran
-		tahunAjaranModels, err := s.TahunAjaranService.FindAll(ctx, schemaName, int(req.GetLimit()), int(req.GetOffset()))
+		tahunAjaranModels, err := s.repo.FindAll(ctx, schemaName, int(req.GetLimit()), int(req.GetOffset()))
 		if err != nil {
 			log.Printf("[ERROR] Gagal menemukan tahun ajaran di schema '%s': %v", schemaName, err)
 			return nil, fmt.Errorf("gagal menemukan tahun ajaran di schema '%s': %w", schemaName, err)
@@ -76,7 +84,7 @@ func (s *TahunAjaranServiceServer) GetTahunAjaran(ctx context.Context, req *pb.G
 	}
 
 	// Ambil data spesifik berdasarkan TahunAjaranId
-	tahunAjaranModel, err := s.TahunAjaranService.FindByID(ctx, tahunAjaranID, schemaName)
+	tahunAjaranModel, err := s.repo.FindByID(ctx, tahunAjaranID, schemaName)
 	if err != nil {
 		log.Printf("[ERROR] Gagal menemukan tahun ajaran dengan ID '%s' di schema '%s': %v", tahunAjaranID, schemaName, err)
 		return nil, fmt.Errorf("gagal menemukan tahun ajaran dengan ID '%s': %w", tahunAjaranID, err)
@@ -91,7 +99,7 @@ func (s *TahunAjaranServiceServer) GetTahunAjaran(ctx context.Context, req *pb.G
 }
 
 // **UpdateTahunAjaran**
-func (s *TahunAjaranServiceServer) UpdateTahunAjaran(ctx context.Context, req *pb.UpdateTahunAjaranRequest) (*pb.UpdateTahunAjaranResponse, error) {
+func (s *TahunAjaranService) UpdateTahunAjaran(ctx context.Context, req *pb.UpdateTahunAjaranRequest) (*pb.UpdateTahunAjaranResponse, error) {
 	// Daftar field yang wajib diisi
 	requiredFields := []string{"schemaname", "tahun_ajaran"}
 	// Validasi request
@@ -107,7 +115,7 @@ func (s *TahunAjaranServiceServer) UpdateTahunAjaran(ctx context.Context, req *p
 		TanggalMulai:   tahunAjaranReq.TanggalMulai,
 		TanggalSelesai: tahunAjaranReq.TanggalSelesai,
 	}
-	err = s.TahunAjaranService.Update(ctx, tahunAjaranModel, schemaName)
+	err = s.repo.Update(ctx, tahunAjaranModel, schemaName)
 	if err != nil {
 		log.Printf("Gagal memperbarui tahun ajaran: %v", err)
 		return nil, fmt.Errorf("gagal memperbarui tahun ajaran: %w", err)
@@ -119,11 +127,11 @@ func (s *TahunAjaranServiceServer) UpdateTahunAjaran(ctx context.Context, req *p
 }
 
 // // **DeleteTahunAjaran**
-func (s *TahunAjaranServiceServer) DeleteTahunAjaran(ctx context.Context, req *pb.DeleteTahunAjaranRequest) (*pb.DeleteTahunAjaranResponse, error) {
+func (s *TahunAjaranService) DeleteTahunAjaran(ctx context.Context, req *pb.DeleteTahunAjaranRequest) (*pb.DeleteTahunAjaranResponse, error) {
 	schemaName := req.GetSchemaName()
 	tahunAjaranID := req.GetTahunAjaranId()
 
-	err := s.TahunAjaranService.Delete(ctx, tahunAjaranID, schemaName)
+	err := s.repo.Delete(ctx, tahunAjaranID, schemaName)
 	if err != nil {
 		log.Printf("Gagal menghapus tahun ajaran: %v", err)
 		return nil, fmt.Errorf("gagal menghapus tahun ajaran: %w", err)

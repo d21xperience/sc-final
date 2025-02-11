@@ -1,5 +1,4 @@
-package server
-
+package services
 // import (
 // 	"context"
 // 	"fmt"

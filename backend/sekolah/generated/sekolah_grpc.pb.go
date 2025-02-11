@@ -3178,3 +3178,117 @@ var TranskripNilaiService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "sekolah.proto",
 }
+
+const (
+	DownloadService_DownloadSekolahService_FullMethodName = "/sekolah.DownloadService/DownloadSekolahService"
+)
+
+// DownloadServiceClient is the client API for DownloadService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// =========================================
+// =========================================
+// =============DOWNLOAD SERVICE============
+// =========================================
+type DownloadServiceClient interface {
+	// UPLOAD IJAZAH DAN TRANSKRIP NILAI
+	DownloadSekolahService(ctx context.Context, in *DownloadSekolahRequest, opts ...grpc.CallOption) (*DownloadSekolahResponse, error)
+}
+
+type downloadServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewDownloadServiceClient(cc grpc.ClientConnInterface) DownloadServiceClient {
+	return &downloadServiceClient{cc}
+}
+
+func (c *downloadServiceClient) DownloadSekolahService(ctx context.Context, in *DownloadSekolahRequest, opts ...grpc.CallOption) (*DownloadSekolahResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DownloadSekolahResponse)
+	err := c.cc.Invoke(ctx, DownloadService_DownloadSekolahService_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DownloadServiceServer is the server API for DownloadService service.
+// All implementations must embed UnimplementedDownloadServiceServer
+// for forward compatibility.
+//
+// =========================================
+// =========================================
+// =============DOWNLOAD SERVICE============
+// =========================================
+type DownloadServiceServer interface {
+	// UPLOAD IJAZAH DAN TRANSKRIP NILAI
+	DownloadSekolahService(context.Context, *DownloadSekolahRequest) (*DownloadSekolahResponse, error)
+	mustEmbedUnimplementedDownloadServiceServer()
+}
+
+// UnimplementedDownloadServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedDownloadServiceServer struct{}
+
+func (UnimplementedDownloadServiceServer) DownloadSekolahService(context.Context, *DownloadSekolahRequest) (*DownloadSekolahResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DownloadSekolahService not implemented")
+}
+func (UnimplementedDownloadServiceServer) mustEmbedUnimplementedDownloadServiceServer() {}
+func (UnimplementedDownloadServiceServer) testEmbeddedByValue()                         {}
+
+// UnsafeDownloadServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DownloadServiceServer will
+// result in compilation errors.
+type UnsafeDownloadServiceServer interface {
+	mustEmbedUnimplementedDownloadServiceServer()
+}
+
+func RegisterDownloadServiceServer(s grpc.ServiceRegistrar, srv DownloadServiceServer) {
+	// If the following call pancis, it indicates UnimplementedDownloadServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&DownloadService_ServiceDesc, srv)
+}
+
+func _DownloadService_DownloadSekolahService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DownloadSekolahRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DownloadServiceServer).DownloadSekolahService(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DownloadService_DownloadSekolahService_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DownloadServiceServer).DownloadSekolahService(ctx, req.(*DownloadSekolahRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// DownloadService_ServiceDesc is the grpc.ServiceDesc for DownloadService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var DownloadService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sekolah.DownloadService",
+	HandlerType: (*DownloadServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "DownloadSekolahService",
+			Handler:    _DownloadService_DownloadSekolahService_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sekolah.proto",
+}
