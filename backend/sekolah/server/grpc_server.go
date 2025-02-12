@@ -7,17 +7,19 @@ import (
 	"google.golang.org/grpc"
 )
 
+var UploadService *services.UploadServiceServer
+
 func RunGRPCServer() *grpc.Server {
 	grpcServer := grpc.NewServer()
 
-	// sekolahService := service
-	// schemaService := services.NewSchemaService()
-	// pb.RegisterSekolahServiceServer(grpcServer, schemaService)
+	sekolahService := services.NewSekolahService()
+	pb.RegisterSekolahServiceServer(grpcServer, sekolahService)
+
 	tahunAjaranService := services.NewTahunAjararanService()
 	pb.RegisterTahunAjaranServiceServer(grpcServer, tahunAjaranService)
-	// pb.RegisterSemesterServiceServer(grpcServer, &SemesterServiceServer{
-	// 	SemesterService: services.semesterService,
-	// })
+
+	semesterService := services.NewSemesterService()
+	pb.RegisterSemesterServiceServer(grpcServer, semesterService)
 
 	// REGISTER SISWA
 	siswaService := services.NewSiswaServiceServer()
@@ -36,8 +38,8 @@ func RunGRPCServer() *grpc.Server {
 	pb.RegisterNilaiAkhirServiceServer(grpcServer, nilaiAkhirService)
 
 	// REGISTER UPLOAD SERVICE
-	// sekolahService := services.NewSekolahService()
-	// pb.RegisterUploadDataSekolahServiceServer(grpcServer, sekolahService)
+	UploadService = services.NewUploadServiceServer()
+	pb.RegisterUploadDataSekolahServiceServer(grpcServer, UploadService)
 
 	return grpcServer
 }

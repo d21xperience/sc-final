@@ -7,11 +7,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-type GRPCServer struct {
-	// grpcServer              *grpc.Server
-	// 	schemaService           services.SchemaService
+// type GRPCServer struct {
+// 	// grpcServer              *grpc.Server
+// 	// 	schemaService           services.SchemaService
 
-}
+// }
 
 func RunGRPCServer() *grpc.Server {
 	grpcServer := grpc.NewServer()

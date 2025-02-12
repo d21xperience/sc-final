@@ -16,9 +16,20 @@ import (
 )
 
 func StartServer() {
-	grpcHost := "localhost"
-	gRPCPort := "50053"
-	httpPort := "8083"
+	grpcHost := os.Getenv("GRPC_HOST")
+	if grpcHost == "" {
+		grpcHost = "localhost"
+	}
+
+	gRPCPort := os.Getenv("GRPC_PORT")
+	if gRPCPort == "" {
+		gRPCPort = "50052"
+	}
+
+	httpPort := os.Getenv("HTTP_PORT")
+	if httpPort == "" {
+		httpPort = "8082"
+	}
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()

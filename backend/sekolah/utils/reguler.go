@@ -21,11 +21,3 @@ func SearchString(input string) string {
 		return ""
 	}
 }
-
-func ConvertModelsToPB[T any, U any](models []*T, converter func(*T) *U) []*U {
-	var pbList []*U
-	for _, model := range models {
-		pbList = append(pbList, converter(model))
-	}
-	return pbList
-}

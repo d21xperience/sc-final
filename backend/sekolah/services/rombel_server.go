@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
 	"sekolah/repositories"
@@ -13,11 +14,13 @@ import (
 type RombelServiceServer struct {
 	pb.UnimplementedKelasServiceServer
 	repo repositories.GenericRepository[models.RombonganBelajar]
-	// service services.RombonganBelajarService
 }
 
 func NewRombelServiceServer() *RombelServiceServer {
-	return &RombelServiceServer{}
+	repoRombel := repositories.NewrombonganBelajarRepository(config.DB)
+	return &RombelServiceServer{
+		repo: *repoRombel,
+	}
 }
 
 // **CreateKelas**
@@ -150,10 +153,10 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	if limit == 0 {
 		limit = 100
 	}
-	// offset := req.GetOffset()
-	// if offset == 0 {
-	// 	offset = 0
-	// }
+	offset := req.GetOffset()
+	if offset == 0 {
+		offset = 0
+	}
 	banyakKelas, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(limit), int(req.GetOffset()))
 	if err != nil {
 		log.Printf("[ERROR] Gagal menemukan Kelas di schema '%s': %v", schemaName, err)

@@ -981,9 +981,9 @@ var SiswaService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	UploadDataSekolahService_UploadDataSekolahWithMultipart_FullMethodName  = "/sekolah.UploadDataSekolahService/UploadDataSekolahWithMultipart"
-	UploadDataSekolahService_UploadDataSekolahWithBase64_FullMethodName     = "/sekolah.UploadDataSekolahService/UploadDataSekolahWithBase64"
-	UploadDataSekolahService_UploadDataSekolahWithStreamGrpc_FullMethodName = "/sekolah.UploadDataSekolahService/UploadDataSekolahWithStreamGrpc"
+	UploadDataSekolahService_UploadDataSekolah_FullMethodName   = "/sekolah.UploadDataSekolahService/UploadDataSekolah"
+	UploadDataSekolahService_DownloadDataSekolah_FullMethodName = "/sekolah.UploadDataSekolahService/DownloadDataSekolah"
+	UploadDataSekolahService_GetTemplate_FullMethodName         = "/sekolah.UploadDataSekolahService/GetTemplate"
 )
 
 // UploadDataSekolahServiceClient is the client API for UploadDataSekolahService service.
@@ -993,9 +993,9 @@ const (
 // =======================================
 // UPLOAD SERVICE
 type UploadDataSekolahServiceClient interface {
-	UploadDataSekolahWithMultipart(ctx context.Context, in *UploadDataSekolahMultipartRequest, opts ...grpc.CallOption) (*UploadDataSekolahMultipartResponse, error)
-	UploadDataSekolahWithBase64(ctx context.Context, in *UploadDataSekolahBase64Request, opts ...grpc.CallOption) (*UploadDataSekolahBase64Response, error)
-	UploadDataSekolahWithStreamGrpc(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse], error)
+	UploadDataSekolah(ctx context.Context, in *UploadDataSekolahRequest, opts ...grpc.CallOption) (*UploadDataSekolahResponse, error)
+	DownloadDataSekolah(ctx context.Context, in *DownloadDataSekolahRequest, opts ...grpc.CallOption) (*DownloadDataSekolahResponse, error)
+	GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateResponse, error)
 }
 
 type uploadDataSekolahServiceClient struct {
@@ -1006,38 +1006,35 @@ func NewUploadDataSekolahServiceClient(cc grpc.ClientConnInterface) UploadDataSe
 	return &uploadDataSekolahServiceClient{cc}
 }
 
-func (c *uploadDataSekolahServiceClient) UploadDataSekolahWithMultipart(ctx context.Context, in *UploadDataSekolahMultipartRequest, opts ...grpc.CallOption) (*UploadDataSekolahMultipartResponse, error) {
+func (c *uploadDataSekolahServiceClient) UploadDataSekolah(ctx context.Context, in *UploadDataSekolahRequest, opts ...grpc.CallOption) (*UploadDataSekolahResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UploadDataSekolahMultipartResponse)
-	err := c.cc.Invoke(ctx, UploadDataSekolahService_UploadDataSekolahWithMultipart_FullMethodName, in, out, cOpts...)
+	out := new(UploadDataSekolahResponse)
+	err := c.cc.Invoke(ctx, UploadDataSekolahService_UploadDataSekolah_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *uploadDataSekolahServiceClient) UploadDataSekolahWithBase64(ctx context.Context, in *UploadDataSekolahBase64Request, opts ...grpc.CallOption) (*UploadDataSekolahBase64Response, error) {
+func (c *uploadDataSekolahServiceClient) DownloadDataSekolah(ctx context.Context, in *DownloadDataSekolahRequest, opts ...grpc.CallOption) (*DownloadDataSekolahResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UploadDataSekolahBase64Response)
-	err := c.cc.Invoke(ctx, UploadDataSekolahService_UploadDataSekolahWithBase64_FullMethodName, in, out, cOpts...)
+	out := new(DownloadDataSekolahResponse)
+	err := c.cc.Invoke(ctx, UploadDataSekolahService_DownloadDataSekolah_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *uploadDataSekolahServiceClient) UploadDataSekolahWithStreamGrpc(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse], error) {
+func (c *uploadDataSekolahServiceClient) GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &UploadDataSekolahService_ServiceDesc.Streams[0], UploadDataSekolahService_UploadDataSekolahWithStreamGrpc_FullMethodName, cOpts...)
+	out := new(GetTemplateResponse)
+	err := c.cc.Invoke(ctx, UploadDataSekolahService_GetTemplate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]{ClientStream: stream}
-	return x, nil
+	return out, nil
 }
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type UploadDataSekolahService_UploadDataSekolahWithStreamGrpcClient = grpc.ClientStreamingClient[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]
 
 // UploadDataSekolahServiceServer is the server API for UploadDataSekolahService service.
 // All implementations must embed UnimplementedUploadDataSekolahServiceServer
@@ -1046,9 +1043,9 @@ type UploadDataSekolahService_UploadDataSekolahWithStreamGrpcClient = grpc.Clien
 // =======================================
 // UPLOAD SERVICE
 type UploadDataSekolahServiceServer interface {
-	UploadDataSekolahWithMultipart(context.Context, *UploadDataSekolahMultipartRequest) (*UploadDataSekolahMultipartResponse, error)
-	UploadDataSekolahWithBase64(context.Context, *UploadDataSekolahBase64Request) (*UploadDataSekolahBase64Response, error)
-	UploadDataSekolahWithStreamGrpc(grpc.ClientStreamingServer[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]) error
+	UploadDataSekolah(context.Context, *UploadDataSekolahRequest) (*UploadDataSekolahResponse, error)
+	DownloadDataSekolah(context.Context, *DownloadDataSekolahRequest) (*DownloadDataSekolahResponse, error)
+	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error)
 	mustEmbedUnimplementedUploadDataSekolahServiceServer()
 }
 
@@ -1059,14 +1056,14 @@ type UploadDataSekolahServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUploadDataSekolahServiceServer struct{}
 
-func (UnimplementedUploadDataSekolahServiceServer) UploadDataSekolahWithMultipart(context.Context, *UploadDataSekolahMultipartRequest) (*UploadDataSekolahMultipartResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadDataSekolahWithMultipart not implemented")
+func (UnimplementedUploadDataSekolahServiceServer) UploadDataSekolah(context.Context, *UploadDataSekolahRequest) (*UploadDataSekolahResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadDataSekolah not implemented")
 }
-func (UnimplementedUploadDataSekolahServiceServer) UploadDataSekolahWithBase64(context.Context, *UploadDataSekolahBase64Request) (*UploadDataSekolahBase64Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadDataSekolahWithBase64 not implemented")
+func (UnimplementedUploadDataSekolahServiceServer) DownloadDataSekolah(context.Context, *DownloadDataSekolahRequest) (*DownloadDataSekolahResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DownloadDataSekolah not implemented")
 }
-func (UnimplementedUploadDataSekolahServiceServer) UploadDataSekolahWithStreamGrpc(grpc.ClientStreamingServer[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]) error {
-	return status.Errorf(codes.Unimplemented, "method UploadDataSekolahWithStreamGrpc not implemented")
+func (UnimplementedUploadDataSekolahServiceServer) GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTemplate not implemented")
 }
 func (UnimplementedUploadDataSekolahServiceServer) mustEmbedUnimplementedUploadDataSekolahServiceServer() {
 }
@@ -1090,48 +1087,59 @@ func RegisterUploadDataSekolahServiceServer(s grpc.ServiceRegistrar, srv UploadD
 	s.RegisterService(&UploadDataSekolahService_ServiceDesc, srv)
 }
 
-func _UploadDataSekolahService_UploadDataSekolahWithMultipart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadDataSekolahMultipartRequest)
+func _UploadDataSekolahService_UploadDataSekolah_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadDataSekolahRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithMultipart(ctx, in)
+		return srv.(UploadDataSekolahServiceServer).UploadDataSekolah(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UploadDataSekolahService_UploadDataSekolahWithMultipart_FullMethodName,
+		FullMethod: UploadDataSekolahService_UploadDataSekolah_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithMultipart(ctx, req.(*UploadDataSekolahMultipartRequest))
+		return srv.(UploadDataSekolahServiceServer).UploadDataSekolah(ctx, req.(*UploadDataSekolahRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UploadDataSekolahService_UploadDataSekolahWithBase64_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadDataSekolahBase64Request)
+func _UploadDataSekolahService_DownloadDataSekolah_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DownloadDataSekolahRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithBase64(ctx, in)
+		return srv.(UploadDataSekolahServiceServer).DownloadDataSekolah(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UploadDataSekolahService_UploadDataSekolahWithBase64_FullMethodName,
+		FullMethod: UploadDataSekolahService_DownloadDataSekolah_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithBase64(ctx, req.(*UploadDataSekolahBase64Request))
+		return srv.(UploadDataSekolahServiceServer).DownloadDataSekolah(ctx, req.(*DownloadDataSekolahRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UploadDataSekolahService_UploadDataSekolahWithStreamGrpc_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(UploadDataSekolahServiceServer).UploadDataSekolahWithStreamGrpc(&grpc.GenericServerStream[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]{ServerStream: stream})
+func _UploadDataSekolahService_GetTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UploadDataSekolahServiceServer).GetTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UploadDataSekolahService_GetTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UploadDataSekolahServiceServer).GetTemplate(ctx, req.(*GetTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type UploadDataSekolahService_UploadDataSekolahWithStreamGrpcServer = grpc.ClientStreamingServer[UploadDataSekolahWithStreamGrpcRequest, UploadDataSekolahWithStreamGrpcResponse]
 
 // UploadDataSekolahService_ServiceDesc is the grpc.ServiceDesc for UploadDataSekolahService service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -1141,21 +1149,19 @@ var UploadDataSekolahService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UploadDataSekolahServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "UploadDataSekolahWithMultipart",
-			Handler:    _UploadDataSekolahService_UploadDataSekolahWithMultipart_Handler,
+			MethodName: "UploadDataSekolah",
+			Handler:    _UploadDataSekolahService_UploadDataSekolah_Handler,
 		},
 		{
-			MethodName: "UploadDataSekolahWithBase64",
-			Handler:    _UploadDataSekolahService_UploadDataSekolahWithBase64_Handler,
+			MethodName: "DownloadDataSekolah",
+			Handler:    _UploadDataSekolahService_DownloadDataSekolah_Handler,
 		},
-	},
-	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "UploadDataSekolahWithStreamGrpc",
-			Handler:       _UploadDataSekolahService_UploadDataSekolahWithStreamGrpc_Handler,
-			ClientStreams: true,
+			MethodName: "GetTemplate",
+			Handler:    _UploadDataSekolahService_GetTemplate_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "sekolah.proto",
 }
 
