@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"sekolah/models"
+	"time"
 
 	"github.com/xuri/excelize/v2"
 )
@@ -194,9 +195,63 @@ func GenerateTemplate(templateType, filePath string) error {
 		col := string(rune('A'+i)) + "1"
 		f.SetCellValue(sheetName, col, header)
 	}
+	f.SetCellValue(sheetName, "Y1", "Timestamp")
+	f.SetCellValue(sheetName, "Y2", time.Now().Format("2006-01-02 15:04:05")) // Isi dengan waktu saat ini
+
+	f.SetCellValue(sheetName, "Z1", "UserID")
+	f.SetCellValue(sheetName, "Z2", "123456") // Bisa diisi dengan ID pengguna yang mengunduh template
+
+	f.SetColVisible(sheetName, "Y", false) // Sembunyikan kolom Timestamp
+	f.SetColVisible(sheetName, "Z", false) // Sembunyikan kolom UserID
+
+	sampleData := []interface{}{"12345", "987654321", "Budi Santoso", "Jakarta", "2005-08-10", "Laki-laki", "Islam"}
+	for i, data := range sampleData {
+		col := string(rune('A'+i)) + "2"
+		f.SetCellValue(sheetName, col, data)
+	}
+
+	// Buat validasi dropdown untuk JenisKelamin
+	dv := excelize.NewDataValidation(true)
+	dv.Sqref = "F2:F100" // Rentang sel yang divalidasi
+	dv.SetDropList([]string{"Laki-laki", "Perempuan"})
+
+	if err := f.AddDataValidation(sheetName, dv); err != nil {
+		return fmt.Errorf("gagal menambahkan validasi: %w", err)
+	}
+
+	// Validasi NilaiAkhir hanya angka 0-100
+	dvNilai := excelize.NewDataValidation(true)
+	dvNilai.Sqref = "D2:D100"
+	// dvNilai.SetWholeNumber(0, 100)
+
+	if err := f.AddDataValidation(sheetName, dvNilai); err != nil {
+		return fmt.Errorf("gagal menambahkan validasi angka: %w", err)
+	}
+
+	err := f.ProtectSheet(sheetName, &excelize.SheetProtectionOptions{
+		FormatCells:         false, // Tidak bisa ubah format
+		FormatColumns:       false, // Tidak bisa ubah kolom
+		FormatRows:          false, // Tidak bisa ubah baris
+		InsertRows:          true,  // Bisa menambah baris baru
+		InsertColumns:       false, // Tidak bisa menambah kolom baru
+		InsertHyperlinks:    false,
+		DeleteRows:          false, // Tidak bisa hapus baris
+		DeleteColumns:       false, // Tidak bisa hapus kolom
+		SelectLockedCells:   false,
+		SelectUnlockedCells: true,
+	})
+	if err != nil {
+		return err
+	}
+
+	f.NewSheet("Panduan")
+	f.SetCellValue("Panduan", "A1", "Panduan Pengisian Template")
+	f.SetCellValue("Panduan", "A2", "1. Isi semua kolom sesuai dengan contoh yang diberikan.")
+	f.SetCellValue("Panduan", "A3", "2. Gunakan dropdown untuk memilih data yang tersedia.")
+	f.SetCellValue("Panduan", "A4", "3. Pastikan semua data terisi sebelum mengunggah ke sistem.")
 
 	// Simpan ke file
-	err := f.SaveAs(filePath)
+	err = f.SaveAs(filePath)
 	if err != nil {
 		return fmt.Errorf("gagal membuat template %s: %w", templateType, err)
 	}

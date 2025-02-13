@@ -174,7 +174,8 @@
                     <FileUpload ref="fileupload" mode="basic" name="demo[]" url="/api/upload" accept="xlsx/*"
                         :maxFileSize="1000000" @upload="onUpload" severity="secondary" />
                 </div>
-                <p class="mt-2 text-sm text-gray-500">Unduh Template Import data Penerima Ijazah <a href="#"
+                <p class="mt-2 text-sm text-gray-500">Unduh Template Import data Penerima Ijazah <a
+                        href="http://localhost:8082/api/v1/ss/download/template?template-type=siswa"
                         class="text-indigo-600 hover:text-indigo-500">Disini</a></p>
             </div>
         </div>
@@ -361,7 +362,7 @@ const fetchSemester = async () => {
 const fetchRombel = async () => {
     try {
         let payload = {
-            
+
         }
         const results = await store.dispatch("sekolahService/fetchRombel")
         // console.log(results)
@@ -410,4 +411,9 @@ const fileupload = ref();
 const onUpload = () => {
     fileupload.value.upload();
 };
+
+const downloadTemplate = async () => {
+    const response = await store.dispatch("sekolahService/getTemplate")
+    console.log(response)
+}
 </script>

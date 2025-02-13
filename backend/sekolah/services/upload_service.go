@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	pb "sekolah/generated"
+	"sekolah/utils"
 	"strconv"
 	"strings"
 )
@@ -106,60 +107,17 @@ func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Requ
 	})
 }
 
-// // DownloadFile menangani download file melalui gRPC dan REST API
-// func (s *UploadServiceServer) DownloadDataSekolah(ctx context.Context, req *pb.DownloadDataSekolahRequest) (*pb.DownloadDataSekolahResponse, error) {
-// 	// Tentukan path file yang diminta
-// 	filePath := filepath.Join(s.uploadDir, req.Filename)
-
-// 	// Baca file dari storage
-// 	fileBytes, err := os.ReadFile(filePath)
-// 	if err != nil {
-// 		return nil, status.Errorf(codes.NotFound, "File tidak ditemukan: %s", req.Filename)
-// 	}
-
-// 	// Kembalikan file dalam bentuk bytes
-// 	return &pb.DownloadDataSekolahResponse{
-// 		File:     fileBytes,
-// 		Filename: req.Filename,
-// 	}, nil
-// }
-
-// HandleDownloadTemplate adalah handler untuk mengunduh file template .xlsx.
-func (h *UploadServiceServer) HandleDownloadTemplate(w http.ResponseWriter, r *http.Request) {
-	// Lokasi file template di backend
-	templatePath := "./templates/template.xlsx" // Ganti dengan path sebenarnya di backend
-
-	// Buka file template
-	file, err := os.Open(templatePath)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Gagal membuka file template: %v", err), http.StatusInternalServerError)
-		return
-	}
-	defer file.Close()
-
-	// Mendapatkan informasi file untuk header
-	fileInfo, err := file.Stat()
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Gagal mendapatkan informasi file: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	// Set header response untuk file download
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", fileInfo.Name()))
-	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	w.Header().Set("Content-Length", strconv.FormatInt(fileInfo.Size(), 10))
-
-	// Kirim file ke response
-	if _, err := io.Copy(w, file); err != nil {
-		http.Error(w, fmt.Sprintf("Gagal mengirim file: %v", err), http.StatusInternalServerError)
-		return
-	}
-}
-
 // GetTemplate menyediakan template Excel berdasarkan jenis data
-func (s *UploadServiceServer) GetTemplate(ctx context.Context, req *pb.GetTemplateRequest) (*pb.GetTemplateResponse, error) {
-	templateType := req.GetTemplateType()
-	templatePath := fmt.Sprintf("/tmp/template_%s.xlsx", templateType)
+func (s *UploadServiceServer) DownloadDataSekolah(ctx context.Context, req *pb.DownloadDataSekolahRequest) (*pb.DownloadDataSekolahResponse, error) {
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"TemplateType"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	templateType := req.GetDownloadType()
+	templatePath := fmt.Sprintf("templates/template_%s.xlsx", templateType)
 
 	// Buat file template jika belum ada
 	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
@@ -175,8 +133,54 @@ func (s *UploadServiceServer) GetTemplate(ctx context.Context, req *pb.GetTempla
 		return nil, fmt.Errorf("gagal membaca template %s: %w", templateType, err)
 	}
 
-	return &pb.GetTemplateResponse{
-		FileName: fmt.Sprintf("template_%s.xlsx", templateType),
-		FileData: data,
+	return &pb.DownloadDataSekolahResponse{
+		Filename: fmt.Sprintf("template_%s.xlsx", templateType),
+		File:     data,
 	}, nil
+}
+
+// HandleDownloadTemplate adalah handler untuk mengunduh file template .xlsx.
+func (h *UploadServiceServer) DownloadTemplateHTTP(w http.ResponseWriter, r *http.Request) {
+	// Ambil nama file dari query parameter
+	templateType := r.URL.Query().Get("template-type")
+	if templateType == "" {
+		http.Error(w, "template-type is required", http.StatusBadRequest)
+		return
+	}
+	// Lokasi direktori template
+	templatePath := fmt.Sprintf("templates/template_%s.xlsx", templateType)
+
+	// Buat file template jika belum ada
+	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
+		err := GenerateTemplate(templateType, templatePath)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Gagal membuat template: %v", err), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	// Buka file template
+	file, err := os.Open(templatePath)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Gagal membuka file template: %v", err), http.StatusInternalServerError)
+		return
+	}
+	defer file.Close()
+
+	// Mendapatkan informasi file untuk header
+	fileInfo, err := file.Stat()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Gagal mendapatkan informasi file: %v", err), http.StatusInternalServerError)
+		return
+	}
+	// Set header response untuk file download
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", fileInfo.Name()))
+	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	w.Header().Set("Content-Length", strconv.FormatInt(fileInfo.Size(), 10))
+
+	// Kirim file ke response
+	if _, err := io.Copy(w, file); err != nil {
+		http.Error(w, fmt.Sprintf("Gagal mengirim file: %v", err), http.StatusInternalServerError)
+		return
+	}
 }

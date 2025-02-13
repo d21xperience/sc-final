@@ -1,7 +1,7 @@
 import axios from "axios";
 // const baseURL = "http://localhost:8080/api/v1";
 const api = axios.create({
-  baseURL: "http://localhost:8081/api/v1/ss", // Pastikan menggunakan protokol HTTPS
+  baseURL: "http://localhost:8082/api/v1/ss", // Pastikan menggunakan protokol HTTPS
   withCredentials: true, // Untuk mengirim cookie atau credensial
   headers: {
     "Content-Type": "application/json",
@@ -112,6 +112,26 @@ const actions = {
       // console.log(response.data.semester);
       commit("SET_TABELSEMESTER", response.data.semester);
       return true; // Mengembalikan data sekolah
+    } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal membuat semester:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
+  async getTemplate({ commit }, payload) {
+    commit("SET_LOADING", true);
+    commit("SET_ERROR", null);
+    try {
+      const response = await api.get(`/get-template`, {
+        params: {
+          template_type: "siswa",
+        },
+      });
+      // console.log(response.data.semester);
+      // commit("SET_TABELSEMESTER", response.data.semester);
+      return response; // Mengembalikan data sekolah
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal membuat semester:", error);
