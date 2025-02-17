@@ -104,7 +104,7 @@ func (s *RombelServiceServer) CreateBanyakKelas(ctx context.Context, req *pb.Cre
 // **GetKelas**
 func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequest) (*pb.GetKelasResponse, error) {
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"Schemaname"}
+	requiredFields := []string{"Schemaname", "SemesterId"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {

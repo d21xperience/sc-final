@@ -63,11 +63,11 @@
                 </div>
 
 
-                <DataTable ref="dt" v-model:selection="selectedKelas" stripedRows size="small" :value="rombel"
-                    dataKey="id" :paginator="true" :rows="5" :filters="filters"
+                <DataTable ref="dt" v-model:selection="selectedKelas" stripedRows size="small" :value="rombel" scrollable scrollHeight="400px"
+                    dataKey="rombonganBelajarId" :paginator="true" :rows="10" :filters="filters" tableStyle="min-width: 50rem"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56">
+                    :rowsPerPageOptions="[10, 20, 30]"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} kelas" class="mt-56">
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
                     <!-- <Column field="name" header="Foto">
                         <template #body="slotProps">
@@ -75,12 +75,17 @@
                                 :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
                         </template>
                     </Column> -->
-                    <Column field="name" header="Nama Kelas" sortable></Column>
-                    <Column field="code" header="Tingkat"></Column>
-                    <Column field="code" header="Jurusan" sortable></Column>
-                    <!-- <Column field="code" header="Tingkat" sortable></Column>
-                    <Column field="code" header="Rombel" sortable></Column>
-                    <Column field="name" header="JK"></Column> -->
+                    <Column field="nmKelas" header="Nama Kelas"></Column>
+                    <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
+                    <Column field="namaJurusanSp" header="Jurusan" sortable></Column>
+                    <Column field="code" header="Wali kelas"></Column>
+                    <Column field="code" header="Anggota Kelas">
+                        <template #body="slotProps">
+                            <!-- <Button icon="pi pi-bullseye" outlined rounded class="mr-2" @click="editProduct(slotProps.data)" /> -->
+                            <Button icon="pi pi-bullseye" outlined rounded class="mr-2" @click="dialogAnggotaRombel(slotProps.data)" />
+                        </template>
+                    </Column>
+                    <!--<Column field="name" header="JK"></Column> -->
                     <!-- <Column field="name" header="Tpt.Lahir"></Column>
                     <Column field="name" header="Tgl.Lahir"></Column>
                     <Column field="name" header="Agama"></Column>
@@ -108,14 +113,16 @@
     <!-- DIALOGBOX UNTUK TAMBAH DATA -->
     <Dialog v-model:visible="kelasDialog" :style="{ width: '450px' }" :header="judulHeader" :modal="true">
         <div class="">
-            <div class="w-full mb-2">
-                <!-- <p>{{ product.name }}</p> -->
-                <label for="name" class="block font-bold">Nama Kelas</label>
-                <InputText id="name" v-model.trim="kelas.nama" required="true" :invalid="submitted && !kelas.nama"
-                    fluid />
-                <small v-if="submitted && !kelas.nama" class="text-red-500">Nama Kelas harus diisi.</small>
-            </div>
-            <div class="flex">
+            <div class="flex space-x-2">
+                <div class="w-full mb-2">
+                    <!-- <p>{{ product.name }}</p> -->
+                    <label for="name" class="block font-bold">Nama Kelas</label>
+                    <InputText id="name" v-model.trim="kelas.nama" required="true" :invalid="submitted && !kelas.nama"
+                        fluid />
+                    <small v-if="submitted && !kelas.nama" class="text-red-500">Nama Kelas harus diisi.</small>
+                
+                
+                </div>
                 <div>
                     <label for="name" class="block font-bold ">Tingkat</label>
                     <Select v-model.trim="kelas.tingkat" showClear :options="tingkat" optionLabel="name"
@@ -124,7 +131,17 @@
                     :invalid="submitted && !product.name" fluid /> -->
                     <small v-if="submitted && !kelas.tingkat" class="text-red-500">Kelas is required.</small>
                 </div>
-                <div class="w-full">
+            </div>
+            <div class="flex">
+                <div class="w-1/2">
+                    <label for="name" class="block font-bold ">Wali kelas</label>
+                    <Select v-model.trim="kelas.tingkat" showClear :options="tingkat" optionLabel="name"
+                        placeholder="Tingkat" class="mr-2" fluid />
+                    <!-- <InputText id="name" v-model.trim="product.name" required="true" 
+                    :invalid="submitted && !product.name" fluid /> -->
+                    <small v-if="submitted && !kelas.tingkat" class="text-red-500">Kelas is required.</small>
+                </div>
+                <div class="w-1/2">
                     <label for="name" class="block font-bold ">Jurusan</label>
                     <Select v-model="kelas.jurusan" showClear :options="jurusan" optionLabel="name"
                         placeholder="Jurusan" class="w-full mr-2" />
@@ -189,7 +206,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useStore } from "vuex";
 import DialogImport from '../../components/DialogImport.vue'
 const store = useStore();
@@ -317,7 +334,7 @@ const confirmDeleteSelected = () => {
     deleteKelasDialog.value = true;
 };
 const deletedKelas = () => {
-    products.value = products.value.filter(val => !selectedKelas.value.includes(val));
+    rombel.value = rombel.value.filter(val => !selectedKelas.value.includes(val));
     deleteKelasDialog.value = false;
     selectedKelas.value = null;
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
@@ -346,7 +363,6 @@ import MultiSelect from 'primevue/multiselect';
 
 import EmptyData from '@/components/EmptyData.vue';
 
-// select tahun ijazah
 const selectedSemester = ref();
 const semester = ref(null);
 const fetchSemester = async () => {
@@ -364,22 +380,28 @@ const fetchSemester = async () => {
 
     }
 }
-
+watch(selectedSemester,(newVal, oldVal)=> {
+    console.log(newVal)
+    fetchRombel()
+})
 const fetchRombel = async () => {
     try {
         let payload = {
-            schemaName: 'rombel',
+            "schema_name": "tabel_D4DA6B98FCFD71C58F5A",
+            "semester_id": selectedSemester.value.semesterId//"20232"
         }
+        console.log(payload)
         const results = await store.dispatch("sekolahService/fetchRombel", payload)
-        // console.log(results)
-        if (results) {
-            rombel.value = store.getters["sekolahService/fetchRombel"]
-            // Ambil semester terbaru berdasarkan ID terbesar
-            // selectedSemester.value = semester.value.reduce((latest, current) =>
-            //     current.semesterId > latest.semesterId ? current : latest
-            // );
-            console.log()
-        }
+        console.log(results)
+        rombel.value = results
+        // if (results) {
+        //     rombel.value = store.getters["sekolahService/fetchRombel"]
+        //     // Ambil semester terbaru berdasarkan ID terbesar
+        //     // selectedSemester.value = semester.value.reduce((latest, current) =>
+        //     //     current.semesterId > latest.semesterId ? current : latest
+        //     // );
+        //     console.log()
+        // }
     } catch (error) {
 
     }
@@ -423,4 +445,9 @@ const downloadTemplate = async () => {
     const response = await store.dispatch("sekolahService/getTemplate")
     console.log(response)
 }
+
+const dialogAnggotaRombel = (d) => {
+    console.log(d)
+}
+
 </script>

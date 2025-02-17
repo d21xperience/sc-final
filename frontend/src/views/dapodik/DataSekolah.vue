@@ -16,6 +16,8 @@
                         <div><input type="text" v-model="sekolah.nama" class="w-full"></div>
                         <div>Jenjang</div>
                         <div></div>
+                        <div>Bentuk Pendidikan</div>
+                        <div></div>
                         <div>NSS</div>
                         <div>sekolah.nss</div>
                         <div>NPSN</div>

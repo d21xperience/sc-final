@@ -13,7 +13,7 @@ const state = {
   loading: false,
   error: null,
   tabelTenant: JSON.parse(localStorage.getItem("tabelTenant")) || null,
-  tabelSemester: JSON.parse(localStorage.getItem("tabelSemester")) || null,
+  // tabelSemester: JSON.parse(localStorage.getItem("tabelSemester")) || null,
 };
 
 const mutations = {
@@ -102,14 +102,14 @@ const actions = {
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);
     try {
-      const response = await api.get(`/ss/semester`, {
-        // params: {
-        //   semester_id: semester_id,
-        // },
+      const response = await api.get(`/ss/${payload.schema_name}/kelas`, {
+        params: {
+          semester_id: payload.semester_id,
+        },
       });
-      // console.log(response.data.semester);
-      commit("SET_TABELSEMESTER", response.data.semester);
-      return true; // Mengembalikan data sekolah
+      // console.log(response.data);
+      // commit("SET_TABELSEMESTER", response.data.semester);
+      return response.data.kelas; // Mengembalikan data sekolah
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal membuat semester:", error);
