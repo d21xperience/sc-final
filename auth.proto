@@ -1,0 +1,233 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "myproject/gen/go/auth";
+import "google/api/annotations.proto";
+
+
+service AuthService {
+  rpc Login (LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/login"
+      body: "*"
+    };
+  }
+  rpc Register(RegisterRequest) returns (RegisterResponse){
+    option (google.api.http) = {
+        post: "/api/v1/auth/register"
+        body: "*"
+      };
+  };
+  rpc GetSekolah (GetSekolahRequest) returns (GetSekolahResponse) {
+    option (google.api.http) = {
+        get: "/api/v1/sekolah"
+      };
+  }
+  rpc GetUserByID (GetUserByIDRequest) returns (GetUserByIDResponse) {
+    option (google.api.http) = {
+        get: "/api/v1/user/{id}"
+    };
+  }
+}
+
+// Struktur Sekolah
+message Sekolah {
+  uint32 sekolah_id =1  [json_name = "sekolah_id"];
+  string sekolah_id_enkrip = 2  [json_name = "sekolah_id_enkrip"];
+  string kecamatan = 3;
+  string kabupaten = 4;
+  string propinsi = 5;
+  string kode_kecamatan = 6 [json_name = "kode_kecamatan"];
+  string kode_kab = 7 [json_name = "kode_kab"];
+  string kode_prop = 8 [json_name = "kode_prop"];
+  string nama_sekolah = 9 [json_name = "nama_sekolah"];
+  string npsn = 10;
+  string alamat_jalan = 11 [json_name = "alamat_jalan"];
+  string status = 12;
+}
+
+// Struktur User
+message User {
+  uint64 user_id = 1;
+  string username = 2;
+  string password = 3;
+  string email = 4;
+  string role = 5;
+  uint32 sekolah_id=6;
+}
+
+// Request untuk Register
+message RegisterRequest {
+  Sekolah sekolah = 1;
+  User user = 2;
+}
+
+// Response untuk Register
+message RegisterResponse {
+  string token = 1;
+  bool ok = 2;
+  User user = 3;
+}
+
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+  bool ok = 2;
+  User user= 3;
+}
+
+message GetSekolahRequest {
+  string npsn = 1;
+  int32 sekolah_id = 2;
+}
+
+message GetSekolahResponse {
+  string nama = 1;
+  Sekolah sekolah_data = 2;
+}
+
+message GetUserByIDRequest {
+   string id = 1; // Pastikan field ini ada
+}
+
+message GetUserByIDResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+}
+// ================================================================
+// Service untuk mengambil data user
+
+service UserProfileService {
+  rpc GetUserProfile (GetUserProfileRequest) returns (GetUserProfileResponse) {
+      option (google.api.http) = {
+          get: "/api/v1/user/{user_id}/profile"
+        };
+  }
+  rpc UpdateUserProfile (UpdateUserProfileRequest) returns (UpdateUserProfileResponse) {
+      option (google.api.http) = {
+          put: "/api/v1/user/{user_id}/profile"
+          body: "*"
+        };
+  }
+
+  rpc GetUserProfilePhoto(GetUserProfilePhotoRequest) returns (GetUserProfilePhotoResponse) {
+    option (google.api.http) = {
+        get: "/api/v1/user/{user_id}/profile/photo"
+    };
+  }
+  rpc UploadUserPhotoProfile (stream UploadUserPhotoProfileRequest) returns (UploadUserPhotoProfileResponse) {
+    option (google.api.http) = {
+        post: "/api/v1/user/profile/photo"
+        body: "*"
+      };
+  }
+
+  rpc DownloadUserPhotoProfile (DownloadUserPhotoProfileRequest) returns (stream DownloadUserPhotoProfileResponse) {
+    option (google.api.http) = {
+        get: "/api/v1/user/download/{filename}"
+      };
+  }
+
+}
+
+
+// Struktur User Profile
+message UserProfile {
+  uint64 user_id = 1 [json_name="user_id"];
+  string nama = 2;
+  string jk = 3;
+  string phone = 4;
+  string tpt_lahir = 5 [json_name="tpt_lahir"];
+  string tgl_lahir = 6 [json_name="tgl_lahir"];
+  string alamat_jalan = 7 [json_name="alamat_jalan"];
+  string kota_kab = 8 [json_name="kota_kab"];
+  string prov = 9;
+  string kode_pos = 10 [json_name="kode_pos"];
+  string nama_ayah = 11 [json_name="nama_ayah"];
+  string nama_ibu = 12 [json_name="nama_ibu"];
+  string photo_url = 13 [json_name="photo_url"];
+}
+message GetUserProfileRequest{
+  uint64 user_id = 1;
+}
+
+message GetUserProfileResponse {
+  UserProfile user_profile = 1;
+}
+
+message UpdateUserProfileRequest{
+  uint64 user_id = 1;
+  UserProfile user_profile = 2;
+}
+
+message UpdateUserProfileResponse{
+  string message = 1;
+  bool status = 2;
+}
+
+message UploadUserPhotoProfileRequest {
+  bytes chunk = 1; // Data gambar dikirim dalam chunk (streaming)
+  uint64 user_id = 2; // User ID untuk menghubungkan foto ke user
+  string filename = 3;
+}
+
+message UploadUserPhotoProfileResponse {
+  string message = 1;     // Status sukses/gagal
+  bool status = 2;   // URL foto yang tersimpan
+}
+
+message GetUserProfilePhotoRequest {
+  uint64 user_id = 1; // ID pengguna untuk mendapatkan foto profil
+}
+
+message GetUserProfilePhotoResponse {
+  bytes photo = 1;    // Foto profil dalam format binary
+  string content_type = 2; // Tipe konten (misalnya "image/png", "image/jpeg")
+}
+
+message DownloadUserPhotoProfileRequest {
+  uint64 user_id = 1;  // User ID untuk menghubungkan foto ke user
+  string filename = 2;  // URL foto yang akan diunduh
+}
+
+message DownloadUserPhotoProfileResponse {
+  bytes chunk = 1;     // Status sukses/gagal
+  string filename = 2;   // URL foto yang tersimpan
+}
+
+service SekolahIndonesiaService {
+  rpc GetSekolahIndonesia (GetSekolahIndonesiaRequest) returns (GetSekolahIndonesiaResponse) {
+    option (google.api.http) = {
+        get: "/api/v1/sekolah-indonesia"
+      };
+  }
+}
+message SekolahIndonesia{
+  string sekolah_id_enkrip		= 1 [json_name="sekolah_id_enkrip"];
+  string kecamatan			 	= 2 [json_name="kecamatan"];
+  string kabupaten			 	= 3 [json_name="kabupaten"];
+  string propinsi			 	= 4 [json_name="propinsi"];
+  string kode_kecamatan		= 5 [json_name="kode_kecamatan"];
+  string kode_kab			 	= 6 [json_name="kode_kab"];
+  string kode_prop			 	= 7 [json_name="kode_prop"];
+  string nama_sekolah			= 8 [json_name="nama_sekolah"];
+  string npsn			 		= 9 [json_name="npsn"];
+  string alamat_jalan			= 10 [json_name="alamat_jalan"];
+  string status			 	= 11 [json_name="status"];
+}
+message GetSekolahIndonesiaRequest {
+  string npsn = 1;  
+  string nama_sekolah = 2; 
+}
+
+message GetSekolahIndonesiaResponse {
+  string pesan = 1;
+  repeated SekolahIndonesia sekolah_indonesia = 2;
+}

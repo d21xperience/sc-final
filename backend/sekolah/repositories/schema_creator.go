@@ -81,53 +81,43 @@ func (r *schemaRepositoryImpl) LoadSQLFile(filePath, schemaName string) (string,
 	return builder.String(), nil
 }
 
-// InitializeDatabase menjalankan script SQL dari file dengan nama schema dinamis
-// func (r *schemaRepositoryImpl) InitializeDatabase(ctx context.Context, schemaFile, schemaName string) error {
-// 	sqlContent, err := r.LoadSQLFile(schemaFile, schemaName)
-// 	if err != nil {
-// 		return fmt.Errorf("failed to load SQL file: %w", err)
-// 	}
-
-//		if err := r.ExecuteSQL(sqlContent); err != nil {
-//			return fmt.Errorf("failed to execute SQL: %w", err)
-//		}
-//		// simpan informasi ke database
-//		log.Printf("Schema and tables created successfully: %s", schemaName)
-//		return nil
-//	}
 func (r *schemaRepositoryImpl) InitializeDatabase(ctx context.Context, schemaFile, schemaName string) error {
+	log.Printf("Initializing database for schema: %s", schemaName)
 	// Mulai transaction
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		log.Printf("Transaction started for schema: %s", schemaName)
+
 		// Muat isi file SQL
 		sqlContent, err := r.LoadSQLFile(schemaFile, schemaName)
 		if err != nil {
-			log.Printf("Error loading SQL file: %v", err)
+			log.Printf("❌ Error loading SQL file (%s): %v", schemaFile, err)
 			return fmt.Errorf("failed to load SQL file: %w", err)
 		}
+		log.Printf("✅ SQL file loaded successfully")
 
 		// Eksekusi SQL
+		log.Printf("Executing SQL statements for schema: %s", schemaName)
 		if err := tx.Exec(sqlContent).Error; err != nil {
-			log.Printf("Error executing SQL: %v", err)
+			log.Printf("❌ Error executing SQL for schema (%s): %v", schemaName, err)
 			return fmt.Errorf("failed to execute SQL: %w", err)
 		}
+		log.Printf("✅ SQL executed successfully")
 
-		// (Opsional) Simpan informasi schema ke database
-		if err := tx.Exec("INSERT INTO schema_logs (schema_name, created_at) VALUES (?, NOW())", schemaName).Error; err != nil {
-			log.Printf("Error saving schema log: %v", err)
+		// Simpan informasi schema ke database
+		log.Printf("Inserting schema log for: %s", schemaName)
+		if err := tx.Exec("INSERT INTO public.schema_logs (schema_name, created_at) VALUES (?, NOW())", schemaName).Error; err != nil {
+			log.Printf("❌ Error saving schema log for (%s): %v", schemaName, err)
 			return fmt.Errorf("failed to save schema log: %w", err)
 		}
+		log.Printf("✅ Schema log inserted successfully")
 
 		// Commit transaction
-		log.Printf("Schema %s successfully initialized", schemaName)
+		log.Printf("🎉 Schema %s successfully initialized", schemaName)
 		return nil
 	})
 }
 
 // Fungsi untuk mengganti schema dinamis
-//
-//	func SetSchema(schemaName string) *gorm.DB {
-//		return DB.Session(&gorm.Session{}).Exec(fmt.Sprintf("SET search_path TO %s", schemaName))
-//	}
 func (r *schemaRepositoryImpl) SetSchema(schemaName string) error {
 	return r.db.Exec(fmt.Sprintf("SET search_path TO %s", schemaName)).Error
 }

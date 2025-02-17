@@ -235,7 +235,7 @@ import DataLulusanService from '@/service/ProductService.js';
 onMounted(() => {
     DataLulusanService.getProducts().then((data) => (products.value = data));
 });
-const dataConnected = ref(false)
+const dataConnected = ref(true)
 const toast = useToast();
 const dt = ref();
 const products = ref();

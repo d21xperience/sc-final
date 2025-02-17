@@ -22,10 +22,10 @@ type Sekolah struct {
 	NmKepsek            string `json:"nm_kepsek"`
 	NipKepsek           string `json:"nip_kepsek"`
 	NiyKepsek           string `json:"niy_kepsek"`
-	StatusKepemilikanId string `json:"status_kepemilikan_id"`
+	StatusKepemilikanId int32  `json:"status_kepemilikan_id"`
 	KodeAktivasi        string `json:"kode_aktivasi"`
 	Jenjang             string `json:"jenjang"`
-	BentukPendidikanId  string `json:"bentuk_pendidikan_id"`
+	BentukPendidikanId  int32  `json:"bentuk_pendidikan_id"`
 }
 
 type SekolahTabelTenant struct {

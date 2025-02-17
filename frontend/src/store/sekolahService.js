@@ -1,7 +1,7 @@
 import axios from "axios";
 // const baseURL = "http://localhost:8080/api/v1";
 const api = axios.create({
-  baseURL: "http://localhost:8082/api/v1/ss", // Pastikan menggunakan protokol HTTPS
+  baseURL: "http://localhost:8183/api/v1", // Pastikan menggunakan protokol HTTPS
   withCredentials: true, // Untuk mengirim cookie atau credensial
   headers: {
     "Content-Type": "application/json",
@@ -35,22 +35,20 @@ const mutations = {
 
 const actions = {
   // Fitur baru ceknpsn
-  async getTabeltenant({ commit }, sekolahId) {
-    console.log(sekolahId);
-    commit("SET_LOADING", true);
-    commit("SET_ERROR", null);
+  async fetchTabeltenant({ commit }, sekolahId) {
+    // console.log(sekolahId);
+    // commit("SET_LOADING", true);
+    // commit("SET_ERROR", null);
     try {
-      const response = await api.get(`/sekolah/sekolah-terdaftar`, {
-        params: {
-          sekolah_id: sekolahId,
-        },
-      });
-      commit("SET_TABELTENANT", response.data);
-      console.log(response.data);
-      return true; // Mengembalikan data sekolah
+      const response = await api.get(
+        `/sekolah/sekolah-terdaftar?sekolah_id=${sekolahId}`
+      );
+      // commit("SET_TABELTENANT", response.data);
+      // console.log(response.data);
+      return response.data; // Mengembalikan data sekolah
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
-      console.error("Gagal membuat tabel tenant:", error);
+      console.error("Gagal mengambil data tabel tenant:", error);
       return null;
     } finally {
       commit("SET_LOADING", false);
@@ -84,7 +82,7 @@ const actions = {
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);
     try {
-      const response = await api.get(`/semester`, {
+      const response = await api.get(`/ss/semester`, {
         params: {
           semester_id: semester_id,
         },
@@ -104,10 +102,10 @@ const actions = {
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);
     try {
-      const response = await api.get(`/semester`, {
-        params: {
-          semester_id: semester_id,
-        },
+      const response = await api.get(`/ss/semester`, {
+        // params: {
+        //   semester_id: semester_id,
+        // },
       });
       // console.log(response.data.semester);
       commit("SET_TABELSEMESTER", response.data.semester);
@@ -124,14 +122,29 @@ const actions = {
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);
     try {
-      const response = await api.get(`/get-template`, {
+      const response = await api.get(`/ss/download/template`, {
         params: {
-          template_type: "siswa",
+          "template-type": "siswa",
         },
       });
       // console.log(response.data.semester);
       // commit("SET_TABELSEMESTER", response.data.semester);
       return response; // Mengembalikan data sekolah
+    } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal membuat semester:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
+  async fetchSekolah({ commit }, payload) {
+    try {
+      const response = await api.get(`/ss/${payload.schemaName}/sekolah`);
+      // console.log(response.data.semester);
+      // commit("SET_TABELSEMESTER", response.data.semester);
+      console.log(response.data.sekolah);
+      return response.data.sekolah; // Mengembalikan data sekolah
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal membuat semester:", error);

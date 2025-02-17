@@ -393,9 +393,18 @@ func request_SekolahService_CreateSekolah_0(ctx context.Context, marshaler runti
 	var (
 		protoReq CreateSekolahRequest
 		metadata runtime.ServerMetadata
+		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	val, ok := pathParams["schema_name"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	}
+	protoReq.SchemaName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
 	msg, err := client.CreateSekolah(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -405,9 +414,18 @@ func local_request_SekolahService_CreateSekolah_0(ctx context.Context, marshaler
 	var (
 		protoReq CreateSekolahRequest
 		metadata runtime.ServerMetadata
+		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	val, ok := pathParams["schema_name"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	}
+	protoReq.SchemaName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
 	msg, err := server.CreateSekolah(ctx, &protoReq)
 	return msg, metadata, err
@@ -427,14 +445,6 @@ func request_SekolahService_GetSekolah_0(ctx context.Context, marshaler runtime.
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
-	val, ok = pathParams["sekolah_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "sekolah_id")
-	}
-	protoReq.SekolahId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "sekolah_id", err)
-	}
 	msg, err := client.GetSekolah(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
@@ -452,14 +462,6 @@ func local_request_SekolahService_GetSekolah_0(ctx context.Context, marshaler ru
 	protoReq.SchemaName, err = runtime.String(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["sekolah_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "sekolah_id")
-	}
-	protoReq.SekolahId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "sekolah_id", err)
 	}
 	msg, err := server.GetSekolah(ctx, &protoReq)
 	return msg, metadata, err
@@ -762,38 +764,6 @@ func local_request_UploadDataSekolahService_DownloadDataSekolah_0(ctx context.Co
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.DownloadDataSekolah(ctx, &protoReq)
-	return msg, metadata, err
-}
-
-var filter_UploadDataSekolahService_GetTemplate_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
-
-func request_UploadDataSekolahService_GetTemplate_0(ctx context.Context, marshaler runtime.Marshaler, client UploadDataSekolahServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq GetTemplateRequest
-		metadata runtime.ServerMetadata
-	)
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_UploadDataSekolahService_GetTemplate_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := client.GetTemplate(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_UploadDataSekolahService_GetTemplate_0(ctx context.Context, marshaler runtime.Marshaler, server UploadDataSekolahServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq GetTemplateRequest
-		metadata runtime.ServerMetadata
-	)
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_UploadDataSekolahService_GetTemplate_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.GetTemplate(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -2653,7 +2623,7 @@ func RegisterSekolahServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.SekolahService/CreateSekolah", runtime.WithHTTPPathPattern("/api/v1/ss/create"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.SekolahService/CreateSekolah", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2673,7 +2643,7 @@ func RegisterSekolahServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.SekolahService/GetSekolah", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/sekolah/{sekolah_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.SekolahService/GetSekolah", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/sekolah"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2846,26 +2816,6 @@ func RegisterUploadDataSekolahServiceHandlerServer(ctx context.Context, mux *run
 			return
 		}
 		forward_UploadDataSekolahService_DownloadDataSekolah_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-	mux.Handle(http.MethodGet, pattern_UploadDataSekolahService_GetTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.UploadDataSekolahService/GetTemplate", runtime.WithHTTPPathPattern("/api/v1/ss/get-template"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_UploadDataSekolahService_GetTemplate_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_UploadDataSekolahService_GetTemplate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -4057,7 +4007,7 @@ func RegisterSekolahServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.SekolahService/CreateSekolah", runtime.WithHTTPPathPattern("/api/v1/ss/create"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.SekolahService/CreateSekolah", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4074,7 +4024,7 @@ func RegisterSekolahServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.SekolahService/GetSekolah", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/sekolah/{sekolah_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.SekolahService/GetSekolah", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/sekolah"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4093,8 +4043,8 @@ func RegisterSekolahServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 var (
 	pattern_SekolahService_RegistrasiSekolah_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sekolah", "registrasi-sekolah"}, ""))
 	pattern_SekolahService_GetSekolahTabelTenant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sekolah", "sekolah-terdaftar"}, ""))
-	pattern_SekolahService_CreateSekolah_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "create"}, ""))
-	pattern_SekolahService_GetSekolah_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "ss", "schema_name", "sekolah", "sekolah_id"}, ""))
+	pattern_SekolahService_CreateSekolah_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "ss", "schema_name", "create"}, ""))
+	pattern_SekolahService_GetSekolah_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "ss", "schema_name", "sekolah"}, ""))
 )
 
 var (
@@ -4314,36 +4264,17 @@ func RegisterUploadDataSekolahServiceHandlerClient(ctx context.Context, mux *run
 		}
 		forward_UploadDataSekolahService_DownloadDataSekolah_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_UploadDataSekolahService_GetTemplate_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.UploadDataSekolahService/GetTemplate", runtime.WithHTTPPathPattern("/api/v1/ss/get-template"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_UploadDataSekolahService_GetTemplate_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_UploadDataSekolahService_GetTemplate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
 	return nil
 }
 
 var (
 	pattern_UploadDataSekolahService_UploadDataSekolah_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "upload"}, ""))
 	pattern_UploadDataSekolahService_DownloadDataSekolah_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "download"}, ""))
-	pattern_UploadDataSekolahService_GetTemplate_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "get-template"}, ""))
 )
 
 var (
 	forward_UploadDataSekolahService_UploadDataSekolah_0   = runtime.ForwardResponseMessage
 	forward_UploadDataSekolahService_DownloadDataSekolah_0 = runtime.ForwardResponseMessage
-	forward_UploadDataSekolahService_GetTemplate_0         = runtime.ForwardResponseMessage
 )
 
 // RegisterMapelServiceHandlerFromEndpoint is same as RegisterMapelServiceHandler but

@@ -13,7 +13,9 @@ CREATE TABLE IF NOT EXISTS ref.jurusan (
 	create_date TIMESTAMP NOT NULL,
 	last_update TIMESTAMP NOT NULL,
 	expired_date TIMESTAMP NULL DEFAULT NULL,
-	last_sync TIMESTAMP NOT NULL
+	last_sync TIMESTAMP NOT NULL,
+	PRIMARY KEY ("jurusan_id"),
+	
 );
 
 
@@ -29,7 +31,8 @@ CREATE TABLE IF NOT EXISTS ref.kurikulum (
 	last_update TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:56.948018',
 	expired_date TIMESTAMP NULL DEFAULT NULL,
 	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
-	PRIMARY KEY (kurikulum_id)
+	PRIMARY KEY (kurikulum_id),
+	CONSTRAINT "FK_kurikulum_jurusan" FOREIGN KEY ("jurusan_id") REFERENCES "jurusan" ("jurusan_id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 CREATE TABLE IF NOT EXISTS ref.tahun_ajaran (
 	tahun_ajaran_id NUMERIC(4,0) NOT NULL,
@@ -56,7 +59,9 @@ CREATE TABLE IF NOT EXISTS ref.semester (
 	last_update TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:59.238151',
 	expired_date TIMESTAMP NULL DEFAULT NULL,
 	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
-	PRIMARY KEY (semester_id)
+	PRIMARY KEY (semester_id),
+	CONSTRAINT "FK_semester_tahun_ajaran" FOREIGN KEY ("tahun_ajaran_id") REFERENCES "tahun_ajaran" ("tahun_ajaran_id") ON UPDATE CASCADE ON DELETE SET NULL
+
 );
 
 CREATE TABLE IF NOT EXISTS ref.mata_pelajaran (
@@ -74,4 +79,56 @@ CREATE TABLE IF NOT EXISTS ref.mata_pelajaran (
 	PRIMARY KEY (mata_pelajaran_id)
 );
 
+CREATE TABLE ref.bentuk_pendidikan (
+	bentuk_pendidikan_id SMALLINT NOT NULL,
+	nama VARCHAR(50) NOT NULL,
+	jenjang_paud NUMERIC(1,0) NOT NULL,
+	jenjang_tk NUMERIC(1,0) NOT NULL,
+	jenjang_sd NUMERIC(1,0) NOT NULL,
+	jenjang_smp NUMERIC(1,0) NOT NULL,
+	jenjang_sma NUMERIC(1,0) NOT NULL,
+	jenjang_tinggi NUMERIC(1,0) NOT NULL,
+	direktorat_pembinaan VARCHAR(40) NULL DEFAULT NULL,
+	aktif NUMERIC(1,0) NOT NULL,
+	formalitas_pendidikan CHAR(1) NOT NULL,
+	create_date TIMESTAMP NOT NULL DEFAULT '2020-04-16 09:40:03.422677',
+	last_update TIMESTAMP NOT NULL DEFAULT '2020-04-16 09:40:03.422677',
+	expired_date TIMESTAMP NULL DEFAULT NULL,
+	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
+	PRIMARY KEY (bentuk_pendidikan_id)
+);
 
+CREATE TABLE ref.jenjang_pendidikan (
+	jenjang_pendidikan_id NUMERIC(2,0) NOT NULL,
+	nama VARCHAR(25) NOT NULL,
+	jenjang_lembaga NUMERIC(1,0) NOT NULL,
+	jenjang_orang NUMERIC(1,0) NOT NULL,
+	create_date TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:56.540627',
+	last_update TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:56.540627',
+	expired_date TIMESTAMP NULL DEFAULT NULL,
+	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
+	PRIMARY KEY (jenjang_pendidikan_id)
+);
+
+CREATE TABLE ref.status_kepemilikan (
+	status_kepemilikan_id NUMERIC(1,0) NOT NULL,
+	nama VARCHAR(20) NOT NULL,
+	create_date TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:59.426803',
+	last_update TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:59.426803',
+	expired_date TIMESTAMP NULL DEFAULT NULL,
+	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
+	PRIMARY KEY (status_kepemilikan_id)
+);
+
+CREATE TABLE ref.tingkat_pendidikan (
+	tingkat_pendidikan_id NUMERIC(2,0) NOT NULL,
+	kode VARCHAR(5) NOT NULL,
+	nama VARCHAR(20) NOT NULL,
+	jenjang_pendidikan_id NUMERIC(2,0) NOT NULL,
+	create_date TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:59.88044',
+	last_update TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:59.88044',
+	expired_date TIMESTAMP NULL DEFAULT NULL,
+	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
+	PRIMARY KEY (tingkat_pendidikan_id),
+	CONSTRAINT "fk_tingkat__tingkat_j_jenjang_" FOREIGN KEY ("jenjang_pendidikan_id") REFERENCES ref.jenjang_pendidikan (jenjang_pendidikan_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+);

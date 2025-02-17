@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Sekolah struct {
-	ID              int    `gorm:"primaryKey"`
+	ID              uint32 `gorm:"primaryKey"`
 	NamaSekolah     string `json:"nama_sekolah"`
 	NPSN            string `gorm:"unique" json:"npsn"`
 	SekolahIDEnkrip string `gorm:"unique" json:"sekolah_id_enkrip"`

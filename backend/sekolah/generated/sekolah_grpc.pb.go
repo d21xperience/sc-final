@@ -983,7 +983,6 @@ var SiswaService_ServiceDesc = grpc.ServiceDesc{
 const (
 	UploadDataSekolahService_UploadDataSekolah_FullMethodName   = "/sekolah.UploadDataSekolahService/UploadDataSekolah"
 	UploadDataSekolahService_DownloadDataSekolah_FullMethodName = "/sekolah.UploadDataSekolahService/DownloadDataSekolah"
-	UploadDataSekolahService_GetTemplate_FullMethodName         = "/sekolah.UploadDataSekolahService/GetTemplate"
 )
 
 // UploadDataSekolahServiceClient is the client API for UploadDataSekolahService service.
@@ -995,7 +994,6 @@ const (
 type UploadDataSekolahServiceClient interface {
 	UploadDataSekolah(ctx context.Context, in *UploadDataSekolahRequest, opts ...grpc.CallOption) (*UploadDataSekolahResponse, error)
 	DownloadDataSekolah(ctx context.Context, in *DownloadDataSekolahRequest, opts ...grpc.CallOption) (*DownloadDataSekolahResponse, error)
-	GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateResponse, error)
 }
 
 type uploadDataSekolahServiceClient struct {
@@ -1026,16 +1024,6 @@ func (c *uploadDataSekolahServiceClient) DownloadDataSekolah(ctx context.Context
 	return out, nil
 }
 
-func (c *uploadDataSekolahServiceClient) GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTemplateResponse)
-	err := c.cc.Invoke(ctx, UploadDataSekolahService_GetTemplate_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UploadDataSekolahServiceServer is the server API for UploadDataSekolahService service.
 // All implementations must embed UnimplementedUploadDataSekolahServiceServer
 // for forward compatibility.
@@ -1045,7 +1033,6 @@ func (c *uploadDataSekolahServiceClient) GetTemplate(ctx context.Context, in *Ge
 type UploadDataSekolahServiceServer interface {
 	UploadDataSekolah(context.Context, *UploadDataSekolahRequest) (*UploadDataSekolahResponse, error)
 	DownloadDataSekolah(context.Context, *DownloadDataSekolahRequest) (*DownloadDataSekolahResponse, error)
-	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error)
 	mustEmbedUnimplementedUploadDataSekolahServiceServer()
 }
 
@@ -1061,9 +1048,6 @@ func (UnimplementedUploadDataSekolahServiceServer) UploadDataSekolah(context.Con
 }
 func (UnimplementedUploadDataSekolahServiceServer) DownloadDataSekolah(context.Context, *DownloadDataSekolahRequest) (*DownloadDataSekolahResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadDataSekolah not implemented")
-}
-func (UnimplementedUploadDataSekolahServiceServer) GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTemplate not implemented")
 }
 func (UnimplementedUploadDataSekolahServiceServer) mustEmbedUnimplementedUploadDataSekolahServiceServer() {
 }
@@ -1123,24 +1107,6 @@ func _UploadDataSekolahService_DownloadDataSekolah_Handler(srv interface{}, ctx 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UploadDataSekolahService_GetTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTemplateRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UploadDataSekolahServiceServer).GetTemplate(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UploadDataSekolahService_GetTemplate_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UploadDataSekolahServiceServer).GetTemplate(ctx, req.(*GetTemplateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // UploadDataSekolahService_ServiceDesc is the grpc.ServiceDesc for UploadDataSekolahService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1155,10 +1121,6 @@ var UploadDataSekolahService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DownloadDataSekolah",
 			Handler:    _UploadDataSekolahService_DownloadDataSekolah_Handler,
-		},
-		{
-			MethodName: "GetTemplate",
-			Handler:    _UploadDataSekolahService_GetTemplate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -9,7 +9,7 @@ import (
 type UserProfile struct {
 	gorm.Model
 	// ID          int32  `gorm:"primaryKey;autoIncrement" json:"biodata_id"`
-	UserId      int32  `gorm:"foreignKey:UserRefer"`
+	UserId      uint64 `gorm:"foreignKey:UserRefer"`
 	User        User   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Nama        string `gorm:"size:100" json:"nama"`
 	JK          string `gorm:"size:100" json:"jk"`
@@ -25,5 +25,5 @@ type UserProfile struct {
 	PhotoUrl    string `gorm:"type:varchar(255)" json:"photo_url"`
 	// CreatedAt   time.Time `gorm:"autoCreateTime" json:"created_at"`
 	// UpdatedAt   time.Time `gorm:"autoUpdateTime" json:"updated_at"`
-	
+
 }

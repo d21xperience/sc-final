@@ -22,7 +22,9 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_sekolah (
 	kode_aktivasi VARCHAR(30) NULL DEFAULT NULL,
 	jenjang VARCHAR(20) NULL DEFAULT NULL,
 	bentuk_pendidikan_id SMALLINT NULL DEFAULT NULL,
-	PRIMARY KEY (sekolah_id)
+	PRIMARY KEY (sekolah_id),
+	CONSTRAINT "FK_tabel_sekolah_ref.bentuk_pendidikan" FOREIGN KEY ("bentuk_pendidikan_id") REFERENCES "ref"."bentuk_pendidikan" ("bentuk_pendidikan_id") ON UPDATE NO ACTION ON DELETE NO ACTION
+
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_siswa (
@@ -88,7 +90,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_ptk_terdaftar (
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_kelas (
 	rombongan_belajar_id UUID NOT NULL,
 	sekolah_id UUID NOT NULL,
-	semester_id VARCHAR(5) NOT NULL,
+	semester_id CHAR(5) NOT NULL,
 	jurusan_id VARCHAR(25) NULL DEFAULT NULL,
 	ptk_id UUID NULL DEFAULT NULL,
 	nm_kelas VARCHAR(30) NULL DEFAULT NULL,
@@ -97,7 +99,11 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_kelas (
 	nama_jurusan_sp VARCHAR(100) NULL DEFAULT NULL,
 	jurusan_sp_id UUID NULL DEFAULT NULL,
 	kurikulum_id SMALLINT NOT NULL,
-	PRIMARY KEY (rombongan_belajar_id)
+	PRIMARY KEY (rombongan_belajar_id),
+	CONSTRAINT "FK_tabel_kelas_ref.jurusan" FOREIGN KEY ("jurusan_id") REFERENCES "ref"."jurusan" ("jurusan_id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT "FK_tabel_kelas_ref.kurikulum" FOREIGN KEY ("kurikulum_id") REFERENCES "ref"."kurikulum" ("kurikulum_id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT "FK_tabel_kelas_ref.semester" FOREIGN KEY ("semester_id") REFERENCES "ref"."semester" ("semester_id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT "FK_tabel_kelas_ref.tingkat_pendidikan" FOREIGN KEY ("tingkat_pendidikan_id") REFERENCES "ref"."tingkat_pendidikan" ("tingkat_pendidikan_id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_anggotakelas (

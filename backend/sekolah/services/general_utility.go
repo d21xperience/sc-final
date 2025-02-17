@@ -177,13 +177,15 @@ func GenerateTemplate(templateType, filePath string) error {
 
 	switch templateType {
 	case "siswa":
-		headers = []string{"NIS", "NISN", "NamaSiswa", "TempatLahir", "TanggalLahir", "JenisKelamin", "Agama"}
+		headers = []string{"peserta_didik_id", "nis", "nisn", "nm_siswa", "tempat_lahir", "tanggal_lahir", "jenis_kelamin", "agama", "alamat_siswa", "telepon_siswa", "diterima_tanggal", "nm_ayah", "nm_ibu", "pekerjaan_ayah", "pekerjaan_ibu", "nm_wali"}
+	case "siswa_pelengkap":
+		headers = []string{"pelengkap_siswa_id", "peserta_didik_id", "status_dalam_kel", "anak_ke", "sekolah_asal", "diterima_kelas", "alamat_ortu", "telepon_ortu", "alamat_wali", "telepon_wali", "foto_siswa"}
 	case "nilai_akhir":
 		headers = []string{"NIS", "NamaSiswa", "MataPelajaran", "NilaiAkhir"}
 	case "guru":
-		headers = []string{"NIP", "NamaGuru", "MataPelajaran", "Telepon"}
+		headers = []string{"ptk_id", "nama", "nip", "jenis_ptk_id", "jenis_kelamin", "tempat_lahir", "tanggal_lahir", "nuptk", "alamat_jalan", "status_keaktifan_id"}
 	case "kelas":
-		headers = []string{"IDKelas", "NamaKelas", "WaliKelas"}
+		headers = []string{"rombongan_belajar_id", "sekolah_id", "semester_id", "jurusan_id", "ptk_id", "nm_kelas", "tingkat_pendidikan_id", "jenis_rombel", "nama_jurusan_sp", "jurusan_sp_id", "kurikulum_id"}
 	case "ijazah":
 		headers = []string{"NIS", "NamaSiswa", "NomorIjazah", "TahunLulus"}
 	default:
@@ -212,8 +214,8 @@ func GenerateTemplate(templateType, filePath string) error {
 
 	// Buat validasi dropdown untuk JenisKelamin
 	dv := excelize.NewDataValidation(true)
-	dv.Sqref = "F2:F100" // Rentang sel yang divalidasi
-	dv.SetDropList([]string{"Laki-laki", "Perempuan"})
+	dv.Sqref = "F2:F1000" // Rentang sel yang divalidasi
+	dv.SetDropList([]string{"L", "P"})
 
 	if err := f.AddDataValidation(sheetName, dv); err != nil {
 		return fmt.Errorf("gagal menambahkan validasi: %w", err)
@@ -228,21 +230,21 @@ func GenerateTemplate(templateType, filePath string) error {
 		return fmt.Errorf("gagal menambahkan validasi angka: %w", err)
 	}
 
-	err := f.ProtectSheet(sheetName, &excelize.SheetProtectionOptions{
-		FormatCells:         false, // Tidak bisa ubah format
-		FormatColumns:       false, // Tidak bisa ubah kolom
-		FormatRows:          false, // Tidak bisa ubah baris
-		InsertRows:          true,  // Bisa menambah baris baru
-		InsertColumns:       false, // Tidak bisa menambah kolom baru
-		InsertHyperlinks:    false,
-		DeleteRows:          false, // Tidak bisa hapus baris
-		DeleteColumns:       false, // Tidak bisa hapus kolom
-		SelectLockedCells:   false,
-		SelectUnlockedCells: true,
-	})
-	if err != nil {
-		return err
-	}
+	// err := f.ProtectSheet(sheetName, &excelize.SheetProtectionOptions{
+	// 	FormatCells:      false, // Tidak bisa ubah format
+	// 	FormatColumns:    false, // Tidak bisa ubah kolom
+	// 	FormatRows:       false, // Tidak bisa ubah baris
+	// 	InsertRows:       true,  // Bisa menambah baris baru
+	// 	InsertColumns:    false, // Tidak bisa menambah kolom baru
+	// 	InsertHyperlinks: false,
+	// 	DeleteRows:       false, // Tidak bisa hapus baris
+	// 	DeleteColumns:    false, // Tidak bisa hapus kolom
+	// 	// SelectLockedCells:   false,
+	// 	// SelectUnlockedCells: true,
+	// })
+	// if err != nil {
+	// 	return err
+	// }
 
 	f.NewSheet("Panduan")
 	f.SetCellValue("Panduan", "A1", "Panduan Pengisian Template")
@@ -251,7 +253,7 @@ func GenerateTemplate(templateType, filePath string) error {
 	f.SetCellValue("Panduan", "A4", "3. Pastikan semua data terisi sebelum mengunggah ke sistem.")
 
 	// Simpan ke file
-	err = f.SaveAs(filePath)
+	err := f.SaveAs(filePath)
 	if err != nil {
 		return fmt.Errorf("gagal membuat template %s: %w", templateType, err)
 	}

@@ -9,7 +9,9 @@ CREATE TABLE sekolah_indonesia (
     kode_kecamatan CHAR(6),
     kode_kab CHAR(6),
     kode_prop CHAR(6),
-    status VARCHAR(50) CHECK (status IN ('Negeri', 'Swasta')) -- Validasi nilai
+    status VARCHAR(50) CHECK (status IN ('Negeri', 'Swasta')), -- Validasi nilai
+    jenjang VARCHAR(100),
+    bentuk_pendidikan_id INTEGER
 );
 
 -- Tambahkan UNIQUE INDEX pada kolom npsn

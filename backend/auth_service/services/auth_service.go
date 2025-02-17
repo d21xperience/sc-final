@@ -2,7 +2,7 @@ package services
 
 import (
 	"auth_service/models"
-	"auth_service/repository"
+	"auth_service/repositories"
 	"auth_service/utils"
 	"errors"
 	"fmt"
@@ -12,7 +12,7 @@ import (
 )
 
 type AuthService interface {
-	IsAdminExists(schoolID int) (bool, error)
+	IsAdminExists(schoolID uint32) (bool, error)
 	Register(user *models.User) error
 	RegisterAdmin(user *models.User) error
 	Login(username, password string) (*models.User, error)
@@ -21,20 +21,20 @@ type AuthService interface {
 
 // AuthServiceImpl is the implementation of AuthService
 type authServiceImpl struct {
-	repository repository.UserRepository
-	secretKey  string
+	repo      repositories.UserRepository
+	secretKey string
 }
 
-func NewAuthService(as repository.UserRepository) AuthService {
-	return &authServiceImpl{repository: as}
+func NewAuthService(as repositories.UserRepository) AuthService {
+	return &authServiceImpl{repo: as}
 }
 
 // IsAdminExists cek apakah admin sudah adah ada pada sekolah
-func (s *authServiceImpl) IsAdminExists(schoolID int) (bool, error) {
-	admin, err := s.repository.FindUserByRoleAndSchoolID("admin", schoolID)
+func (s *authServiceImpl) IsAdminExists(schoolID uint32) (bool, error) {
+	admin, err := s.repo.FindUserByRoleAndSchoolID("admin", schoolID)
 	if err != nil {
 		// Return false if no admin found or error is not nil
-		if err == repository.ErrUserNotFound {
+		if err == repositories.ErrUserNotFound {
 			return false, nil
 		}
 		return false, err
@@ -44,7 +44,7 @@ func (s *authServiceImpl) IsAdminExists(schoolID int) (bool, error) {
 
 func (s *authServiceImpl) Register(user *models.User) error {
 	// Cek apakah username sudah ada
-	existingUser, err := s.repository.FindByUsername(user.Username)
+	existingUser, err := s.repo.FindByUsername(user.Username)
 	if err != nil {
 		// Tangani error jika terjadi kesalahan dalam mencari user
 		return fmt.Errorf("failed to check existing username: %w", err)
@@ -55,7 +55,7 @@ func (s *authServiceImpl) Register(user *models.User) error {
 	}
 	// Simpan user baru
 	// user.Password, _ = utils.EncryptPassword(user.Password) // Encrypt password
-	// return s.repository.Save(user)
+	// return s.repositories.Save(user)
 	// Enkripsi password
 	encryptedPasswordChan := make(chan string, 1)
 	errorChan := make(chan error, 1)
@@ -73,7 +73,7 @@ func (s *authServiceImpl) Register(user *models.User) error {
 	select {
 	case user.Password = <-encryptedPasswordChan:
 		// Simpan admin baru
-		return s.repository.Save(user)
+		return s.repo.Save(user)
 	case err = <-errorChan:
 		return err
 	}
@@ -81,7 +81,7 @@ func (s *authServiceImpl) Register(user *models.User) error {
 }
 func (s *authServiceImpl) RegisterAdmin(user *models.User) error {
 	// Cek apakah email sudah ada dengan query efisien
-	emailExists, err := s.repository.EmailExists(user.Email) // Hanya cek keberadaan email
+	emailExists, err := s.repo.EmailExists(user.Email) // Hanya cek keberadaan email
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func (s *authServiceImpl) RegisterAdmin(user *models.User) error {
 	select {
 	case user.Password = <-encryptedPasswordChan:
 		// Simpan admin baru
-		return s.repository.Save(user)
+		return s.repo.Save(user)
 	case err = <-errorChan:
 		return err
 	}
@@ -115,7 +115,7 @@ func (s *authServiceImpl) RegisterAdmin(user *models.User) error {
 func (s *authServiceImpl) Login(username, password string) (*models.User, error) {
 
 	// Ambil user berdasarkan username
-	user, err := s.repository.FindByUsername(username)
+	user, err := s.repo.FindByUsername(username)
 	if err != nil {
 		return nil, errors.New("invalid credentials")
 	}

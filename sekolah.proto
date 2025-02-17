@@ -1,0 +1,1173 @@
+syntax = "proto3";
+
+package sekolah;
+
+option go_package = "sekolah/sekolah;sekolah";
+import "google/api/annotations.proto";
+
+// =============================================
+// Generated Tahun Ajaran
+// =============================================
+service TahunAjaranService {
+  // CRUD for TahunAjaran
+  rpc CreateTahunAjaran (CreateTahunAjaranRequest) returns (CreateTahunAjaranResponse) {
+      option (google.api.http) = {
+        post: "/api/v1/ss/{schema_name}/tahun-ajaran/create"
+        body: "*"
+    };
+  }
+    rpc GetTahunAjaran (GetTahunAjaranRequest) returns (GetTahunAjaranResponse) {
+      option (google.api.http) = {
+        get: "/api/v1/ss/{schema_name}/tahun-ajaran"
+    };
+  }
+    rpc UpdateTahunAjaran (UpdateTahunAjaranRequest) returns (UpdateTahunAjaranResponse) {
+      option (google.api.http) = {
+        put: "/api/v1/ss/{schema_name}/tahun-ajaran/update"
+        body: "*"
+    };
+  }
+    rpc DeleteTahunAjaran (DeleteTahunAjaranRequest) returns (DeleteTahunAjaranResponse) {
+      option (google.api.http) = {
+        delete: "/api/v1/ss/{schema_name}/tahun-ajaran/delete/{tahun_ajaran_id}"
+    };
+  }
+}
+
+
+// TahunAjaran Structure
+message TahunAjaran {
+	uint32 tahun_ajaran_id     = 1;
+	string nama  = 2;
+	string periode_aktif   = 3;
+  string tanggal_mulai = 4;
+  string tanggal_selesai = 5;
+}
+
+// TahunAjaran CRUD
+message CreateTahunAjaranRequest {
+  string schema_name = 1;
+  TahunAjaran tahun_ajaran = 2;
+}
+message CreateTahunAjaranResponse {
+  string message = 1;
+  bool status = 2;
+}
+message GetTahunAjaranRequest {
+  string schema_name = 1;      // Nama schema (wajib)
+  string tahun_ajaran_id = 2;  // ID Tahun Ajaran (opsional, kosong jika ingin semua data)
+  int32 limit = 3;             // Batas data per halaman (opsional, default 10)
+  int32 offset = 4;            // Posisi data awal (opsional, default 0)
+}
+message GetTahunAjaranResponse {
+  repeated TahunAjaran tahun_ajaran = 1; // Slice dari Tahun Ajaran
+}
+message UpdateTahunAjaranRequest {
+  string schema_name = 1;
+  TahunAjaran tahun_ajaran = 2;
+}
+message UpdateTahunAjaranResponse {
+    string message = 1;
+    bool status = 2;
+}
+message DeleteTahunAjaranRequest {
+  string schema_name = 1;
+  string tahun_ajaran_id = 2;
+}
+message DeleteTahunAjaranResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+// =============================================
+// Generated Semester
+// =============================================
+
+service SemesterService {
+  // CRUD for Semester
+  rpc CreateSemester (CreateSemesterRequest) returns (CreateSemesterResponse) {
+      option (google.api.http) = {
+        post: "/api/v1/ss/semester/create"
+        body: "*"
+    };
+  }
+    rpc GetSemester (GetSemesterRequest) returns (GetSemesterResponse) {
+      option (google.api.http) = {
+        get: "/api/v1/ss/semester"
+    };
+  }
+    rpc UpdateSemester (UpdateSemesterRequest) returns (UpdateSemesterResponse) {
+      option (google.api.http) = {
+        put: "/api/v1/ss/semester"
+        body: "*"
+    };
+  }
+    rpc DeleteSemester (DeleteSemesterRequest) returns (DeleteSemesterResponse) {
+      option (google.api.http) = {
+        delete: "/api/v1/ss/semester"
+    };
+  }
+}
+
+
+// Semester Structure
+message Semester {
+	string semester_id     = 1;
+	uint32 tahun_ajaran_id  = 2;
+	string nama_semester   = 3;
+	int32 semester       = 4;
+	int32 periode_aktif   = 5;
+	string tanggal_mulai   = 6;
+	string tanggal_selesai = 7;
+}
+
+// Semester CRUD
+message CreateSemesterRequest {
+  Semester semester = 1;
+  uint32 tahun_ajaran_id = 2;
+}
+message CreateSemesterResponse {
+  string message = 1;
+  bool status = 2;
+}
+message GetSemesterRequest {
+  string semester_id = 1;
+}
+message GetSemesterResponse {
+  repeated Semester semester = 1;
+}
+message UpdateSemesterRequest {
+    Semester semester = 1;
+}
+message UpdateSemesterResponse {
+    string message = 1;
+    bool status = 2;
+}
+message DeleteSemesterRequest {
+  string semester_id = 1;
+}
+message DeleteSemesterResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+// =============================================
+// Generated Sekolah
+// =============================================
+
+service SekolahService {
+  rpc GetSchoolInfo(SchoolRequest) returns (SchoolResponse);
+  rpc RegistrasiSekolah (TabelSekolahRequest) returns (TabelSekolahResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/sekolah/registrasi-sekolah"
+      body: "*"
+    };
+  }
+  rpc GetSekolahTabelTenant (SekolahTabelTenantRequest) returns (SekolahTabelTenantResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/sekolah/sekolah-terdaftar"
+    };
+  }
+    // // CRUD for Sekolah
+  rpc CreateSekolah (CreateSekolahRequest) returns (CreateSekolahResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ss/{schema_name}/create"
+      body: "*"
+    };
+  }
+  rpc GetSekolah (GetSekolahRequest) returns (GetSekolahResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ss/{schema_name}/sekolah"
+    };
+  }
+}  
+// Struktur Sekolah
+message Sekolah {
+  int32 sekolah_id = 1;
+  string sekolah_id_enkrip = 2;
+  string kecamatan = 3;
+  string kabupaten = 4;
+  string propinsi = 5;
+  string kode_kecamatan = 6;
+  string kode_kab = 7;
+  string kode_prop = 8;
+  string nama_sekolah = 9;
+  string npsn = 10;
+  string alamat_jalan = 11;
+  string status = 12;
+}
+
+message SekolahDapo{
+  string		sekolah_id		 = 1 [json_name = "sekolah_id"];				
+	string		nama		 = 2;				 		
+	string		npsn		 = 3;				 		
+	string		nss		 = 4;				 		
+	string		alamat		 = 5;					
+	string		kd_pos		 = 6;					
+	string		telepon		 = 7;					
+	string		fax		 = 8;				 		
+	string		kelurahan		 = 9;				
+	string		kecamatan		 = 10;				
+	string		kab_kota		 = 11;					
+	string		propinsi		 = 12;					
+	string		website		 = 13;					
+	string		email		 = 14;				 	
+	string		nm_kepsek		 = 15;				
+	string		nip_kepsek		 = 16;				
+	string		niy_kepsek		 = 17;				
+	int32		status_kepemilikan_id		 = 18;	
+	string		kode_aktivasi		 = 19;			
+	string		jenjang		 = 20;				 	
+	int32		bentuk_pendidikan_id		 = 21;
+  string status = 22;		
+}
+message TabelSekolahRequest{
+  Sekolah sekolah = 1;
+}
+message TabelSekolahResponse{
+  string message = 1;
+  bool status = 2;
+}
+
+message SchoolRequest {
+  string school_id = 1;
+  string schema_name = 2;
+}
+
+message SchoolResponse {
+  string school_name = 1;
+  string address = 2;
+}
+
+message SekolahTabelTenantRequest {
+  int32 sekolah_id = 1;
+  // string schema_name = 2;
+}
+message SekolahTabelTenantResponse {
+  int32 sekolah_id = 1;
+  string nama_sekolah = 2;
+  string schema_name = 3;
+}
+
+message CreateSekolahRequest {
+  string schema_name = 1;
+  SekolahDapo sekolah = 2;
+}
+
+message CreateSekolahResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+message GetSekolahRequest {
+  string schema_name = 1;
+}
+
+message GetSekolahResponse{
+  SekolahDapo sekolah = 1;
+}
+
+// =======================================
+// SISWA SERVICE
+service SiswaService {
+  // CRUD for Siswa
+  rpc CreateSiswa (CreateSiswaRequest) returns (CreateSiswaResponse) {
+      option (google.api.http) = {
+        post: "/api/v1/ss/{schema_name}/siswa/create"
+        body: "*"
+    };
+  }
+  rpc CreateBanyakSiswa (CreateBanyakSiswaRequest) returns (CreateBanyakSiswaResponse) {
+      option (google.api.http) = {
+        post: "/api/v1/ss/{schema_name}/siswa/create-banyak"
+        body: "*"
+    };
+  }
+  rpc GetSiswa (GetSiswaRequest) returns (GetSiswaResponse) {
+      option (google.api.http) = {
+        get: "/api/v1/ss/{schema_name}/siswa/{semester_id}"
+    };
+  }
+  rpc UpdateSiswa (UpdateSiswaRequest) returns (UpdateSiswaResponse) {
+      option (google.api.http) = {
+        put: "/api/v1/ss/{schema_name}/siswa/update"
+        body: "*"
+    };
+  }
+  rpc DeleteSiswa (DeleteSiswaRequest) returns (DeleteSiswaResponse) {
+      option (google.api.http) = {
+        delete: "/api/v1/ss/{schema_name}/siswa/delete/{siswa_id}"
+    };
+  }
+}
+
+
+// Siswa Structure
+message Siswa {
+  string    peserta_didik_id	= 1;
+  string    nis					= 2;
+  string    nisn				= 3;
+  string    nm_siswa			= 4;
+  string    tempat_lahir		= 5;
+  string    tanggal_lahir		= 6;
+  string    jenis_kelamin		= 7;
+  string    agama				= 8;
+  string    alamat_siswa		= 9;
+  string    telepon_siswa		= 10;
+  string    diterima_tanggal	= 11;
+  string    nm_ayah				= 12;
+  string    nm_ibu				= 13;
+  string    pekerjaan_ayah		= 14;
+  string    pekerjaan_ibu		= 15;
+  string    nm_wali				= 16;
+  string    pekerjaan_wali		= 17;
+}
+
+message SiswaPelengkap{
+  string    pelengkap_siswa_id	= 1;
+  string    peserta_didik_id		= 2;
+  string    status_dalam_kel		= 3;
+  string    anak_ke					= 4;
+  string    sekolah_asal			= 5;
+  string    diterima_kelas			= 6;
+  string    alamat_ortu				= 7;
+  string    telepon_ortu			= 8;
+  string    alamat_wali				= 9;
+  string    telepon_wali			= 10;
+  string    foto_siswa				= 11;
+}
+
+// Siswa CRUD
+message CreateSiswaRequest {
+  string schema_name = 1;
+  Siswa siswa = 2;
+}
+message CreateSiswaResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+// Crate Banyak Siswa
+message CreateBanyakSiswaRequest {
+  string schema_name = 1;
+  repeated Siswa siswa = 2;
+}
+message CreateBanyakSiswaResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+message GetSiswaRequest {
+  string schema_name = 1;
+  string semester_id  = 2;
+  string rombel_id = 3;
+  string peserta_didik_id = 4;
+  int32 limit = 5;             // Batas data per halaman (opsional, default 10)
+  int32 offset = 6;            // Posisi data awal (opsional, default 0)
+
+}
+message GetSiswaResponse {
+  repeated Siswa siswa = 1;
+}
+message UpdateSiswaRequest {
+    string schema_name = 1;
+    Siswa siswa = 2;
+    SiswaPelengkap siswa_pelengkap = 3;
+}
+message UpdateSiswaResponse {
+    string message = 1;
+    bool status = 2;
+}
+message DeleteSiswaRequest {
+  string schema_name = 1;
+  string siswa_id = 2;
+}
+message DeleteSiswaResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+// =======================================
+// UPLOAD SERVICE
+service UploadDataSekolahService{
+  rpc UploadDataSekolah (UploadDataSekolahRequest) returns (UploadDataSekolahResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ss/upload"
+      body:"*"
+    };
+  }
+  rpc DownloadDataSekolah (DownloadDataSekolahRequest) returns (DownloadDataSekolahResponse) {
+    option (google.api.http) = {
+        get: "/api/v1/ss/download"
+    };
+  }
+  // rpc GetTemplate (GetTemplateRequest) returns (GetTemplateResponse) {
+  //   option (google.api.http) = {
+  //       get: "/api/v1/ss/get-template"
+  //   };
+  // }
+}
+
+message UploadDataSekolahRequest {
+  string upload_type = 1; // siswa, nilai_akhir, guru, kelas
+  string schemaname = 2;
+  string filename = 3;
+  bytes file = 4;
+}
+message UploadDataSekolahResponse {
+  string message = 1;
+  string file_url = 2;
+}
+message DownloadDataSekolahRequest {
+  string download_type = 1; // siswa, nilai_akhir, guru, kelas
+  string schemaname = 2;
+  string filename = 3;
+}
+
+message DownloadDataSekolahResponse {
+  string filename = 1;
+  bytes file = 2;
+}
+
+// message GetTemplateRequest {
+//   string template_type = 1; // siswa, nilai_akhir, guru, kelas, ijazah
+// }
+
+// message GetTemplateResponse {
+//   string file_name = 1;
+//   bytes file_data = 2;
+// }
+
+// =======================================
+// MATA PELAJARAN SERVICE
+service MapelService {    
+  // CRUD for Mapel
+  rpc CreateMapel (CreateMapelRequest) returns (CreateMapelResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/{schema_name}/mapel/create"
+      body: "*"
+    };
+  }
+  rpc CreateBanyakMapel (CreateBanyakMapelRequest) returns (CreateBanyakMapelResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/{schema_name}/mapel/create-banyak"
+      body: "*"
+    };
+  }
+  rpc GetMapel (GetMapelRequest) returns (GetMapelResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/{schema_name}/mapel"
+    };
+  }
+  rpc UpdateMapel (UpdateMapelRequest) returns (UpdateMapelResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/{schema_name}/mapel/update/{mapel_id}"
+      body: "*"
+    };
+  }
+  rpc DeleteMapel (DeleteMapelRequest) returns (DeleteMapelResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/{schema_name}/mapel/delete/{mapel_id}"
+    };
+  }
+}
+
+message Mapel {
+  string	id_map_mapel	= 1;
+  string	mata_pelajaran_id	= 2;
+  string	nm_lokal	= 3;
+  string	area_kompetensi	= 4;
+  string	klp_mpl	= 5;
+  string	kurikulum_id	= 6;
+  int32	urut_rapor	= 7;
+  string	tingkat_pendidikan_id	= 8;  
+}
+
+message CreateMapelRequest {
+  Mapel mapel = 1;
+  string schema_name = 2;
+}
+message CreateMapelResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+message CreateBanyakMapelRequest {
+  string schema_name = 1;
+  repeated Mapel mapel = 2;
+}
+message CreateBanyakMapelResponse {
+  string message = 1;
+  bool status = 2;
+}
+message GetMapelRequest {
+  string schema_name = 1;
+  string mapel_id = 2;
+}
+message GetMapelResponse {
+  repeated Mapel mapel = 1;
+}
+message UpdateMapelRequest {
+  string schema_name = 1;
+  string mapel_id = 2;
+  Mapel mapel = 3;
+
+}
+  message UpdateMapelResponse {
+  string message = 1;
+  bool status = 2;
+}
+  message DeleteMapelRequest {
+  string mapel_id = 1;
+  string schema_name = 2;
+}
+message DeleteMapelResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+// SERVICE NILAI AKHIR
+service NilaiAkhirService {    
+    // Nilai Akhir
+    rpc CreateNilaiAkhir (CreateNilaiAkhirRequest) returns (CreateNilaiAkhirResponse) {
+      option (google.api.http) = {
+        post: "/api/v1/ss/{schema_name}/nilai-akhir/create"
+        body: "*"
+    };
+  }
+    rpc GetNilaiAkhir (GetNilaiAkhirRequest) returns (GetNilaiAkhirResponse) {
+      option (google.api.http) = {
+        get: "/api/v1/ss/{schema_name}/nilai-akhir/{id_nilai_akhir}"
+    };
+  }
+    rpc UpdateNilaiAkhir (UpdateNilaiAkhirRequest) returns (UpdateNilaiAkhirResponse) {
+      option (google.api.http) = {
+        put: "/api/v1/ss/{schema_name}/nilai-akhir/update/{id_nilai_akhir}"
+        body: "*"
+    };
+  }
+    rpc DeleteNilaiAkhir (DeleteNilaiAkhirRequest) returns (DeleteNilaiAkhirResponse) {
+      option (google.api.http) = {
+        delete: "/api/ss/v1/{schema_name}/nilai-akhir/delete/{id_nilai_akhir}"
+    };
+  }
+}
+message NilaiAkhir {
+  string	id_nilai_akhir	=1;
+  string	anggota_rombel_id	=2;
+  int32	mata_pelajaran_id	=3;
+  string	semester_id	=4;
+  int32	nilai_peng	=5;
+  string	predikat_peng	=6;
+  int32	nilai_ket	=7;
+  string	predikat_ket	=8;
+  int32	nilai_sik	=9;
+  string	predikat_sik	=10;
+  int32	nilai_siksos	=11;
+  string	predikat_siksos	=12;
+  string	peserta_didik_id	=13;
+  string	id_minat	=14;
+  int32	semester	=15;
+  
+}
+
+message CreateNilaiAkhirRequest {
+  string schema_name = 1;
+  repeated NilaiAkhir nilai_akhir = 2;
+}
+message CreateNilaiAkhirResponse {
+  string message = 1;
+  bool status = 2;
+}
+message GetNilaiAkhirRequest {
+  string schema_name = 1;
+  string id_nilai_akhir = 2;
+}
+message GetNilaiAkhirResponse {
+  repeated NilaiAkhir nilai = 1;
+}
+message UpdateNilaiAkhirRequest {
+  string schema_name = 1;
+  string id_nilai_akhir = 2;
+  NilaiAkhir nilai = 3;
+}
+message UpdateNilaiAkhirResponse {
+  string message = 1;
+  bool status = 2;
+}
+message DeleteNilaiAkhirRequest {
+  string schema_name = 1;
+  string id_nilai_akhir = 2;
+}
+message DeleteNilaiAkhirResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+
+// =======================================
+// KELAS SERVICE
+service KelasService {    
+  // Kelas
+  rpc CreateKelas (CreateKelasRequest) returns (CreateKelasResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ss/{schema_name}/kelas"
+      body: "*"
+    };
+  }
+  rpc CreateBanyakKelas (CreateBanyakKelasRequest) returns (CreateBanyakKelasResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ss/{schema_name}/kelas/bulk"
+      body: "*"
+    };
+  }
+  rpc GetKelas (GetKelasRequest) returns (GetKelasResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ss/{schema_name}/kelas"
+    };
+  }
+  rpc UpdateKelas (UpdateKelasRequest) returns (UpdateKelasResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/{schema_name}/kelas"
+      body: "*"
+    };
+  }
+  rpc DeleteKelas (DeleteKelasRequest) returns (DeleteKelasResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/ss/{schema_name}/kelas"
+    };
+  }
+}
+
+
+message Kelas {
+  string	rombongan_belajar_id	=1;
+  string	sekolah_id	=2;
+  string	semester_id	=3;
+  string	jurusan_id	=4;
+  string	ptk_id	=5;
+  string	nm_kelas	=6;
+  int32	tingkat_pendidikan_id	=7;
+  int32	jenis_rombel	=8;
+  string	nama_jurusan_sp	=9;
+  optional string	jurusan_sp_id	=10;
+  int32	kurikulum_id	=11;
+  
+}
+
+message CreateKelasRequest {
+  string schema_name = 1;
+  Kelas kelas = 2;
+}
+message CreateKelasResponse {
+  string message = 1;
+  bool status = 2;
+}
+message CreateBanyakKelasRequest {
+  string schema_name = 1;
+  repeated Kelas kelas = 2;
+}
+message CreateBanyakKelasResponse {
+  string message = 1;
+  bool status = 2;
+}
+message GetKelasRequest {
+  string schema_name = 1;
+  string semester_id = 2;
+  string kelas_id = 3;
+  optional int32 limit = 5;             // Batas data per halaman (opsional, default 10)
+  optional int32 offset = 6;            // Posisi data awal (opsional, default 0)
+
+}
+message GetKelasResponse {
+  repeated Kelas kelas = 1;
+}
+message UpdateKelasRequest {
+  string schema_name = 1;
+  string kelas_id = 2;
+  Kelas kelas = 3;
+}
+message UpdateKelasResponse {
+  string message = 1;
+  bool status = 2;
+}
+message DeleteKelasRequest {
+  string schema_name = 1;
+  string kelas_id = 2;
+}
+message DeleteKelasResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+
+// =======================================
+// KELAS SERVICE
+service AnggotaKelasService {    
+  // AnggotaKelas
+  rpc CreateAnggotaKelas (CreateAnggotaKelasRequest) returns (CreateAnggotaKelasResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ss/{schema_name}/anggota-kelas/create"
+      body: "*"
+    };
+  }
+  rpc CreateBanyakAnggotaKelas (CreateBanyakAnggotaKelasRequest) returns (CreateBanyakAnggotaKelasResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ss/{schema_name}/anggota-kelas/create-banyak"
+      body: "*"
+    };
+  }
+  rpc GetAnggotaKelas (GetAnggotaKelasRequest) returns (GetAnggotaKelasResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ss/{schema_name}/anggota-kelas"
+    };
+  }
+  rpc UpdateAnggotaKelas (UpdateAnggotaKelasRequest) returns (UpdateAnggotaKelasResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/{schema_name}/anggota-kelas/update/{kelas_id}"
+      body: "*"
+    };
+  }
+  rpc DeleteAnggotaKelas (DeleteAnggotaKelasRequest) returns (DeleteAnggotaKelasResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/{schema_name}/anggota-kelas/delete/{kelas_id}"
+    };
+  }
+}
+
+
+message AnggotaKelas {
+  string	anggota_rombel_id	=1;
+  string	peserta_didik_id	=2;
+  string	rombongan_belajar_id	=3;
+  string	semester_id	=4;  
+  optional string nm_siswa = 5;
+  optional string nm_kelas = 6;
+  optional string nm_wl_kelas = 7;
+}
+
+message CreateAnggotaKelasRequest {
+  string schema_name = 1;
+  AnggotaKelas anggota_kelas = 2;
+}
+message CreateAnggotaKelasResponse {
+  string message = 1;
+  bool status = 2;
+}
+message CreateBanyakAnggotaKelasRequest {
+  string schema_name = 1;
+  repeated AnggotaKelas anggota_kelas = 2;
+}
+message CreateBanyakAnggotaKelasResponse {
+  string message = 1;
+  bool status = 2;
+}
+message GetAnggotaKelasRequest {
+  string schema_name = 1;
+  string semester_id = 2;
+  string kelas_id = 3;
+  string	rombongan_belajar_id	=4;
+  int32 limit = 5;             // Batas data per halaman (opsional, default 10)
+  int32 offset = 6;
+}
+message GetAnggotaKelasResponse {
+  repeated AnggotaKelas anggota_kelas = 1;
+}
+message UpdateAnggotaKelasRequest {
+  string schema_name = 1;
+  string kelas_id = 2;
+  AnggotaKelas anggota_kelas = 3;
+}
+message UpdateAnggotaKelasResponse {
+  string message = 1;
+  bool status = 2;
+}
+message DeleteAnggotaKelasRequest {
+  string schema_name = 1;
+  string kelas_id = 2;
+}
+message DeleteAnggotaKelasResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+
+
+// =======================================
+// PTK SERVICE
+service PTKService {    
+  // CRUD for PTK
+  rpc CreatePTK (CreatePTKRequest) returns (CreatePTKResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ss/PTK/create"
+      body: "*"
+    };
+  }
+  rpc GetPTK (GetPTKRequest) returns (GetPTKResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ss/PTK/{PTK_id}"
+    };
+  }
+  rpc UpdatePTK (UpdatePTKRequest) returns (UpdatePTKResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/ss/PTK/update/{PTK_id}"
+      body: "*"
+    };
+  }
+  rpc DeletePTK (DeletePTKRequest) returns (DeletePTKResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/ss/PTK/delete/{PTK_id}"
+    };
+  }
+}
+
+// PTK Structure
+message PTK {
+  string	ptk_id	=	1	;
+  string	nama	=	2	;
+  string	nip	=	3	;
+  int32	jenis_ptk_id	=	4	;
+  string	jenis_kelamin	=	5	;
+  string	tempat_lahir	=	6	;
+  string	tanggal_lahir	=	7	;
+  string	nuptk	=	8	;
+  string	alamat_jalan	=	9	;
+  int32	status_keaktifan_id	=	10	;
+  int32	soft_delete	=	11	;  
+}
+
+message PTKPelengkap{
+  string	ptk_pelengkap_id	=	1	;
+  string	ptk_id	=	2	;
+  string	gelar_depan	=	3	;
+  int32	gelar_belakang	=	4	;
+  string	nip_niy	=	5	;
+
+}
+
+// Request and Response for CRUD
+// PTK CRUD
+message CreatePTKRequest {
+  string schema_name = 1;
+  PTK PTK = 2;
+}
+message CreatePTKResponse {
+  string message = 1;
+  bool status = 2;
+}
+message GetPTKRequest {
+  string schema_name = 1;
+  string PTK_id = 2;
+}
+message GetPTKResponse {
+  PTK PTK = 1;
+}
+message UpdatePTKRequest {
+  string schema_name = 1;
+  string PTK_id = 2;
+  PTK PTK = 3;
+}
+message UpdatePTKResponse {
+  string message = 1;
+  bool status = 2;
+}
+message DeletePTKRequest {
+  string schema_name = 1;
+  string PTK_id = 2;
+}
+message DeletePTKResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+service PTKTerdaftarService {    
+  // CRUD for PTKTerdaftar
+  rpc CreatePTKTerdaftar (CreatePTKTerdaftarRequest) returns (CreatePTKTerdaftarResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ss/{schema_name}/PTKTerdaftar/create"
+      body: "*"
+    };
+  }
+  rpc CreateBanyakPTKTerdaftar (CreateBanyakPTKTerdaftarRequest) returns (CreateBanyakPTKTerdaftarResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ss/{schema_name}/ptk-terdaftar/create-banyak"
+      body: "*"
+    };
+  }
+  rpc GetPTKTerdaftar (GetPTKTerdaftarRequest) returns (GetPTKTerdaftarResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ss/{schema_name}/ptk-terdaftar"
+    };
+  }
+  rpc UpdatePTKTerdaftar (UpdatePTKTerdaftarRequest) returns (UpdatePTKTerdaftarResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/ss/{schema_name}/ptk-terdaftar/update/{ptk_terdaftar_id}"
+      body: "*"
+    };
+  }
+  rpc DeletePTKTerdaftar (DeletePTKTerdaftarRequest) returns (DeletePTKTerdaftarResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/ss/{schema_name}/ptk-terdaftar/delete/{ptk_terdaftar_id}"
+    };
+  }
+}
+
+message PTKTerdaftar{
+  string ptk_terdaftar_id =1;
+	string ptk_id          =2;
+	string tahun_ajaran_id  =3;
+	string jenis_keluar_id  =4;
+}
+
+message CreatePTKTerdaftarRequest {
+  string schema_name = 1;
+  PTKTerdaftar PTKTerdaftar = 2;
+}
+message CreatePTKTerdaftarResponse {
+  string message = 1;
+  bool status = 2;
+}
+message CreateBanyakPTKTerdaftarRequest {
+  string schema_name = 1;
+  repeated PTKTerdaftar ptk_terdaftar = 2;
+}
+message CreateBanyakPTKTerdaftarResponse {
+  string message = 1;
+  bool status = 2;
+}
+message GetPTKTerdaftarRequest {
+  string schema_name = 1;
+  string ptk_terdaftar_id = 2;
+}
+message GetPTKTerdaftarResponse {
+  repeated PTKTerdaftar ptk_terdaftar = 1;
+}
+message UpdatePTKTerdaftarRequest {
+  string schema_name = 1;
+  string ptk_terdaftar_id = 2;
+  PTKTerdaftar PTKTerdaftar = 3;
+}
+message UpdatePTKTerdaftarResponse {
+  string message = 1;
+  bool status = 2;
+}
+message DeletePTKTerdaftarRequest {
+  string schema_name = 1;
+  string ptk_terdaftar_id = 2;
+}
+message DeletePTKTerdaftarResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+
+// =========================================
+// service untuk Ijazah
+// =========================================
+service IjazahService {
+  // CRUD IZAJAH
+  rpc CreateIjazah(CreateIjazahRequest) returns (CreateIjazahResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/ijazah/create"
+      body: "*"
+    };
+  }
+  rpc GetIjazah(GetIjazahRequest) returns (GetIjazahResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ijazah"
+    };
+  }
+  rpc UpdateIjazah(UpdateIjazahRequest) returns (UpdateIjazahResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/ijazah"
+      body:"*"
+    };
+  }
+  rpc DeleteIjazah(DeleteIjazahRequest) returns (DeleteIjazahResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/ijazah"
+    };
+  }
+  // UPLOAD IJAZAH
+  rpc UploadIjazah (UploadIjazahRequest) returns (UploadIjazahResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/it/ijazah/upload"
+      body: "*"
+    };
+  }
+}
+message Ijazah {
+  string	ID                            =1;
+  string	peserta_didik_id                =2;
+  string	nama                          =3;
+  string	nis                           =4;
+  string	nisn                          =5;
+  string	npsn                          =6;
+  string	nomor_ijazah                      =7;
+  string	tempat_lahir                   =8;
+  string	tanggal_lahir                  =9;
+  string	nama_ortuwali                  =10;
+  string	paket_keahlian                 =11;
+  string	kabupatenkota                 =12;
+  string	provinsi                      =13;
+  string	program_keahlian               =14;
+  string	sekolah_penyelenggara_ujian_us   =15;
+  string	sekolah_penyelenggara_ujian_un   =16;
+  string	asal_sekolah                   =17;
+  string	tempat_ijazah                  =18;
+  string	tanggal_ijazah                 =19;
+}
+
+message CreateIjazahRequest {
+  string schema_name = 1;
+  Ijazah ijazah = 2;
+}
+message CreateIjazahResponse {
+  string message = 1;
+  bool status = 2;
+}
+message CreateBanyakIjazahRequest {
+  string schema_name = 1;
+  repeated Ijazah ijazah = 2;
+}
+message CreateBanyakIjazahResponse {
+  string message = 1;
+  bool status = 2;
+}
+message GetIjazahRequest {
+  string schema_name = 1;
+  string ijazah_id = 2;
+}
+message GetIjazahResponse {
+  repeated Ijazah ijazah = 1;
+  bool status= 2;
+  string message= 3;
+}
+message UpdateIjazahRequest {
+  Ijazah ijazah = 1;
+  string schema_name = 2;
+}
+message UpdateIjazahResponse {
+  string message = 1;
+  bool status = 2;
+}
+message DeleteIjazahRequest {
+  string ijazah_id = 1;
+  string schema_name = 2;
+}
+message DeleteIjazahResponse {
+  string message = 1;
+  bool status = 2;
+} 
+message UploadIjazahRequest {
+  bytes ijazah_file = 1;
+
+}
+message UploadIjazahResponse {
+  bool status = 1;
+  string message = 2;
+}
+// =========================================
+
+// =========================================
+// service untuk transkrip
+// =========================================
+service TranskripNilaiService {
+  // CRUD TRANSKRIP NILAI
+  rpc CreateTranskripNilai(CreateTranskripNilaiRequest) returns (CreateTranskripNilaiResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/trankrip-nilai"
+      body: "*"
+    };
+  }
+  rpc GetTranskripNilai(GetTranskripNilaiRequest) returns (GetTranskripNilaiResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/trankrip-nilai"
+    };
+  }
+  rpc UpdateTranskripNilai(UpdateTranskripNilaiRequest) returns (UpdateTranskripNilaiResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/trankrip-nilai"
+      body:"*"
+    };
+  }
+  rpc DeleteTranskripNilai(DeleteTranskripNilaiRequest) returns (DeleteTranskripNilaiResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/trankrip-nilai"
+    };
+  }
+   
+  // UPLOAD IJAZAH DAN TRANSKRIP NILAI
+  rpc UploadITranskripNilai (UploadTranskripNilaiRequest) returns (UploadTranskripNilaiResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/transkrip/upload"
+      body: "*"
+    };
+  }
+}
+
+// TRANSKRIP
+message TranskripNilai {
+  string peserta_didik_id = 1;
+  string mapel_id = 2;
+  int32  nilai = 3;
+
+}
+message CreateTranskripNilaiRequest {
+  repeated TranskripNilai transkrip_nilai = 1;
+}
+message CreateTranskripNilaiResponse {
+  bool status = 1;
+  string message = 2;
+}
+message GetTranskripNilaiRequest {
+  string transkrip_nilai_id = 1;
+}
+message GetTranskripNilaiResponse {
+  repeated TranskripNilai transkrip_nilai = 1;
+  bool status = 2;
+  string message = 3;
+}
+message UpdateTranskripNilaiRequest {
+  TranskripNilai transkrip_nilai = 1;
+}
+message UpdateTranskripNilaiResponse {
+  bool status = 1;
+  string message = 2;
+}
+message DeleteTranskripNilaiRequest {
+  uint64 transkrip_nilai_id = 1;
+}
+message DeleteTranskripNilaiResponse {
+  bool status = 1;
+  string message = 2;
+}
+message UploadTranskripNilaiRequest {
+  bytes transkrip_file = 1;
+
+}
+message UploadTranskripNilaiResponse {
+  bool status = 1;
+  string message = 2;
+}
+// =========================================
+// =========================================
+// =============DOWNLOAD SERVICE============
+// =========================================
+service DownloadService {
+ // UPLOAD IJAZAH DAN TRANSKRIP NILAI
+  rpc DownloadSekolahService (DownloadSekolahRequest) returns (DownloadSekolahResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/transkrip/upload"
+      body: "*"
+    };
+  }
+}
+
+message DownloadSekolahRequest {
+  string file_name = 1;
+  string download_type = 2;
+}
+message DownloadSekolahResponse {
+  bytes file = 1;
+}

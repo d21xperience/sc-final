@@ -70,13 +70,10 @@ service BlockchainService {
       body: "*"
     };
   }
-  rpc GenerateETHAccount(GenerateETHAccountRequest) returns (GenerateETHAccountResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/account/generate"
-      body: "*"
-    };
-  }
+ 
 
+  // ====================================================
+// ================CONTRACT MANAGEMENT================
   rpc GetContract(GetContractRequest) returns (GetContractResponse) {
     option (google.api.http) = {
       get: "/api/v1/contract/{contract_address}"
@@ -108,6 +105,10 @@ service BlockchainService {
       get: "/api/v1/contract/{contract_address}/events"
     };
   }
+  // ====================================================
+  
+  // ====================================================
+  // =====================TOKEN==========================
   rpc GetGasPrice(Empty) returns (GetGasPriceResponse) {
     option (google.api.http) = {
       get: "/api/v1/gas/price"
@@ -133,8 +134,9 @@ service BlockchainService {
 message Empty {}
 
 message SetConfigRequest {
-  string blockchain_type = 1;
-  string rpc_url = 2;
+  BCNetwork network = 1;
+  // string blockchain_type = 1;
+  // string rpc_url = 2;
 }
 
 message SetConfigResponse {
@@ -142,7 +144,7 @@ message SetConfigResponse {
 }
 
 message NetworkIDResponse {
-  string network_id = 1;
+  uint32 network_id = 1;
 }
 
 message SendETHRequest {
@@ -199,12 +201,20 @@ message GetTokenAllowanceRequest {
 message GetTokenAllowanceResponse {
   string allowance = 1;
 }
-
+// ==================================
+// ============CONTRACT==============
+enum BCAccountType {
+  imported = 0;
+  keystore = 1;
+}
 message DeployIjazahContractRequest {
-  string address = 1; 
-  string password = 2;
-  // string private_key = 2;
-  // uint64 gas_limit = 3;
+  string private_key = 1;
+  BlockchainAccount account = 2; 
+  uint64 gas_limit = 3;
+  string schemaname = 4;
+  AdminSekolah admin_sekolah = 5;
+  // string user_id = 4; 
+  // string password = 5; 
 }
 
 message DeployIjazahContractResponse {
@@ -214,6 +224,7 @@ message DeployIjazahContractResponse {
 
 message GetContractRequest {
   string contract_address = 1;
+  string schemaname = 2;
 }
 
 message GetContractResponse {
@@ -227,10 +238,7 @@ message CallContractMethodRequest {
   string abi = 2;
   string method = 3;
   repeated string params = 4;
-}
-
-message CallContractMethodResponse {
-  string result = 1;
+  string schemaname = 5;
 }
 
 message SendTransactionToContractRequest {
@@ -240,6 +248,7 @@ message SendTransactionToContractRequest {
   repeated string params = 4;
   string private_key = 5;
   uint64 gas_limit = 6;
+  string schemaname = 7;
 }
 
 message SendTransactionToContractResponse {
@@ -254,6 +263,21 @@ message GetContractOwnerRequest {
 message GetContractOwnerResponse {
   string owner_address = 1;
 }
+message GetContractEventsRequest {
+  string contract_address = 1;
+  string abi = 2;
+  string event_name = 3;
+  uint64 from_block = 4;
+  uint64 to_block = 5;
+}
+
+message GetContractEventsResponse {
+  repeated string events = 1;
+}
+message CallContractMethodResponse {
+  string result = 1;
+}
+// ==================================
 
 message GetGasPriceResponse {
   string gas_price = 1;
@@ -275,25 +299,217 @@ message GetTransactionStatusResponse {
   string status = 1;
 }
 
-message GetContractEventsRequest {
-  string contract_address = 1;
-  string abi = 2;
-  string event_name = 3;
-  uint64 from_block = 4;
-  uint64 to_block = 5;
+
+// ==================================
+// ===========ACOUNT MANAGEMENT================
+service BlockchainAccountService {
+  rpc CreateBlockchainAccount(CreateBlockchainAccountRequest) returns (CreateBlockchainAccountResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/blockchainaccount/create"
+      body: "*"
+    };
+  }
+  rpc ImportBlockchainAccount(ImportBlockchainAccountRequest) returns (ImportBlockchainAccountResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/blockchainaccount/import"
+      body: "*"
+    };
+  }
+  rpc GetBlockchainAccounts(GetBlockchainAccountsRequest) returns (GetBlockchainAccountsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/blockchainaccount/list"
+    };
+  }
+  rpc UpdateBlockchainAccount(UpdateBlockchainAccountRequest) returns (UpdateBlockchainAccountResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/blockchainaccount/update"
+      body: "*"
+    };
+  }
+  rpc DeleteBlockchainAccount(DeleteBlockchainAccountRequest) returns (DeleteBlockchainAccountResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/blockchainaccount/delete"
+    };
+  }
+  // ====================================================
 }
 
-message GetContractEventsResponse {
-  repeated string events = 1;
+message AdminSekolah {
+  int32 sekolah_id=1;
+  int32  user_id     =2;
+  string password = 3;
+  string nama_sekolah=4;
+  string sekolah_id_enkrip = 5;
 }
 
-message GenerateETHAccountRequest {
-  string user_id = 1;
-  string password = 2;
+
+message BlockchainAccount {
+	string        Address            = 1;
+	string        Username           = 2;
+	BCAccountType Type               = 3;
+	int32         UserId             = 4;
+	string        Password           = 5;
+	string        KeystrokeFilename  = 6;
+	uint32        NetworkId          = 7;
+	BCNetwork     Network            = 8;
+	string        Organization       = 9;
+	bool          IsActive           = 10;
 }
 
-message GenerateETHAccountResponse {
+message CreateBlockchainAccountRequest {
+  AdminSekolah admin = 1;
+  BCNetwork network =2;
+  string schemaname = 3;
+}
+message CreateBlockchainAccountResponse {
   bool status = 1;
-  string contract_address = 2;
-  string tx_hash = 3;
+  string message = 2; //contract_address
+}
+message ImportBlockchainAccountRequest {
+  string private_key = 1;
+  AdminSekolah admin = 2;
+  BCNetwork network =3;
+  string schemaname = 4;
+}
+message ImportBlockchainAccountResponse {
+  bool status = 1;
+  string message = 2; //contract_address
+}
+message GetBlockchainAccountsRequest {
+  int32 user_id = 1;
+  string schemaname = 2;
+  uint32 network_id = 3;
+}
+message GetBlockchainAccountsResponse {
+  bool status = 1;
+  repeated BlockchainAccount blockchainaccounts = 2;
+}
+message DeleteBlockchainAccountRequest {
+  int32 user_id = 1;
+  string schemaname = 2;
+}
+message DeleteBlockchainAccountResponse {
+  bool status = 1;
+  string message = 2;
+}
+message UpdateBlockchainAccountRequest {
+  string schemaname = 1;
+  repeated BlockchainAccount blockchainaccounts = 2;
+}
+message UpdateBlockchainAccountResponse {
+  string message = 1;
+  bool status = 2;
+}
+
+// ==================================
+
+
+service BlockchainNetworkService {
+    // Konfigurasi Blockchain
+    rpc CreateBCNetwork(CreateBCNetworkRequest) returns (CreateBCNetworkResponse) {
+      option (google.api.http) = {
+        post: "/api/v1/blockchain/create"
+        body: "*"
+      };
+    }
+    rpc GetBCNetwork(GetBCNetworkRequest) returns (GetBCNetworkResponse) {
+      option (google.api.http) = {
+        get: "/api/v1/blockchain/list"
+      };
+    }
+    rpc UpdateBCNetwork(UpdateBCNetworkRequest) returns (UpdateBCNetworkResponse) {
+      option (google.api.http) = {
+        put: "/api/v1/blockchain/network"
+        body:"*"
+      };
+    }
+    rpc DeleteBCNetwork(DeleteNetworkRequest) returns (DeleteNetworkResponse) {
+      option (google.api.http) = {
+        delete: "/api/v1/blockchain/network"
+      };
+    }
+}
+enum NetworkType {
+  mainnet = 0;
+  testnet = 1;
+  private = 2;
+}
+// ==================================
+message BCNetwork {
+  string Name        = 1;
+  int64  ChainId     = 2;
+  string RPCURL      = 3;
+  string ExplorerURL = 4;
+  string Symbol      = 5;
+  NetworkType Type   = 6;
+  bool Activate =7;
+  bool Available =8;
+  uint32 Id =9;
+  string Architecture= 10;
+}
+
+message CreateBCNetworkRequest {
+  repeated BCNetwork network = 1;
+}
+message CreateBCNetworkResponse {
+  bool status = 1;
+  string message = 2;
+}
+message GetBCNetworkRequest {
+  string network_name = 1;
+}
+message GetBCNetworkResponse {
+  repeated BCNetwork network = 1;
+  bool status = 2;
+  string message = 3;
+}
+message UpdateBCNetworkRequest {
+  BCNetwork network = 1;
+}
+message UpdateBCNetworkResponse {
+  bool status = 1;
+  string message = 2;
+}
+message DeleteNetworkRequest {
+  uint32 network_id = 1;
+}
+message DeleteNetworkResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+service TenantService {
+  rpc RegistrasiSekolahTenant (RegistrasiSekolahTenantRequest) returns (RegistrasiSekolahTenantResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/t/registrasi-sekolah"
+      body: "*"
+    };
+  }
+  rpc GetSekolahTenant (GetSekolahTenantRequest) returns (GetSekolahTenantResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/t/sekolah-terdaftar"
+    };
+  }
+}  
+
+message SekolahTenant {
+  string	nama_sekolah  = 1;
+  int32 	user_id       = 2;
+  int32 	sekolah_id    = 3;
+  string	schemaname   = 4;
+}
+message RegistrasiSekolahTenantRequest{
+  SekolahTenant sekolah_tenant = 1;
+}
+message RegistrasiSekolahTenantResponse{
+  string message = 1;
+  bool status = 2;
+}
+
+message GetSekolahTenantRequest {
+  int32 sekolah_id = 1;
+
+}
+message GetSekolahTenantResponse {
+  SekolahTenant sekolah_tenant = 1;
 }

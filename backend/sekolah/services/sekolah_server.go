@@ -10,25 +10,29 @@ import (
 	"sekolah/models"
 	"sekolah/repositories"
 	"sekolah/utils"
+	"strconv"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type SekolahService struct {
 	pb.UnimplementedSekolahServiceServer
 	// RedisClient    *redis.Client // Tambahkan Redis sebagai field
-	sekolahService repositories.SekolahRepository
-	schemaService  SchemaService
+	sekolahService    repositories.SekolahRepository
+	schemaService     SchemaService
+	repoSekolahTenant repositories.GenericRepository[models.SekolahTabelTenant]
 }
 
 func NewSekolahService() *SekolahService {
 	sekolahRepo := repositories.NewSekolahRepository(config.DB)
 	schemaRepo := repositories.NewSchemaRepository(config.DB)
 	sekolahTabelTenant := repositories.NewsekolahTenantRepository(config.DB)
-	schemaService := NewSchemaService(schemaRepo, sekolahTabelTenant)
+	schemaService := NewSchemaService(schemaRepo, *sekolahTabelTenant)
 	return &SekolahService{
-		sekolahService: sekolahRepo,
-		schemaService:  schemaService,
+		sekolahService:    sekolahRepo,
+		schemaService:     schemaService,
+		repoSekolahTenant: *sekolahTabelTenant,
 	}
 }
 
@@ -43,8 +47,9 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 	}
 
 	sekolah := req.GetSekolah()
-	schemaName := sekolah.SekolahIdEnkrip
-	existingSchema, err := s.schemaService.GetSchemaBySekolahID(int(sekolah.SekolahId))
+	schemaName := fmt.Sprintf("tabel_%s", sekolah.SekolahIdEnkrip)
+	// existingSchema, err := s.schemaService.GetSchemaBySekolahID(int(sekolah.SekolahId))
+	existingSchema, err := s.schemaService.GetSchemaBySchemaname(schemaName)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Printf("Lanjutkan pendaftaran: %v", err)
 	}
@@ -84,8 +89,15 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 }
 
 func (s *SekolahService) GetSekolahTabelTenant(ctx context.Context, req *pb.SekolahTabelTenantRequest) (*pb.SekolahTabelTenantResponse, error) {
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SekolahId"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
 	sekolahID := req.GetSekolahId()
-	sekolahTerdaftar, err := s.schemaService.GetSchemaBySekolahID(int(sekolahID))
+	sekolahTerdaftar, err := s.repoSekolahTenant.FindByID(ctx, strconv.Itoa(int(sekolahID)), "public", "sekolah_id")
 	if err != nil {
 		return nil, err
 	}
@@ -112,8 +124,25 @@ func (s *SekolahService) CreateSekolah(ctx context.Context, req *pb.CreateSekola
 	schemaName := req.GetSchemaName()
 	sekolah := req.GetSekolah()
 	// sekolahID, _ := uuid.Parse(sekolah.SekolahId)
+	// Contoh: Konversi UUID ke string
+	uuidObj := uuid.New() // Generate UUID baru
+	strValue, err := utils.ConvertUUIDToStringViceVersa(uuidObj)
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("UUID ke String:", strValue)
+	}
+
+	if sekolah.BentukPendidikanId == 0 {
+		sekolah.BentukPendidikanId = 4
+	}
+
+	if sekolah.StatusKepemilikanId == 0 {
+		sekolah.StatusKepemilikanId = 4
+	}
+
 	sekolahModel := &models.Sekolah{
-		SekolahID:           sekolah.SekolahId,
+		SekolahID:           strValue.(string),
 		Nama:                sekolah.Nama,
 		Npsn:                sekolah.Npsn,
 		Alamat:              sekolah.Alamat,
@@ -151,10 +180,10 @@ func (s *SekolahService) CreateSekolah(ctx context.Context, req *pb.CreateSekola
 func (s *SekolahService) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
 	//  Ambil schema dari request
 	schemaName := req.GetSchemaName()
-	sekolahID := req.GetSekolahId()
+	// sekolahID := req.GetSekolahId()
 
 	//  Cari sekolah berdasarkan ID dan schema
-	sekolah, err := s.sekolahService.FindByID(ctx, sekolahID, schemaName)
+	sekolah, err := s.sekolahService.Find(ctx, schemaName)
 	if err != nil {
 		log.Printf("Gagal menemukan sekolah: %v", err)
 		return nil, fmt.Errorf("gagal menemukan sekolah: %w", err)

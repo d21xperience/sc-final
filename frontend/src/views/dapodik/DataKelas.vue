@@ -111,26 +111,26 @@
             <div class="w-full mb-2">
                 <!-- <p>{{ product.name }}</p> -->
                 <label for="name" class="block font-bold">Nama Kelas</label>
-                <InputText id="name" v-model.trim="product.name" required="true" :invalid="submitted && !product.name"
+                <InputText id="name" v-model.trim="kelas.nama" required="true" :invalid="submitted && !kelas.nama"
                     fluid />
-                <small v-if="submitted && !product.name" class="text-red-500">Nama Kelas harus diisi.</small>
+                <small v-if="submitted && !kelas.nama" class="text-red-500">Nama Kelas harus diisi.</small>
             </div>
             <div class="flex">
                 <div>
                     <label for="name" class="block font-bold ">Tingkat</label>
-                    <Select v-model.trim="product.name" showClear :options="tingkat" optionLabel="name"
+                    <Select v-model.trim="kelas.tingkat" showClear :options="tingkat" optionLabel="name"
                         placeholder="Tingkat" class="mr-2" />
                     <!-- <InputText id="name" v-model.trim="product.name" required="true" 
                     :invalid="submitted && !product.name" fluid /> -->
-                    <small v-if="submitted && !product.name" class="text-red-500">Nama is required.</small>
+                    <small v-if="submitted && !kelas.tingkat" class="text-red-500">Kelas is required.</small>
                 </div>
                 <div class="w-full">
                     <label for="name" class="block font-bold ">Jurusan</label>
-                    <Select v-model="selectedJurusan" showClear :options="jurusan" optionLabel="name"
+                    <Select v-model="kelas.jurusan" showClear :options="jurusan" optionLabel="name"
                         placeholder="Jurusan" class="w-full mr-2" />
                     <!-- <InputText id="name" v-model.trim="product.price" required="true" 
                     :invalid="submitted && !product.price" fluid /> -->
-                    <small v-if="submitted && !product.price" class="text-red-500">Nilai is required.</small>
+                    <small v-if="submitted && !kelas.jurusan" class="text-red-500">Nilai is required.</small>
                 </div>
             </div>
             <!--<div>
@@ -159,6 +159,8 @@
     </Dialog>
 
     <!-- DIALOG IMPORT -->
+    <!-- <DialogImport v-model:visible="dialogImport" :semester="semester" :selectedSemester="selectedSemester"
+        @save="saveImport" @cancel="cancelImport" /> -->
     <Dialog v-model:visible="dialogImport" :style="{ width: '450px' }" header="Tambah Data" :modal="true">
         <div>
             <div class="mb-4">
@@ -174,9 +176,9 @@
                     <FileUpload ref="fileupload" mode="basic" name="demo[]" url="/api/upload" accept="xlsx/*"
                         :maxFileSize="1000000" @upload="onUpload" severity="secondary" />
                 </div>
-                <p class="mt-2 text-sm text-gray-500">Unduh Template Import data Penerima Ijazah <a
-                        href="http://localhost:8082/api/v1/ss/download/template?template-type=siswa"
-                        class="text-indigo-600 hover:text-indigo-500">Disini</a></p>
+                <p class="mt-2 text-sm text-gray-500">Unduh Template Import data Penerima Ijazah <a href="#"
+                        class="text-indigo-600 hover:text-indigo-500" @click="downloadTemplate">Disini</a></p>
+
             </div>
         </div>
         <template #footer>
@@ -189,6 +191,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useStore } from "vuex";
+import DialogImport from '../../components/DialogImport.vue'
 const store = useStore();
 import FileUpload from 'primevue/fileupload';
 import DataTable from 'primevue/datatable';
@@ -214,6 +217,7 @@ const dataConnected = ref(true)
 const toast = useToast();
 const dt = ref();
 const rombel = ref();
+const kelas = ref({})
 const kelasDialog = ref(false);
 const deleteKelasDialog = ref(false);
 const product = ref({});
@@ -233,6 +237,7 @@ const submitted = ref(false);
 //         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 //     return;
 // };
+
 const judulHeader = ref("")
 const openNew = () => {
     judulHeader.value = "Tambah Data"
@@ -247,23 +252,24 @@ const hideDialog = () => {
 };
 const saveProduct = () => {
     submitted.value = true;
-    if (product?.value.name?.trim()) {
-        if (product.value.id) {
-            product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
-            products.value[findIndexById(product.value.id)] = product.value;
+    if (kelas?.value.nama?.trim()) {
+        // Untuk menyimpan edit
+        if (kelas.value.id) {
+            // kelas.value.tingkat = kelas.value.inventoryStatus.value ? kelas.value.inventoryStatus.value : kelas.value.inventoryStatus;
+            rombel.value[findIndexById(product.value.id)] = kelas.value;
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
         }
         else {
-            product.value.id = createId();
-            product.value.code = createId();
-            product.value.image = 'product-placeholder.svg';
-            product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
-            products.value.push(product.value);
+            kelas.value.id = createId();
+            kelas.value.code = createId();
+            kelas.value.image = 'product-placeholder.svg';
+            // product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
+            rombel.value.push(kelas.value);
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
         }
 
         kelasDialog.value = false;
-        product.value = {};
+        kelas.value = {};
     }
 };
 const editKelas = (prod) => {
@@ -362,9 +368,9 @@ const fetchSemester = async () => {
 const fetchRombel = async () => {
     try {
         let payload = {
-
+            schemaName: 'rombel',
         }
-        const results = await store.dispatch("sekolahService/fetchRombel")
+        const results = await store.dispatch("sekolahService/fetchRombel", payload)
         // console.log(results)
         if (results) {
             rombel.value = store.getters["sekolahService/fetchRombel"]
@@ -372,6 +378,7 @@ const fetchRombel = async () => {
             // selectedSemester.value = semester.value.reduce((latest, current) =>
             //     current.semesterId > latest.semesterId ? current : latest
             // );
+            console.log()
         }
     } catch (error) {
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 // const baseURL = "http://localhost:8080/api/v1";
 const api = axios.create({
-  baseURL: "http://localhost:8080/api/v1", // Pastikan menggunakan protokol HTTPS
+  baseURL: "http://localhost:8182/api/v1", // Pastikan menggunakan protokol HTTPS
   withCredentials: true, // Untuk mengirim cookie atau credensial
   headers: {
     "Content-Type": "application/json",
@@ -56,6 +56,7 @@ const mutations = {
     localStorage.removeItem("tabelTenant");
     localStorage.removeItem("BCNETWORK");
     localStorage.removeItem("BCACCOUNT");
+    localStorage.removeItem("tabelSemester");
   },
   SET_SEKOLAH(state, sekolah) {
     state.sekolah = sekolah;
@@ -105,6 +106,7 @@ const actions = {
   },
   async registerAdmin({ commit }, payload) {
     try {
+      console.log(payload)
       const response = await api.post("/auth/register", payload);
       // console.log(response);
 
