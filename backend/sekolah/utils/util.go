@@ -7,13 +7,22 @@ import (
 	"github.com/google/uuid"
 )
 
-func ConvertModelsToPB[T any, U any](models []*T, converter func(*T) *U) []*U {
-	var pbList []*U
+// ConvertModelsToPB mengonversi slice model ke slice protobuf
+func ConvertModelsToPB[T any, U any](models []T, convert func(T) U) []U {
+	var pbModels []U
 	for _, model := range models {
-		pbList = append(pbList, converter(model))
+		pbModels = append(pbModels, convert(model))
 	}
-	return pbList
+	return pbModels
 }
+
+//	func ConvertModelsToPB[T any, U any](models []*T, converter func(*T) *U) []*U {
+//		var pbList []*U
+//		for _, model := range models {
+//			pbList = append(pbList, converter(model))
+//		}
+//		return pbList
+//	}
 func ConvertPBToModels[T any, U any](pbs []*T, converter func(*T) *U) []*U {
 	var modelList []*U
 	for _, model := range pbs {
@@ -58,6 +67,7 @@ func ConvertUUIDToStringViceVersa[T any](input T) (any, error) {
 		return nil, fmt.Errorf("tipe tidak didukung: %T", v)
 	}
 }
+
 // ConvertStringToUint mengonversi string ke tipe bilangan unsigned (generic)
 func ConvertStringToUint[T uint8 | uint16 | uint32 | uint64](str string) (T, error) {
 	num, err := strconv.ParseUint(str, 10, strconv.IntSize)

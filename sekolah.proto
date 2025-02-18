@@ -896,25 +896,25 @@ service PTKTerdaftarService {
   }
   rpc GetPTKTerdaftar (GetPTKTerdaftarRequest) returns (GetPTKTerdaftarResponse) {
     option (google.api.http) = {
-      get: "/api/v1/ss/{schema_name}/ptk-terdaftar"
+      get: "/api/v1/ss/ptk-terdaftar"
     };
   }
   rpc UpdatePTKTerdaftar (UpdatePTKTerdaftarRequest) returns (UpdatePTKTerdaftarResponse) {
     option (google.api.http) = {
-      put: "/api/v1/ss/{schema_name}/ptk-terdaftar/update/{ptk_terdaftar_id}"
+      put: "/api/v1/ss/ptk-terdaftar/update"
       body: "*"
     };
   }
   rpc DeletePTKTerdaftar (DeletePTKTerdaftarRequest) returns (DeletePTKTerdaftarResponse) {
     option (google.api.http) = {
-      delete: "/api/v1/ss/{schema_name}/ptk-terdaftar/delete/{ptk_terdaftar_id}"
+      delete: "/api/v1/ss/ptk-terdaftar/delete"
     };
   }
 }
 
 message PTKTerdaftar{
-  string ptk_terdaftar_id =1;
-	string ptk_id          =2;
+	string ptk_terdaftar_id =1;
+	PTK ptk          	=2;
 	string tahun_ajaran_id  =3;
 	string jenis_keluar_id  =4;
 }
@@ -938,9 +938,11 @@ message CreateBanyakPTKTerdaftarResponse {
 message GetPTKTerdaftarRequest {
   string schema_name = 1;
   string ptk_terdaftar_id = 2;
+  string tahun_ajaran_id = 3;
 }
 message GetPTKTerdaftarResponse {
   repeated PTKTerdaftar ptk_terdaftar = 1;
+  string message = 2;
 }
 message UpdatePTKTerdaftarRequest {
   string schema_name = 1;

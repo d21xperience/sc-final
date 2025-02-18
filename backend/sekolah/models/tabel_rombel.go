@@ -20,3 +20,24 @@ type RombelAnggota struct {
 	RombonganBelajarId string `json:"rombongan_belajar_id"`
 	SemesterId         string `json:"semester_id"`
 }
+
+// type TabelKelas struct {
+// 	RombonganBelajarID  uuid.UUID  `gorm:"type:uuid;primaryKey"`
+// 	SekolahID           uuid.UUID  `gorm:"type:uuid;not null"`
+// 	SemesterID          string     `gorm:"type:char(5);not null"`
+// 	JurusanID           *string    `gorm:"type:varchar(25);default:NULL"`
+// 	PtkID               *uuid.UUID `gorm:"type:uuid;default:NULL"`
+// 	NmKelas             *string    `gorm:"type:varchar(30);default:NULL"`
+// 	TingkatPendidikanID *int       `gorm:"type:numeric(2,0);default:NULL"`
+// 	JenisRombel         *int       `gorm:"type:numeric(2,0);default:NULL"`
+// 	NamaJurusanSP       *string    `gorm:"type:varchar(100);default:NULL"`
+// 	JurusanSpID         *uuid.UUID `gorm:"type:uuid;default:NULL"`
+// 	KurikulumID         int16      `gorm:"type:smallint;not null"`
+
+// 	// Foreign Keys
+// 	Jurusan           Jurusan           `gorm:"foreignKey:JurusanID;references:JurusanID"`
+// 	Kurikulum         Kurikulum         `gorm:"foreignKey:KurikulumID;references:KurikulumID"`
+// 	Semester          Semester          `gorm:"foreignKey:SemesterID;references:SemesterID"`
+// 	TingkatPendidikan TingkatPendidikan `gorm:"foreignKey:TingkatPendidikanID;references:TingkatPendidikanID"`
+// 	Ptk               Ptk               `gorm:"foreignKey:PtkID;references:PtkID"`
+// }

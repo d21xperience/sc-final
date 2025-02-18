@@ -118,6 +118,28 @@ const actions = {
       commit("SET_LOADING", false);
     }
   },
+  async fetchPTK({ commit }, payload) {
+    commit("SET_LOADING", true);
+    commit("SET_ERROR", null);
+    console.log(payload);
+    try {
+      const response = await api.get("/ss/ptk-terdaftar", {
+        params: {
+          schema_name: payload.schema_name,
+          tahun_ajaran_id: payload.tahun_ajaran_id,
+        },
+      });
+      // console.log(response.data);
+      // commit("SET_TABELSEMESTER", response.data.semester);
+      return response.data.ptkTerdaftar; // Mengembalikan data sekolah
+    } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal membuat semester:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
   async getTemplate({ commit }, payload) {
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);

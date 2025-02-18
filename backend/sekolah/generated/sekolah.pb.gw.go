@@ -1935,22 +1935,13 @@ func local_request_PTKTerdaftarService_CreateBanyakPTKTerdaftar_0(ctx context.Co
 	return msg, metadata, err
 }
 
-var filter_PTKTerdaftarService_GetPTKTerdaftar_0 = &utilities.DoubleArray{Encoding: map[string]int{"schema_name": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+var filter_PTKTerdaftarService_GetPTKTerdaftar_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 
 func request_PTKTerdaftarService_GetPTKTerdaftar_0(ctx context.Context, marshaler runtime.Marshaler, client PTKTerdaftarServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetPTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
@@ -1965,16 +1956,7 @@ func local_request_PTKTerdaftarService_GetPTKTerdaftar_0(ctx context.Context, ma
 	var (
 		protoReq GetPTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
@@ -1989,26 +1971,9 @@ func request_PTKTerdaftarService_UpdatePTKTerdaftar_0(ctx context.Context, marsh
 	var (
 		protoReq UpdatePTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["ptk_terdaftar_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ptk_terdaftar_id")
-	}
-	protoReq.PtkTerdaftarId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ptk_terdaftar_id", err)
 	}
 	msg, err := client.UpdatePTKTerdaftar(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -2018,52 +1983,26 @@ func local_request_PTKTerdaftarService_UpdatePTKTerdaftar_0(ctx context.Context,
 	var (
 		protoReq UpdatePTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["ptk_terdaftar_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ptk_terdaftar_id")
-	}
-	protoReq.PtkTerdaftarId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ptk_terdaftar_id", err)
 	}
 	msg, err := server.UpdatePTKTerdaftar(ctx, &protoReq)
 	return msg, metadata, err
 }
 
+var filter_PTKTerdaftarService_DeletePTKTerdaftar_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
 func request_PTKTerdaftarService_DeletePTKTerdaftar_0(ctx context.Context, marshaler runtime.Marshaler, client PTKTerdaftarServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq DeletePTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["ptk_terdaftar_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ptk_terdaftar_id")
-	}
-	protoReq.PtkTerdaftarId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ptk_terdaftar_id", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PTKTerdaftarService_DeletePTKTerdaftar_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.DeletePTKTerdaftar(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -2073,23 +2012,12 @@ func local_request_PTKTerdaftarService_DeletePTKTerdaftar_0(ctx context.Context,
 	var (
 		protoReq DeletePTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["ptk_terdaftar_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ptk_terdaftar_id")
-	}
-	protoReq.PtkTerdaftarId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ptk_terdaftar_id", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PTKTerdaftarService_DeletePTKTerdaftar_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.DeletePTKTerdaftar(ctx, &protoReq)
 	return msg, metadata, err
@@ -3383,7 +3311,7 @@ func RegisterPTKTerdaftarServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/GetPTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/GetPTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3403,7 +3331,7 @@ func RegisterPTKTerdaftarServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/UpdatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/update/{ptk_terdaftar_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/UpdatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3423,7 +3351,7 @@ func RegisterPTKTerdaftarServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/DeletePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/delete/{ptk_terdaftar_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/DeletePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5013,7 +4941,7 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/GetPTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/GetPTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5030,7 +4958,7 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/UpdatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/update/{ptk_terdaftar_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/UpdatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5047,7 +4975,7 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/DeletePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/delete/{ptk_terdaftar_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/DeletePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5066,9 +4994,9 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 var (
 	pattern_PTKTerdaftarService_CreatePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "PTKTerdaftar", "create"}, ""))
 	pattern_PTKTerdaftarService_CreateBanyakPTKTerdaftar_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar", "create-banyak"}, ""))
-	pattern_PTKTerdaftarService_GetPTKTerdaftar_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar"}, ""))
-	pattern_PTKTerdaftarService_UpdatePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar", "update", "ptk_terdaftar_id"}, ""))
-	pattern_PTKTerdaftarService_DeletePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar", "delete", "ptk_terdaftar_id"}, ""))
+	pattern_PTKTerdaftarService_GetPTKTerdaftar_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "ptk-terdaftar"}, ""))
+	pattern_PTKTerdaftarService_UpdatePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "ptk-terdaftar", "update"}, ""))
+	pattern_PTKTerdaftarService_DeletePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "ptk-terdaftar", "delete"}, ""))
 )
 
 var (

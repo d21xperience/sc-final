@@ -1,36 +1,41 @@
 package services
 
-// import (
-// 	"context"
-// 	"fmt"
-// 	"log"
-// 	pb "sekolah/generated"
-// 	"sekolah/models"
-// 	"sekolah/services"
-// 	"sekolah/utils"
-// )
+import (
+	"sekolah/config"
+	pb "sekolah/generated"
+	"sekolah/models"
+	"sekolah/repositories"
+)
 
-// type PTKServiceServer struct {
-// 	pb.UnimplementedPTKServiceServer
-// 	PTKService services.PTKService
-// }
+type PTKServiceServer struct {
+	pb.UnimplementedPTKServiceServer
+	repo repositories.GenericRepository[models.TabelPTK]
+}
 
-// // **CreatePTK**
+func NewPTKServiceServer() *PTKServiceServer {
+	repoPTK := repositories.NewPTKRepository(config.DB)
+	return &PTKServiceServer{
+		repo: *repoPTK,
+	}
+}
+
+// **CreatePTK**
 // func (s *PTKServiceServer) CreatePTK(ctx context.Context, req *pb.CreatePTKRequest) (*pb.CreatePTKResponse, error) {
+// 	// Debugging: Cek nilai request yang diterima
+// 	log.Printf("Received Sekolah data request: %+v\n", req)
+// 	// Daftar field yang wajib diisi
+// 	requiredFields := []string{"SchemaName", "AnggotaKelas"}
 // 	// Validasi request
-// 	err := utils.ValidateRequest(req, "ptk")
+// 	err := utils.ValidateFields(req, requiredFields)
 // 	if err != nil {
 // 		return nil, err
 // 	}
-
-// 	schemaName := req.GetSchemaname()
+// 	schemaName := req.GetSchemaName()
 // 	PTKReq := req.GetPTK()
 
-// 	PTKModel := &models.TabelPTK{
+// 	PTKModel := &models.TabelPTK{}
 
-// 	}
-
-// 	err = s.PTKService.Save(ctx, PTKModel, schemaName)
+// 	err = s.repo.Save(ctx, PTKModel, schemaName)
 // 	if err != nil {
 // 		log.Printf("Gagal menyimpan PTK: %v", err)
 // 		return nil, fmt.Errorf("gagal menyimpan PTK: %w", err)
@@ -42,7 +47,7 @@ package services
 // 	}, nil
 // }
 
-// // **GetPTK**
+// **GetPTK**
 // func (s *PTKServiceServer) GetPTK(ctx context.Context, req *pb.GetPTKRequest) (*pb.GetPTKResponse, error) {
 // 	schemaName := req.GetSchemaname()
 // 	PTKID := req.GetPTKId()
@@ -60,19 +65,15 @@ package services
 // 	}, nil
 // }
 
-// // **UpdatePTK**
+// **UpdatePTK**
 // func (s *PTKServiceServer) UpdatePTK(ctx context.Context, req *pb.UpdatePTKRequest) (*pb.UpdatePTKResponse, error) {
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received UpdateUserProfile request: %+v\n", req)
 // 	schemaName := req.GetSchemaname()
 // 	PTKReq := req.GetPTK()
 // 	PTKPelenReq := req.GetPTKPelengkap()
-// 	PTK := &models.PTK{
-
-// 	}
-// 	PTKPelenkap := &models.PTKPelengkap{
-
-// 	}
+// 	PTK := &models.PTK{}
+// 	PTKPelenkap := &models.PTKPelengkap{}
 // 	err := s.PTKService.Update(ctx, PTK, PTKPelenkap, schemaName)
 // 	if err != nil {
 // 		log.Printf("Gagal memperbarui PTK: %v", err)
@@ -102,7 +103,7 @@ package services
 // 	}, nil
 // }
 
-// // UploadPTK mengunggah data PTK dari file Excel
+// UploadPTK mengunggah data PTK dari file Excel
 // func (s *PTKServiceServer) UploadPTK(ctx context.Context, req *pb.UploadPTKRequest) (*pb.UploadPTKResponse, error) {
 // 	schemaName := req.GetSchemaname()
 // 	fileData := req.GetFile() // File dalam bentuk byte array

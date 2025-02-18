@@ -7,8 +7,15 @@
                         <div class="container ">
                             <div class="flex flex-wrap justify-between items-center mb-2">
                                 <h4 class="font-bold text-xl md:text-2xl">Data Kelas </h4>
-                                <Select v-model="selectedSemester" :options="semester" optionLabel="namaSemester"
-                                    placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" />
+                                <div class="md:flex md:items-center md:space-x-2">
+                                    <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
+                                    <div>
+                                        <Select v-model="selectedSemester" :options="semester"
+                                            optionLabel="namaSemester" placeholder="Tahun Pelajaran"
+                                            class="w-full md:w-52 mr-2" />
+
+                                    </div>
+                                </div>
 
                             </div>
                             <div class="mb-2">
@@ -30,7 +37,7 @@
                                         <Button label="Export" icon="pi pi-upload" severity="help"
                                             @click="exportCSV($event)" class="mr-2" />
                                         <Button label="Proses" icon="pi pi-send" severity="info"
-                                            @click="exportCSV($event)" v-tooltip.right="'Menyimpan ke database'"
+                                            @click="exportCSV($event)" v-tooltip.bottom="'Menyimpan ke database'"
                                             badge="2" />
                                     </template>
 
@@ -63,8 +70,9 @@
                 </div>
 
 
-                <DataTable ref="dt" v-model:selection="selectedKelas" stripedRows size="small" :value="rombel" scrollable scrollHeight="400px"
-                    dataKey="rombonganBelajarId" :paginator="true" :rows="10" :filters="filters" tableStyle="min-width: 50rem"
+                <DataTable ref="dt" v-model:selection="selectedKelas" stripedRows size="small" :value="rombel"
+                    scrollable scrollHeight="400px" dataKey="rombonganBelajarId" :paginator="true" :rows="10"
+                    :filters="filters" tableStyle="min-width: 50rem"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[10, 20, 30]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} kelas" class="mt-56">
@@ -82,7 +90,8 @@
                     <Column field="code" header="Anggota Kelas">
                         <template #body="slotProps">
                             <!-- <Button icon="pi pi-bullseye" outlined rounded class="mr-2" @click="editProduct(slotProps.data)" /> -->
-                            <Button icon="pi pi-bullseye" outlined rounded class="mr-2" @click="dialogAnggotaRombel(slotProps.data)" />
+                            <Button icon="pi pi-bullseye" outlined rounded class="mr-2"
+                                @click="dialogAnggotaRombel(slotProps.data)" />
                         </template>
                     </Column>
                     <!--<Column field="name" header="JK"></Column> -->
@@ -120,8 +129,8 @@
                     <InputText id="name" v-model.trim="kelas.nama" required="true" :invalid="submitted && !kelas.nama"
                         fluid />
                     <small v-if="submitted && !kelas.nama" class="text-red-500">Nama Kelas harus diisi.</small>
-                
-                
+
+
                 </div>
                 <div>
                     <label for="name" class="block font-bold ">Tingkat</label>
@@ -380,7 +389,7 @@ const fetchSemester = async () => {
 
     }
 }
-watch(selectedSemester,(newVal, oldVal)=> {
+watch(selectedSemester, (newVal, oldVal) => {
     console.log(newVal)
     fetchRombel()
 })

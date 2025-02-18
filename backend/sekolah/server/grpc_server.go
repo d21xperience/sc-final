@@ -38,8 +38,12 @@ func RunGRPCServer() *grpc.Server {
 	pb.RegisterNilaiAkhirServiceServer(grpcServer, nilaiAkhirService)
 
 	// REGISTER UPLOAD SERVICE
-	UploadService = services.NewUploadServiceServer()
+	UploadService := services.NewUploadServiceServer()
 	pb.RegisterUploadDataSekolahServiceServer(grpcServer, UploadService)
+
+	// REGISTER PTK TERDAFTAR SERVICE
+	ptkTerdaftarService := services.NewPTKTerdaftarServiceServer()
+	pb.RegisterPTKTerdaftarServiceServer(grpcServer, ptkTerdaftarService)
 
 	return grpcServer
 }

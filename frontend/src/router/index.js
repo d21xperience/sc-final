@@ -231,6 +231,11 @@ const router = createRouter({
           name: "dapodikKelas",
           component: () => import("../views/dapodik/DataKelas.vue"),
           meta: { title: "Data Kelas", requiresAuth: true, role: "admin" },
+          // children:[
+          //   {
+          //     path:""
+          //   }
+          // ]
         },
 
         // Data akademik siswa

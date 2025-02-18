@@ -96,7 +96,6 @@ func (r *GenericRepository[T]) FindAllByConditions(
 	return entities, nil
 }
 
-
 func (r *GenericRepository[T]) Update(ctx context.Context, entity *T, schemaName, idColumn, id string) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
@@ -128,7 +127,7 @@ func (r *GenericRepository[T]) Delete(ctx context.Context, id string, schemaName
 		return nil
 	})
 }
-func (r *GenericRepository[T]) SaveMany(ctx context.Context, schemaName string, entities []*T,  batchSize int) error {
+func (r *GenericRepository[T]) SaveMany(ctx context.Context, schemaName string, entities []*T, batchSize int) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		// Set schema
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
@@ -143,4 +142,71 @@ func (r *GenericRepository[T]) SaveMany(ctx context.Context, schemaName string, 
 
 		return nil
 	})
+}
+
+// FindWithJoins melakukan query dengan joins dan kondisi tertentu
+func (r *GenericRepository[T]) FindWithJoins(ctx context.Context, schemaName string, joins []string, conditions map[string]interface{}) (*T, error) {
+	var result T
+
+	// Gunakan transaksi agar bisa set schema lebih aman
+	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// Set schema
+		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+			return fmt.Errorf("failed to set schema: %w", err)
+		}
+
+		// Query dengan joins
+		query := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName))
+
+		// Apply joins
+		for _, join := range joins {
+			query = query.Joins(join)
+		}
+
+		// Apply conditions
+		if len(conditions) > 0 {
+			query = query.Where(conditions)
+		}
+
+		// Execute query
+		if err := query.First(&result).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// FindWithPreloadAndJoins - Fungsi generic untuk mendapatkan data dengan Preload dan Joins
+func (r *GenericRepository[T]) FindWithPreloadAndJoins(ctx context.Context, schemaName string, joins []string, preloads []string, conditions map[string]interface{}) ([]T, error) {
+	var results []T
+	tx := r.db.WithContext(ctx)
+
+	// Set Schema (Multi-Tenant)
+	if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", schemaName)).Error; err != nil {
+		return nil, fmt.Errorf("failed to set schema: %w", err)
+	}
+
+	// Tambahkan Joins jika ada
+	for _, join := range joins {
+		tx = tx.Joins(join)
+	}
+
+	// Tambahkan Preload jika ada
+	for _, preload := range preloads {
+		tx = tx.Preload(preload)
+	}
+
+	// Eksekusi Query dengan kondisi
+	if err := tx.Where(conditions).Find(&results).Error; err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }
