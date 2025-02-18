@@ -6,9 +6,16 @@
                     <div class="lg:ml-[250px] my-2 ">
                         <div class="container ">
                             <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Guru </h4>
-                                <Select v-model="selectedSemester" :options="semester" optionLabel="namaSemester"
-                                    placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" />
+                                <h4 class="font-bold text-xl md:text-2xl">Data Kelas </h4>
+                                <div class="md:flex md:items-center md:space-x-2">
+                                    <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
+                                    <div>
+                                        <Select v-model="selectedSemester" :options="semester"
+                                            optionLabel="namaSemester" placeholder="Tahun Pelajaran"
+                                            class="w-full md:w-52 mr-2" />
+
+                                    </div>
+                                </div>
 
                             </div>
                             <div class="mb-2">
@@ -64,7 +71,7 @@
 
 
                 <DataTable ref="dt" v-model:selection="selectedKelas" stripedRows size="small" :value="rombel"
-                    scrollable scrollHeight="400px" dataKey="rombonganBelajarId" :paginator="true" :rows="10"
+                    scrollable scrollHeight="400px" dataKey="ptkTerdaftarId" :paginator="true" :rows="10"
                     :filters="filters" tableStyle="min-width: 50rem"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[10, 20, 30]"
