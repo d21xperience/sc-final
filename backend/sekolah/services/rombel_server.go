@@ -43,7 +43,7 @@ func (s *RombelServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKel
 		SemesterId:          Kelas.SemesterId,
 		JurusanId:           Kelas.JurusanId,
 		TingkatPendidikanId: Kelas.TingkatPendidikanId,
-		PtkId:               Kelas.PtkId,
+		PtkID:               Kelas.PtkId,
 		JenisRombel:         Kelas.JenisRombel,
 		NamaJurusanSp:       Kelas.NamaJurusanSp,
 		JurusanSpId:         Kelas.JurusanSpId,
@@ -80,13 +80,13 @@ func (s *RombelServiceServer) CreateBanyakKelas(ctx context.Context, req *pb.Cre
 			SekolahId:           rom.SekolahId,
 			SemesterId:          rom.SemesterId,
 			JurusanId:           rom.JurusanId,
-			PtkId:               rom.PtkId,
+			PtkID:               rom.PtkId,
 			NmKelas:             rom.NmKelas,
 			TingkatPendidikanId: rom.TingkatPendidikanId,
 			JenisRombel:         rom.JenisRombel,
 			NamaJurusanSp:       rom.NamaJurusanSp,
-			JurusanSpId:         rom.JurusanSpId,
-			KurikulumId:         rom.KurikulumId,
+			// JurusanSpId:         rom.JurusanSpId,
+			KurikulumId: rom.KurikulumId,
 		}
 	})
 	err = s.repo.SaveMany(ctx, schemaName, kelasModels, 100)
@@ -116,71 +116,134 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	}
 
 	// Cek apakah harus mengambil semua data atau data spesifik berdasarkan SemesterId
-	kelasId := req.GetKelasId()
+	// kelasId := req.GetKelasId()
 	semesterId := req.GetSemesterId()
+	joins := []string{
+		"JOIN tabel_ptk ON tabel_kelas.ptk_id = tabel_ptk.ptk_id",
+		// "JOIN ref.jurusan ON tabel_kelas.jurusan_id = ref.jurusan.jurusan_id",
+	}
+	preloads := []string{"PTK"}
 	var conditions = map[string]interface{}{
 		"semester_id": semesterId,
 	}
 
-	if kelasId != "" {
-		// Ambil data Kelas berdasarkan RombonganBelajarId
-		rombel, err := s.repo.FindByID(ctx, kelasId, schemaName, "semester_id")
-		if err != nil {
-			return nil, err
-		}
-		return &pb.GetKelasResponse{
-			Kelas: []*pb.Kelas{
-				ConvertModelToPB(rombel, func(rom *models.RombonganBelajar) *pb.Kelas {
-					return &pb.Kelas{
-						RombonganBelajarId:  rom.RombonganBelajarId,
-						SekolahId:           rom.SekolahId,
-						SemesterId:          rom.SemesterId,
-						JurusanId:           rom.JurusanId,
-						PtkId:               rom.PtkId,
-						NmKelas:             rom.NmKelas,
-						TingkatPendidikanId: rom.TingkatPendidikanId,
-						JenisRombel:         rom.JenisRombel,
-						NamaJurusanSp:       rom.NamaJurusanSp,
-						JurusanSpId:         rom.JurusanSpId,
-						KurikulumId:         rom.KurikulumId,
-					}
-				}),
-			},
-		}, nil
-	}
-	// Ambil semua data Kelas
-	limit := req.GetLimit()
-	if limit == 0 {
-		limit = 100
-	}
-	offset := req.GetOffset()
-	if offset == 0 {
-		offset = 0
-	}
-	banyakKelas, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(limit), int(req.GetOffset()))
+	rombelModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions)
 	if err != nil {
-		log.Printf("[ERROR] Gagal menemukan Kelas di schema '%s': %v", schemaName, err)
-		return nil, fmt.Errorf("gagal menemukan Kelas di schema '%s': %w", schemaName, err)
+		return nil, err
 	}
-	banyakKelasList := ConvertModelsToPB(banyakKelas, func(kelas *models.RombonganBelajar) *pb.Kelas {
+
+	banyakKelasList := utils.ConvertModelsToPB(rombelModel, func(kelas models.RombonganBelajar) *pb.Kelas {
 		return &pb.Kelas{
 			RombonganBelajarId:  kelas.RombonganBelajarId,
 			SekolahId:           kelas.SekolahId,
 			SemesterId:          kelas.SemesterId,
 			JurusanId:           kelas.JurusanId,
-			PtkId:               kelas.PtkId,
+			PtkId:               kelas.PtkID,
 			NmKelas:             kelas.NmKelas,
 			TingkatPendidikanId: kelas.TingkatPendidikanId,
 			JenisRombel:         kelas.JenisRombel,
 			NamaJurusanSp:       kelas.NamaJurusanSp,
 			JurusanSpId:         kelas.JurusanSpId,
 			KurikulumId:         kelas.KurikulumId,
+			Ptk: &pb.PTK{
+				PtkId:             kelas.PTK.PtkID,
+				Nama:              kelas.PTK.Nama,
+				JenisKelamin:      kelas.PTK.JenisKelamin,
+				JenisPtkId:        kelas.PTK.JenisPtkID,
+				TempatLahir:       kelas.PTK.TempatLahir,
+				TanggalLahir:      kelas.PTK.TanggalLahir,
+				AlamatJalan:       kelas.PTK.AlamatJalan,
+				StatusKeaktifanId: kelas.PTK.StatusKeaktifanID,
+				Nuptk:             utils.SafeString(kelas.PTK.NUPTK),
+				Nip:               utils.SafeString(kelas.PTK.NIP),
+			},
 		}
 	})
 	return &pb.GetKelasResponse{
 		Kelas: banyakKelasList,
 	}, nil
 }
+
+// // **GetKelas**
+// func (s *RombelServiceServer) ReadKelas(ctx context.Context, req *pb.GetKelasRequest) (*pb.GetKelasResponse, error) {
+// 	// Daftar field yang wajib diisi
+// 	requiredFields := []string{"Schemaname", "SemesterId"}
+// 	// Validasi request
+// 	err := utils.ValidateFields(req, requiredFields)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	schemaName := req.GetSchemaName()
+// 	if schemaName == "\"\"" {
+// 		return nil, fmt.Errorf("schema name is required")
+// 	}
+
+// 	// Cek apakah harus mengambil semua data atau data spesifik berdasarkan SemesterId
+// 	kelasId := req.GetKelasId()
+// 	semesterId := req.GetSemesterId()
+// 	var conditions = map[string]interface{}{
+// 		"semester_id": semesterId,
+// 	}
+
+// 	if kelasId != "" {
+// 		// Ambil data Kelas berdasarkan RombonganBelajarId
+// 		rombel, err := s.repo.FindByID(ctx, kelasId, schemaName, "semester_id")
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		return &pb.GetKelasResponse{
+// 			Kelas: []*pb.Kelas{
+// 				ConvertModelToPB(rombel, func(rom *models.RombonganBelajar) *pb.Kelas {
+// 					return &pb.Kelas{
+// 						RombonganBelajarId:  rom.RombonganBelajarId,
+// 						SekolahId:           rom.SekolahId,
+// 						SemesterId:          rom.SemesterId,
+// 						JurusanId:           rom.JurusanId,
+// 						PtkId:               rom.PtkID,
+// 						NmKelas:             rom.NmKelas,
+// 						TingkatPendidikanId: rom.TingkatPendidikanId,
+// 						JenisRombel:         rom.JenisRombel,
+// 						NamaJurusanSp:       rom.NamaJurusanSp,
+// 						JurusanSpId:         rom.JurusanSpId,
+// 						KurikulumId:         rom.KurikulumId,
+// 					}
+// 				}),
+// 			},
+// 		}, nil
+// 	}
+// 	// Ambil semua data Kelas
+// 	limit := req.GetLimit()
+// 	if limit == 0 {
+// 		limit = 100
+// 	}
+// 	offset := req.GetOffset()
+// 	if offset == 0 {
+// 		offset = 0
+// 	}
+// 	banyakKelas, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(limit), int(req.GetOffset()))
+// 	if err != nil {
+// 		log.Printf("[ERROR] Gagal menemukan Kelas di schema '%s': %v", schemaName, err)
+// 		return nil, fmt.Errorf("gagal menemukan Kelas di schema '%s': %w", schemaName, err)
+// 	}
+// 	banyakKelasList := ConvertModelsToPB(banyakKelas, func(kelas *models.RombonganBelajar) *pb.Kelas {
+// 		return &pb.Kelas{
+// 			RombonganBelajarId:  kelas.RombonganBelajarId,
+// 			SekolahId:           kelas.SekolahId,
+// 			SemesterId:          kelas.SemesterId,
+// 			JurusanId:           kelas.JurusanId,
+// 			PtkId:               kelas.PtkID,
+// 			NmKelas:             kelas.NmKelas,
+// 			TingkatPendidikanId: kelas.TingkatPendidikanId,
+// 			JenisRombel:         kelas.JenisRombel,
+// 			NamaJurusanSp:       kelas.NamaJurusanSp,
+// 			JurusanSpId:         kelas.JurusanSpId,
+// 			KurikulumId:         kelas.KurikulumId,
+// 		}
+// 	})
+// 	return &pb.GetKelasResponse{
+// 		Kelas: banyakKelasList,
+// 	}, nil
+// }
 
 // **UpdateKelas**
 func (s *RombelServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKelasRequest) (*pb.UpdateKelasResponse, error) {
@@ -202,7 +265,7 @@ func (s *RombelServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKel
 		SemesterId:          Kelas.SemesterId,
 		JurusanId:           Kelas.JurusanId,
 		TingkatPendidikanId: Kelas.TingkatPendidikanId,
-		PtkId:               Kelas.PtkId,
+		PtkID:               Kelas.PtkId,
 		JenisRombel:         Kelas.JenisRombel,
 		NamaJurusanSp:       Kelas.NamaJurusanSp,
 		JurusanSpId:         Kelas.JurusanSpId,

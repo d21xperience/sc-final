@@ -1879,6 +1879,8 @@ const (
 	AnggotaKelasService_GetAnggotaKelas_FullMethodName          = "/sekolah.AnggotaKelasService/GetAnggotaKelas"
 	AnggotaKelasService_UpdateAnggotaKelas_FullMethodName       = "/sekolah.AnggotaKelasService/UpdateAnggotaKelas"
 	AnggotaKelasService_DeleteAnggotaKelas_FullMethodName       = "/sekolah.AnggotaKelasService/DeleteAnggotaKelas"
+	AnggotaKelasService_SearchAnggotaKelas_FullMethodName       = "/sekolah.AnggotaKelasService/SearchAnggotaKelas"
+	AnggotaKelasService_FilterAnggotaKelas_FullMethodName       = "/sekolah.AnggotaKelasService/FilterAnggotaKelas"
 )
 
 // AnggotaKelasServiceClient is the client API for AnggotaKelasService service.
@@ -1894,6 +1896,8 @@ type AnggotaKelasServiceClient interface {
 	GetAnggotaKelas(ctx context.Context, in *GetAnggotaKelasRequest, opts ...grpc.CallOption) (*GetAnggotaKelasResponse, error)
 	UpdateAnggotaKelas(ctx context.Context, in *UpdateAnggotaKelasRequest, opts ...grpc.CallOption) (*UpdateAnggotaKelasResponse, error)
 	DeleteAnggotaKelas(ctx context.Context, in *DeleteAnggotaKelasRequest, opts ...grpc.CallOption) (*DeleteAnggotaKelasResponse, error)
+	SearchAnggotaKelas(ctx context.Context, in *SearchAnggotaKelasRequest, opts ...grpc.CallOption) (*SearchAnggotaKelasResponse, error)
+	FilterAnggotaKelas(ctx context.Context, in *FilterAnggotaKelasRequest, opts ...grpc.CallOption) (*FilterAnggotaKelasResponse, error)
 }
 
 type anggotaKelasServiceClient struct {
@@ -1954,6 +1958,26 @@ func (c *anggotaKelasServiceClient) DeleteAnggotaKelas(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *anggotaKelasServiceClient) SearchAnggotaKelas(ctx context.Context, in *SearchAnggotaKelasRequest, opts ...grpc.CallOption) (*SearchAnggotaKelasResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchAnggotaKelasResponse)
+	err := c.cc.Invoke(ctx, AnggotaKelasService_SearchAnggotaKelas_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *anggotaKelasServiceClient) FilterAnggotaKelas(ctx context.Context, in *FilterAnggotaKelasRequest, opts ...grpc.CallOption) (*FilterAnggotaKelasResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FilterAnggotaKelasResponse)
+	err := c.cc.Invoke(ctx, AnggotaKelasService_FilterAnggotaKelas_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AnggotaKelasServiceServer is the server API for AnggotaKelasService service.
 // All implementations must embed UnimplementedAnggotaKelasServiceServer
 // for forward compatibility.
@@ -1967,6 +1991,8 @@ type AnggotaKelasServiceServer interface {
 	GetAnggotaKelas(context.Context, *GetAnggotaKelasRequest) (*GetAnggotaKelasResponse, error)
 	UpdateAnggotaKelas(context.Context, *UpdateAnggotaKelasRequest) (*UpdateAnggotaKelasResponse, error)
 	DeleteAnggotaKelas(context.Context, *DeleteAnggotaKelasRequest) (*DeleteAnggotaKelasResponse, error)
+	SearchAnggotaKelas(context.Context, *SearchAnggotaKelasRequest) (*SearchAnggotaKelasResponse, error)
+	FilterAnggotaKelas(context.Context, *FilterAnggotaKelasRequest) (*FilterAnggotaKelasResponse, error)
 	mustEmbedUnimplementedAnggotaKelasServiceServer()
 }
 
@@ -1991,6 +2017,12 @@ func (UnimplementedAnggotaKelasServiceServer) UpdateAnggotaKelas(context.Context
 }
 func (UnimplementedAnggotaKelasServiceServer) DeleteAnggotaKelas(context.Context, *DeleteAnggotaKelasRequest) (*DeleteAnggotaKelasResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAnggotaKelas not implemented")
+}
+func (UnimplementedAnggotaKelasServiceServer) SearchAnggotaKelas(context.Context, *SearchAnggotaKelasRequest) (*SearchAnggotaKelasResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchAnggotaKelas not implemented")
+}
+func (UnimplementedAnggotaKelasServiceServer) FilterAnggotaKelas(context.Context, *FilterAnggotaKelasRequest) (*FilterAnggotaKelasResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FilterAnggotaKelas not implemented")
 }
 func (UnimplementedAnggotaKelasServiceServer) mustEmbedUnimplementedAnggotaKelasServiceServer() {}
 func (UnimplementedAnggotaKelasServiceServer) testEmbeddedByValue()                             {}
@@ -2103,6 +2135,42 @@ func _AnggotaKelasService_DeleteAnggotaKelas_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AnggotaKelasService_SearchAnggotaKelas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchAnggotaKelasRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AnggotaKelasServiceServer).SearchAnggotaKelas(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AnggotaKelasService_SearchAnggotaKelas_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AnggotaKelasServiceServer).SearchAnggotaKelas(ctx, req.(*SearchAnggotaKelasRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AnggotaKelasService_FilterAnggotaKelas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FilterAnggotaKelasRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AnggotaKelasServiceServer).FilterAnggotaKelas(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AnggotaKelasService_FilterAnggotaKelas_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AnggotaKelasServiceServer).FilterAnggotaKelas(ctx, req.(*FilterAnggotaKelasRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AnggotaKelasService_ServiceDesc is the grpc.ServiceDesc for AnggotaKelasService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -2129,6 +2197,14 @@ var AnggotaKelasService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAnggotaKelas",
 			Handler:    _AnggotaKelasService_DeleteAnggotaKelas_Handler,
+		},
+		{
+			MethodName: "SearchAnggotaKelas",
+			Handler:    _AnggotaKelasService_SearchAnggotaKelas_Handler,
+		},
+		{
+			MethodName: "FilterAnggotaKelas",
+			Handler:    _AnggotaKelasService_FilterAnggotaKelas_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

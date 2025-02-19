@@ -48,10 +48,10 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 			log.Printf("Invalid UUID for AnggotaRombelID: %v", err)
 		}
 		return &models.NilaiAkhir{
-			IDNilaiAkhir:    uuid.New(),
-			AnggotaRombelID: &anggotaRombelID,
-			MataPelajaranID: &nilai.MataPelajaranId,
-			SemesterID:      nilai.SemesterId,
+			IdNilaiAkhir:    uuid.New(),
+			AnggotaRombelId: anggotaRombelID,
+			MataPelajaranId: &nilai.MataPelajaranId,
+			SemesterId:      nilai.SemesterId,
 			NilaiPeng:       &nilai.NilaiPeng,
 			PredikatPeng:    nilai.PredikatPeng,
 			NilaiKet:        &nilai.NilaiKet,
@@ -60,7 +60,7 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 			PredikatSik:     nilai.PredikatSik,
 			NilaiSikSos:     &nilai.NilaiSiksos,
 			PredikatSikSos:  nilai.PredikatSiksos,
-			PesertaDidikID:  &pesertaDidikID,
+			PesertaDidikId:  pesertaDidikID,
 			IDMinat:         nilai.IdMinat,
 		}
 	})
@@ -77,60 +77,52 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 }
 
 // **GetNilai akhir**
-// func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.GetNilaiAkhirRequest) (*pb.GetNilaiAkhirResponse, error) {
-// 	// Debugging: Cek nilai request yang diterima
-// 	log.Printf("Received Sekolah data request: %+v\n", req)
-// 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "SemesterId"}
-// 	// Validasi request
-// 	err := utils.ValidateFields(req, requiredFields)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	schemaName := req.GetSchemaName()
-// 	Nilai akhirId := req.GetNilai akhirId()
-// 	semesterId := req.GetSemesterId()
-// 	var conditions = map[string]interface{}{
-// 		"semester_id": semesterId,
-// 	}
+func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.GetNilaiAkhirRequest) (*pb.GetNilaiAkhirResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SchemaName", "SemesterId"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	semesterId := req.GetSemesterId()
+	joins := []string{
+		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_nilaiakhir.peserta_didik_id",
+		// "JOIN ref.jurusan ON tabel_kelas.jurusan_id = ref.jurusan.jurusan_id",
+	}
+	preloads := []string{"PesertaDidik"}
+	var conditions = map[string]interface{}{
+		"semester_id": semesterId,
+	}
 
-// 	if Nilai akhirId != "" {
-// 		// Ambil data Nilai akhir berdasarkan PesertaDidikId
-// 		NilaiAkhir, err := s.repo.FindByID(ctx, Nilai akhirId, schemaName)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		return &pb.GetNilaiAkhirResponse{
-// 			NilaiAkhir: []*pb.NilaiAkhir{
-// 				ConvertModelToPB(NilaiAkhir, func(anggota *models.NilaiAkhir) *pb.NilaiAkhir {
-// 					return &pb.NilaiAkhir{
-// 						RombonganBelajarId: anggota.RombonganBelajarId,
-// 						nilaiAkhirId:       anggota.nilaiAkhirId,
-// 						PesertaDidikId:     anggota.PesertaDidikId,
-// 						SemesterId:         anggota.SemesterId,
-// 					}
-// 				}),
-// 			},
-// 		}, nil
-// 	}
-// 	// Ambil semua data Nilai akhir
-// 	NilaiAkhir, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(req.GetLimit()), int(req.GetOffset()))
-// 	if err != nil {
-// 		log.Printf("[ERROR] Gagal menemukan Nilai akhir di schema '%s': %v", schemaName, err)
-// 		return nil, fmt.Errorf("gagal menemukan Nilai akhir di schema '%s': %w", schemaName, err)
-// 	}
-// 	NilaiAkhirList := ConvertModelsToPB(NilaiAkhir, func(anggota *models.NilaiAkhir) *pb.NilaiAkhir {
-// 		return &pb.NilaiAkhir{
-// 			RombonganBelajarId: anggota.RombonganBelajarId,
-// 			nilaiAkhirId:       anggota.nilaiAkhirId,
-// 			PesertaDidikId:     anggota.PesertaDidikId,
-// 			SemesterId:         anggota.SemesterId,
-// 		}
-// 	})
-// 	return &pb.GetNilaiAkhirResponse{
-// 		NilaiAkhir: NilaiAkhirList,
-// 	}, nil
-// }
+	nilaiAkhirModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions)
+	if err != nil {
+		return nil, err
+	}
+
+	NilaiAkhirList := utils.ConvertModelsToPB(nilaiAkhirModel, func(model models.NilaiAkhir) *pb.NilaiAkhir {
+		anggotaRombelId, err := utils.ConvertUUIDToStringViceVersa(model.AnggotaRombelId)
+		if err != nil {
+			return nil
+		}
+		return &pb.NilaiAkhir{
+			AnggotaRombelId: anggotaRombelId.(string),
+			MataPelajaranId: *model.MataPelajaranId,
+			SemesterId:      model.SemesterId,
+			NilaiPeng:       *model.NilaiPeng,
+
+			// nilaiAkhirId:    model.nilaiAkhirId,
+			// PesertaDidikId:  model.PesertaDidikId,
+			// SemesterId:      model.SemesterId,
+		}
+	})
+	return &pb.GetNilaiAkhirResponse{
+		Nilai: NilaiAkhirList,
+	}, nil
+}
 
 // **UpdateNilai akhir**
 // func (s *NilaiAkhirServiceServer) UpdateNilai akhir(ctx context.Context, req *pb.UpdateNilai akhirRequest) (*pb.UpdateNilai akhirResponse, error) {

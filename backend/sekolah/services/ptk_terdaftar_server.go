@@ -140,7 +140,6 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 			PtkTerdaftarId: ptkTerdaftarId.(string),
 			TahunAjaranId:  ptk.TahunAjaranID,
 			Ptk: &pb.PTK{
-				// PtkId: string(ptk.PtkID),
 				PtkId:             ptk.PTK.PtkID,
 				Nama:              ptk.PTK.Nama,
 				JenisKelamin:      ptk.PTK.JenisKelamin,
@@ -149,8 +148,8 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 				TanggalLahir:      ptk.PTK.TanggalLahir,
 				AlamatJalan:       ptk.PTK.AlamatJalan,
 				StatusKeaktifanId: ptk.PTK.StatusKeaktifanID,
-				// Nuptk:             *ptk.PTK.NUPTK,
-				// Nip:               *ptk.PTK.NIP,
+				Nuptk:             utils.SafeString(ptk.PTK.NUPTK),
+				Nip:               utils.SafeString(ptk.PTK.NIP),
 			},
 			// Isi field sesuai kebutuhan
 		}

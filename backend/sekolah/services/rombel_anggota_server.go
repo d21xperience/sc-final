@@ -113,49 +113,114 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 		return nil, err
 	}
 	schemaName := req.GetSchemaName()
-	kelasId := req.GetKelasId()
 	semesterId := req.GetSemesterId()
+	joins := []string{
+		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
+		"JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = tabel_anggotakelas.rombongan_belajar_id",
+	}
+	preloads := []string{"PesertaDidik", "RombonganBelajar"}
 	var conditions = map[string]interface{}{
-		"semester_id": semesterId,
+		// Edit karena terjadi ERROR: column reference "semester_id" is ambiguous (SQLSTATE 42702)
+		"tabel_anggotakelas.semester_id": semesterId,
 	}
 
-	if kelasId != "" {
-		// Ambil data Kelas berdasarkan PesertaDidikId
-		RombelAnggota, err := s.repo.FindByID(ctx, kelasId, schemaName, "anggota_rombel_id")
-		if err != nil {
-			return nil, err
-		}
-		return &pb.GetAnggotaKelasResponse{
-			AnggotaKelas: []*pb.AnggotaKelas{
-				ConvertModelToPB(RombelAnggota, func(anggota *models.RombelAnggota) *pb.AnggotaKelas {
-					return &pb.AnggotaKelas{
-						RombonganBelajarId: anggota.RombonganBelajarId,
-						AnggotaRombelId:    anggota.AnggotaRombelId,
-						PesertaDidikId:     anggota.PesertaDidikId,
-						SemesterId:         anggota.SemesterId,
-					}
-				}),
-			},
-		}, nil
-	}
-	// Ambil semua data Kelas
-	banyakAnggotaKelas, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(req.GetLimit()), int(req.GetOffset()))
+	anggotaRombelModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions)
 	if err != nil {
-		log.Printf("[ERROR] Gagal menemukan Kelas di schema '%s': %v", schemaName, err)
-		return nil, fmt.Errorf("gagal menemukan Kelas di schema '%s': %w", schemaName, err)
+		return nil, err
 	}
-	banyakAnggotaKelasList := ConvertModelsToPB(banyakAnggotaKelas, func(anggota *models.RombelAnggota) *pb.AnggotaKelas {
+
+	banyakAnggotaKelasList := utils.ConvertModelsToPB(anggotaRombelModel, func(anggota models.RombelAnggota) *pb.AnggotaKelas {
 		return &pb.AnggotaKelas{
 			RombonganBelajarId: anggota.RombonganBelajarId,
 			AnggotaRombelId:    anggota.AnggotaRombelId,
 			PesertaDidikId:     anggota.PesertaDidikId,
 			SemesterId:         anggota.SemesterId,
+			PesertaDidik: &pb.Siswa{
+				// PesertaDidikId: anggota.PesertaDidikId,
+				Nis:             anggota.PesertaDidik.Nis,
+				Nisn:            anggota.PesertaDidik.Nisn,
+				NmSiswa:         anggota.PesertaDidik.NmSiswa,
+				TempatLahir:     anggota.PesertaDidik.TempatLahir,
+				TanggalLahir:    anggota.PesertaDidik.TanggalLahir,
+				JenisKelamin:    anggota.PesertaDidik.JenisKelamin,
+				Agama:           anggota.PesertaDidik.Agama,
+				AlamatSiswa:     *anggota.PesertaDidik.AlamatSiswa,
+				TeleponSiswa:    anggota.PesertaDidik.TeleponSiswa,
+				DiterimaTanggal: anggota.PesertaDidik.DiterimaTanggal,
+				NmAyah:          anggota.PesertaDidik.NmAyah,
+				NmIbu:           anggota.PesertaDidik.NmIbu,
+				PekerjaanAyah:   anggota.PesertaDidik.PekerjaanAyah,
+				PekerjaanIbu:    anggota.PesertaDidik.PekerjaanIbu,
+			},
+			RombonganBelajar: &pb.Kelas{
+				NmKelas:             anggota.RombonganBelajar.NmKelas,
+				PtkId:               anggota.RombonganBelajar.PtkID,
+				TingkatPendidikanId: anggota.RombonganBelajar.TingkatPendidikanId,
+				JurusanId:           anggota.RombonganBelajar.JurusanId,
+				NamaJurusanSp:       anggota.RombonganBelajar.NamaJurusanSp,
+			},
 		}
 	})
 	return &pb.GetAnggotaKelasResponse{
 		AnggotaKelas: banyakAnggotaKelasList,
 	}, nil
 }
+
+// // **GetKelas**
+// func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetAnggotaKelasRequest) (*pb.GetAnggotaKelasResponse, error) {
+// 	// Debugging: Cek nilai request yang diterima
+// 	log.Printf("Received Sekolah data request: %+v\n", req)
+// 	// Daftar field yang wajib diisi
+// 	requiredFields := []string{"SchemaName", "SemesterId"}
+// 	// Validasi request
+// 	err := utils.ValidateFields(req, requiredFields)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	schemaName := req.GetSchemaName()
+// 	kelasId := req.GetKelasId()
+// 	semesterId := req.GetSemesterId()
+// 	var conditions = map[string]interface{}{
+// 		"semester_id": semesterId,
+// 	}
+
+// 	if kelasId != "" {
+// 		// Ambil data Kelas berdasarkan PesertaDidikId
+// 		RombelAnggota, err := s.repo.FindByID(ctx, kelasId, schemaName, "anggota_rombel_id")
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		return &pb.GetAnggotaKelasResponse{
+// 			AnggotaKelas: []*pb.AnggotaKelas{
+// 				ConvertModelToPB(RombelAnggota, func(anggota *models.RombelAnggota) *pb.AnggotaKelas {
+// 					return &pb.AnggotaKelas{
+// 						RombonganBelajarId: anggota.RombonganBelajarId,
+// 						AnggotaRombelId:    anggota.AnggotaRombelId,
+// 						PesertaDidikId:     anggota.PesertaDidikId,
+// 						SemesterId:         anggota.SemesterId,
+// 					}
+// 				}),
+// 			},
+// 		}, nil
+// 	}
+// 	// Ambil semua data Kelas
+// 	banyakAnggotaKelas, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(req.GetLimit()), int(req.GetOffset()))
+// 	if err != nil {
+// 		log.Printf("[ERROR] Gagal menemukan Kelas di schema '%s': %v", schemaName, err)
+// 		return nil, fmt.Errorf("gagal menemukan Kelas di schema '%s': %w", schemaName, err)
+// 	}
+// 	banyakAnggotaKelasList := ConvertModelsToPB(banyakAnggotaKelas, func(anggota *models.RombelAnggota) *pb.AnggotaKelas {
+// 		return &pb.AnggotaKelas{
+// 			RombonganBelajarId: anggota.RombonganBelajarId,
+// 			AnggotaRombelId:    anggota.AnggotaRombelId,
+// 			PesertaDidikId:     anggota.PesertaDidikId,
+// 			SemesterId:         anggota.SemesterId,
+// 		}
+// 	})
+// 	return &pb.GetAnggotaKelasResponse{
+// 		AnggotaKelas: banyakAnggotaKelasList,
+// 	}, nil
+// }
 
 // **UpdateKelas**
 // func (s *RombelAnggotaServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKelasRequest) (*pb.UpdateKelasResponse, error) {

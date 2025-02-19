@@ -444,30 +444,30 @@ service MapelService {
   // CRUD for Mapel
   rpc CreateMapel (CreateMapelRequest) returns (CreateMapelResponse) {
     option (google.api.http) = {
-      post: "/api/v1/{schema_name}/mapel/create"
+      post: "/api/v1/ss/mapel/create"
       body: "*"
     };
   }
   rpc CreateBanyakMapel (CreateBanyakMapelRequest) returns (CreateBanyakMapelResponse) {
     option (google.api.http) = {
-      post: "/api/v1/{schema_name}/mapel/create-banyak"
+      post: "/api/v1/ss/mapel/create-banyak"
       body: "*"
     };
   }
   rpc GetMapel (GetMapelRequest) returns (GetMapelResponse) {
     option (google.api.http) = {
-      get: "/api/v1/{schema_name}/mapel"
+      get: "/api/v1/ss/mapel"
     };
   }
   rpc UpdateMapel (UpdateMapelRequest) returns (UpdateMapelResponse) {
     option (google.api.http) = {
-      put: "/api/v1/{schema_name}/mapel/update/{mapel_id}"
+      put: "/api/v1/ss/mapel/update"
       body: "*"
     };
   }
   rpc DeleteMapel (DeleteMapelRequest) returns (DeleteMapelResponse) {
     option (google.api.http) = {
-      delete: "/api/v1/{schema_name}/mapel/delete/{mapel_id}"
+      delete: "/api/v1/ss/mapel/delete"
     };
   }
 }
@@ -537,18 +537,18 @@ service NilaiAkhirService {
   }
     rpc GetNilaiAkhir (GetNilaiAkhirRequest) returns (GetNilaiAkhirResponse) {
       option (google.api.http) = {
-        get: "/api/v1/ss/{schema_name}/nilai-akhir/{id_nilai_akhir}"
+        get: "/api/v1/ss/{schema_name}/nilai-akhir"
     };
   }
     rpc UpdateNilaiAkhir (UpdateNilaiAkhirRequest) returns (UpdateNilaiAkhirResponse) {
       option (google.api.http) = {
-        put: "/api/v1/ss/{schema_name}/nilai-akhir/update/{id_nilai_akhir}"
+        put: "/api/v1/ss/{schema_name}/nilai-akhir/update"
         body: "*"
     };
   }
     rpc DeleteNilaiAkhir (DeleteNilaiAkhirRequest) returns (DeleteNilaiAkhirResponse) {
       option (google.api.http) = {
-        delete: "/api/ss/v1/{schema_name}/nilai-akhir/delete/{id_nilai_akhir}"
+        delete: "/api/ss/v1/{schema_name}/nilai-akhir/delete"
     };
   }
 }
@@ -582,6 +582,7 @@ message CreateNilaiAkhirResponse {
 message GetNilaiAkhirRequest {
   string schema_name = 1;
   string id_nilai_akhir = 2;
+  string semester_id = 3;
 }
 message GetNilaiAkhirResponse {
   repeated NilaiAkhir nilai = 1;
@@ -652,6 +653,7 @@ message Kelas {
   string	nama_jurusan_sp	=9;
   optional string	jurusan_sp_id	=10;
   int32	kurikulum_id	=11;
+  PTK ptk = 12;
   
 }
 
@@ -733,6 +735,16 @@ service AnggotaKelasService {
       delete: "/api/v1/{schema_name}/anggota-kelas/delete/{kelas_id}"
     };
   }
+	rpc SearchAnggotaKelas (SearchAnggotaKelasRequest) returns (SearchAnggotaKelasResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ss/{schema_name}/anggota-kelas/search"
+    };
+  }
+  	rpc FilterAnggotaKelas (FilterAnggotaKelasRequest) returns (FilterAnggotaKelasResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ss/{schema_name}/anggota-kelas/filter"
+    };
+  }
 }
 
 
@@ -740,10 +752,9 @@ message AnggotaKelas {
   string	anggota_rombel_id	=1;
   string	peserta_didik_id	=2;
   string	rombongan_belajar_id	=3;
-  string	semester_id	=4;  
-  optional string nm_siswa = 5;
-  optional string nm_kelas = 6;
-  optional string nm_wl_kelas = 7;
+  string	semester_id	=4;
+  Siswa peserta_didik = 5;
+  Kelas rombongan_belajar = 6;
 }
 
 message CreateAnggotaKelasRequest {
@@ -765,13 +776,11 @@ message CreateBanyakAnggotaKelasResponse {
 message GetAnggotaKelasRequest {
   string schema_name = 1;
   string semester_id = 2;
-  string kelas_id = 3;
-  string	rombongan_belajar_id	=4;
-  int32 limit = 5;             // Batas data per halaman (opsional, default 10)
-  int32 offset = 6;
+  string rombongan_belajar_id	=3;
 }
 message GetAnggotaKelasResponse {
   repeated AnggotaKelas anggota_kelas = 1;
+  
 }
 message UpdateAnggotaKelasRequest {
   string schema_name = 1;
@@ -791,8 +800,25 @@ message DeleteAnggotaKelasResponse {
   bool status = 2;
 }
 
-
-
+message SearchAnggotaKelasRequest {
+  string schema_name = 1;
+  string semester_id = 2;
+  string nm_siswa = 3;
+  string nis = 4;
+  string nisn = 5;
+}
+message SearchAnggotaKelasResponse {
+  repeated AnggotaKelas anggota_kelas = 1;
+}
+message FilterAnggotaKelasRequest {
+  string schema_name = 1;
+  string semester_id = 2;
+  string tingkat_pendidikan_id = 3;
+  string rombongan_belajar_id	=4;
+}
+message FilterAnggotaKelasResponse {
+  repeated AnggotaKelas anggota_kelas = 1;
+}
 // =======================================
 // PTK SERVICE
 service PTKService {    

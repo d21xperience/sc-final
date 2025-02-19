@@ -81,3 +81,13 @@ func ConvertStringToUint[T uint8 | uint16 | uint32 | uint64](str string) (T, err
 func ConvertUintToString[T uint8 | uint16 | uint32 | uint64](num T) string {
 	return strconv.FormatUint(uint64(num), 10)
 }
+
+// FUNGSI untuk Menangani ERROR pada POINTER
+
+// fungsi helper untuk menangani pointer nil pada string
+func SafeString(s *string) string {
+	if s == nil {
+		return "" // atau return nilai default lain yang sesuai
+	}
+	return *s
+}

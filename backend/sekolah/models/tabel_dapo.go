@@ -5,7 +5,7 @@ import (
 )
 
 type Jurusan struct {
-	JurusanID           string  `gorm:"column:jurusan_id;primaryKey"` // Primary key
+	JurusanId           string  `gorm:"column:jurusan_id;primaryKey"` // Primary key
 	NamaJurusan         string  `gorm:"column:nama_jurusan"`          // Nama jurusan
 	UntukSMA            int     `gorm:"column:untuk_sma"`             // Indikator untuk SMA
 	UntukSMK            int     `gorm:"column:untuk_smk"`             // Indikator untuk SMK
@@ -23,6 +23,10 @@ type Jurusan struct {
 	// Relasi
 	// ParentJurusan *Jurusan  `gorm:"foreignKey:JurusanInduk"` // Relasi self-referencing ke jurusan induk
 	// ChildJurusan  []Jurusan `gorm:"foreignKey:JurusanInduk"` // Relasi ke anak-anak jurusan
+}
+
+func (Jurusan) TableName() string {
+	return "jurusan"
 }
 
 type TabelKurikulum struct {

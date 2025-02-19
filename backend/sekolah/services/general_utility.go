@@ -96,7 +96,7 @@ func parseSiswa(rows [][]string) []*models.PesertaDidik {
 			continue
 		}
 		siswa := &models.PesertaDidik{
-			PesertaDidikID:  row[0],
+			PesertaDidikId:  row[0],
 			Nis:             row[1],
 			Nisn:            row[2],
 			NmSiswa:         row[3],

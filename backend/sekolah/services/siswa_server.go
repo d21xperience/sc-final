@@ -38,7 +38,7 @@ func (s *SiswaServiceServer) CreateSiswa(ctx context.Context, req *pb.CreateSisw
 	siswa := req.Siswa
 
 	siswaModel := &models.PesertaDidik{
-		PesertaDidikID:  siswa.PesertaDidikId,
+		PesertaDidikId:  siswa.PesertaDidikId,
 		Nis:             siswa.Nis,
 		Nisn:            siswa.Nisn,
 		NmSiswa:         siswa.NmSiswa,
@@ -83,7 +83,7 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 
 	siswaModels := ConvertPBToModels(siswa, func(sis *pb.Siswa) *models.PesertaDidik {
 		return &models.PesertaDidik{
-			PesertaDidikID:  sis.PesertaDidikId,
+			PesertaDidikId:  sis.PesertaDidikId,
 			Nis:             sis.Nis,
 			Nisn:            sis.Nisn,
 			NmSiswa:         sis.NmSiswa,
@@ -139,7 +139,7 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 	}
 	banyakSiswaList := ConvertModelsToPB(banyakSiswa, func(siswa *models.PesertaDidik) *pb.Siswa {
 		return &pb.Siswa{
-			PesertaDidikId:  siswa.PesertaDidikID,
+			PesertaDidikId:  siswa.PesertaDidikId,
 			Nis:             siswa.Nis,
 			Nisn:            siswa.Nisn,
 			NmSiswa:         siswa.NmSiswa,

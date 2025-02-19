@@ -16,7 +16,6 @@
 
                                     </div>
                                 </div>
-
                             </div>
                             <div class="mb-2">
                                 <Toolbar>
@@ -86,7 +85,11 @@
                     <Column field="nmKelas" header="Nama Kelas"></Column>
                     <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
                     <Column field="namaJurusanSp" header="Jurusan" sortable></Column>
-                    <Column field="code" header="Wali kelas"></Column>
+                    <Column field="code" header="Wali kelas">
+                        <template #body="slotProps">
+                            {{ slotProps.data.ptk.nama }}
+                        </template>
+                    </Column>
                     <Column field="code" header="Anggota Kelas">
                         <template #body="slotProps">
                             <!-- <Button icon="pi pi-bullseye" outlined rounded class="mr-2" @click="editProduct(slotProps.data)" /> -->
@@ -217,8 +220,8 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useStore } from "vuex";
-import DialogImport from '../../components/DialogImport.vue'
 const store = useStore();
+import DialogImport from '../../components/DialogImport.vue'
 import FileUpload from 'primevue/fileupload';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -371,7 +374,8 @@ import Select from 'primevue/select';
 import MultiSelect from 'primevue/multiselect';
 
 import EmptyData from '@/components/EmptyData.vue';
-
+// ==================================
+// =======SEMESTER=============
 const selectedSemester = ref();
 const semester = ref(null);
 const fetchSemester = async () => {
@@ -393,6 +397,8 @@ watch(selectedSemester, (newVal, oldVal) => {
     console.log(newVal)
     fetchRombel()
 })
+// ==================================
+
 const fetchRombel = async () => {
     try {
         let payload = {

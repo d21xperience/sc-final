@@ -143,5 +143,8 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_nilaiakhir (
 	peserta_didik_id UUID NULL DEFAULT NULL,
 	id_minat VARCHAR(2) NULL DEFAULT NULL,
 	semester NUMERIC(1,0) NULL DEFAULT NULL,
-	PRIMARY KEY (id_nilai_akhir)
+	PRIMARY KEY (id_nilai_akhir),
+	CONSTRAINT "FK_tabel_nilaiakhir_tabel_anggotakelas" FOREIGN KEY ("anggota_rombel_id") REFERENCES "tabel_anggotakelas" ("anggota_rombel_id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT "FK_tabel_nilaiakhir_tabel_siswa" FOREIGN KEY ("peserta_didik_id") REFERENCES "tabel_siswa" ("peserta_didik_id") ON UPDATE NO ACTION ON DELETE NO ACTION
+	CONSTRAINT "FK_tabel_nilaiakhir_tabel_siswa" FOREIGN KEY ("peserta_didik_id") REFERENCES "tabel_siswa" ("peserta_didik_id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );

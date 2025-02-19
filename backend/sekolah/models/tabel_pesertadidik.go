@@ -1,35 +1,43 @@
 package models
 
 type PesertaDidik struct {
-	PesertaDidikID  string  `json:"peserta_didik_id"` // STRING
-	Nis             string  `json:"nis"`              // String
-	Nisn            string  `json:"nisn"`             // String
-	NmSiswa         string  `json:"nm_siswa"`         // String
-	TempatLahir     string  `json:"tempat_lahir"`     // String
-	TanggalLahir    string  `json:"tanggal_lahir"`    // String (format tanggal, bisa diubah ke time.Time jika perlu)
-	JenisKelamin    string  `json:"jenis_kelamin"`    // String
-	Agama           string  `json:"agama"`            // String
-	AlamatSiswa     *string `json:"alamat_siswa"`     // Nullable string
-	TeleponSiswa    string  `json:"telepon_siswa"`    // String
-	DiterimaTanggal string  `json:"diterima_tanggal"` // String (format tanggal, bisa diubah ke time.Time jika perlu)
-	NmAyah          string  `json:"nm_ayah"`          // String
-	NmIbu           string  `json:"nm_ibu"`           // String
-	PekerjaanAyah   string  `json:"pekerjaan_ayah"`   // String
-	PekerjaanIbu    string  `json:"pekerjaan_ibu"`    // String
-	NmWali          *string `json:"nm_wali"`          // Nullable string
-	PekerjaanWali   *string `json:"pekerjaan_wali"`   // Nullable string
+	PesertaDidikId  string  `gorm:"column:peserta_didik_id;primaryKey"` // STRING
+	Nis             string  `gorm:"column:nis"`                         // String
+	Nisn            string  `gorm:"column:nisn"`                        // String
+	NmSiswa         string  `gorm:"column:nm_siswa"`                    // String
+	TempatLahir     string  `gorm:"column:tempat_lahir"`                // String
+	TanggalLahir    string  `gorm:"column:tanggal_lahir"`               // String (format tanggal, bisa diubah ke time.Time jika perlu)
+	JenisKelamin    string  `gorm:"column:jenis_kelamin"`               // String
+	Agama           string  `gorm:"column:agama"`                       // String
+	AlamatSiswa     *string `gorm:"column:alamat_siswa"`                // Nullable string
+	TeleponSiswa    string  `gorm:"column:telepon_siswa"`               // String
+	DiterimaTanggal string  `gorm:"column:diterima_tanggal"`            // String (format tanggal, bisa diubah ke time.Time jika perlu)
+	NmAyah          string  `gorm:"column:nm_ayah"`                     // String
+	NmIbu           string  `gorm:"column:nm_ibu"`                      // String
+	PekerjaanAyah   string  `gorm:"column:pekerjaan_ayah"`              // String
+	PekerjaanIbu    string  `gorm:"column:pekerjaan_ibu"`               // String
+	NmWali          *string `gorm:"column:nm_wali"`                     // Nullable string
+	PekerjaanWali   *string `gorm:"column:pekerjaan_wali"`              // Nullable string
 }
 
 type PesertaDidikPelengkap struct {
-	PelengkapSiswaID string  `json:"pelengkap_siswa_id"` // UUID
-	PesertaDidikID   *string `json:"peserta_didik_id"`   // UUID
-	StatusDalamKel   *string `json:"status_dalam_kel"`   // Nullable string
-	AnakKe           *string `json:"anak_ke"`            // Integer
-	SekolahAsal      string  `json:"sekolah_asal"`       // Non-nullable string
-	DiterimaKelas    *string `json:"diterima_kelas"`     // Nullable string
-	AlamatOrtu       *string `json:"alamat_ortu"`        // Nullable string
-	TeleponOrtu      *string `json:"telepon_ortu"`       // Nullable string
-	AlamatWali       *string `json:"alamat_wali"`        // Nullable string
-	TeleponWali      *string `json:"telepon_wali"`       // Nullable string
-	FotoSiswa        *string `json:"foto_siswa"`         // Nullable string
+	PelengkapSiswaId string       `gorm:"column:pelengkap_siswa_id;primaryKey"` // UUID
+	PesertaDidikId   *string      `gorm:"column:peserta_didik_id"`              // UUID
+	StatusDalamKel   *string      `gorm:"column:status_dalam_kel"`              // Nullable string
+	AnakKe           *string      `gorm:"column:anak_ke"`                       // Integer
+	SekolahAsal      string       `gorm:"column:sekolah_asal"`                  // Non-nullable string
+	DiterimaKelas    *string      `gorm:"column:diterima_kelas"`                // Nullable string
+	AlamatOrtu       *string      `gorm:"column:alamat_ortu"`                   // Nullable string
+	TeleponOrtu      *string      `gorm:"column:telepon_ortu"`                  // Nullable string
+	AlamatWali       *string      `gorm:"column:alamat_wali"`                   // Nullable string
+	TeleponWali      *string      `gorm:"column:telepon_wali"`                  // Nullable string
+	FotoSiswa        *string      `gorm:"column:foto_siswa"`                    // Nullable string
+	PesertaDidik     PesertaDidik `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
+}
+
+func (PesertaDidik) TableName() string {
+	return "tabel_siswa"
+}
+func (PesertaDidikPelengkap) TableName() string {
+	return "siswa_pelengkap"
 }

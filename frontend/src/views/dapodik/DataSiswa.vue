@@ -7,10 +7,16 @@
                     <div class="lg:ml-[250px] my-2 ">
                         <div class="container ">
                             <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Siswa </h4>
-                                <Select v-model="selectedCity" :options="cities" optionLabel="name"
-                                    placeholder="Tahun Pelajaran" class="md:w-52 mr-2" />
+                                <h4 class="font-bold text-xl md:text-2xl">Data Kelas </h4>
+                                <div class="md:flex md:items-center md:space-x-2">
+                                    <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
+                                    <div>
+                                        <Select v-model="selectedSemester" :options="semester"
+                                            optionLabel="namaSemester" placeholder="Tahun Pelajaran"
+                                            class="w-full md:w-52 mr-2" />
 
+                                    </div>
+                                </div>
                             </div>
                             <div class="mb-2">
                                 <Toolbar>
@@ -63,10 +69,10 @@
                 </div>
 
 
-                <DataTable ref="dt" v-model:selection="dataLulusan" stripedRows size="small" :value="products"
-                    dataKey="id" :paginator="true" :rows="5" :filters="filters"
+                <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa"
+                    dataKey="id" :paginator="true" :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25]"
+                    :rowsPerPageOptions="[10, 20, 50]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56">
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
                     <Column field="name" header="Foto">
@@ -75,12 +81,39 @@
                                 :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
                         </template>
                     </Column>
-                    <Column field="name" header="Nama" sortable></Column>
-                    <Column field="code" header="NISN"></Column>
-                    <Column field="code" header="NIS" sortable></Column>
-                    <Column field="code" header="Tingkat" sortable></Column>
-                    <Column field="code" header="Rombel" sortable></Column>
-                    <Column field="name" header="JK"></Column>
+                    <Column field="nama" header="Nama" sortable>
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.nmSiswa }}
+                        </template>
+                    </Column>
+                    <Column field="jk" header="JK">
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                        </template>
+                    </Column>
+                    <Column field="nisn" header="NISN">
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.nisn }}
+                        </template>
+                    </Column>
+
+
+                    <Column field="nis" header="NIS" sortable>
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.nis }}
+                        </template>
+                    </Column>
+                    <Column field="tingkat" header="Tingkat" sortable>
+                        <!-- rombonganBelajar -->
+                        <template #body="slotProps">
+                            {{ slotProps.data.rombonganBelajar.tingkatPendidikanId }}
+                        </template>
+                    </Column>
+                    <Column field="rombel" header="Rombel" sortable>
+                        <template #body="slotProps">
+                            {{ slotProps.data.rombonganBelajar.nmKelas }}
+                        </template>
+                    </Column>
                     <!-- <Column field="name" header="Tpt.Lahir"></Column>
                     <Column field="name" header="Tgl.Lahir"></Column>
                     <Column field="name" header="Agama"></Column>
@@ -90,12 +123,12 @@
                     <Column field="category" header="Pekerjaan Ibu"></Column> -->
                     <!-- <Column field="category" header="Alamat"></Column> -->
 
-                    <Column field="inventoryStatus" header="Status" sortable>
+                    <!-- <Column field="inventoryStatus" header="Status" sortable>
                         <template #body="slotProps">
                             <Tag :value="slotProps.data.inventoryStatus"
                                 :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
                         </template>
-                    </Column>
+                    </Column> -->
                 </DataTable>
 
             </div>
@@ -178,6 +211,9 @@
 </template>
 
 <script setup>
+import { ref, onMounted, watch } from 'vue';
+import { useStore } from "vuex";
+const store = useStore();
 import FileUpload from 'primevue/fileupload';
 
 import DataTable from 'primevue/datatable';
@@ -188,17 +224,11 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 
 import Toolbar from 'primevue/toolbar';
-
-import ColumnGroup from 'primevue/columngroup';   // optional
-import Row from 'primevue/row';                   // optional
-
-import { ref, onMounted } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-import RadioButton from 'primevue/radiobutton';
 import DataLulusanService from '@/service/ProductService.js';
 // =============UJI FITUR FOTO========================
 import Image from 'primevue/image';
@@ -206,8 +236,16 @@ import Image from 'primevue/image';
 
 
 onMounted(() => {
-    DataLulusanService.getProducts().then((data) => (products.value = data));
+    fetchSemester()
+    fetchSiswa()
+    // DataLulusanService.getProducts().then((data) => (products.value = data));
+
 });
+// watch(selectedSemester, (newVal, oldVal) => {
+//     console.log(newVal)
+//     // fetchRombel()
+// })
+
 
 const dataConnected = ref(true)
 const toast = useToast();
@@ -363,4 +401,58 @@ const handleFetchError = (error) => {
 
 // status siswa naik atau lulus
 const dialogStatus = ref(false)
+
+
+// ==================================
+// =======SEMESTER=============
+const selectedSemester = ref();
+const semester = ref(null);
+const fetchSemester = async () => {
+    try {
+        const results = await store.dispatch("sekolahService/fetchSemester")
+        console.log(results)
+        if (results) {
+            semester.value = store.getters["sekolahService/getSemester"]
+            // Ambil semester terbaru berdasarkan ID terbesar
+            selectedSemester.value = semester.value.reduce((latest, current) =>
+                current.semesterId > latest.semesterId ? current : latest
+            );
+        }
+    } catch (error) {
+
+    }
+}
+
+// ==================================
+// ==================================
+// =======Siswa=============
+const selectedSiswa = ref();
+const siswa = ref(null);
+const fetchSiswa = async () => {
+    try {
+        console.log("fethcSiswa")
+        let payload = {
+            semesterId: 20232,
+            schemaName: "tabel_D4DA6B98FCFD71C58F5A"
+        }
+        console.log(payload)
+        const results = await store.dispatch("sekolahService/fetchSiswa", payload)
+        // console.log(results)
+        if (results) {
+            siswa.value = store.getters["sekolahService/getSiswa"]
+            // // Ambil siswa terbaru berdasarkan ID terbesar
+            // selectedSiswa.value = siswa.value.reduce((latest, current) =>
+            //     current.siswaId > latest.siswaId ? current : latest
+            // );
+        }
+    } catch (error) {
+
+    }
+}
+
+// ==================================
+
+
+
+
 </script>

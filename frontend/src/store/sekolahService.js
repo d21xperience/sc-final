@@ -14,6 +14,7 @@ const state = {
   error: null,
   tabelTenant: JSON.parse(localStorage.getItem("tabelTenant")) || null,
   // tabelSemester: JSON.parse(localStorage.getItem("tabelSemester")) || null,
+  tabelSiswa: JSON.parse(localStorage.getItem("tabelSiswa")) || null,
 };
 
 const mutations = {
@@ -30,6 +31,10 @@ const mutations = {
   SET_TABELSEMESTER(state, tabelSemester) {
     state.tabelSemester = tabelSemester;
     localStorage.setItem("tabelSemester", JSON.stringify(tabelSemester));
+  },
+  SET_TABELSISWA(state, tabelSiswa) {
+    state.tabelSiswa = tabelSiswa;
+    localStorage.setItem("tabelSiswa", JSON.stringify(tabelSiswa));
   },
 };
 
@@ -175,6 +180,27 @@ const actions = {
       commit("SET_LOADING", false);
     }
   },
+  async fetchSiswa({ commit }, payload) {
+    try {
+      const response = await api.get(
+        `/ss/${payload.schemaName}/anggota-kelas`,
+        {
+          params: {
+            semester_id: payload.semesterId,
+          },
+        }
+      );
+      console.log(response.data.anggotaKelas);
+      commit("SET_TABELSISWA", response.data.anggotaKelas);
+      return response.data; // Mengembalikan data sekolah
+    } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal membuat semester:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
 };
 
 const getters = {
@@ -182,6 +208,7 @@ const getters = {
   getError: (state) => state.error,
   getTabeltenant: (state) => state.tabelTenant,
   getSemester: (state) => state.tabelSemester,
+  getSiswa: (state) => state.tabelSiswa,
 };
 
 export default {
