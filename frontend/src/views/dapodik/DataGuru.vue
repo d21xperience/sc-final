@@ -106,14 +106,13 @@
                             }) }}
                         </template>
                     </Column>
-                    <Column field="code" header="Wali kelas"></Column>
-                    <Column field="code" header="Anggota Kelas">
+                    <Column field="code" header="Mapel yang diampu"></Column>
+                    <!-- <Column field="code" header="Anggota Kelas">
                         <template #body="slotProps">
-                            <!-- <Button icon="pi pi-bullseye" outlined rounded class="mr-2" @click="editProduct(slotProps.data)" /> -->
                             <Button icon="pi pi-bullseye" outlined rounded class="mr-2"
                                 @click="dialogAnggotaRombel(slotProps.data)" />
                         </template>
-                    </Column>
+                    </Column> -->
                     <!--<Column field="name" header="JK"></Column> -->
                     <!-- <Column field="name" header="Tpt.Lahir"></Column>
                     <Column field="name" header="Tgl.Lahir"></Column>
