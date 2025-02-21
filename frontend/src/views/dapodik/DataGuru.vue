@@ -6,7 +6,7 @@
                     <div class="lg:ml-[250px] my-2 ">
                         <div class="container ">
                             <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Kelas </h4>
+                                <h4 class="font-bold text-xl md:text-2xl">Data Guru </h4>
                                 <div class="md:flex md:items-center md:space-x-2">
                                     <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
                                     <div>
@@ -61,7 +61,7 @@
                                         <InputIcon>
                                             <i class="pi pi-search" />
                                         </InputIcon>
-                                        <InputText v-model="filters['global'].value" placeholder="Search..." />
+                                        <InputText v-model="filters['global'].value" placeholder="Cari nama..." />
                                     </IconField>
                                 </template>
                             </Toolbar>
@@ -77,27 +77,9 @@
                     :rowsPerPageOptions="[10, 20, 30]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} kelas" class="mt-56">
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                    <!-- <Column field="name" header="Foto">
-                        <template #body="slotProps">
-                            <Image :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                                :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
-                        </template>
-                    </Column> -->
-                    <Column field="ptk" header="Nama" sortable>
-                        <template #body="slotProps">
-                            {{ slotProps.data.ptk.nama }}
-                        </template>
-                    </Column>
-                    <Column field="tingkatPendidikanId" header="JK" sortable>
-                        <template #body="slotProps">
-                            {{ slotProps.data.ptk.jenisKelamin }}
-                        </template>
-                    </Column>
-                    <Column field="tptLahir" header="Tpt Lahir">
-                        <template #body="slotProps">
-                            {{ slotProps.data.ptk.tempatLahir }}
-                        </template>
-                    </Column>
+                    <Column field="ptk.nama" header="Nama" sortable></Column>
+                    <Column field="ptk.jenisKelamin" header="JK" sortable></Column>
+                    <Column field="ptk.tempatLahir" header="Tpt Lahir"></Column>
                     <Column field="tglLahir" header="Tgl Lahir">
                         <template #body="slotProps">
                             {{ new Date(slotProps.data.ptk.tanggalLahir).toLocaleDateString("id-ID", {
@@ -106,7 +88,9 @@
                             }) }}
                         </template>
                     </Column>
-                    <Column field="code" header="Mapel yang diampu"></Column>
+                    <Column field="ptk.nuptk" header="NUPTK"></Column>
+                    <!-- <Column field="ptk.alamatJalan" header="Alamat"></Column> -->
+                    <!-- <Column field="code" header="Mapel yang diampu"></Column> -->
                     <!-- <Column field="code" header="Anggota Kelas">
                         <template #body="slotProps">
                             <Button icon="pi pi-bullseye" outlined rounded class="mr-2"

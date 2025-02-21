@@ -115,30 +115,29 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 	}
 
 	// Cek apakah harus mengambil semua data atau data spesifik berdasarkan SemesterId
-	// PTKTerdaftarId := req.GetPtkTerdaftarId()
 	joins := []string{
 		"JOIN tabel_ptk ON tabel_ptk.ptk_id = tabel_ptk_terdaftar.ptk_id",
-		// "JOIN tabel_ptk ON tabel_kelas.ptk_id = tabel_ptk.ptk_id",
 	}
 	preloads := []string{"PTK"}
 
 	conditions := map[string]interface{}{
 		"tahun_ajaran_id": req.GetTahunAjaranId(),
 	}
-
-	PTKTerdaftarModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions)
+	orderBy := []string{"nama ASC"}
+	// groupByColumns := []string{"tabel_ptk_terdaftar.ptk_terdaftar_id"} // Hindari duplikasi
+	PTKTerdaftarModel, err := s.repo.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
 	if err != nil {
 		return nil, err
 	}
 	// Konversi ke protobuf
 	ptkTerdaftarPB := utils.ConvertModelsToPB(PTKTerdaftarModel, func(ptk models.PTKTerdaftar) *pb.PTKTerdaftar {
-		ptkTerdaftarId, err := utils.ConvertUUIDToStringViceVersa(ptk.PtkTerdaftarID)
+		ptkTerdaftarId, err := utils.ConvertUUIDToStringViceVersa(ptk.PtkTerdaftarId)
 		if err != nil {
 			return nil
 		}
 		return &pb.PTKTerdaftar{
 			PtkTerdaftarId: ptkTerdaftarId.(string),
-			TahunAjaranId:  ptk.TahunAjaranID,
+			TahunAjaranId:  ptk.TahunAjaranId,
 			Ptk: &pb.PTK{
 				PtkId:             ptk.PTK.PtkID,
 				Nama:              ptk.PTK.Nama,

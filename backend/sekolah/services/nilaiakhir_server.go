@@ -97,8 +97,8 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 	var conditions = map[string]interface{}{
 		"semester_id": semesterId,
 	}
-
-	nilaiAkhirModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions)
+	groupByColumns := []string{"tabel_nilaiakhir.id_nilai_akhir"} // Hindari duplikasi
+	nilaiAkhirModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns)
 	if err != nil {
 		return nil, err
 	}

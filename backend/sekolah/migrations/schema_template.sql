@@ -148,3 +148,15 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_nilaiakhir (
 	CONSTRAINT "FK_tabel_nilaiakhir_tabel_siswa" FOREIGN KEY ("peserta_didik_id") REFERENCES "tabel_siswa" ("peserta_didik_id") ON UPDATE NO ACTION ON DELETE NO ACTION
 	CONSTRAINT "FK_tabel_nilaiakhir_tabel_siswa" FOREIGN KEY ("peserta_didik_id") REFERENCES "tabel_siswa" ("peserta_didik_id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_kenaikan (
+	kd_kenaikan UUID NOT NULL,
+	semester_id CHAR(5) NOT NULL,
+	anggota_rombel_id UUID NOT NULL,
+	peserta_didik_id UUID NULL DEFAULT NULL,
+	kenaikan NUMERIC(3,0) NULL DEFAULT 'NULL::numeric',
+	tingkat NUMERIC(3,0) NULL DEFAULT 'NULL::numeric',
+	PRIMARY KEY (kd_kenaikan),
+	CONSTRAINT FK_tabel_kenaikan_ref.semester FOREIGN KEY (semester_id) REFERENCES ref.semester (semester_id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT FK_tabel_kenaikan_tabel_siswa FOREIGN KEY (peserta_didik_id) REFERENCES tabel_siswa (peserta_didik_id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);

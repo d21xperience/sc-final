@@ -123,6 +123,14 @@ const menuItems = ref([
                     router.push({ name: 'dapodikSiswa' })
                 }
             },
+            {
+                label: 'Data Nilai',
+                icon: 'pi pi-file-check',
+
+                command: () => {
+                    router.push({ name: 'dapodikSiswa' })
+                }
+            },
             // {
             //     label: 'Sync Dapodik',
             //     icon: 'pi pi-refresh',

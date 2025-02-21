@@ -117,14 +117,15 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 	joins := []string{
 		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
 		"JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = tabel_anggotakelas.rombongan_belajar_id",
+		"JOIN tabel_ptk ON tabel_ptk.ptk_id = tabel_kelas.ptk_id",
 	}
-	preloads := []string{"PesertaDidik", "RombonganBelajar"}
+	preloads := []string{"PesertaDidik", "RombonganBelajar", "RombonganBelajar.PTK"}
 	var conditions = map[string]interface{}{
 		// Edit karena terjadi ERROR: column reference "semester_id" is ambiguous (SQLSTATE 42702)
 		"tabel_anggotakelas.semester_id": semesterId,
 	}
-
-	anggotaRombelModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions)
+	orderBy := []string{"tabel_kelas.nm_kelas ASC"} // Hindari duplikasi
+	anggotaRombelModel, err := s.repo.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
 	if err != nil {
 		return nil, err
 	}
@@ -158,6 +159,19 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 				TingkatPendidikanId: anggota.RombonganBelajar.TingkatPendidikanId,
 				JurusanId:           anggota.RombonganBelajar.JurusanId,
 				NamaJurusanSp:       anggota.RombonganBelajar.NamaJurusanSp,
+				JenisRombel:         anggota.RombonganBelajar.JenisRombel,
+				KurikulumId:         anggota.RombonganBelajar.KurikulumId,
+				Ptk: &pb.PTK{
+					Nama:              anggota.RombonganBelajar.PTK.Nama,
+					Nip:               utils.SafeString(anggota.RombonganBelajar.PTK.NIP),
+					JenisPtkId:        anggota.RombonganBelajar.PTK.JenisPtkID,
+					JenisKelamin:      anggota.RombonganBelajar.PTK.JenisKelamin,
+					TempatLahir:       anggota.RombonganBelajar.PTK.TempatLahir,
+					StatusKeaktifanId: anggota.RombonganBelajar.PTK.StatusKeaktifanID,
+					TanggalLahir:      anggota.RombonganBelajar.PTK.TanggalLahir,
+					Nuptk:             utils.SafeString(anggota.RombonganBelajar.PTK.NUPTK),
+					AlamatJalan:       anggota.RombonganBelajar.PTK.AlamatJalan,
+				},
 			},
 		}
 	})

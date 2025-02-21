@@ -126,8 +126,8 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	var conditions = map[string]interface{}{
 		"semester_id": semesterId,
 	}
-
-	rombelModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions)
+	groupByColumns := []string{"tabel_kelas.rombongan_belajar_id"} // Hindari duplikasi
+	rombelModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns)
 	if err != nil {
 		return nil, err
 	}

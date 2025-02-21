@@ -184,7 +184,14 @@ func (r *GenericRepository[T]) FindWithJoins(ctx context.Context, schemaName str
 }
 
 // FindWithPreloadAndJoins - Fungsi generic untuk mendapatkan data dengan Preload dan Joins
-func (r *GenericRepository[T]) FindWithPreloadAndJoins(ctx context.Context, schemaName string, joins []string, preloads []string, conditions map[string]interface{}) ([]T, error) {
+func (r *GenericRepository[T]) FindWithPreloadAndJoinsOrigin(
+	ctx context.Context,
+	schemaName string,
+	joins []string,
+	preloads []string,
+	conditions map[string]interface{},
+	orderBy []string, // Tambahkan parameter orderBy
+) ([]T, error) {
 	var results []T
 	tx := r.db.WithContext(ctx)
 
@@ -201,6 +208,124 @@ func (r *GenericRepository[T]) FindWithPreloadAndJoins(ctx context.Context, sche
 	// Tambahkan Preload jika ada
 	for _, preload := range preloads {
 		tx = tx.Preload(preload)
+	}
+
+	// Tambahkan ORDER BY jika ada
+	if len(orderBy) > 0 {
+		tx = tx.Order(strings.Join(orderBy, ", ")) // Gabungkan semua kolom ORDER BY
+	}
+
+	// Eksekusi Query dengan kondisi
+	if err := tx.Where(conditions).Find(&results).Error; err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// Fungsi Generic untuk Preload One-To-Many
+func (r *GenericRepository[T]) FindWithPreloadAndJoins(
+	ctx context.Context,
+	schemaName string,
+	joins []string,
+	preloads []string,
+	conditions map[string]interface{},
+	groupByColumns []string,
+) ([]T, error) {
+	var results []T
+	tx := r.db.WithContext(ctx)
+
+	// Set Schema (Multi-Tenant)
+	if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", schemaName)).Error; err != nil {
+		return nil, fmt.Errorf("failed to set schema: %w", err)
+	}
+
+	// Tambahkan DISTINCT untuk menghindari duplikasi
+	tx = tx.Distinct()
+
+	// Tambahkan Joins jika ada
+	for _, join := range joins {
+		tx = tx.Joins(join)
+	}
+
+	// Tambahkan Preload untuk relasi One-To-Many
+	for _, preload := range preloads {
+		tx = tx.Preload(preload)
+	}
+
+	// Tambahkan GROUP BY jika diperlukan
+	if len(groupByColumns) > 0 {
+		tx = tx.Group(strings.Join(groupByColumns, ", "))
+	}
+
+	// Eksekusi Query dengan kondisi
+	if err := tx.Where(conditions).Find(&results).Error; err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+//
+// //
+
+// FindWithRelations mengambil data dengan relasi tertentu berdasarkan tipe relasinya
+//
+// Fungsi Generic untuk Relasi dalam GORM.
+//  1. Jenis Relasi dalam GORM
+//  2. BelongsTo (One-To-One, Foreign Key di tabel anak)
+//  3. HasOne (One-To-One, Foreign Key di tabel induk)
+//  4. HasMany (One-To-Many)
+//  5. ManyToMany (Many-To-Many, menggunakan tabel pivot)
+//
+// //
+//
+//	// 1. One-To-One (BelongsTo & HasOne)
+//	preloads := []string{"PTK"}  // Preload PTK dalam PTKTerdaftar
+//	conditions := map[string]interface{}{"ptk_terdaftar_id": "some-uuid"}
+//	data, err := repo.FindWithRelations(ctx, schemaName, nil, preloads, conditions, nil)
+//	// 2. One-To-Many (HasMany)
+//	preloads := []string{"Pembelajaran"}  // Preload Pembelajaran dalam PTKTerdaftar
+//	conditions := map[string]interface{}{"tahun_ajaran_id": "2023"}
+//	data, err := repo.FindWithRelations(ctx, schemaName, nil, preloads, conditions, nil)
+//	// 3. Many-To-Many
+//	preloads := []string{"Kelas"}  // Preload Kelas dalam Guru
+//	conditions := map[string]interface{}{"guru_id": "some-uuid"}
+//	data, err := repo.FindWithRelations(ctx, schemaName, nil, preloads, conditions, nil)
+//
+// [docs]: https://gorm.io/docs/query.html#Conditions
+func (r *GenericRepository[T]) FindWithRelations(
+	ctx context.Context,
+	schemaName string,
+	joins []string,
+	preloads []string,
+	conditions map[string]interface{},
+	groupByColumns []string,
+) ([]T, error) {
+	var results []T
+	tx := r.db.WithContext(ctx)
+
+	// Set Schema (Multi-Tenant)
+	if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", schemaName)).Error; err != nil {
+		return nil, fmt.Errorf("failed to set schema: %w", err)
+	}
+
+	// Tambahkan DISTINCT untuk menghindari duplikasi
+	tx = tx.Distinct()
+
+	// Tambahkan Joins jika ada (untuk hubungan complex)
+	for _, join := range joins {
+		tx = tx.Joins(join)
+	}
+
+	// Tambahkan Preload untuk relasi One-To-One, One-To-Many, dan Many-To-Many
+	for _, preload := range preloads {
+		tx = tx.Preload(preload)
+	}
+
+	// Tambahkan GROUP BY jika diperlukan
+	if len(groupByColumns) > 0 {
+		tx = tx.Group(strings.Join(groupByColumns, ", "))
 	}
 
 	// Eksekusi Query dengan kondisi

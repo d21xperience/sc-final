@@ -23,13 +23,14 @@ type PTKPelengkap struct {
 }
 
 type PTKTerdaftar struct {
-	PtkTerdaftarID uuid.UUID `gorm:"column:ptk_terdaftar_id;primaryKey"`
+	PtkTerdaftarId uuid.UUID `gorm:"column:ptk_terdaftar_id;primaryKey"`
 	PtkID          uuid.UUID `gorm:"column:ptk_id"`
-	TahunAjaranID  string    `gorm:"column:tahun_ajaran_id"`
-	JenisKeluarID  *string   `gorm:"column:jenis_keluar_id"`
+	TahunAjaranId  string    `gorm:"column:tahun_ajaran_id"`
+	JenisKeluarId  *string   `gorm:"column:jenis_keluar_id"`
 
 	// Relasi ke PTK
-	PTK TabelPTK `gorm:"foreignKey:PtkID;references:PtkID"`
+	PTK          TabelPTK       `gorm:"foreignKey:PtkID;references:PtkID"`
+	Pembelajaran []Pembelajaran `gorm:"foreignKey:PtkTerdaftarId;references:PtkTerdaftarId"`
 }
 
 // Menentukan nama tabel kustom

@@ -7,7 +7,7 @@
                     <div class="lg:ml-[250px] my-2 ">
                         <div class="container ">
                             <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Kelas </h4>
+                                <h4 class="font-bold text-xl md:text-2xl">Data Siswa </h4>
                                 <div class="md:flex md:items-center md:space-x-2">
                                     <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
                                     <div>
