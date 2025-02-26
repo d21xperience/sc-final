@@ -7,7 +7,7 @@
                     <div class="lg:ml-[250px] my-2 ">
                         <div class="container ">
                             <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Siswa </h4>
+                                <h4 class="font-bold text-xl md:text-2xl">Data Ijazah</h4>
                                 <div class="md:flex md:items-center md:space-x-2">
                                     <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
                                     <div>
@@ -27,18 +27,18 @@
                                         <Button icon="pi pi-trash" severity="danger" class="mr-2"
                                             @click="confirmDeleteSelected"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <Button label="Lulus" severity="help" class="mr-2" @click="dialogStatus = true"
+                                        <!-- <Button label="Lulus" severity="warn" class="mr-2" @click="dialogStatus = true"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <Button label="Naik" severity="success" class="mr-2" @click="openNew"
-                                            :disabled="!dataLulusan || !dataLulusan.length" />
+                                        <Button label="Naik" severity="warn" class="mr-2" @click="openNew"
+                                            :disabled="!dataLulusan || !dataLulusan.length" /> -->
                                     </template>
                                     <template #end>
                                         <Button label="Import" icon="pi pi-download" severity="warn"
                                             @click="dialogImport = true" class="mr-2" />
                                         <Button label="Export" icon="pi pi-upload" severity="help"
                                             @click="exportCSV($event)" class="mr-2" />
-                                        <!-- <Button label="Proses" icon="pi pi-send" severity="info"
-                                            @click="exportCSV($event)" /> -->
+                                        <Button label="Proses" icon="pi pi-send" severity="info"
+                                            @click="exportCSV($event)" />
                                     </template>
 
                                 </Toolbar>
@@ -50,8 +50,8 @@
                                         <div class="flex">
                                             <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
                                                 placeholder="Rombel" class="w-full md:w-56 mr-2" />
-                                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                                placeholder="Tingkat" class="mr-2" />
+                                            <!-- <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                                placeholder="Tingkat" class="mr-2" /> -->
                                         </div>
                                     </div>
                                 </template>
@@ -70,12 +70,12 @@
 
 
                 <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa"
-                    dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
+                    dataKey="id" :paginator="true" :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[10, 20, 50]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56">
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                    <Column field="name" header="Foto">
+                    <Column field="name" header="File Ijazah">
                         <template #body="slotProps">
                             <Image :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
                                 :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
@@ -86,49 +86,64 @@
                             {{ slotProps.data.pesertaDidik.nmSiswa }}
                         </template>
                     </Column>
-                    <Column field="jk" header="JK">
-                        <template #body="slotProps">
-                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                        </template>
-                    </Column>
-                    <Column field="nisn" header="NISN">
-                        <template #body="slotProps">
-                            {{ slotProps.data.pesertaDidik.nisn }}
-                        </template>
-                    </Column>
-
-
-                    <Column field="nis" header="NIS" sortable>
-                        <template #body="slotProps">
-                            {{ slotProps.data.pesertaDidik.nis }}
-                        </template>
-                    </Column>
-                    <Column field="tingkat" header="Tingkat" sortable>
-                        <!-- rombonganBelajar -->
-                        <template #body="slotProps">
-                            {{ slotProps.data.rombonganBelajar.tingkatPendidikanId }}
-                        </template>
-                    </Column>
-                    <Column field="rombel" header="Rombel" sortable>
+                    <Column field="rombonganBelajar.nmKelas" header="Rombel" sortable>
                         <template #body="slotProps">
                             {{ slotProps.data.rombonganBelajar.nmKelas }}
                         </template>
                     </Column>
-                    <!-- <Column field="name" header="Tpt.Lahir"></Column>
-                    <Column field="name" header="Tgl.Lahir"></Column>
-                    <Column field="name" header="Agama"></Column>
-                    <Column field="category" header="Ayah"></Column>
-                    <Column field="category" header="Ibu"></Column> -->
-                    <!-- <Column field="category" header="Pekerjaan Ayah"></Column>
-                    <Column field="category" header="Pekerjaan Ibu"></Column> -->
-                    <!-- <Column field="category" header="Alamat"></Column> -->
-
-                    <!-- <Column field="inventoryStatus" header="Status" sortable>
+                    <Column field="jk" header="Tahun Pelajaran">
                         <template #body="slotProps">
-                            <Tag :value="slotProps.data.inventoryStatus"
-                                :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
+                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
                         </template>
-                    </Column> -->
+                    </Column>
+                    <Column field="jk" header="Tempat,Tgl. Lahir">
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                        </template>
+                    </Column>
+                    <Column field="jk" header="Nama Ortu/Wali">
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                        </template>
+                    </Column>
+                    <Column field="jk" header="NIS">
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                        </template>
+                    </Column>
+                    <Column field="jk" header="NISN">
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                        </template>
+                    </Column>
+                    <Column field="jk" header="Sekolah Asal">
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                        </template>
+                    </Column>
+                    <Column field="jk" header="Tgl. Terbit">
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                        </template>
+                    </Column>
+                    <Column field="jk" header="No.Ijazah">
+                        <template #body="slotProps">
+                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                        </template>
+                    </Column>
+                    <!-- Jika SMK/MAK Program Keahlian & Kompetensi Keahlian akan muncul-->
+                    <div v-if="['smk', 'mak'].includes(bentukPendidikan)">
+                        <Column field="jk" header="Prog.Keahlian">
+                            <template #body="slotProps">
+                                {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                            </template>
+                        </Column>
+                        <Column field="jk" header="Komp.Keahlian">
+                            <template #body="slotProps">
+                                {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                            </template>
+                        </Column>
+                    </div>
                 </DataTable>
 
             </div>
@@ -215,6 +230,9 @@
             @save="saveImport" @cancel="cancelImport" :downloadUrl="templateUrl" fileName="template_siswa.xlsx" />
 
         <!-- end of import data -->
+
+
+
 
     </div>
 </template>
@@ -459,6 +477,7 @@ const fetchSiswa = async () => {
     }
 }
 
+const bentukPendidikan = ref("smk")
 // ==================================
 
 // ========IMPORT DATA========

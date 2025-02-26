@@ -3,6 +3,7 @@ package repositories
 import (
 	"auth_service/models"
 	"errors"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -14,6 +15,8 @@ type UserRepository interface {
 	FindUserByRoleAndSchoolID(role string, schoolID uint32) (*models.User, error)
 	Save(user *models.User) error
 	EmailExists(email string) (bool, error)
+	UpdateLastLogin(userID uint64) error
+	GetUsers(role string, schoolID uint32) ([]models.User, error)
 }
 
 type userRepositoryImpl struct {
@@ -72,4 +75,23 @@ func (r *userRepositoryImpl) EmailExists(email string) (bool, error) {
 		return false, err
 	}
 	return count > 0, nil
+}
+
+func (r *userRepositoryImpl) UpdateLastLogin(userID uint64) error {
+	return r.db.Model(&models.User{}).Where("id = ?", userID).Update("last_login", time.Now()).Error
+}
+
+func (r *userRepositoryImpl) GetUsers(role string, schoolID uint32) ([]models.User, error) {
+	var users []models.User
+	err := r.db.Where("role = ? AND sekolah_id = ?", role, schoolID).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// Jika tidak ada data ditemukan, kembalikan error khusus
+	if len(users) == 0 {
+		return nil, ErrUserNotFound
+	}
+
+	return users, nil
 }

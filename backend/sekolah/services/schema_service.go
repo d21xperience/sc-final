@@ -39,6 +39,8 @@ func (s *schemaServiceImpl) RegistrasiSekolah(ctx context.Context, schemaName st
 	}
 	// 2️ Tentukan lokasi file SQL untuk schema
 	schemaFile := filepath.Join(wd, "migrations", "schema_template.sql")
+	// cty, cancel := context.WithTimeout(context.Background(), 5*time.Minute) // Tambah timeout
+	// defer cancel()
 	if err := s.schemaRepo.InitializeDatabase(ctx, schemaFile, schemaName); err != nil {
 		return fmt.Errorf("gagal membuat schema %s: %w", schemaName, err)
 	}

@@ -2692,6 +2692,310 @@ var PTKTerdaftarService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	KenaikanService_CreateKenaikan_FullMethodName = "/sekolah.KenaikanService/CreateKenaikan"
+	KenaikanService_GetKenaikan_FullMethodName    = "/sekolah.KenaikanService/GetKenaikan"
+	KenaikanService_FilterKenaikan_FullMethodName = "/sekolah.KenaikanService/FilterKenaikan"
+	KenaikanService_UpdateKenaikan_FullMethodName = "/sekolah.KenaikanService/UpdateKenaikan"
+	KenaikanService_DeleteKenaikan_FullMethodName = "/sekolah.KenaikanService/DeleteKenaikan"
+	KenaikanService_UploadKenaikan_FullMethodName = "/sekolah.KenaikanService/UploadKenaikan"
+)
+
+// KenaikanServiceClient is the client API for KenaikanService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// =========================================
+// service kenaikan kelas
+// =========================================
+type KenaikanServiceClient interface {
+	// CRUD IZAJAH
+	CreateKenaikan(ctx context.Context, in *CreateKenaikanRequest, opts ...grpc.CallOption) (*CreateKenaikanResponse, error)
+	GetKenaikan(ctx context.Context, in *GetKenaikanRequest, opts ...grpc.CallOption) (*GetKenaikanResponse, error)
+	FilterKenaikan(ctx context.Context, in *FilterKenaikanRequest, opts ...grpc.CallOption) (*FilterKenaikanResponse, error)
+	UpdateKenaikan(ctx context.Context, in *UpdateKenaikanRequest, opts ...grpc.CallOption) (*UpdateKenaikanResponse, error)
+	DeleteKenaikan(ctx context.Context, in *DeleteKenaikanRequest, opts ...grpc.CallOption) (*DeleteKenaikanResponse, error)
+	// UPLOAD Kenaikan
+	UploadKenaikan(ctx context.Context, in *UploadKenaikanRequest, opts ...grpc.CallOption) (*UploadKenaikanResponse, error)
+}
+
+type kenaikanServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewKenaikanServiceClient(cc grpc.ClientConnInterface) KenaikanServiceClient {
+	return &kenaikanServiceClient{cc}
+}
+
+func (c *kenaikanServiceClient) CreateKenaikan(ctx context.Context, in *CreateKenaikanRequest, opts ...grpc.CallOption) (*CreateKenaikanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateKenaikanResponse)
+	err := c.cc.Invoke(ctx, KenaikanService_CreateKenaikan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kenaikanServiceClient) GetKenaikan(ctx context.Context, in *GetKenaikanRequest, opts ...grpc.CallOption) (*GetKenaikanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetKenaikanResponse)
+	err := c.cc.Invoke(ctx, KenaikanService_GetKenaikan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kenaikanServiceClient) FilterKenaikan(ctx context.Context, in *FilterKenaikanRequest, opts ...grpc.CallOption) (*FilterKenaikanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FilterKenaikanResponse)
+	err := c.cc.Invoke(ctx, KenaikanService_FilterKenaikan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kenaikanServiceClient) UpdateKenaikan(ctx context.Context, in *UpdateKenaikanRequest, opts ...grpc.CallOption) (*UpdateKenaikanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateKenaikanResponse)
+	err := c.cc.Invoke(ctx, KenaikanService_UpdateKenaikan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kenaikanServiceClient) DeleteKenaikan(ctx context.Context, in *DeleteKenaikanRequest, opts ...grpc.CallOption) (*DeleteKenaikanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteKenaikanResponse)
+	err := c.cc.Invoke(ctx, KenaikanService_DeleteKenaikan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kenaikanServiceClient) UploadKenaikan(ctx context.Context, in *UploadKenaikanRequest, opts ...grpc.CallOption) (*UploadKenaikanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UploadKenaikanResponse)
+	err := c.cc.Invoke(ctx, KenaikanService_UploadKenaikan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// KenaikanServiceServer is the server API for KenaikanService service.
+// All implementations must embed UnimplementedKenaikanServiceServer
+// for forward compatibility.
+//
+// =========================================
+// service kenaikan kelas
+// =========================================
+type KenaikanServiceServer interface {
+	// CRUD IZAJAH
+	CreateKenaikan(context.Context, *CreateKenaikanRequest) (*CreateKenaikanResponse, error)
+	GetKenaikan(context.Context, *GetKenaikanRequest) (*GetKenaikanResponse, error)
+	FilterKenaikan(context.Context, *FilterKenaikanRequest) (*FilterKenaikanResponse, error)
+	UpdateKenaikan(context.Context, *UpdateKenaikanRequest) (*UpdateKenaikanResponse, error)
+	DeleteKenaikan(context.Context, *DeleteKenaikanRequest) (*DeleteKenaikanResponse, error)
+	// UPLOAD Kenaikan
+	UploadKenaikan(context.Context, *UploadKenaikanRequest) (*UploadKenaikanResponse, error)
+	mustEmbedUnimplementedKenaikanServiceServer()
+}
+
+// UnimplementedKenaikanServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedKenaikanServiceServer struct{}
+
+func (UnimplementedKenaikanServiceServer) CreateKenaikan(context.Context, *CreateKenaikanRequest) (*CreateKenaikanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateKenaikan not implemented")
+}
+func (UnimplementedKenaikanServiceServer) GetKenaikan(context.Context, *GetKenaikanRequest) (*GetKenaikanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetKenaikan not implemented")
+}
+func (UnimplementedKenaikanServiceServer) FilterKenaikan(context.Context, *FilterKenaikanRequest) (*FilterKenaikanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FilterKenaikan not implemented")
+}
+func (UnimplementedKenaikanServiceServer) UpdateKenaikan(context.Context, *UpdateKenaikanRequest) (*UpdateKenaikanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateKenaikan not implemented")
+}
+func (UnimplementedKenaikanServiceServer) DeleteKenaikan(context.Context, *DeleteKenaikanRequest) (*DeleteKenaikanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteKenaikan not implemented")
+}
+func (UnimplementedKenaikanServiceServer) UploadKenaikan(context.Context, *UploadKenaikanRequest) (*UploadKenaikanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadKenaikan not implemented")
+}
+func (UnimplementedKenaikanServiceServer) mustEmbedUnimplementedKenaikanServiceServer() {}
+func (UnimplementedKenaikanServiceServer) testEmbeddedByValue()                         {}
+
+// UnsafeKenaikanServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to KenaikanServiceServer will
+// result in compilation errors.
+type UnsafeKenaikanServiceServer interface {
+	mustEmbedUnimplementedKenaikanServiceServer()
+}
+
+func RegisterKenaikanServiceServer(s grpc.ServiceRegistrar, srv KenaikanServiceServer) {
+	// If the following call pancis, it indicates UnimplementedKenaikanServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&KenaikanService_ServiceDesc, srv)
+}
+
+func _KenaikanService_CreateKenaikan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateKenaikanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KenaikanServiceServer).CreateKenaikan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KenaikanService_CreateKenaikan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KenaikanServiceServer).CreateKenaikan(ctx, req.(*CreateKenaikanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KenaikanService_GetKenaikan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetKenaikanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KenaikanServiceServer).GetKenaikan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KenaikanService_GetKenaikan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KenaikanServiceServer).GetKenaikan(ctx, req.(*GetKenaikanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KenaikanService_FilterKenaikan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FilterKenaikanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KenaikanServiceServer).FilterKenaikan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KenaikanService_FilterKenaikan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KenaikanServiceServer).FilterKenaikan(ctx, req.(*FilterKenaikanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KenaikanService_UpdateKenaikan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateKenaikanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KenaikanServiceServer).UpdateKenaikan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KenaikanService_UpdateKenaikan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KenaikanServiceServer).UpdateKenaikan(ctx, req.(*UpdateKenaikanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KenaikanService_DeleteKenaikan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteKenaikanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KenaikanServiceServer).DeleteKenaikan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KenaikanService_DeleteKenaikan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KenaikanServiceServer).DeleteKenaikan(ctx, req.(*DeleteKenaikanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KenaikanService_UploadKenaikan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadKenaikanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KenaikanServiceServer).UploadKenaikan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KenaikanService_UploadKenaikan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KenaikanServiceServer).UploadKenaikan(ctx, req.(*UploadKenaikanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// KenaikanService_ServiceDesc is the grpc.ServiceDesc for KenaikanService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var KenaikanService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sekolah.KenaikanService",
+	HandlerType: (*KenaikanServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateKenaikan",
+			Handler:    _KenaikanService_CreateKenaikan_Handler,
+		},
+		{
+			MethodName: "GetKenaikan",
+			Handler:    _KenaikanService_GetKenaikan_Handler,
+		},
+		{
+			MethodName: "FilterKenaikan",
+			Handler:    _KenaikanService_FilterKenaikan_Handler,
+		},
+		{
+			MethodName: "UpdateKenaikan",
+			Handler:    _KenaikanService_UpdateKenaikan_Handler,
+		},
+		{
+			MethodName: "DeleteKenaikan",
+			Handler:    _KenaikanService_DeleteKenaikan_Handler,
+		},
+		{
+			MethodName: "UploadKenaikan",
+			Handler:    _KenaikanService_UploadKenaikan_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sekolah.proto",
+}
+
+const (
 	IjazahService_CreateIjazah_FullMethodName = "/sekolah.IjazahService/CreateIjazah"
 	IjazahService_GetIjazah_FullMethodName    = "/sekolah.IjazahService/GetIjazah"
 	IjazahService_UpdateIjazah_FullMethodName = "/sekolah.IjazahService/UpdateIjazah"

@@ -85,10 +85,6 @@
                     <!-- <Column field="category" header="Alamat"></Column> -->
 
                     <Column field="inventoryStatus" header="Status" sortable>
-                        <template #body="slotProps">
-                            <Tag :value="slotProps.data.inventoryStatus"
-                                :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                        </template>
                     </Column>
                 </DataTable>
 

@@ -18,12 +18,12 @@
 
                     <div class="flex flex-wrap gap-2 items-center justify-between">
                         <div class="flex">
-                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                placeholder="Tahun Ajaran" class="md:w-48  mr-2" />
+                            <!-- <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                placeholder="Tahun Ajaran" class="md:w-48  mr-2" /> -->
                             <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name" placeholder="Rombel"
                                 class="w-full md:w-48 mr-1" />
-                            <Button icon="pi pi-times" severity="danger" class="mr-2" @click="confirmDeleteSelected"
-                                :disabled="!dataLulusan || !dataLulusan.length" />
+                            <!-- <Button icon="pi pi-times" severity="danger" class="mr-2" @click="confirmDeleteSelected"
+                                :disabled="!dataLulusan || !dataLulusan.length" /> -->
                         </div>
                     </div>
                     <IconField>

@@ -10,7 +10,7 @@ type UserProfile struct {
 	gorm.Model
 	// ID          int32  `gorm:"primaryKey;autoIncrement" json:"biodata_id"`
 	UserId      uint64 `gorm:"foreignKey:UserRefer"`
-	User        User   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	User        User   `gorm:"foreignKey:UserId;references:ID"`
 	Nama        string `gorm:"size:100" json:"nama"`
 	JK          string `gorm:"size:100" json:"jk"`
 	Phone       string `gorm:"size:100" json:"phone"`

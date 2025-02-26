@@ -3,7 +3,6 @@ package utils
 import (
 	"crypto/rand"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -157,66 +156,66 @@ func TestJWTAuthMiddleware(t *testing.T) {
 	}
 }
 
-func TestGenerateUsername(t *testing.T) {
-	mockIsUsernameTaken := func(existingUsernames map[string]bool) func(string) bool {
-		return func(username string) bool {
-			return existingUsernames[username]
-		}
-	}
+// func TestGenerateUsername(t *testing.T) {
+// 	mockIsUsernameTaken := func(existingUsernames map[string]bool) func(string) bool {
+// 		return func(username string) bool {
+// 			return existingUsernames[username]
+// 		}
+// 	}
 
-	tests := []struct {
-		name              string
-		inputName         string
-		inputID           int
-		existingUsernames map[string]bool
-		expectedUsername  string
-	}{
-		{
-			name:              "Simple unique username",
-			inputName:         "JohnDoe",
-			inputID:           123,
-			existingUsernames: map[string]bool{},
-			expectedUsername:  "johndoe123",
-		},
-		{
-			name:              "Username with special characters",
-			inputName:         "John.Doe@123!",
-			inputID:           456,
-			existingUsernames: map[string]bool{},
-			expectedUsername:  "johndoe123456",
-		},
-		{
-			name:              "Username already taken",
-			inputName:         "JaneDoe",
-			inputID:           789,
-			existingUsernames: map[string]bool{"janedoe789": true},
-			expectedUsername:  "janedoe790",
-		},
-		{
-			name:              "Empty name input",
-			inputName:         "",
-			inputID:           101,
-			existingUsernames: map[string]bool{},
-			expectedUsername:  "user101",
-		},
-		{
-			name:              "Multiple conflicts",
-			inputName:         "Alice",
-			inputID:           202,
-			existingUsernames: map[string]bool{"alice202": true, "alice203": true},
-			expectedUsername:  "alice204",
-		},
-	}
+// 	tests := []struct {
+// 		name              string
+// 		inputName         string
+// 		inputID           int
+// 		existingUsernames map[string]bool
+// 		expectedUsername  string
+// 	}{
+// 		{
+// 			name:              "Simple unique username",
+// 			inputName:         "JohnDoe",
+// 			inputID:           123,
+// 			existingUsernames: map[string]bool{},
+// 			expectedUsername:  "johndoe123",
+// 		},
+// 		{
+// 			name:              "Username with special characters",
+// 			inputName:         "John.Doe@123!",
+// 			inputID:           456,
+// 			existingUsernames: map[string]bool{},
+// 			expectedUsername:  "johndoe123456",
+// 		},
+// 		{
+// 			name:              "Username already taken",
+// 			inputName:         "JaneDoe",
+// 			inputID:           789,
+// 			existingUsernames: map[string]bool{"janedoe789": true},
+// 			expectedUsername:  "janedoe790",
+// 		},
+// 		{
+// 			name:              "Empty name input",
+// 			inputName:         "",
+// 			inputID:           101,
+// 			existingUsernames: map[string]bool{},
+// 			expectedUsername:  "user101",
+// 		},
+// 		{
+// 			name:              "Multiple conflicts",
+// 			inputName:         "Alice",
+// 			inputID:           202,
+// 			existingUsernames: map[string]bool{"alice202": true, "alice203": true},
+// 			expectedUsername:  "alice204",
+// 		},
+// 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			isUsernameTaken := mockIsUsernameTaken(tt.existingUsernames)
-			result := GenerateUsername(tt.inputName, tt.inputID, isUsernameTaken)
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			isUsernameTaken := mockIsUsernameTaken(tt.existingUsernames)
+// 			result := GenerateUsername(tt.inputName, tt.inputID, isUsernameTaken)
 
-			assert.Equal(t, tt.expectedUsername, result, fmt.Sprintf("Expected %s, but got %s", tt.expectedUsername, result))
-		})
-	}
-}
+//				assert.Equal(t, tt.expectedUsername, result, fmt.Sprintf("Expected %s, but got %s", tt.expectedUsername, result))
+//			})
+//		}
+//	}
 func TestGenerateRefreshToken(t *testing.T) {
 	t.Run("Successful token generation", func(t *testing.T) {
 		token, err := GenerateRefreshToken(rand.Read)

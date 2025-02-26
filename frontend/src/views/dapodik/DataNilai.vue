@@ -7,14 +7,13 @@
                     <div class="lg:ml-[250px] my-2 ">
                         <div class="container ">
                             <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Siswa </h4>
+                                <h4 class="font-bold text-xl md:text-2xl">Data Transkrip Nilai</h4>
                                 <div class="md:flex md:items-center md:space-x-2">
                                     <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
                                     <div>
                                         <Select v-model="selectedSemester" :options="semester"
                                             optionLabel="namaSemester" placeholder="Tahun Pelajaran"
                                             class="w-full md:w-52 mr-2" />
-
                                     </div>
                                 </div>
                             </div>
@@ -27,18 +26,18 @@
                                         <Button icon="pi pi-trash" severity="danger" class="mr-2"
                                             @click="confirmDeleteSelected"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <Button label="Lulus" severity="help" class="mr-2" @click="dialogStatus = true"
+                                        <!-- <Button label="Lulus" severity="warn" class="mr-2" @click="dialogStatus = true"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <Button label="Naik" severity="success" class="mr-2" @click="openNew"
-                                            :disabled="!dataLulusan || !dataLulusan.length" />
+                                        <Button label="Naik" severity="warn" class="mr-2" @click="openNew"
+                                            :disabled="!dataLulusan || !dataLulusan.length" /> -->
                                     </template>
                                     <template #end>
                                         <Button label="Import" icon="pi pi-download" severity="warn"
                                             @click="dialogImport = true" class="mr-2" />
                                         <Button label="Export" icon="pi pi-upload" severity="help"
                                             @click="exportCSV($event)" class="mr-2" />
-                                        <!-- <Button label="Proses" icon="pi pi-send" severity="info"
-                                            @click="exportCSV($event)" /> -->
+                                        <Button label="Proses" icon="pi pi-send" severity="info"
+                                            @click="exportCSV($event)" />
                                     </template>
 
                                 </Toolbar>
@@ -50,8 +49,8 @@
                                         <div class="flex">
                                             <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
                                                 placeholder="Rombel" class="w-full md:w-56 mr-2" />
-                                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                                placeholder="Tingkat" class="mr-2" />
+                                            <!-- <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                                placeholder="Tingkat" class="mr-2" /> -->
                                         </div>
                                     </div>
                                 </template>
@@ -69,66 +68,54 @@
                 </div>
 
 
-                <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa"
+                <DataTable ref="dt" v-model:expandedRows="selectedSiswa" stripedRows size="small" :value="siswa"
                     dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[10, 20, 50]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56">
-                    <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                    <Column field="name" header="Foto">
-                        <template #body="slotProps">
-                            <Image :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                                :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
-                        </template>
-                    </Column>
-                    <Column field="nama" header="Nama" sortable>
-                        <template #body="slotProps">
-                            {{ slotProps.data.pesertaDidik.nmSiswa }}
-                        </template>
-                    </Column>
-                    <Column field="jk" header="JK">
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56"
+                    @rowExpand="onRowExpand" @rowCollapse="onRowCollapse">
+                    <template #header>
+                        <div class="flex flex-wrap justify-end gap-2">
+                            <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />
+                            <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" />
+                        </div>
+                    </template>
+                    <Column expander style="width: 5rem" />
+                    <Column field="pesertaDidik.nmSiswa" header="Nama" sortable></Column>
+                    <Column field="rombonganBelajar.nmKelas" header="Rombel" sortable> </Column>
+                    <Column field="jk" header="Rerata Nilai">
                         <template #body="slotProps">
                             {{ slotProps.data.pesertaDidik.jenisKelamin }}
                         </template>
                     </Column>
-                    <Column field="nisn" header="NISN">
-                        <template #body="slotProps">
-                            {{ slotProps.data.pesertaDidik.nisn }}
-                        </template>
-                    </Column>
-
-
-                    <Column field="nis" header="NIS" sortable>
-                        <template #body="slotProps">
-                            {{ slotProps.data.pesertaDidik.nis }}
-                        </template>
-                    </Column>
-                    <Column field="tingkat" header="Tingkat" sortable>
-                        <!-- rombonganBelajar -->
-                        <template #body="slotProps">
-                            {{ slotProps.data.rombonganBelajar.tingkatPendidikanId }}
-                        </template>
-                    </Column>
-                    <Column field="rombel" header="Rombel" sortable>
-                        <template #body="slotProps">
-                            {{ slotProps.data.rombonganBelajar.nmKelas }}
-                        </template>
-                    </Column>
-                    <!-- <Column field="name" header="Tpt.Lahir"></Column>
-                    <Column field="name" header="Tgl.Lahir"></Column>
-                    <Column field="name" header="Agama"></Column>
-                    <Column field="category" header="Ayah"></Column>
-                    <Column field="category" header="Ibu"></Column> -->
-                    <!-- <Column field="category" header="Pekerjaan Ayah"></Column>
-                    <Column field="category" header="Pekerjaan Ibu"></Column> -->
-                    <!-- <Column field="category" header="Alamat"></Column> -->
-
-                    <!-- <Column field="inventoryStatus" header="Status" sortable>
-                        <template #body="slotProps">
-                            <Tag :value="slotProps.data.inventoryStatus"
-                                :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                        </template>
-                    </Column> -->
+                    <template #expansion="slotProps">
+                        <div class="p-4">
+                            <!-- <h5>Orders for {{ slotProps.data.name }}</h5> -->
+                            <DataTable :value="slotProps.data.orders">
+                                <Column field="id" header="Nama Mapel" sortable></Column>
+                                <Column field="customer" header="Smt1" sortable></Column>
+                                <Column field="date" header="Smt2" sortable></Column>
+                                <Column field="date" header="Smt3" sortable></Column>
+                                <Column field="date" header="Smt4" sortable></Column>
+                                <Column field="amount" header="Smt5" sortable>
+                                    <template #body="slotProps">
+                                        {{ formatCurrency(slotProps.data.amount) }}
+                                    </template>
+                                </Column>
+                                <Column field="status" header="Smt6" sortable>
+                                    <template #body="slotProps">
+                                        <Tag :value="slotProps.data.status.toLowerCase()"
+                                            :severity="getOrderSeverity(slotProps.data)" />
+                                    </template>
+                                </Column>
+                                <Column headerStyle="width:4rem">
+                                    <template #body>
+                                        <Button icon="pi pi-search" />
+                                    </template>
+                                </Column>
+                            </DataTable>
+                        </div>
+                    </template>
                 </DataTable>
 
             </div>
@@ -209,22 +196,25 @@
         </Dialog>
 
 
-        <!-- import data -->
+
         <!-- DIALOG IMPORT -->
         <DialogImport v-model:visible="dialogImport" :semester="semester" :selectedSemester="selectedSemester"
             @save="saveImport" @cancel="cancelImport" :downloadUrl="templateUrl" fileName="template_siswa.xlsx" />
-
-        <!-- end of import data -->
-
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
+
+// ===========================
+// STORE
 import { useStore } from "vuex";
 const store = useStore();
-import FileUpload from 'primevue/fileupload';
+// ===========================
 
+
+// ===========================
+// PRIMEVUE
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
@@ -247,13 +237,7 @@ import Image from 'primevue/image';
 onMounted(() => {
     fetchSemester()
     fetchSiswa()
-    // DataLulusanService.getProducts().then((data) => (products.value = data));
-
 });
-// watch(selectedSemester, (newVal, oldVal) => {
-//     console.log(newVal)
-//     // fetchRombel()
-// })
 
 
 const dataConnected = ref(true)
@@ -431,8 +415,8 @@ const fetchSemester = async () => {
 
     }
 }
-
 // ==================================
+
 // ==================================
 // =======Siswa=============
 const selectedSiswa = ref();
@@ -461,6 +445,20 @@ const fetchSiswa = async () => {
 
 // ==================================
 
+
+const onRowExpand = (event) => {
+    toast.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.name, life: 3000 });
+};
+const onRowCollapse = (event) => {
+    toast.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.name, life: 3000 });
+};
+const expandAll = () => {
+    expandedRows.value = products.value.reduce((acc, p) => (acc[p.id] = true) && acc, {});
+};
+const collapseAll = () => {
+    expandedRows.value = null;
+};
+
 // ========IMPORT DATA========
 import DialogImport from '../../components/DialogImport.vue'
 const dialogImport = ref(false)
@@ -475,6 +473,4 @@ const cancelImport = () => {
 };
 const templateUrl = ref("http://localhost:8183/api/v1/ss/download/template?template-type=siswa");
 // ===========================================
-
-
 </script>

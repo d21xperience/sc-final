@@ -121,6 +121,7 @@ const onFormSubmit = async ({ valid, values }) => {
     // return
     if (valid) {
         try {
+            isLoading.value = true
             const resp = await store.dispatch('authService/registerAdmin', dataReg);
             // Jika sukses, arahkan ke beranda
             if (resp.ok) {
@@ -132,6 +133,8 @@ const onFormSubmit = async ({ valid, values }) => {
             errorInfo.value = error
             console.error(error)
             // error.value = err.error || 'Registration failed';
+        } finally {
+            isLoading.value = false
         }
         // return { name, email, password, schoolName, register, error, success };
     }
@@ -162,6 +165,7 @@ const cekSekolah = async () => {
     try {
         error.value = ""; // Reset error
         sekolah.value = null; // Reset data sekolah
+        isLoading.value = true
         // Panggil fungsi ceknpsn dari Vuex storex
         const data = await store.dispatch("authService/ceknpsn", npsn.value);
         // console.log(data)
@@ -176,6 +180,8 @@ const cekSekolah = async () => {
         }
     } catch (e) {
         error.value = "Terjadi kesalahan saat mengambil data sekolah.";
+    } finally {
+        isLoading.value = false
     }
 }
 const agrement = ref(false)
@@ -188,6 +194,11 @@ const batalPersetujuan = () => {
     agreement.value = false
 }
 
+// loading
+import ProgressSpinner from 'primevue/progressspinner';
+const isLoading = ref(false)
+const isError = ref(false)
+const errorMessage = ref(null)
 </script>
 
 
@@ -414,4 +425,21 @@ const batalPersetujuan = () => {
 
     <!-- End ofDialog Info register -->
     <!-- Dialog end -->
+    <Dialog v-model:visible="isLoading" pt:root:class="!border-0 !bg-transparent" pt:mask:class="backdrop-blur-sm">
+        <template #container="{ closeCallback }">
+            <div class="flex flex-col px-8 py-8 gap-6 rounded-2xl ">
+                <!-- <ProgressSpinner /> -->
+                <ProgressSpinner style="width: 100px; height: 100px" strokeWidth="8" fill="transparent"
+                    animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+
+                <!-- <div class="flex items-center gap-4">
+                                <Button label="Cancel" @click="closeCallback" text
+                                    class="!p-4 w-full !text-primary-50 !border !border-white/30 hover:!bg-white/10"></Button>
+                                <Button label="Sign-In" @click="closeCallback" text
+                                    class="!p-4 w-full !text-primary-50 !border !border-white/30 hover:!bg-white/10"></Button>
+                            </div> -->
+            </div>
+        </template>
+        Sedang mengambil data
+    </Dialog>
 </template>

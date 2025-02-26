@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"gorm.io/gorm"
 )
 
 type AuthService interface {
@@ -45,18 +46,27 @@ func (s *authServiceImpl) IsAdminExists(schoolID uint32) (bool, error) {
 func (s *authServiceImpl) Register(user *models.User) error {
 	// Cek apakah username sudah ada
 	existingUser, err := s.repo.FindByUsername(user.Username)
+	var lanjutkan bool
 	if err != nil {
-		// Tangani error jika terjadi kesalahan dalam mencari user
-		return fmt.Errorf("failed to check existing username: %w", err)
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			lanjutkan = true
+		} else {
+			// Tangani error jika terjadi kesalahan dalam mencari user
+			return fmt.Errorf("failed to check existing username: %w", err)
+		}
 	}
 
 	if existingUser != nil {
 		return errors.New("username already exists")
 	}
 	// Simpan user baru
+	if !lanjutkan {
+		return fmt.Errorf("failed to save user: %w", err)
+	}
 	// user.Password, _ = utils.EncryptPassword(user.Password) // Encrypt password
 	// return s.repositories.Save(user)
 	// Enkripsi password
+	user.InitialPassword = user.Password
 	encryptedPasswordChan := make(chan string, 1)
 	errorChan := make(chan error, 1)
 
@@ -122,6 +132,11 @@ func (s *authServiceImpl) Login(username, password string) (*models.User, error)
 	// Verifikasi password
 	if !utils.VerifyPassword(password, user.Password) {
 		return nil, errors.New("invalid credentials")
+	}
+	// Update waktu login terakhir
+	err = s.repo.UpdateLastLogin(user.ID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update last login: %w", err)
 	}
 	return user, nil
 }

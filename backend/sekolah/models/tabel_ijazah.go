@@ -1,34 +1,39 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Ijazah struct {
-	gorm.Model
-	PesertaDidikID              *uuid.UUID `gorm:"column:peserta_didik_id"`
-	ProgramKeahlian             string
-	PaketKeahlian               string
-	SekolahID                   *uuid.UUID `gorm:"column:sekolah_id"`
-	NPSN                        string
-	KabupatenKota               string
-	Provinsi                    string
-	Nama                        string
-	TempatLahir                 string
-	TanggalLahir                string
-	Nis                         string
-	NISN                        string
-	NamaOrtuWali                string
-	SekolahPenyelenggaraUjianUS string
-	SekolahPenyelenggaraUjianUN string
-	AsalSekolah                 string
-	NomorIjazah                 string
-	TempatIjazah                string
-	TanggalIjazah               string
-	NoIjazah                    string
+	ID                          uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
+	PesertaDidikId              string    `gorm:"column:peserta_didik_id;uique;not null"`
+	ProgramKeahlian             string    `gorm:"type:varchar(100);not null"`
+	PaketKeahlian               string    `gorm:"type:varchar(100);not null"`
+	SekolahID                   uuid.UUID `gorm:"type:uuid;not null;index"`
+	NPSN                        string    `gorm:"type:varchar(15);not null"`
+	KabupatenKota               string    `gorm:"type:varchar(100);not null"`
+	Provinsi                    string    `gorm:"type:varchar(100);not null"`
+	Nama                        string    `gorm:"type:varchar(200);not null"`
+	TempatLahir                 string    `gorm:"type:varchar(100);not null"`
+	TanggalLahir                string    `gorm:"type:date;not null"`
+	Nis                         string    `gorm:"type:varchar(20);unique;not null"`
+	NISN                        string    `gorm:"type:varchar(20);unique;not null"`
+	NamaOrtuWali                string    `gorm:"type:varchar(200);not null"`
+	SekolahPenyelenggaraUjianUS string    `gorm:"type:varchar(200);not null"`
+	SekolahPenyelenggaraUjianUN string    `gorm:"type:varchar(200);not null"`
+	AsalSekolah                 string    `gorm:"type:varchar(200);not null"`
+	NomorIjazah                 string    `gorm:"type:varchar(50);unique;not null"`
+	TempatIjazah                string    `gorm:"type:varchar(100);not null"`
+	TanggalIjazah               string    `gorm:"type:date;not null"`
+	NoIjazah                    string    `gorm:"type:varchar(50);unique;not null"`
+	CreatedAt                   time.Time
+	UpdatedAt                   time.Time
+	DeletedAt                   gorm.DeletedAt `gorm:"index"`
 
 	// Relasi
-	PesertaDidik PesertaDidik `gorm:"foreignKey:PesertaDidikID"`
+	// PesertaDidik PesertaDidik `gorm:"foreignKey:PesertaDidikID"`
 	// NilaiUjianSekolah NIlaiRerataAkhir
 }

@@ -27,14 +27,14 @@
                                         <Button icon="pi pi-trash" severity="danger" class="mr-2"
                                             @click="confirmDeleteSelected"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <Button label="Lulus" severity="help" class="mr-2" @click="dialogStatus = true"
+                                        <Button label="Lulus" severity="warn" class="mr-2" @click="dialogStatus = true"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <Button label="Naik" severity="success" class="mr-2" @click="openNew"
+                                        <Button label="Naik" severity="warn" class="mr-2" @click="openNew"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
                                     </template>
                                     <template #end>
-                                        <Button label="Import" icon="pi pi-download" severity="warn"
-                                            @click="dialogImport = true" class="mr-2" />
+                                        <FileUpload mode="basic" accept="xlsx/*" :maxFileSize="1000000" label="Import"
+                                            chooseLabel="Import" class="mr-2" auto />
                                         <Button label="Export" icon="pi pi-upload" severity="help"
                                             @click="exportCSV($event)" class="mr-2" />
                                         <!-- <Button label="Proses" icon="pi pi-send" severity="info"
@@ -70,7 +70,7 @@
 
 
                 <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa"
-                    dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
+                    dataKey="id" :paginator="true" :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[10, 20, 50]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56">
@@ -207,15 +207,6 @@
                 <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
             </template>
         </Dialog>
-
-
-        <!-- import data -->
-        <!-- DIALOG IMPORT -->
-        <DialogImport v-model:visible="dialogImport" :semester="semester" :selectedSemester="selectedSemester"
-            @save="saveImport" @cancel="cancelImport" :downloadUrl="templateUrl" fileName="template_siswa.xlsx" />
-
-        <!-- end of import data -->
-
     </div>
 </template>
 
@@ -461,20 +452,7 @@ const fetchSiswa = async () => {
 
 // ==================================
 
-// ========IMPORT DATA========
-import DialogImport from '../../components/DialogImport.vue'
-const dialogImport = ref(false)
-const saveImport = () => {
-    console.log("Data disimpan:", selectedSemester.value);
-    dialogImport.value = false;
-};
 
-const cancelImport = () => {
-    console.log("Import dibatalkan");
-    dialogImport.value = false;
-};
-const templateUrl = ref("http://localhost:8183/api/v1/ss/download/template?template-type=siswa");
-// ===========================================
 
 
 </script>

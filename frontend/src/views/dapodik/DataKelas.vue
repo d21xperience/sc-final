@@ -35,9 +35,9 @@
                                             @click="dialogImport = true" class="mr-2" />
                                         <Button label="Export" icon="pi pi-upload" severity="help"
                                             @click="exportCSV($event)" class="mr-2" />
-                                        <Button label="Proses" icon="pi pi-send" severity="info"
+                                        <!-- <Button label="Proses" icon="pi pi-send" severity="info"
                                             @click="exportCSV($event)" v-tooltip.bottom="'Menyimpan ke database'"
-                                            badge="2" />
+                                            badge="2" /> -->
                                     </template>
 
                                 </Toolbar>
@@ -55,14 +55,14 @@
                                         </div>
                                     </div>
                                 </template>
-                                <template #end>
+                                <!-- <template #end>
                                     <IconField>
                                         <InputIcon>
                                             <i class="pi pi-search" />
                                         </InputIcon>
                                         <InputText v-model="filters['global'].value" placeholder="Search..." />
                                     </IconField>
-                                </template>
+                                </template> -->
                             </Toolbar>
                         </div>
                     </div>
@@ -84,7 +84,10 @@
                     </Column> -->
                     <Column field="nmKelas" header="Nama Kelas"></Column>
                     <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
-                    <Column field="namaJurusanSp" header="Jurusan" sortable></Column>
+                    <!-- Jika SMK/MAK Program Keahlian & Kompetensi Keahlian akan muncul-->
+                    <div v-if="['smk', 'mak'].includes(bentukPendidikan)">
+                        <Column field="namaJurusanSp" header="Jurusan" sortable></Column>
+                    </div>
                     <Column field="code" header="Wali kelas">
                         <template #body="slotProps">
                             {{ slotProps.data.ptk.nama }}
@@ -395,6 +398,7 @@ const fetchSemester = async () => {
 }
 watch(selectedSemester, (newVal, oldVal) => {
     console.log(newVal)
+    console.log("mengambil data ...")
     fetchRombel()
 })
 // ==================================
@@ -402,7 +406,7 @@ watch(selectedSemester, (newVal, oldVal) => {
 const fetchRombel = async () => {
     try {
         let payload = {
-            "schema_name": "tabel_D4DA6B98FCFD71C58F5A",
+            "schema_name": "tabel_d4da6b98fcfd71c58f5a",
             "semester_id": selectedSemester.value.semesterId//"20232"
         }
         console.log(payload)
@@ -464,5 +468,6 @@ const downloadTemplate = async () => {
 const dialogAnggotaRombel = (d) => {
     console.log(d)
 }
+const bentukPendidikan = ref("sma")
 
 </script>

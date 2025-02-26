@@ -1,12 +1,20 @@
 package utils
 
-func ConvertModelsToPB[T any, U any](models []*T, converter func(*T) *U) []*U {
-	var pbList []*U
+func ConvertModelsToPB[T any, U any](models []T, convert func(T) U) []U {
+	var pbModels []U
 	for _, model := range models {
-		pbList = append(pbList, converter(model))
+		pbModels = append(pbModels, convert(model))
 	}
-	return pbList
+	return pbModels
 }
+
+//	func ConvertModelsToPB[T any, U any](models []*T, converter func(*T) *U) []*U {
+//		var pbList []*U
+//		for _, model := range models {
+//			pbList = append(pbList, converter(model))
+//		}
+//		return pbList
+//	}
 func ConvertPBToModels[T any, U any](pbs []*T, converter func(*T) *U) []*U {
 	var modelList []*U
 	for _, model := range pbs {

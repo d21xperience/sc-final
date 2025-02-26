@@ -1,7 +1,7 @@
 import axios from "axios";
 // const baseURL = "http://localhost:8080/api/v1";
 const api = axios.create({
-  baseURL: "http://localhost:8082/api/v1", // Pastikan menggunakan protokol HTTPS
+  baseURL: "http://localhost:8184/api/v1", // Pastikan menggunakan protokol HTTPS
   withCredentials: true, // Untuk mengirim cookie atau credensial
   headers: {
     "Content-Type": "application/json",

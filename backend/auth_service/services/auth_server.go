@@ -21,6 +21,7 @@ type AuthServiceServer struct {
 	repoSekolah repositories.SekolahRepository
 	authService AuthService
 	repoProfile repositories.GenericRepository[models.UserProfile]
+	repoUser    repositories.UserRepository
 }
 
 func NewAuthServiceServer() *AuthServiceServer {
@@ -28,10 +29,12 @@ func NewAuthServiceServer() *AuthServiceServer {
 	authService := NewAuthService(repoAuth)
 	repoSekolah := repositories.NewSekolahRepository(config.DB)
 	repoProfile := repositories.NewUserProfileRepository(config.DB)
+	repoUser := repositories.NewUserRepository(config.DB)
 	return &AuthServiceServer{
 		authService: authService,
 		repoSekolah: repoSekolah,
 		repoProfile: *repoProfile,
+		repoUser:    repoUser,
 	}
 }
 
@@ -54,6 +57,7 @@ func (s *AuthServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*p
 	if err != nil {
 		return nil, errors.New("failed to generate token")
 	}
+
 	return &pb.LoginResponse{
 		Token: token,
 		Ok:    true,
@@ -101,7 +105,6 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 					KodeKab:         sekolah.KodeKab,
 					KodeProp:        sekolah.KodeProp,
 					AlamatJalan:     sekolah.AlamatJalan,
-					Status:          sekolah.Status,
 				}
 				err = s.repoSekolah.CreateSekolah(sekolahModel)
 
@@ -139,11 +142,6 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 			return nil, fmt.Errorf("admin sudah ada untuk sekolah ini")
 		}
 
-		// Registrasi admin
-		if err := s.authService.RegisterAdmin(userModel); err != nil {
-			log.Printf("Error registrasi admin: %v", err)
-			return nil, fmt.Errorf("gagal registrasi admin: %w", err)
-		}
 		// Buat database
 		// 2. Buat client untuk sekolah_service
 		sekolahClient, err := NewSekolahServiceClient()
@@ -158,6 +156,12 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 		if err := sekolahClient.CreateSekolah(sekolahModel); err != nil {
 			return nil, err
 		}
+		// Registrasi admin
+		if err := s.authService.RegisterAdmin(userModel); err != nil {
+			log.Printf("Error registrasi admin: %v", err)
+			return nil, fmt.Errorf("gagal registrasi admin: %w", err)
+		}
+
 
 	} else if userModel.Role == "siswa" {
 		// Registrasi siswa
@@ -224,6 +228,100 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 	// fmt.Println("Registration message published successfully!")
 
 	return response, nil
+}
+
+// Digunakan untuk membuat user baru dengan role siswa
+func (s *AuthServiceServer) CreateUsers(ctx context.Context, req *pb.CreateUsersRequest) (*pb.CreateUsersResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Users"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	users := req.GetUsers()
+	for _, v := range users {
+		username := utils.GenerateUsername(v.Sekolah.NamaSekolah, v.UserProfile.Nama)
+		pass, err := utils.GeneratePassword(4)
+		if err != nil {
+			return nil, err
+		}
+		newUser := models.User{
+			Username:  username,
+			Email:     v.Email,
+			Password:  pass,
+			SekolahID: v.Sekolah.SekolahId,
+			Role:      v.User.Role,
+		}
+		err = s.authService.Register(&newUser)
+		if err != nil {
+			return nil, err
+		}
+		// Hubungkan dengan user profile
+		userId := newUser.ID
+		userProfile := models.UserProfile{
+			UserId:   userId,
+			Nama:     v.UserProfile.Nama,
+			JK:       v.UserProfile.Jk,
+			Phone:    v.UserProfile.Phone,
+			TptLahir: v.UserProfile.TptLahir,
+			// TglLahir:  v.UserProfile.TglLahir,
+			AlamatJalan: v.UserProfile.AlamatJalan,
+			KotaKab:     v.UserProfile.KotaKab,
+		}
+		err = s.repoProfile.Save(ctx, &userProfile, "public")
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &pb.CreateUsersResponse{
+		Message: "ok",
+	}, nil
+}
+func (s *AuthServiceServer) ResetPassword(ctx context.Context, req *pb.ResetPasswordRequest) (*pb.ResetPasswordResponse, error) {
+	return &pb.ResetPasswordResponse{
+		Message: "password berhasil direset",
+	}, nil
+}
+func (s *AuthServiceServer) GetUsers(ctx context.Context, req *pb.GetUsersRequest) (*pb.GetUsersResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SekolahId"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+
+	var roleSiswa bool
+	if req.Role == "" {
+		roleSiswa = true
+	}
+
+	var usersModel []models.User
+	if roleSiswa {
+		usersModel, err = s.repoUser.GetUsers("siswa", req.GetSekolahId())
+		if err != nil {
+			return nil, err
+		}
+
+	} // tambahkan else jika ingin menampilkan role admin
+	res := utils.ConvertModelsToPB(usersModel, func(model models.User) *pb.User {
+		return &pb.User{
+			Username:  model.Username,
+			Password:  model.InitialPassword,
+			LastLogin: model.LastLogin.String(),
+		}
+	})
+
+	return &pb.GetUsersResponse{
+		Users: res,
+	}, nil
+
 }
 
 // func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {

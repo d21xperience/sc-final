@@ -1,4 +1,4 @@
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('12B73AD79D96EA44B459', 'Kec. Tanjung Priok', 'Kota Jakarta Utara', 'Prov. D.K.I. Jakarta', '016103', '016100', '010000', 'SMP Pusaka Nusantara', '20106635', 'Jl. Edam II No. 17', 'Swasta', 'SMP', 6),
 	('DBB598C6BB9129243CC2', 'Kec. Penjaringan', 'Kota Jakarta Utara', 'Prov. D.K.I. Jakarta', '016101', '016100', '010000', 'SMP PERMAI', '20106628', 'JL. PLUIT KARANG BARAT BLOK O-VI NO. 1A', 'Swasta', 'SMP', 6),
 	('36D081A0E5AE0AA68A7D', 'Kec. Tanjung Priok', 'Kota Jakarta Utara', 'Prov. D.K.I. Jakarta', '016103', '016100', '010000', 'SMP Mutiara I', '20100826', 'Jl. Kom. Yos Sudarso II No.19', 'Swasta', 'SMP', 6),
@@ -4677,7 +4677,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('7E333468B61DE875703C', 'Kec. Cikedung', 'Kab. Indramayu', 'Prov. Jawa Barat', '021804', '021800', '020000', 'SMP BOARDING SCHOOL MIFTAHUS SHUDUR', '69954544', 'Blok Tarikolot', 'Swasta', 'SMP', 6),
 	('C8DE5C4EE1D32A3BC9E3', 'Kec. Kedokan Bunder', 'Kab. Indramayu', 'Prov. Jawa Barat', '021828', '021800', '020000', 'UPTD SMP NEGERI 2 KEDOKANBUNDER', '20270982', 'JL. Raya Jayalaksana', 'Negeri', 'SMP', 6),
 	('3B9E7168B29BE766AD46', 'Kec. Anjatan', 'Kab. Indramayu', 'Prov. Jawa Barat', '021821', '021800', '020000', 'SMP NU DARUSSALAM', '70002027', 'Jl. irigasi timur sukareja', 'Swasta', 'SMP', 6);
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('B5DC2DECDD740BD2B23C', 'Kec. Sukatani', 'Kab. Purwakarta', 'Prov. Jawa Barat', '022005', '022000', '020000', 'SMP NEGERI 3 SUKATANI', '20217378', 'Jl. Sukamaju', 'Negeri', 'SMP', 6),
 	('9D1FA692D12613724738', 'Kec. Maniis', 'Kab. Purwakarta', 'Prov. Jawa Barat', '022002', '022000', '020000', 'SMP NEGERI 1 MANIIS', '20217353', 'Jalan Raya Palumbon 23', 'Negeri', 'SMP', 6),
 	('B1106370CFBDF8479022', 'Kec. Purwakarta', 'Kab. Purwakarta', 'Prov. Jawa Barat', '022010', '022000', '020000', 'SMPS 2 AL-MUHAJIRIN', '69786624', 'JL. IPIK GANDAMANAH 33', 'Swasta', 'SMP', 6),
@@ -9365,7 +9365,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('9EF50033E7B8CF53ECBA', 'Kec. Belik', 'Kab. Pemalang', 'Prov. Jawa Tengah', '032703', '032700', '030000', 'SMP NEGERI 2 BELIK', '20324296', 'Jl. Raya Kalisaleh,sikasur', 'Negeri', 'SMP', 6),
 	('3F0F011FEBE82D6EE5B7', 'Kec. Warungpring', 'Kab. Pemalang', 'Prov. Jawa Tengah', '032714', '032700', '030000', 'SMP NEGERI 2 MOGA', '20324293', 'Jl. Lap. Olahraga No. 472 Warungpring', 'Negeri', 'SMP', 6),
 	('811B1E535EEB9632576A', 'Kec. Bodeh', 'Kab. Pemalang', 'Prov. Jawa Tengah', '032705', '032700', '030000', 'SMP SATAP PARUNGGALIH', '69727637', 'Desa Parunggalih Kec. Bodeh', 'Negeri', 'SMP', 6);
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('CC0E1F0CDAE90344C804', 'Kec. Randudongkal', 'Kab. Pemalang', 'Prov. Jawa Tengah', '032707', '032700', '030000', 'SMP ISLAM NURUL HUDA MEJAGONG', '20324184', 'Jalan Raya Randudongkal - Moga KM 4 Mejagong', 'Swasta', 'SMP', 6),
 	('72EA334D19E4050A4330', 'Kec. Bodeh', 'Kab. Pemalang', 'Prov. Jawa Tengah', '032705', '032700', '030000', 'SMP NEGERI 1 BODEH', '20324276', 'Jl. Raya Desa Kebandaran', 'Negeri', 'SMP', 6),
 	('D66BA2F492262A1E6542', 'Kec. Pemalang', 'Kab. Pemalang', 'Prov. Jawa Tengah', '032708', '032700', '030000', 'SMP NEGERI 8 PEMALANG', '20324259', 'Jl. Desa Kramat', 'Negeri', 'SMP', 6),
@@ -14072,7 +14072,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('961B9D0A6ED9C9A921C7', 'Kec. Wuluhan', 'Kab. Jember', 'Prov. Jawa Timur', '052404', '052400', '050000', 'SMP 06 DIPONEGORO', '20523737', 'Jl. Pahlawan No 127 Wuluhan - Jember', 'Swasta', 'SMP', 6),
 	('069D4955983300EC8440', 'Kec. Patrang', 'Kab. Jember', 'Prov. Jawa Timur', '052431', '052400', '050000', 'SMP MUHAMMADIYAH 1 JEMBER', '20523930', 'Jl. Belimbing No.29 Jember', 'Swasta', 'SMP', 6),
 	('35EC6B07A6D7B98E286C', 'Kec. Sumbersari', 'Kab. Jember', 'Prov. Jawa Timur', '052430', '052400', '050000', 'SMP ASY SYAFAAH', '20523780', 'Jl. Basuki Rahmat V/31 Jember', 'Swasta', 'SMP', 6);
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('52336C4D470FA4DD8327', 'Kec. Jombang', 'Kab. Jember', 'Prov. Jawa Timur', '052416', '052400', '050000', 'UNIT PELAKSANA TEKNIS DAERAH (UPTD) SATUAN PENDIDIKAN SMPN 1 JOMBANG', '20523894', 'Jl. Raya Kencong', 'Negeri', 'SMP', 6),
 	('4050ED757F0639D58F21', 'Kec. Ambulu', 'Kab. Jember', 'Prov. Jawa Timur', '052405', '052400', '050000', 'SMPS UNGGULAN ASTRA NAWA', '69956898', 'Jl Payangan Sumberejo Ambulu', 'Swasta', 'SMP', 6),
 	('D826A1F886F06837D32D', 'Kec. Balung', 'Kab. Jember', 'Prov. Jawa Timur', '052413', '052400', '050000', 'SMPS ASH SHIDDIQI', '69882336', 'JL DUSUN KRAJAN KIDUL', 'Swasta', 'SMP', 6),
@@ -17027,7 +17027,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('976FEE3EC8D0067FF6A7', 'Kec. Jeumpa', 'Kab. Bireuen', 'Prov. Aceh', '061206', '061200', '060000', 'UPTD SMP NEGERI 3 JEUMPA', '69760664', 'Jalan Kuta Jeumpa Pintoe Cermen', 'Negeri', 'SMP', 6),
 	('B78935C8E6F5BD0F3292', 'Kec. Kuta Blang', 'Kab. Bireuen', 'Prov. Aceh', '061217', '061200', '060000', 'SMP IT MANBAUL ULUM AL-AZIZIYAH', '70012368', 'Jl. Medan Banda Aceh 250 m', 'Swasta', 'SMP', 6),
 	('32DA1EBB67C519DB385B', 'Kec. Juli', 'Kab. Bireuen', 'Prov. Aceh', '061205', '061200', '060000', 'SMP Islam Babul Mustaqim', '70023929', 'Gampong Paseh, Kec Juli, Kab Bireuen', 'Swasta', 'SMP', 6),
-	('69532F3C792BB17BAD4B', 'Kec. Peudada', 'Kab. Bireuen', 'Prov. Aceh', '061204', '061200', '060000', 'UPTD SMP NEGERI 4 PEUDADA', '10112846', 'Jln. Iku Alue - Pinto Rimba', 'Negeri', 'SMP', 6),
+	('69532F3C792BB17BAD4B', 'Kec. Peudada', 'Kab. Bireuen', 'Prov. Aceh', '061204', '061200', '060000', 'UPTD SMP NEGERI 4 PEUDADA', '10112846', 'Jln. Iku Alue - PINTO ref.Rimba', 'Negeri', 'SMP', 6),
 	('0B925091DBC7C15EFD1F', 'Kec. Peulimbang', 'Kab. Bireuen', 'Prov. Aceh', '061212', '061200', '060000', 'SMP SWASTA AL-HIDAYAH', '69932141', 'Jln. mesjid Plimbang Km.02', 'Swasta', 'SMP', 6),
 	('C9B76A332895AABD3700', 'Kec. Simpang Mamplam', 'Kab. Bireuen', 'Prov. Aceh', '061211', '061200', '060000', 'SMP MAHYAUL ULUM', '69995767', 'Jl. Krueng Meseugob', 'Swasta', 'SMP', 6),
 	('1F7369D1B7EA4081D6A6', 'Kec. Jeumpa', 'Kab. Bireuen', 'Prov. Aceh', '061206', '061200', '060000', 'UPTD SMP NEGERI 2 JEUMPA', '10111931', 'Jln. Pendidikan Simpang IV Lipah Rayeuk kemukiman Geulumpang payong', 'Negeri', 'SMP', 6),
@@ -18749,7 +18749,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('321C924F41BA7D9D3D80', 'Kec. Lueng Bata', 'Kota Banda Aceh', 'Prov. Aceh', '066107', '066100', '060000', 'SMP ISLAM IBNU KHALDUN', '10107307', 'Lueng Bata', 'Swasta', 'SMP', 6),
 	('2F21612FC11067443F1C', 'Kec. Kuta Alam', 'Kota Banda Aceh', 'Prov. Aceh', '066103', '066100', '060000', 'SMP NEGERI 9 BANDA ACEH', '10105390', 'Jl. H.T.Daudsyah No.26', 'Negeri', 'SMP', 6),
 	('26FCB7C2E1C8E06A1669', 'Kec. Jaya Baru', 'Kota Banda Aceh', 'Prov. Aceh', '066109', '066100', '060000', 'SMP MISHRUL HUDA MALIKUSSALEH BANDA ACEH', '70041168', 'Jln. Blang Ciep', 'Swasta', 'SMP', 6);
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('4168B12639A7E0492317', 'Kec. Kuta Alam', 'Kota Banda Aceh', 'Prov. Aceh', '066103', '066100', '060000', 'SMP NEGERI 4 BANDA ACEH', '10105410', 'Jl. HT. Daudsyah No. 24', 'Negeri', 'SMP', 6),
 	('6C4339FA73436B4ECB34', 'Kec. Kuta Alam', 'Kota Banda Aceh', 'Prov. Aceh', '066103', '066100', '060000', 'SMP NEGERI 18 BANDA ACEH', '10105428', 'Jl. Tgk. Chik Dipineung Raya No.7', 'Negeri', 'SMP', 6),
 	('1B81881E90255B83E1C3', 'Kec. Kuta Alam', 'Kota Banda Aceh', 'Prov. Aceh', '066103', '066100', '060000', 'SMP INSHAFUDDIN', '10105419', 'Jln. Taman Ratu Safiatuddin No. 3 Lambaro Skep', 'Swasta', 'SMP', 6),
@@ -23360,7 +23360,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('FD0CAD87D2C8DE9697C9', 'Kec. Tungkal Jaya', 'Kab. Musi Banyuasin', 'Prov. Sumatera Selatan', '110118', '110100', '110000', 'SMPN 11 TUNGKAL JAYA', '69988636', 'Dusun 8 Damai Makmur', 'Negeri', 'SMP', 6),
 	('C44D03B2158B8F868CCC', 'Kec. Sekayu', 'Kab. Musi Banyuasin', 'Prov. Sumatera Selatan', '110104', '110100', '110000', 'SMPN 2 SEKAYU', '10600187', 'Jl. Merdeka Lk.II Sekayu', 'Negeri', 'SMP', 6),
 	('AB96D4BEF9AC4A66AB82', 'Kec. Sungai Lilin', 'Kab. Musi Banyuasin', 'Prov. Sumatera Selatan', '110109', '110100', '110000', 'SMPN 3 SUNGAI LILIN', '10600182', 'Jl. Desa Sumber Rejeki', 'Negeri', 'SMP', 6);
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('D9455F6B0F94AF5D125F', 'Kec. Tungkal Jaya', 'Kab. Musi Banyuasin', 'Prov. Sumatera Selatan', '110118', '110100', '110000', 'SMP BINA INSAN', '69875538', 'JL. ASAMERA BENTAYAN KM. 20 SUKA DAMAI', 'Swasta', 'SMP', 6),
 	('66FC7DE2885AEC5B7E29', 'Kec. Tungkal Jaya', 'Kab. Musi Banyuasin', 'Prov. Sumatera Selatan', '110118', '110100', '110000', 'SMP N 1 TUNGKAL JAYA', '10600188', 'Jl. Palembang -jambi Km. 181 Desa Sumber Harum Tungkal Jaya', 'Negeri', 'SMP', 6),
 	('3D4386BB356DFCD3CD58', 'Kec. Sungai Lilin', 'Kab. Musi Banyuasin', 'Prov. Sumatera Selatan', '110109', '110100', '110000', 'SMPI PROGRAM KHUSUS BUSTANUL ULUM WAL QURAN', '70047820', 'Jl. Palembang Jambi KM. 127 Desa Sri Gunung', 'Swasta', 'SMP', 6),
@@ -27864,7 +27864,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('75EBF3F7FDAEFE4AC079', 'Kec. Banjarmasin Tengah', 'Kota Banjarmasin', 'Prov. Kalimantan Selatan', '156005', '156000', '150000', 'SMP KRISTEN KANAAN', '30304192', 'Jl Kapten Piere Tendean 50', 'Swasta', 'SMP', 6),
 	('787411D7951D7ED8BCF1', 'Kec. Banjarmasin Utara', 'Kota Banjarmasin', 'Prov. Kalimantan Selatan', '156004', '156000', '150000', 'SMP Negeri 31 Banjarmasin', '30304201', 'Jl. Antasan Kecil Timur Dalam RT.18 Banjarmasin', 'Negeri', 'SMP', 6),
 	('C6C5B976E7684D6FD17A', 'Kec. Banjarmasin Selatan', 'Kota Banjarmasin', 'Prov. Kalimantan Selatan', '156001', '156000', '150000', 'SMP NEGERI 34', '30304173', 'Jl. Tembus Mantuil RT.01 RW.01', 'Negeri', 'SMP', 6);
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('F306F929F58FBC6B3510', 'Kec. Banjarmasin Tengah', 'Kota Banjarmasin', 'Prov. Kalimantan Selatan', '156005', '156000', '150000', 'SMP NEGERI 06 BANJARMASIN', '30304191', 'Jl. Veteran Gang Sempati No.06 RT.30 Banjarmasin', 'Negeri', 'SMP', 6),
 	('C3D3DF75954D2DBCA182', 'Kec. Banjarmasin Tengah', 'Kota Banjarmasin', 'Prov. Kalimantan Selatan', '156005', '156000', '150000', 'SMP SMIP 3 PANGERAN ANTASARI', '30305040', 'Jl. Pangeran Antasari Gg. Janainah RT. 20 No. 27C', 'Swasta', 'SMP', 6),
 	('263CB23A56D6C861C254', 'Kec. Banjarmasin Tengah', 'Kota Banjarmasin', 'Prov. Kalimantan Selatan', '156005', '156000', '150000', 'SMP MUHAMMADIYAH 2 BANJARMASIN', '30304182', 'Jl. Kamp. Melayu Darat Gg. Kenari No.1', 'Swasta', 'SMP', 6),
@@ -32408,7 +32408,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('ECBC5F6A67071A984372', 'Kec. Laonti', 'Kab. Konawe Selatan', 'Prov. Sulawesi Tenggara', '200510', '200500', '200000', 'SMPN SATAP 16 KONAWE SELATAN', '40404997', 'Pesisir Timur Sulawesi', 'Negeri', 'SMP', 6),
 	('6E61A3EABB470900AFAA', 'Kec. Laeya', 'Kab. Konawe Selatan', 'Prov. Sulawesi Tenggara', '200516', '200500', '200000', 'SMP NEGERI 2 KONAWE SELATAN', '40401895', 'Jl. Alam Ria No. 1', 'Negeri', 'SMP', 6),
 	('7A2A48BF88E7A351EA7E', 'Kec. Moramo Utara', 'Kab. Konawe Selatan', 'Prov. Sulawesi Tenggara', '200517', '200500', '200000', 'SMP NEGERI 37 KONAWE SELATAN', '40405008', 'Jl. Poros Kendari Moramo', 'Negeri', 'SMP', 6);
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('5B9B60BBFDD48DEACDED', 'Kec. Tinanggea', 'Kab. Konawe Selatan', 'Prov. Sulawesi Tenggara', '200501', '200500', '200000', 'SMP SWASTA WAHDAH ISLAMIYAH', '70010126', 'Jl. Poros Tinanggea-Lapulu', 'Swasta', 'SMP', 6),
 	('F54AB37FD3550D91C432', 'Kec. Angata', 'Kab. Konawe Selatan', 'Prov. Sulawesi Tenggara', '200511', '200500', '200000', 'SMP NEGERI SATU ATAP 4 KONAWE SELATAN', '40404840', 'JL. Usaha Tani', 'Negeri', 'SMP', 6),
 	('DD5DE206CB973FDBDAE5', 'Kec. Angata', 'Kab. Konawe Selatan', 'Prov. Sulawesi Tenggara', '200511', '200500', '200000', 'SMP NEGERI 33 KONAWE SELATAN', '40403327', 'Jalan Poros Kendari Motaha', 'Negeri', 'SMP', 6),
@@ -37047,7 +37047,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('8F58E2D46EBDF4D6DE08', 'Kec. Aesesa', 'Kab. Nagekeo', 'Prov. Nusa Tenggara Timur', '241701', '241700', '240000', 'SMPS TOZUPAZO DANGA', '50302939', 'Jl.Rae Sape', 'Swasta', 'SMP', 6),
 	('8AAA4995420C536FDF16', 'Kec. Nangaroro', 'Kab. Nagekeo', 'Prov. Nusa Tenggara Timur', '241705', '241700', '240000', 'SMPS ST PETRUS LOKATADHO', '50303002', 'Lokatadho', 'Swasta', 'SMP', 6),
 	('0CD63645721751CA303A', 'Kec. Aesesa Selatan', 'Kab. Nagekeo', 'Prov. Nusa Tenggara Timur', '241708', '241700', '240000', 'SMP NEGERI 1 AESESA SELATAN SATAP', '50309378', 'Natatadi', 'Negeri', 'SMP', 6);
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('1B4F407B9F2CC2EA0F6F', 'Kec. Nangaroro', 'Kab. Nagekeo', 'Prov. Nusa Tenggara Timur', '241705', '241700', '240000', 'SMP NEGERI 2 NANGARORO', '50308287', 'Koekobho', 'Negeri', 'SMP', 6),
 	('CC8DBD72BEF0DD1BA417', 'Kec. Mauponggo', 'Kab. Nagekeo', 'Prov. Nusa Tenggara Timur', '241704', '241700', '240000', 'SMP NEGERI 3 MAUPONGGO', '69946316', 'Natasule', 'Negeri', 'SMP', 6),
 	('6B3EEC06712B071A0AB8', 'Kec. Aesesa', 'Kab. Nagekeo', 'Prov. Nusa Tenggara Timur', '241701', '241700', '240000', 'SMP NEGERI 1 AESESA', '50302942', 'Penginanga', 'Negeri', 'SMP', 6),
@@ -38913,7 +38913,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('E7F5206143A2AD4C87F9', 'Kec. Ciruas', 'Kab. Serang', 'Prov. Banten', '280424', '280400', '280000', 'SMP PGRI CIRUAS', '20605182', 'Jl. Ciptayasa- Pontang', 'Swasta', 'SMP', 6),
 	('3E4A2B1225135B96EC60', 'Kec. Padarincang', 'Kab. Serang', 'Prov. Banten', '280402', '280400', '280000', 'SMPN 5 SATU ATAP PADARINCANG', '20622319', 'Jl. Palka Km. 31 Kp. Wangun', 'Negeri', 'SMP', 6),
 	('DC406E8BE22869A889E3', 'Kec. Carenang', 'Kab. Serang', 'Prov. Banten', '280426', '280400', '280000', 'SMP PGRI CARENANG', '20614160', 'Jl.warung Selikur Km 1 Kp Bara', 'Swasta', 'SMP', 6),
-	('2D190D260527689AC75E', 'Kec. Binuang', 'Kab. Serang', 'Prov. Banten', '280431', '280400', '280000', 'SMP ISLAM DARUL KHALIFAH', '20615989', 'Jl. Lanud Gorda Km. 05 Kinto Ds. Gembor', 'Swasta', 'SMP', 6),
+	('2D190D260527689AC75E', 'Kec. Binuang', 'Kab. Serang', 'Prov. Banten', '280431', '280400', '280000', 'SMP ISLAM DARUL KHALIFAH', '20615989', 'Jl. Lanud Gorda Km. 05 KINTO ref.Ds. Gembor', 'Swasta', 'SMP', 6),
 	('0FB50F810421DA133B2B', 'Kec. Cinangka', 'Kab. Serang', 'Prov. Banten', '280401', '280400', '280000', 'SMP INFORMASI TEKNOLOGI ISTANA MULIA', '69849681', 'JL. KARANG BOLONG Gg. JAMBU', 'Swasta', 'SMP', 6),
 	('942D5AB81A30BE4CD2B9', 'Kec. Pontang', 'Kab. Serang', 'Prov. Banten', '280425', '280400', '280000', 'SMPN 3 SATU ATAP PONTANG', '20614167', 'Kp. Kemayungan RT.03 RW.01', 'Negeri', 'SMP', 6),
 	('15EE55F91C98DC5FCD5C', 'Kec. Tunjung Teja', 'Kab. Serang', 'Prov. Banten', '280428', '280400', '280000', 'SMPN 4 SATU ATAP TUNJUNGTEJA', '20615943', 'Jl. KH. Yusa bojong Menteng - Tunjungteja, 42174', 'Negeri', 'SMP', 6),
@@ -41725,7 +41725,7 @@ INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi
 	('5EAC647D6A64540DD9B5', 'Kec. Sesenapadang', 'Kab. Mamasa', 'Prov. Sulawesi Barat', '330408', '330400', '330000', 'SMPN 4 SESENAPADANG', '69758935', 'Pongko', 'Negeri', 'SMP', 6),
 	('747FBE40608A08B832A0', 'Kec. Tawalian', 'Kab. Mamasa', 'Prov. Sulawesi Barat', '330414', '330400', '330000', 'SMP SWASTA BERBUDI KOPIAN', '40605711', 'TAWALIAN', 'Swasta', 'SMP', 6),
 	('E3F68C8ACDB7FF3CB59B', 'Kec. Pamboang', 'Kab. Majene', 'Prov. Sulawesi Barat', '330502', '330500', '330000', 'SMP NEGERI 7 SATAP PAMBOANG', '69772701', 'Ratte', 'Negeri', 'SMP', 6);
-INSERT INTO sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
+INSERT INTO ref.sekolah_indonesia (sekolah_id_enkrip, kecamatan, kabupaten, propinsi, kode_kecamatan, kode_kab, kode_prop, nama_sekolah, npsn, alamat_jalan, status, jenjang, bentuk_pendidikan_id) VALUES
 	('0F5EC0FC39BA2B390BEC', 'Kec. Banggae Timur', 'Kab. Majene', 'Prov. Sulawesi Barat', '330512', '330500', '330000', 'SMP AL-QALAM HIDAYATULLAH MAJENE', '70046343', 'Lingkuangan Talumung', 'Swasta', 'SMP', 6),
 	('F8AD7A3D9EF2B62F3785', 'Kec. Ulumanda', 'Kab. Majene', 'Prov. Sulawesi Barat', '330505', '330500', '330000', 'SMP NEGERI 6 MALUNDA', '40604373', 'Dusun Taukong', 'Negeri', 'SMP', 6),
 	('95F723A5E3E94C3FB4CF', 'Kec. Sendana', 'Kab. Majene', 'Prov. Sulawesi Barat', '330510', '330500', '330000', 'SMP ISLAM DARUL HIKMAH', '69964079', 'Palipi', 'Swasta', 'SMP', 6),

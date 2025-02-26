@@ -124,11 +124,19 @@ const menuItems = ref([
                 }
             },
             {
-                label: 'Data Nilai',
+                label: 'Data Transkrip Nilai',
                 icon: 'pi pi-file-check',
 
                 command: () => {
-                    router.push({ name: 'dapodikSiswa' })
+                    router.push({ name: 'dapodikNilaiSiswa' })
+                }
+            },
+            {
+                label: 'Data Ijazah',
+                icon: 'pi pi-file-check',
+
+                command: () => {
+                    router.push({ name: 'dapodikDataIjazah' })
                 }
             },
             // {
@@ -217,7 +225,7 @@ const menuItems = ref([
 const items = computed(() => {
     let excludedLabels = []
     if (userRole.value === "siswa") {
-        excludedLabels = ["Home", "Blockchain", "IPFS", "Data Dapodik"]; // Kategori yang akan dihapus
+        excludedLabels = ["Home", "Blockchain", "IPFS", "Data Dapodik", "Data User"]; // Kategori yang akan dihapus
     } else if (userRole.value === "admin") {
         excludedLabels = ["Data Akademik"]; // Kategori yang akan dihapus
     }

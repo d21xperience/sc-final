@@ -771,18 +771,9 @@ func request_MapelService_CreateMapel_0(ctx context.Context, marshaler runtime.M
 	var (
 		protoReq CreateMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
 	msg, err := client.CreateMapel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -792,18 +783,9 @@ func local_request_MapelService_CreateMapel_0(ctx context.Context, marshaler run
 	var (
 		protoReq CreateMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
 	msg, err := server.CreateMapel(ctx, &protoReq)
 	return msg, metadata, err
@@ -813,18 +795,9 @@ func request_MapelService_CreateBanyakMapel_0(ctx context.Context, marshaler run
 	var (
 		protoReq CreateBanyakMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
 	msg, err := client.CreateBanyakMapel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -834,39 +807,21 @@ func local_request_MapelService_CreateBanyakMapel_0(ctx context.Context, marshal
 	var (
 		protoReq CreateBanyakMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
 	msg, err := server.CreateBanyakMapel(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-var filter_MapelService_GetMapel_0 = &utilities.DoubleArray{Encoding: map[string]int{"schema_name": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+var filter_MapelService_GetMapel_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 
 func request_MapelService_GetMapel_0(ctx context.Context, marshaler runtime.Marshaler, client MapelServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
@@ -881,16 +836,7 @@ func local_request_MapelService_GetMapel_0(ctx context.Context, marshaler runtim
 	var (
 		protoReq GetMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
@@ -905,26 +851,9 @@ func request_MapelService_UpdateMapel_0(ctx context.Context, marshaler runtime.M
 	var (
 		protoReq UpdateMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["mapel_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "mapel_id")
-	}
-	protoReq.MapelId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "mapel_id", err)
 	}
 	msg, err := client.UpdateMapel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -934,52 +863,26 @@ func local_request_MapelService_UpdateMapel_0(ctx context.Context, marshaler run
 	var (
 		protoReq UpdateMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["mapel_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "mapel_id")
-	}
-	protoReq.MapelId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "mapel_id", err)
 	}
 	msg, err := server.UpdateMapel(ctx, &protoReq)
 	return msg, metadata, err
 }
 
+var filter_MapelService_DeleteMapel_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
 func request_MapelService_DeleteMapel_0(ctx context.Context, marshaler runtime.Marshaler, client MapelServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq DeleteMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["mapel_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "mapel_id")
-	}
-	protoReq.MapelId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "mapel_id", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_MapelService_DeleteMapel_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.DeleteMapel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -989,23 +892,12 @@ func local_request_MapelService_DeleteMapel_0(ctx context.Context, marshaler run
 	var (
 		protoReq DeleteMapelRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["mapel_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "mapel_id")
-	}
-	protoReq.MapelId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "mapel_id", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_MapelService_DeleteMapel_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.DeleteMapel(ctx, &protoReq)
 	return msg, metadata, err
@@ -1053,6 +945,8 @@ func local_request_NilaiAkhirService_CreateNilaiAkhir_0(ctx context.Context, mar
 	return msg, metadata, err
 }
 
+var filter_NilaiAkhirService_GetNilaiAkhir_0 = &utilities.DoubleArray{Encoding: map[string]int{"schema_name": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+
 func request_NilaiAkhirService_GetNilaiAkhir_0(ctx context.Context, marshaler runtime.Marshaler, client NilaiAkhirServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetNilaiAkhirRequest
@@ -1067,13 +961,11 @@ func request_NilaiAkhirService_GetNilaiAkhir_0(ctx context.Context, marshaler ru
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
-	val, ok = pathParams["id_nilai_akhir"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id_nilai_akhir")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.IdNilaiAkhir, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id_nilai_akhir", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_NilaiAkhirService_GetNilaiAkhir_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.GetNilaiAkhir(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -1093,13 +985,11 @@ func local_request_NilaiAkhirService_GetNilaiAkhir_0(ctx context.Context, marsha
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
-	val, ok = pathParams["id_nilai_akhir"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id_nilai_akhir")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.IdNilaiAkhir, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id_nilai_akhir", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_NilaiAkhirService_GetNilaiAkhir_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.GetNilaiAkhir(ctx, &protoReq)
 	return msg, metadata, err
@@ -1122,14 +1012,6 @@ func request_NilaiAkhirService_UpdateNilaiAkhir_0(ctx context.Context, marshaler
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
-	val, ok = pathParams["id_nilai_akhir"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id_nilai_akhir")
-	}
-	protoReq.IdNilaiAkhir, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id_nilai_akhir", err)
-	}
 	msg, err := client.UpdateNilaiAkhir(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
@@ -1151,17 +1033,11 @@ func local_request_NilaiAkhirService_UpdateNilaiAkhir_0(ctx context.Context, mar
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
-	val, ok = pathParams["id_nilai_akhir"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id_nilai_akhir")
-	}
-	protoReq.IdNilaiAkhir, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id_nilai_akhir", err)
-	}
 	msg, err := server.UpdateNilaiAkhir(ctx, &protoReq)
 	return msg, metadata, err
 }
+
+var filter_NilaiAkhirService_DeleteNilaiAkhir_0 = &utilities.DoubleArray{Encoding: map[string]int{"schema_name": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 
 func request_NilaiAkhirService_DeleteNilaiAkhir_0(ctx context.Context, marshaler runtime.Marshaler, client NilaiAkhirServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
@@ -1177,13 +1053,11 @@ func request_NilaiAkhirService_DeleteNilaiAkhir_0(ctx context.Context, marshaler
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
-	val, ok = pathParams["id_nilai_akhir"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id_nilai_akhir")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.IdNilaiAkhir, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id_nilai_akhir", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_NilaiAkhirService_DeleteNilaiAkhir_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.DeleteNilaiAkhir(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -1203,13 +1077,11 @@ func local_request_NilaiAkhirService_DeleteNilaiAkhir_0(ctx context.Context, mar
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
 	}
-	val, ok = pathParams["id_nilai_akhir"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id_nilai_akhir")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.IdNilaiAkhir, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id_nilai_akhir", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_NilaiAkhirService_DeleteNilaiAkhir_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.DeleteNilaiAkhir(ctx, &protoReq)
 	return msg, metadata, err
@@ -1685,6 +1557,106 @@ func local_request_AnggotaKelasService_DeleteAnggotaKelas_0(ctx context.Context,
 	return msg, metadata, err
 }
 
+var filter_AnggotaKelasService_SearchAnggotaKelas_0 = &utilities.DoubleArray{Encoding: map[string]int{"schema_name": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+
+func request_AnggotaKelasService_SearchAnggotaKelas_0(ctx context.Context, marshaler runtime.Marshaler, client AnggotaKelasServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq SearchAnggotaKelasRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["schema_name"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	}
+	protoReq.SchemaName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
+	}
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AnggotaKelasService_SearchAnggotaKelas_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.SearchAnggotaKelas(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_AnggotaKelasService_SearchAnggotaKelas_0(ctx context.Context, marshaler runtime.Marshaler, server AnggotaKelasServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq SearchAnggotaKelasRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["schema_name"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	}
+	protoReq.SchemaName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
+	}
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AnggotaKelasService_SearchAnggotaKelas_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.SearchAnggotaKelas(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+var filter_AnggotaKelasService_FilterAnggotaKelas_0 = &utilities.DoubleArray{Encoding: map[string]int{"schema_name": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+
+func request_AnggotaKelasService_FilterAnggotaKelas_0(ctx context.Context, marshaler runtime.Marshaler, client AnggotaKelasServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq FilterAnggotaKelasRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["schema_name"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	}
+	protoReq.SchemaName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
+	}
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AnggotaKelasService_FilterAnggotaKelas_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.FilterAnggotaKelas(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_AnggotaKelasService_FilterAnggotaKelas_0(ctx context.Context, marshaler runtime.Marshaler, server AnggotaKelasServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq FilterAnggotaKelasRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["schema_name"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	}
+	protoReq.SchemaName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
+	}
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AnggotaKelasService_FilterAnggotaKelas_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.FilterAnggotaKelas(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_PTKService_CreatePTK_0(ctx context.Context, marshaler runtime.Marshaler, client PTKServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq CreatePTKRequest
@@ -1935,22 +1907,13 @@ func local_request_PTKTerdaftarService_CreateBanyakPTKTerdaftar_0(ctx context.Co
 	return msg, metadata, err
 }
 
-var filter_PTKTerdaftarService_GetPTKTerdaftar_0 = &utilities.DoubleArray{Encoding: map[string]int{"schema_name": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+var filter_PTKTerdaftarService_GetPTKTerdaftar_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 
 func request_PTKTerdaftarService_GetPTKTerdaftar_0(ctx context.Context, marshaler runtime.Marshaler, client PTKTerdaftarServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetPTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
@@ -1965,16 +1928,7 @@ func local_request_PTKTerdaftarService_GetPTKTerdaftar_0(ctx context.Context, ma
 	var (
 		protoReq GetPTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
@@ -1989,26 +1943,9 @@ func request_PTKTerdaftarService_UpdatePTKTerdaftar_0(ctx context.Context, marsh
 	var (
 		protoReq UpdatePTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["ptk_terdaftar_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ptk_terdaftar_id")
-	}
-	protoReq.PtkTerdaftarId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ptk_terdaftar_id", err)
 	}
 	msg, err := client.UpdatePTKTerdaftar(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -2018,52 +1955,26 @@ func local_request_PTKTerdaftarService_UpdatePTKTerdaftar_0(ctx context.Context,
 	var (
 		protoReq UpdatePTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
-	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["ptk_terdaftar_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ptk_terdaftar_id")
-	}
-	protoReq.PtkTerdaftarId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ptk_terdaftar_id", err)
 	}
 	msg, err := server.UpdatePTKTerdaftar(ctx, &protoReq)
 	return msg, metadata, err
 }
 
+var filter_PTKTerdaftarService_DeletePTKTerdaftar_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
 func request_PTKTerdaftarService_DeletePTKTerdaftar_0(ctx context.Context, marshaler runtime.Marshaler, client PTKTerdaftarServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq DeletePTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["ptk_terdaftar_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ptk_terdaftar_id")
-	}
-	protoReq.PtkTerdaftarId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ptk_terdaftar_id", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PTKTerdaftarService_DeletePTKTerdaftar_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.DeletePTKTerdaftar(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -2073,25 +1984,182 @@ func local_request_PTKTerdaftarService_DeletePTKTerdaftar_0(ctx context.Context,
 	var (
 		protoReq DeletePTKTerdaftarRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["schema_name"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "schema_name")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.SchemaName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "schema_name", err)
-	}
-	val, ok = pathParams["ptk_terdaftar_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ptk_terdaftar_id")
-	}
-	protoReq.PtkTerdaftarId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ptk_terdaftar_id", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PTKTerdaftarService_DeletePTKTerdaftar_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.DeletePTKTerdaftar(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_KenaikanService_CreateKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, client KenaikanServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq CreateKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.CreateKenaikan(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_KenaikanService_CreateKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, server KenaikanServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq CreateKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.CreateKenaikan(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+var filter_KenaikanService_GetKenaikan_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
+func request_KenaikanService_GetKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, client KenaikanServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KenaikanService_GetKenaikan_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.GetKenaikan(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_KenaikanService_GetKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, server KenaikanServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KenaikanService_GetKenaikan_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.GetKenaikan(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+var filter_KenaikanService_FilterKenaikan_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
+func request_KenaikanService_FilterKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, client KenaikanServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq FilterKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KenaikanService_FilterKenaikan_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.FilterKenaikan(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_KenaikanService_FilterKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, server KenaikanServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq FilterKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KenaikanService_FilterKenaikan_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.FilterKenaikan(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_KenaikanService_UpdateKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, client KenaikanServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq UpdateKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.UpdateKenaikan(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_KenaikanService_UpdateKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, server KenaikanServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq UpdateKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.UpdateKenaikan(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+var filter_KenaikanService_DeleteKenaikan_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
+func request_KenaikanService_DeleteKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, client KenaikanServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq DeleteKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KenaikanService_DeleteKenaikan_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.DeleteKenaikan(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_KenaikanService_DeleteKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, server KenaikanServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq DeleteKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_KenaikanService_DeleteKenaikan_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.DeleteKenaikan(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_KenaikanService_UploadKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, client KenaikanServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq UploadKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.UploadKenaikan(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_KenaikanService_UploadKenaikan_0(ctx context.Context, marshaler runtime.Marshaler, server KenaikanServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq UploadKenaikanRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.UploadKenaikan(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -2833,7 +2901,7 @@ func RegisterMapelServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/CreateMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel/create"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/CreateMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2853,7 +2921,7 @@ func RegisterMapelServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/CreateBanyakMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel/create-banyak"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/CreateBanyakMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel/create-banyak"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2873,7 +2941,7 @@ func RegisterMapelServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/GetMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/GetMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2893,7 +2961,7 @@ func RegisterMapelServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/UpdateMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel/update/{mapel_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/UpdateMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2913,7 +2981,7 @@ func RegisterMapelServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/DeleteMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel/delete/{mapel_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.MapelService/DeleteMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2963,7 +3031,7 @@ func RegisterNilaiAkhirServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.NilaiAkhirService/GetNilaiAkhir", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/nilai-akhir/{id_nilai_akhir}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.NilaiAkhirService/GetNilaiAkhir", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/nilai-akhir"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2983,7 +3051,7 @@ func RegisterNilaiAkhirServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.NilaiAkhirService/UpdateNilaiAkhir", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/nilai-akhir/update/{id_nilai_akhir}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.NilaiAkhirService/UpdateNilaiAkhir", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/nilai-akhir/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3003,7 +3071,7 @@ func RegisterNilaiAkhirServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.NilaiAkhirService/DeleteNilaiAkhir", runtime.WithHTTPPathPattern("/api/ss/v1/{schema_name}/nilai-akhir/delete/{id_nilai_akhir}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.NilaiAkhirService/DeleteNilaiAkhir", runtime.WithHTTPPathPattern("/api/ss/v1/{schema_name}/nilai-akhir/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3237,6 +3305,46 @@ func RegisterAnggotaKelasServiceHandlerServer(ctx context.Context, mux *runtime.
 		}
 		forward_AnggotaKelasService_DeleteAnggotaKelas_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_AnggotaKelasService_SearchAnggotaKelas_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.AnggotaKelasService/SearchAnggotaKelas", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/anggota-kelas/search"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_AnggotaKelasService_SearchAnggotaKelas_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_AnggotaKelasService_SearchAnggotaKelas_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_AnggotaKelasService_FilterAnggotaKelas_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.AnggotaKelasService/FilterAnggotaKelas", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/anggota-kelas/filter"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_AnggotaKelasService_FilterAnggotaKelas_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_AnggotaKelasService_FilterAnggotaKelas_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 
 	return nil
 }
@@ -3383,7 +3491,7 @@ func RegisterPTKTerdaftarServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/GetPTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/GetPTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3403,7 +3511,7 @@ func RegisterPTKTerdaftarServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/UpdatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/update/{ptk_terdaftar_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/UpdatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3423,7 +3531,7 @@ func RegisterPTKTerdaftarServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/DeletePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/delete/{ptk_terdaftar_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/DeletePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3436,6 +3544,136 @@ func RegisterPTKTerdaftarServiceHandlerServer(ctx context.Context, mux *runtime.
 			return
 		}
 		forward_PTKTerdaftarService_DeletePTKTerdaftar_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	return nil
+}
+
+// RegisterKenaikanServiceHandlerServer registers the http handlers for service KenaikanService to "mux".
+// UnaryRPC     :call KenaikanServiceServer directly.
+// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterKenaikanServiceHandlerFromEndpoint instead.
+// GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
+func RegisterKenaikanServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server KenaikanServiceServer) error {
+	mux.Handle(http.MethodPost, pattern_KenaikanService_CreateKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/CreateKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan/create"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_KenaikanService_CreateKenaikan_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_CreateKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_KenaikanService_GetKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/GetKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_KenaikanService_GetKenaikan_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_GetKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_KenaikanService_FilterKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/FilterKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan/filter"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_KenaikanService_FilterKenaikan_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_FilterKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPut, pattern_KenaikanService_UpdateKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/UpdateKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_KenaikanService_UpdateKenaikan_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_UpdateKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodDelete, pattern_KenaikanService_DeleteKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/DeleteKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_KenaikanService_DeleteKenaikan_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_DeleteKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_KenaikanService_UploadKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/UploadKenaikan", runtime.WithHTTPPathPattern("/api/v1/it/kenaikan/upload"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_KenaikanService_UploadKenaikan_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_UploadKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -4317,7 +4555,7 @@ func RegisterMapelServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/CreateMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel/create"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/CreateMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4334,7 +4572,7 @@ func RegisterMapelServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/CreateBanyakMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel/create-banyak"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/CreateBanyakMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel/create-banyak"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4351,7 +4589,7 @@ func RegisterMapelServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/GetMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/GetMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4368,7 +4606,7 @@ func RegisterMapelServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/UpdateMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel/update/{mapel_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/UpdateMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4385,7 +4623,7 @@ func RegisterMapelServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/DeleteMapel", runtime.WithHTTPPathPattern("/api/v1/{schema_name}/mapel/delete/{mapel_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.MapelService/DeleteMapel", runtime.WithHTTPPathPattern("/api/v1/ss/mapel/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4402,11 +4640,11 @@ func RegisterMapelServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_MapelService_CreateMapel_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 2, 4}, []string{"api", "v1", "schema_name", "mapel", "create"}, ""))
-	pattern_MapelService_CreateBanyakMapel_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 2, 4}, []string{"api", "v1", "schema_name", "mapel", "create-banyak"}, ""))
-	pattern_MapelService_GetMapel_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "v1", "schema_name", "mapel"}, ""))
-	pattern_MapelService_UpdateMapel_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "schema_name", "mapel", "update", "mapel_id"}, ""))
-	pattern_MapelService_DeleteMapel_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "schema_name", "mapel", "delete", "mapel_id"}, ""))
+	pattern_MapelService_CreateMapel_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "mapel", "create"}, ""))
+	pattern_MapelService_CreateBanyakMapel_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "mapel", "create-banyak"}, ""))
+	pattern_MapelService_GetMapel_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "mapel"}, ""))
+	pattern_MapelService_UpdateMapel_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "mapel", "update"}, ""))
+	pattern_MapelService_DeleteMapel_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "mapel", "delete"}, ""))
 )
 
 var (
@@ -4474,7 +4712,7 @@ func RegisterNilaiAkhirServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.NilaiAkhirService/GetNilaiAkhir", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/nilai-akhir/{id_nilai_akhir}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.NilaiAkhirService/GetNilaiAkhir", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/nilai-akhir"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4491,7 +4729,7 @@ func RegisterNilaiAkhirServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.NilaiAkhirService/UpdateNilaiAkhir", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/nilai-akhir/update/{id_nilai_akhir}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.NilaiAkhirService/UpdateNilaiAkhir", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/nilai-akhir/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4508,7 +4746,7 @@ func RegisterNilaiAkhirServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.NilaiAkhirService/DeleteNilaiAkhir", runtime.WithHTTPPathPattern("/api/ss/v1/{schema_name}/nilai-akhir/delete/{id_nilai_akhir}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.NilaiAkhirService/DeleteNilaiAkhir", runtime.WithHTTPPathPattern("/api/ss/v1/{schema_name}/nilai-akhir/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4526,9 +4764,9 @@ func RegisterNilaiAkhirServiceHandlerClient(ctx context.Context, mux *runtime.Se
 
 var (
 	pattern_NilaiAkhirService_CreateNilaiAkhir_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "nilai-akhir", "create"}, ""))
-	pattern_NilaiAkhirService_GetNilaiAkhir_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "ss", "schema_name", "nilai-akhir", "id_nilai_akhir"}, ""))
-	pattern_NilaiAkhirService_UpdateNilaiAkhir_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "ss", "schema_name", "nilai-akhir", "update", "id_nilai_akhir"}, ""))
-	pattern_NilaiAkhirService_DeleteNilaiAkhir_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "ss", "v1", "schema_name", "nilai-akhir", "delete", "id_nilai_akhir"}, ""))
+	pattern_NilaiAkhirService_GetNilaiAkhir_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "ss", "schema_name", "nilai-akhir"}, ""))
+	pattern_NilaiAkhirService_UpdateNilaiAkhir_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "nilai-akhir", "update"}, ""))
+	pattern_NilaiAkhirService_DeleteNilaiAkhir_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "ss", "v1", "schema_name", "nilai-akhir", "delete"}, ""))
 )
 
 var (
@@ -4799,6 +5037,40 @@ func RegisterAnggotaKelasServiceHandlerClient(ctx context.Context, mux *runtime.
 		}
 		forward_AnggotaKelasService_DeleteAnggotaKelas_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_AnggotaKelasService_SearchAnggotaKelas_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.AnggotaKelasService/SearchAnggotaKelas", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/anggota-kelas/search"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_AnggotaKelasService_SearchAnggotaKelas_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_AnggotaKelasService_SearchAnggotaKelas_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_AnggotaKelasService_FilterAnggotaKelas_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.AnggotaKelasService/FilterAnggotaKelas", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/anggota-kelas/filter"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_AnggotaKelasService_FilterAnggotaKelas_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_AnggotaKelasService_FilterAnggotaKelas_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	return nil
 }
 
@@ -4808,6 +5080,8 @@ var (
 	pattern_AnggotaKelasService_GetAnggotaKelas_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "ss", "schema_name", "anggota-kelas"}, ""))
 	pattern_AnggotaKelasService_UpdateAnggotaKelas_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "schema_name", "anggota-kelas", "update", "kelas_id"}, ""))
 	pattern_AnggotaKelasService_DeleteAnggotaKelas_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "schema_name", "anggota-kelas", "delete", "kelas_id"}, ""))
+	pattern_AnggotaKelasService_SearchAnggotaKelas_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "anggota-kelas", "search"}, ""))
+	pattern_AnggotaKelasService_FilterAnggotaKelas_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "anggota-kelas", "filter"}, ""))
 )
 
 var (
@@ -4816,6 +5090,8 @@ var (
 	forward_AnggotaKelasService_GetAnggotaKelas_0          = runtime.ForwardResponseMessage
 	forward_AnggotaKelasService_UpdateAnggotaKelas_0       = runtime.ForwardResponseMessage
 	forward_AnggotaKelasService_DeleteAnggotaKelas_0       = runtime.ForwardResponseMessage
+	forward_AnggotaKelasService_SearchAnggotaKelas_0       = runtime.ForwardResponseMessage
+	forward_AnggotaKelasService_FilterAnggotaKelas_0       = runtime.ForwardResponseMessage
 )
 
 // RegisterPTKServiceHandlerFromEndpoint is same as RegisterPTKServiceHandler but
@@ -5013,7 +5289,7 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/GetPTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/GetPTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5030,7 +5306,7 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/UpdatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/update/{ptk_terdaftar_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/UpdatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5047,7 +5323,7 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/DeletePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/delete/{ptk_terdaftar_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/DeletePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/ptk-terdaftar/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5066,9 +5342,9 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 var (
 	pattern_PTKTerdaftarService_CreatePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "PTKTerdaftar", "create"}, ""))
 	pattern_PTKTerdaftarService_CreateBanyakPTKTerdaftar_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar", "create-banyak"}, ""))
-	pattern_PTKTerdaftarService_GetPTKTerdaftar_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar"}, ""))
-	pattern_PTKTerdaftarService_UpdatePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar", "update", "ptk_terdaftar_id"}, ""))
-	pattern_PTKTerdaftarService_DeletePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar", "delete", "ptk_terdaftar_id"}, ""))
+	pattern_PTKTerdaftarService_GetPTKTerdaftar_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "ptk-terdaftar"}, ""))
+	pattern_PTKTerdaftarService_UpdatePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "ptk-terdaftar", "update"}, ""))
+	pattern_PTKTerdaftarService_DeletePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "ptk-terdaftar", "delete"}, ""))
 )
 
 var (
@@ -5077,6 +5353,165 @@ var (
 	forward_PTKTerdaftarService_GetPTKTerdaftar_0          = runtime.ForwardResponseMessage
 	forward_PTKTerdaftarService_UpdatePTKTerdaftar_0       = runtime.ForwardResponseMessage
 	forward_PTKTerdaftarService_DeletePTKTerdaftar_0       = runtime.ForwardResponseMessage
+)
+
+// RegisterKenaikanServiceHandlerFromEndpoint is same as RegisterKenaikanServiceHandler but
+// automatically dials to "endpoint" and closes the connection when "ctx" gets done.
+func RegisterKenaikanServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+	conn, err := grpc.NewClient(endpoint, opts...)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+			return
+		}
+		go func() {
+			<-ctx.Done()
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+		}()
+	}()
+	return RegisterKenaikanServiceHandler(ctx, mux, conn)
+}
+
+// RegisterKenaikanServiceHandler registers the http handlers for service KenaikanService to "mux".
+// The handlers forward requests to the grpc endpoint over "conn".
+func RegisterKenaikanServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterKenaikanServiceHandlerClient(ctx, mux, NewKenaikanServiceClient(conn))
+}
+
+// RegisterKenaikanServiceHandlerClient registers the http handlers for service KenaikanService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "KenaikanServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "KenaikanServiceClient"
+// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
+// "KenaikanServiceClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterKenaikanServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client KenaikanServiceClient) error {
+	mux.Handle(http.MethodPost, pattern_KenaikanService_CreateKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/CreateKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan/create"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_KenaikanService_CreateKenaikan_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_CreateKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_KenaikanService_GetKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/GetKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_KenaikanService_GetKenaikan_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_GetKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_KenaikanService_FilterKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/FilterKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan/filter"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_KenaikanService_FilterKenaikan_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_FilterKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPut, pattern_KenaikanService_UpdateKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/UpdateKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_KenaikanService_UpdateKenaikan_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_UpdateKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodDelete, pattern_KenaikanService_DeleteKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/DeleteKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_KenaikanService_DeleteKenaikan_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_DeleteKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_KenaikanService_UploadKenaikan_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/UploadKenaikan", runtime.WithHTTPPathPattern("/api/v1/it/kenaikan/upload"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_KenaikanService_UploadKenaikan_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_KenaikanService_UploadKenaikan_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	return nil
+}
+
+var (
+	pattern_KenaikanService_CreateKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "kenaikan", "create"}, ""))
+	pattern_KenaikanService_GetKenaikan_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "kenaikan"}, ""))
+	pattern_KenaikanService_FilterKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "kenaikan", "filter"}, ""))
+	pattern_KenaikanService_UpdateKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "kenaikan"}, ""))
+	pattern_KenaikanService_DeleteKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "kenaikan"}, ""))
+	pattern_KenaikanService_UploadKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "it", "kenaikan", "upload"}, ""))
+)
+
+var (
+	forward_KenaikanService_CreateKenaikan_0 = runtime.ForwardResponseMessage
+	forward_KenaikanService_GetKenaikan_0    = runtime.ForwardResponseMessage
+	forward_KenaikanService_FilterKenaikan_0 = runtime.ForwardResponseMessage
+	forward_KenaikanService_UpdateKenaikan_0 = runtime.ForwardResponseMessage
+	forward_KenaikanService_DeleteKenaikan_0 = runtime.ForwardResponseMessage
+	forward_KenaikanService_UploadKenaikan_0 = runtime.ForwardResponseMessage
 )
 
 // RegisterIjazahServiceHandlerFromEndpoint is same as RegisterIjazahServiceHandler but

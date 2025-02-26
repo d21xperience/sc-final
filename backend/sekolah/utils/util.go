@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -90,4 +91,18 @@ func SafeString(s *string) string {
 		return "" // atau return nilai default lain yang sesuai
 	}
 	return *s
+}
+
+// Generic function to convert string to time.Time
+func StringToTime[T ~string](str T, layout string) (time.Time, error) {
+	parsedTime, err := time.Parse(layout, string(str))
+	if err != nil {
+		return time.Time{}, err
+	}
+	return parsedTime, nil
+}
+
+// Function to convert time.Time to string (Tidak perlu generic)
+func TimeToString(t time.Time, layout string) string {
+	return t.Format(layout)
 }

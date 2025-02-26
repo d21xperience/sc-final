@@ -36,9 +36,9 @@
                                             @click="dialogImport = true" class="mr-2" />
                                         <Button label="Export" icon="pi pi-upload" severity="help"
                                             @click="exportCSV($event)" class="mr-2" />
-                                        <Button label="Proses" icon="pi pi-send" severity="info"
+                                        <!-- <Button label="Proses" icon="pi pi-send" severity="info"
                                             @click="exportCSV($event)" v-tooltip.right="'Menyimpan ke database'"
-                                            badge="2" />
+                                            badge="2" /> -->
                                     </template>
 
                                 </Toolbar>
@@ -89,30 +89,6 @@
                         </template>
                     </Column>
                     <Column field="ptk.nuptk" header="NUPTK"></Column>
-                    <!-- <Column field="ptk.alamatJalan" header="Alamat"></Column> -->
-                    <!-- <Column field="code" header="Mapel yang diampu"></Column> -->
-                    <!-- <Column field="code" header="Anggota Kelas">
-                        <template #body="slotProps">
-                            <Button icon="pi pi-bullseye" outlined rounded class="mr-2"
-                                @click="dialogAnggotaRombel(slotProps.data)" />
-                        </template>
-                    </Column> -->
-                    <!--<Column field="name" header="JK"></Column> -->
-                    <!-- <Column field="name" header="Tpt.Lahir"></Column>
-                    <Column field="name" header="Tgl.Lahir"></Column>
-                    <Column field="name" header="Agama"></Column>
-                    <Column field="category" header="Ayah"></Column>
-                    <Column field="category" header="Ibu"></Column> -->
-                    <!-- <Column field="category" header="Pekerjaan Ayah"></Column>
-                    <Column field="category" header="Pekerjaan Ibu"></Column> -->
-                    <!-- <Column field="category" header="Alamat"></Column> -->
-
-                    <!-- <Column field="inventoryStatus" header="Status" sortable>
-                        <template #body="slotProps">
-                            <Tag :value="slotProps.data.inventoryStatus"
-                                :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                        </template>
-                    </Column> -->
                 </DataTable>
 
             </div>

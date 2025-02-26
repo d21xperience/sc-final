@@ -48,7 +48,6 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 
 	sekolah := req.GetSekolah()
 	schemaName := fmt.Sprintf("tabel_%s", sekolah.SekolahIdEnkrip)
-	// existingSchema, err := s.schemaService.GetSchemaBySekolahID(int(sekolah.SekolahId))
 	existingSchema, err := s.schemaService.GetSchemaBySchemaname(schemaName)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Printf("Lanjutkan pendaftaran: %v", err)
@@ -160,7 +159,7 @@ func (s *SekolahService) CreateSekolah(ctx context.Context, req *pb.CreateSekola
 		NiyKepsek:           sekolah.NipKepsek,
 		StatusKepemilikanId: sekolah.StatusKepemilikanId,
 		KodeAktivasi:        sekolah.KodeAktivasi,
-		Jenjang:             sekolah.Jenjang,
+		JenjangPendidikanId: sekolah.JenjangPendidikanId,
 		BentukPendidikanId:  sekolah.BentukPendidikanId,
 	}
 
@@ -210,7 +209,7 @@ func (s *SekolahService) GetSekolah(ctx context.Context, req *pb.GetSekolahReque
 			NiyKepsek:           sekolah.NipKepsek,
 			StatusKepemilikanId: sekolah.StatusKepemilikanId,
 			KodeAktivasi:        sekolah.KodeAktivasi,
-			Jenjang:             sekolah.Jenjang,
+			JenjangPendidikanId: sekolah.JenjangPendidikanId,
 			BentukPendidikanId:  sekolah.BentukPendidikanId,
 		},
 	}, nil

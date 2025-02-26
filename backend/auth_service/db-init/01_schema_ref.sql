@@ -1,4 +1,5 @@
-CREATE TABLE sekolah_indonesia (
+CREATE SCHEMA IF NOT EXISTS ref;
+CREATE TABLE ref.sekolah_indonesia (
     sekolah_id_enkrip VARCHAR(50) NOT NULL PRIMARY KEY, -- Identifier unik
     nama_sekolah VARCHAR(255) NOT NULL,
     npsn VARCHAR(255) NOT NULL,

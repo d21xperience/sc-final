@@ -5,27 +5,27 @@ import (
 )
 
 type Sekolah struct {
-	SekolahID           string `json:"sekolah_id"`
-	Nama                string `json:"nama"`
-	Npsn                string `json:"npsn"`
-	Nss                 string `json:"nss"`
-	Alamat              string `json:"alamat"`
-	KdPos               string `json:"kd_pos"`
-	Telepon             string `json:"telepon"`
-	Fax                 string `json:"fax"`
-	Kelurahan           string `json:"kelurahan"`
-	Kecamatan           string `json:"kecamatan"`
-	KabKota             string `json:"kab_kota"`
-	Propinsi            string `json:"propinsi"`
-	Website             string `json:"website"`
-	Email               string `json:"email"`
-	NmKepsek            string `json:"nm_kepsek"`
-	NipKepsek           string `json:"nip_kepsek"`
-	NiyKepsek           string `json:"niy_kepsek"`
-	StatusKepemilikanId int32  `json:"status_kepemilikan_id"`
-	KodeAktivasi        string `json:"kode_aktivasi"`
-	Jenjang             string `json:"jenjang"`
-	BentukPendidikanId  int32  `json:"bentuk_pendidikan_id"`
+	SekolahID           string `gorm:"column:sekolah_id"`
+	Nama                string `gorm:"column:nama"`
+	Npsn                string `gorm:"column:npsn"`
+	Nss                 string `gorm:"column:nss"`
+	Alamat              string `gorm:"column:alamat"`
+	KdPos               string `gorm:"column:kd_pos"`
+	Telepon             string `gorm:"column:telepon"`
+	Fax                 string `gorm:"column:fax"`
+	Kelurahan           string `gorm:"column:kelurahan"`
+	Kecamatan           string `gorm:"column:kecamatan"`
+	KabKota             string `gorm:"column:kab_kota"`
+	Propinsi            string `gorm:"column:propinsi"`
+	Website             string `gorm:"column:website"`
+	Email               string `gorm:"column:email"`
+	NmKepsek            string `gorm:"column:nm_kepsek"`
+	NipKepsek           string `gorm:"column:nip_kepsek"`
+	NiyKepsek           string `gorm:"column:niy_kepsek"`
+	StatusKepemilikanId int32  `gorm:"column:status_kepemilikan_id"`
+	KodeAktivasi        string `gorm:"column:kode_aktivasi"`
+	BentukPendidikanId  int32  `gorm:"column:bentuk_pendidikan_id"`
+	JenjangPendidikanId int32  `gorm:"column:jenjang_pendidikan_id"`
 }
 
 type SekolahTabelTenant struct {

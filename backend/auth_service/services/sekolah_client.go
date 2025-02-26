@@ -27,7 +27,7 @@ func NewSekolahServiceClient() (*SekolahServiceClient, error) {
 }
 
 func (s *SekolahServiceClient) RegistrasiSekolah(sekolah *models.Sekolah) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
 	_, err := s.client.RegistrasiSekolah(ctx, &pb.TabelSekolahRequest{
@@ -35,6 +35,14 @@ func (s *SekolahServiceClient) RegistrasiSekolah(sekolah *models.Sekolah) error 
 			SekolahIdEnkrip: sekolah.SekolahIDEnkrip,
 			SekolahId:       int32(sekolah.ID),
 			NamaSekolah:     sekolah.NamaSekolah,
+			Kecamatan:       sekolah.Kecamatan,
+			Kabupaten:       sekolah.Kabupaten,
+			Propinsi:        sekolah.Propinsi,
+			KodeKecamatan:   sekolah.KodeKecamatan,
+			KodeKab:         sekolah.KodeKab,
+			KodeProp:        sekolah.KodeProp,
+			Npsn:            sekolah.NPSN,
+			AlamatJalan:     sekolah.AlamatJalan,
 		},
 	})
 	if err != nil {
@@ -51,14 +59,13 @@ func (s *SekolahServiceClient) CreateSekolah(sekolah *models.Sekolah) error {
 	_, err := s.client.CreateSekolah(ctx, &pb.CreateSekolahRequest{
 		SchemaName: fmt.Sprintf("tabel_%s", sekolah.SekolahIDEnkrip),
 		Sekolah: &pb.SekolahDapo{
-			Alamat:    sekolah.AlamatJalan,
-			Npsn:      sekolah.NPSN,
+			SekolahId: sekolah.SekolahIDEnkrip,
 			Nama:      sekolah.NamaSekolah,
+			Npsn:      sekolah.NPSN,
 			Kecamatan: sekolah.Kecamatan,
 			KabKota:   sekolah.Kabupaten,
 			Propinsi:  sekolah.Propinsi,
-			// // StatusKepemilikanId: 0,
-			// BentukPendidikanId: 0,
+			Alamat:    sekolah.AlamatJalan,
 		},
 	})
 	if err != nil {

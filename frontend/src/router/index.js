@@ -227,6 +227,18 @@ const router = createRouter({
           meta: { title: "Data Siswa", requiresAuth: true, role: "admin" },
         },
         {
+          path: "data-nilai",
+          name: "dapodikNilaiSiswa",
+          component: () => import("../views/dapodik/DataNilai.vue"),
+          meta: { title: "Data Nilai", requiresAuth: true, role: "admin" },
+        },
+        {
+          path: "data-ijazah",
+          name: "dapodikDataIjazah",
+          component: () => import("../views/dapodik/DataIjazah.vue"),
+          meta: { title: "Data Ijazah", requiresAuth: true, role: "admin" },
+        },
+        {
           path: "data-kelas",
           name: "dapodikKelas",
           component: () => import("../views/dapodik/DataKelas.vue"),

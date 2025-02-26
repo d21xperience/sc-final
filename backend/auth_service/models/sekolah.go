@@ -14,7 +14,6 @@ type Sekolah struct {
 	KodeKab         string `json:"kode_kab"`
 	KodeProp        string `json:"kode_prop"`
 	AlamatJalan     string `json:"alamat_jalan"`
-	Status          string `json:"status"`
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 }

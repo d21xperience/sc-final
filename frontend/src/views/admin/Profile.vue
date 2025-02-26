@@ -156,6 +156,28 @@
         </div>
     </div>
     <div class="max-w-4xl mx-auto p-2 bg-white shadow-md rounded-lg mt-10">
+        <h3 class="font-bold text-xl">Riwayat Pendidikan</h3>
+        <form action="" method="post">
+            <div>
+                <label for="email">TK</label>
+                <input class="block border w-full" type="email" name="email" id="email">
+            </div>
+            <div>
+                <label for="email">SD</label>
+                <input class="block border w-full" type="email" name="email" id="email">
+            </div>
+            <div>
+                <label for="password">SMP</label>
+                <input class="block border w-full" type="password" name="password" id="password">
+            </div>
+            <div>
+                <button>Batal</button>
+                <button>Simpan</button>
+            </div>
+
+        </form>
+    </div>
+    <div class="max-w-4xl mx-auto p-2 bg-white shadow-md rounded-lg mt-10">
         <h3 class="font-bold text-xl">Change email & password</h3>
         <form action="" method="post">
             <div>
