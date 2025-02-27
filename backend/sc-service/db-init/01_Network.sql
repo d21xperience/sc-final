@@ -1,3 +1,4 @@
+CREATE SCHEMA IF NOT EXISTS ref;
 -- Buat ENUM type untuk jenis jaringan blockchain jika belum ada
 DO $$ 
 BEGIN
@@ -7,7 +8,7 @@ BEGIN
 END $$ LANGUAGE plpgsql;
 
 
-CREATE TABLE IF NOT EXISTS networks (
+CREATE TABLE IF NOT EXISTS ref.networks (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,  -- Nama jaringan (Ethereum, Polygon, BSC, dll.)
     chain_id BIGINT NOT NULL UNIQUE,    -- Chain ID jaringan (<0 untuk jaringan PRIVATE)
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS networks (
 );
 
 -- Insert data jaringan blockchain utama & PRIVATE
-INSERT INTO networks (name, chain_id, rpc_url, explorer_url, symbol,TYPE, activate, available,architecture)
+INSERT INTO ref.networks (name, chain_id, rpc_url, explorer_url, symbol,TYPE, activate, available,architecture)
 VALUES 
     -- 🌍 PUBLIC MAINNET NETWORKS
     ('Ethereum MAINNET', 1, 'https://MAINNET.infura.io/v3/YOUR_INFURA_KEY', 'https://etherscan.io', 'ETH', 'mainnet', false,false,'EVM'),

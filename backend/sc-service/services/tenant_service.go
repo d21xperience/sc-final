@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sc-service/config"
 	"sc-service/models"
+	"sc-service/repositories"
 	"sc-service/utils"
 
 	pb "sc-service/generated"
@@ -19,10 +21,20 @@ type TenantServiceServer struct {
 	// RedisClient    *redis.Client // Tambahkan Redis sebagai field
 }
 
+func NewTenantServiceServer() *TenantServiceServer {
+	schemaRepository := repositories.NewSchemaRepository(config.DB)
+	sekolahTenantRepository := repositories.NewsekolahTenantRepository(config.DB)
+	schema := NewSchemaService(schemaRepository, sekolahTenantRepository)
+
+	return &TenantServiceServer{
+		schemaService: schema,
+	}
+}
+
 func (s *TenantServiceServer) RegistrasiSekolahTenant(ctx context.Context, req *pb.RegistrasiSekolahTenantRequest) (*pb.RegistrasiSekolahTenantResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
-	requiredFields := []string{"Sekolah"}
+	requiredFields := []string{"SekolahTenant"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {

@@ -464,8 +464,8 @@ const fetchSiswa = async () => {
 // ========IMPORT DATA========
 import DialogImport from '../../components/DialogImport.vue'
 const dialogImport = ref(false)
-const saveImport = () => {
-    console.log("Data disimpan:", selectedSemester.value);
+const saveImport = (e) => {
+    console.log("Data disimpan:", e);
     dialogImport.value = false;
 };
 

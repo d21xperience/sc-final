@@ -142,17 +142,17 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 			return nil, fmt.Errorf("admin sudah ada untuk sekolah ini")
 		}
 
-		// Buat database
-		// 2. Buat client untuk sekolah_service
+		// ==============Inisialisasi database di sekolah service==============
+		// 1. Buat client untuk sekolah_service
 		sekolahClient, err := NewSekolahServiceClient()
 		if err != nil {
 			return nil, err
 		}
-		// 3. Panggil sekolah_service untuk membuat schema database sekolah
+		// 2. Panggil sekolah_service untuk membuat schema database sekolah
 		if err := sekolahClient.RegistrasiSekolah(sekolahModel); err != nil {
 			return nil, err
 		}
-		// 4. Panggil sekolah_service untuk membuat inisialiasi data sekolah
+		// 3. Panggil sekolah_service untuk membuat inisialiasi data sekolah
 		if err := sekolahClient.CreateSekolah(sekolahModel); err != nil {
 			return nil, err
 		}
@@ -161,7 +161,17 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 			log.Printf("Error registrasi admin: %v", err)
 			return nil, fmt.Errorf("gagal registrasi admin: %w", err)
 		}
-
+		// ==============Inisialisasi database di sc service==============
+		// Buat client untuk SC_service
+		scClient, err := NewSCServiceClient()
+		if err != nil {
+			return nil, err
+		}
+		// 2. Panggil sekolah_service untuk membuat schema database sekolah
+		if err := scClient.RegistrasiSekolahTenant(sekolahModel, int32(userModel.ID)); err != nil {
+			return nil, err
+		}
+		
 
 	} else if userModel.Role == "siswa" {
 		// Registrasi siswa

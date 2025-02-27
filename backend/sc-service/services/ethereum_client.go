@@ -678,3 +678,41 @@ func (e *EthereumClient) IssueDegree(ctx context.Context, contractAddress string
 
 	return txHash, nil
 }
+
+func (e *EthereumClient) IssueTranscript(
+    ctx context.Context,
+    contractAddress string,
+    degreeHash [32]byte,
+    transkrip map[string]uint8, // Mata pelajaran -> Nilai
+    privateKey string,
+    gasLimit uint64,
+) (string, error) {
+    // Load ABI
+    parsedABI, err := abi.JSON(strings.NewReader(abiJSON))
+    if err != nil {
+        return "", fmt.Errorf("error parsing ABI: %v", err)
+    }
+
+    // Convert transcript map to Solidity-compatible types
+    subjects := make([]string, 0, len(transkrip))
+    grades := make([]*big.Int, 0, len(transkrip))
+    
+    for subject, grade := range transkrip {
+        subjects = append(subjects, subject)
+        grades = append(grades, big.NewInt(int64(grade)))
+    }
+
+    // Encode data untuk fungsi issueTranscript
+    data, err := parsedABI.Pack("issueTranscript", degreeHash, subjects, grades)
+    if err != nil {
+        return "", fmt.Errorf("error packing data: %v", err)
+    }
+
+    // Kirim transaksi
+    txHash, err := SendTransactionToContract(ctx, e.client, contractAddress, data, privateKey, gasLimit)
+    if err != nil {
+        return "", fmt.Errorf("transaction failed: %v", err)
+    }
+
+    return txHash, nil
+}

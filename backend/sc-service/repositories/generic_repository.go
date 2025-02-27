@@ -75,7 +75,7 @@ func (r *GenericRepository[T]) FindAll(ctx context.Context, schemaName string, l
 func (r *GenericRepository[T]) FindAllByConditions(
 	ctx context.Context,
 	schemaName string,
-	conditions map[string]interface{}, // Parameter untuk kondisi WHERE
+	conditions map[string]any, // Parameter untuk kondisi WHERE
 	limit, offset int,
 ) ([]*T, error) {
 	var entities []*T

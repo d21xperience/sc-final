@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.accounts (
     created_at TIMESTAMPTZ NULL DEFAULT NULL,
     updated_at TIMESTAMPTZ NULL DEFAULT NULL,
     UNIQUE (address),
-    CONSTRAINT fk_accounts_network FOREIGN KEY (network_id) REFERENCES networks (id) 
+    CONSTRAINT fk_accounts_network FOREIGN KEY (network_id) REFERENCES ref.networks (id) 
         ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.contracts (
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,
     UNIQUE (contract_address),
-    CONSTRAINT fk_contracts_network FOREIGN KEY (network_id) REFERENCES networks (id) 
+    CONSTRAINT fk_contracts_network FOREIGN KEY (network_id) REFERENCES ref.networks (id) 
         ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.transactions (
         ON UPDATE NO ACTION ON DELETE NO ACTION,
     CONSTRAINT fk_transactions_contract FOREIGN KEY (contract_id) REFERENCES {{schema_name}}.contracts (id) 
         ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT fk_transactions_network FOREIGN KEY (network_id) REFERENCES networks (id) 
+    CONSTRAINT fk_transactions_network FOREIGN KEY (network_id) REFERENCES ref.networks (id) 
         ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 -- 

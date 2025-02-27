@@ -10,9 +10,9 @@ import (
 
 var ErrRecordNotFound = errors.New("record not found")
 
-func NewSekolahTenantRepository(db *gorm.DB) *GenericRepository[models.SekolahTenant] {
-	return NewGenericRepository[models.SekolahTenant](db, "sekolah_tenants")
-}
+// func NewSekolahTenantRepository(db *gorm.DB) *GenericRepository[models.SekolahTenant] {
+// 	return NewGenericRepository[models.SekolahTenant](db, "sekolah_tenants")
+// }
 
 type SekolahTenantRepository interface {
 	Save(sekolahTenant *models.SekolahTenant) error

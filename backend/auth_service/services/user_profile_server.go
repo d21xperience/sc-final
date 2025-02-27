@@ -32,7 +32,7 @@ func NewUserProfileServiceServer() *UserProfileServiceServer {
 // GetUserProfile - Mengambil profil pengguna berdasarkan UserID
 func (s *UserProfileServiceServer) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
 	userID := req.GetUserId()
-	profile, err := s.repo.FindByID(ctx, utils.ConvertUintToString[uint64](userID), "public", "user_id")
+	profile, err := s.repo.FindByID(ctx, utils.ConvertUintToString(userID), "public", "user_id")
 	if err != nil {
 		log.Printf("Error fetching user profile: %v", err)
 		return nil, errors.New("failed to retrieve user profile")
@@ -89,7 +89,7 @@ func (s *UserProfileServiceServer) UpdateUserProfile(ctx context.Context, req *p
 		return nil, errors.New("invalid request: user profile is nil")
 	}
 
-	profile, err := s.repo.FindByID(ctx, utils.ConvertUintToString[uint64](uint64(req.UserId)), "public", "profile")
+	profile, err := s.repo.FindByID(ctx, utils.ConvertUintToString(uint64(req.UserId)), "public", "profile")
 	if err != nil {
 		log.Printf("Error fetching user profile: %v", err)
 		return nil, errors.New("user profile not found")
@@ -109,7 +109,7 @@ func (s *UserProfileServiceServer) UpdateUserProfile(ctx context.Context, req *p
 	profile.NamaIbu = req.UserProfile.NamaIbu
 
 	// Simpan perubahan ke database
-	err = s.repo.Update(ctx, profile, "public", "user_id", utils.ConvertUintToString[uint64](profile.User.ID))
+	err = s.repo.Update(ctx, profile, "public", "user_id", utils.ConvertUintToString(profile.User.ID))
 	if err != nil {
 		log.Printf("Error updating user profile: %v", err)
 		return nil, errors.New("failed to update user profile")

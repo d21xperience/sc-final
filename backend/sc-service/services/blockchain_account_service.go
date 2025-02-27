@@ -49,8 +49,6 @@ func (s *BlockchainAccountService) CreateBlockchainAccount(ctx context.Context, 
 		return nil, errors.New("schemaname tidak boleh kosong")
 	}
 
-	// GetOrCreate(schemaname)
-	// GetOrCreate(schemaname)
 	var adminSekolah = AdminSekolah{
 		SekolahId:       req.Admin.SekolahId,
 		UserId:          req.Admin.UserId,

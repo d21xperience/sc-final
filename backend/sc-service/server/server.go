@@ -100,7 +100,6 @@ func StartServer() {
 		if err := httpListener.Close(); err != nil {
 			log.Printf("Error while closing HTTP listener: %v", err)
 		}
-
 		// Batalkan context utama agar semua operasi berhenti
 		cancel()
 	}()

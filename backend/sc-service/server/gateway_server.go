@@ -27,4 +27,8 @@ func RunHTTPGateway(ctx context.Context, mux *runtime.ServeMux, grpcServerEndpoi
 	if err != nil {
 		log.Fatalf("Failed to register BlockcahainAccount on HTTP gateway: %v", err)
 	}
+	err = pb.RegisterTenantServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register Tenant  on HTTP gateway: %v", err)
+	}
 }

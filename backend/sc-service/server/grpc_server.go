@@ -21,6 +21,7 @@ func RunGRPCServer() *grpc.Server {
 	pb.RegisterBlockchainNetworkServiceServer(grpcServer, blockchainNetworkService)
 	blockchainAccountService := services.NewBlockchainAccountService()
 	pb.RegisterBlockchainAccountServiceServer(grpcServer, blockchainAccountService)
-
+	tenantServiceServer := services.NewTenantServiceServer()
+	pb.RegisterTenantServiceServer(grpcServer, tenantServiceServer)
 	return grpcServer
 }
