@@ -78,11 +78,9 @@
         <card-info title="Jumlah Siswa" date="22 - 29 May 2016" :value="totalSiswa" :percentage="33.87"
             @updateData="handleUpdate" bgColor="bg-blue-100" routePath="/admin/data-siswa"></card-info>
         <card-info title="Jumlah Guru Aktif" date="22 - 29 May 2016" :value="totalGuru" :percentage="33.87"
-            @updateData="handleUpdate" bgColor="bg-red-200"
-            routePath="/dashboard"></card-info>
+            @updateData="handleUpdate" bgColor="bg-red-200" routePath="/dashboard"></card-info>
         <card-info title="Jumlah Kelas" date="22 - 29 May 2016" :value="totalKelas" :percentage="33.87"
-            @updateData="handleUpdate" bgColor="bg-blue-100"
-            routePath="/dashboard"></card-info>
+            @updateData="handleUpdate" bgColor="bg-blue-100" routePath="/dashboard"></card-info>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-white p-6 rounded-lg shadow-md">
@@ -253,13 +251,14 @@ import router from '@/router';
 import Chart from 'primevue/chart';
 
 import { ref, onMounted } from "vue";
-import { useStore } from "vuex";
 import CardInfo from '@/components/CardInfo.vue';
 
+import { useStore } from "vuex";
 const store = useStore();
 onMounted(() => {
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();
+    fetchCountSiswa()
 });
 
 const chartData = ref();
@@ -320,7 +319,15 @@ const totalBlocks = ref(10215845);
 const totalSiswa = ref(800);
 const totalGuru = ref(50);
 const totalKelas = ref(28);
+const fetchCountSiswa = async () => {
+    let payload = {
+        schemaname: "tabel_D4DA6B98FCFD71C58F5A",
+        semester_id: "20241"
+    }
+    const resp = await store.dispatch("sekolahService/fetchSiswaCount", payload)
+    console.log(resp)
 
+}
 const handleUpdate = (newValue) => {
     totalBlocks.value = newValue;
 };

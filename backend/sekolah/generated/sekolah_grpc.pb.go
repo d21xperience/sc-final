@@ -3640,3 +3640,189 @@ var DownloadService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "sekolah.proto",
 }
+
+const (
+	DashboardService_GetCountSiswa_FullMethodName = "/sekolah.DashboardService/GetCountSiswa"
+	DashboardService_GetCountGuru_FullMethodName  = "/sekolah.DashboardService/GetCountGuru"
+	DashboardService_GetCountKelas_FullMethodName = "/sekolah.DashboardService/GetCountKelas"
+)
+
+// DashboardServiceClient is the client API for DashboardService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// =========================================
+// =============DASHBOARD SERVICE============
+// =========================================
+type DashboardServiceClient interface {
+	GetCountSiswa(ctx context.Context, in *GetCountSiswaRequest, opts ...grpc.CallOption) (*GetCountSiswaResponse, error)
+	GetCountGuru(ctx context.Context, in *GetCountGuruRequest, opts ...grpc.CallOption) (*GetCountGuruResponse, error)
+	GetCountKelas(ctx context.Context, in *GetCountKelasRequest, opts ...grpc.CallOption) (*GetCountKelasResponse, error)
+}
+
+type dashboardServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewDashboardServiceClient(cc grpc.ClientConnInterface) DashboardServiceClient {
+	return &dashboardServiceClient{cc}
+}
+
+func (c *dashboardServiceClient) GetCountSiswa(ctx context.Context, in *GetCountSiswaRequest, opts ...grpc.CallOption) (*GetCountSiswaResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCountSiswaResponse)
+	err := c.cc.Invoke(ctx, DashboardService_GetCountSiswa_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dashboardServiceClient) GetCountGuru(ctx context.Context, in *GetCountGuruRequest, opts ...grpc.CallOption) (*GetCountGuruResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCountGuruResponse)
+	err := c.cc.Invoke(ctx, DashboardService_GetCountGuru_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dashboardServiceClient) GetCountKelas(ctx context.Context, in *GetCountKelasRequest, opts ...grpc.CallOption) (*GetCountKelasResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCountKelasResponse)
+	err := c.cc.Invoke(ctx, DashboardService_GetCountKelas_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DashboardServiceServer is the server API for DashboardService service.
+// All implementations must embed UnimplementedDashboardServiceServer
+// for forward compatibility.
+//
+// =========================================
+// =============DASHBOARD SERVICE============
+// =========================================
+type DashboardServiceServer interface {
+	GetCountSiswa(context.Context, *GetCountSiswaRequest) (*GetCountSiswaResponse, error)
+	GetCountGuru(context.Context, *GetCountGuruRequest) (*GetCountGuruResponse, error)
+	GetCountKelas(context.Context, *GetCountKelasRequest) (*GetCountKelasResponse, error)
+	mustEmbedUnimplementedDashboardServiceServer()
+}
+
+// UnimplementedDashboardServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedDashboardServiceServer struct{}
+
+func (UnimplementedDashboardServiceServer) GetCountSiswa(context.Context, *GetCountSiswaRequest) (*GetCountSiswaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCountSiswa not implemented")
+}
+func (UnimplementedDashboardServiceServer) GetCountGuru(context.Context, *GetCountGuruRequest) (*GetCountGuruResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCountGuru not implemented")
+}
+func (UnimplementedDashboardServiceServer) GetCountKelas(context.Context, *GetCountKelasRequest) (*GetCountKelasResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCountKelas not implemented")
+}
+func (UnimplementedDashboardServiceServer) mustEmbedUnimplementedDashboardServiceServer() {}
+func (UnimplementedDashboardServiceServer) testEmbeddedByValue()                          {}
+
+// UnsafeDashboardServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DashboardServiceServer will
+// result in compilation errors.
+type UnsafeDashboardServiceServer interface {
+	mustEmbedUnimplementedDashboardServiceServer()
+}
+
+func RegisterDashboardServiceServer(s grpc.ServiceRegistrar, srv DashboardServiceServer) {
+	// If the following call pancis, it indicates UnimplementedDashboardServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&DashboardService_ServiceDesc, srv)
+}
+
+func _DashboardService_GetCountSiswa_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCountSiswaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardServiceServer).GetCountSiswa(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DashboardService_GetCountSiswa_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardServiceServer).GetCountSiswa(ctx, req.(*GetCountSiswaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DashboardService_GetCountGuru_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCountGuruRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardServiceServer).GetCountGuru(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DashboardService_GetCountGuru_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardServiceServer).GetCountGuru(ctx, req.(*GetCountGuruRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DashboardService_GetCountKelas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCountKelasRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardServiceServer).GetCountKelas(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DashboardService_GetCountKelas_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardServiceServer).GetCountKelas(ctx, req.(*GetCountKelasRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// DashboardService_ServiceDesc is the grpc.ServiceDesc for DashboardService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var DashboardService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sekolah.DashboardService",
+	HandlerType: (*DashboardServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetCountSiswa",
+			Handler:    _DashboardService_GetCountSiswa_Handler,
+		},
+		{
+			MethodName: "GetCountGuru",
+			Handler:    _DashboardService_GetCountGuru_Handler,
+		},
+		{
+			MethodName: "GetCountKelas",
+			Handler:    _DashboardService_GetCountKelas_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sekolah.proto",
+}

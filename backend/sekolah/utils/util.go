@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 	"time"
 
@@ -105,4 +106,21 @@ func StringToTime[T ~string](str T, layout string) (time.Time, error) {
 // Function to convert time.Time to string (Tidak perlu generic)
 func TimeToString(t time.Time, layout string) string {
 	return t.Format(layout)
+}
+
+// Fungsi generic untuk memastikan semua pointer string dalam struct tidak nil
+func HandleNilPointers[T any](data *T) {
+	val := reflect.ValueOf(data).Elem()
+
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
+
+		// Cek apakah field adalah pointer ke string (*string)
+		if field.Kind() == reflect.Ptr && field.Type().Elem().Kind() == reflect.String {
+			if field.IsNil() {
+				emptyStr := ""
+				field.Set(reflect.ValueOf(&emptyStr)) // Set pointer ke string kosong
+			}
+		}
+	}
 }

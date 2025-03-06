@@ -45,5 +45,9 @@ func RunGRPCServer() *grpc.Server {
 	ptkTerdaftarService := services.NewPTKTerdaftarServiceServer()
 	pb.RegisterPTKTerdaftarServiceServer(grpcServer, ptkTerdaftarService)
 
+	// REGISTER DASHBOARD SERVICE
+	dashboardService := services.NewDashboardServiceServer()
+	pb.RegisterDashboardServiceServer(grpcServer, dashboardService)
+
 	return grpcServer
 }

@@ -32,7 +32,7 @@ const resolver = ref(zodResolver(
 
 const isLoading = ref(false)
 const isError = ref(false)
-const errorMessage = ref(null)
+const errorMessage = ref("")
 // const onFormSubmit = async ({ valid, values }) => {
 //     if (valid) {
 //         isLoading.value = true
@@ -61,14 +61,14 @@ const onFormSubmit = async ({ valid, values }) => {
 
     isLoading.value = true;
     isError.value = false; // Reset error state
-
+    // console.log('Before try block');
     try {
+        // console.log('Inside try block');
         const response = await store.dispatch('authService/login', {
             username: values.username,
             password: values.password
         });
-        // console.log(response)
-        // if (response?.success) {
+        // console.log('Response:', response);
         if (response) {
             await nextTick(); // Pastikan state sudah diperbarui sebelum redirect
             router.push({ name: 'admin' });
@@ -77,12 +77,15 @@ const onFormSubmit = async ({ valid, values }) => {
             errorMessage.value = response?.message || 'Invalid login credentials';
         }
     } catch (error) {
-        console.error('Login error:', error);
+        // console.error('Catch block:', error);
         isError.value = true;
-        errorMessage.value = 'Something went wrong. Please try again.';
+        console.log(error)
+        errorMessage.value = error
     } finally {
-        isLoading.value = false;
+        // console.log('Finally block executed');
+        isLoading.value = false
     }
+    // console.log('After try block');
 };
 
 </script>
@@ -215,19 +218,11 @@ const onFormSubmit = async ({ valid, values }) => {
                 <!-- <ProgressSpinner /> -->
                 <ProgressSpinner style="width: 100px; height: 100px" strokeWidth="8" fill="transparent"
                     animationDuration=".5s" aria-label="Custom ProgressSpinner" />
-
-                <!-- <div class="flex items-center gap-4">
-                                <Button label="Cancel" @click="closeCallback" text
-                                    class="!p-4 w-full !text-primary-50 !border !border-white/30 hover:!bg-white/10"></Button>
-                                <Button label="Sign-In" @click="closeCallback" text
-                                    class="!p-4 w-full !text-primary-50 !border !border-white/30 hover:!bg-white/10"></Button>
-                            </div> -->
             </div>
         </template>
         Sedang mengambil data
     </Dialog>
-    <Dialog v-model:visible="isError" :style="{ width: '450px' }" header="Warning">
-        <div>Terjadi Kesalahan!</div>
-        <div>{{ errorMessage.value }}</div>
+    <Dialog v-model:visible="isError" :style="{ width: '450px' }" header="Terjadi Kesalahan!">
+        <div>{{ errorMessage }}</div>
     </Dialog>
 </template>

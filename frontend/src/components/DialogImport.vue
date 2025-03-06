@@ -7,21 +7,38 @@ import Button from "primevue/button";
 // ============toast============
 import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
+import DialogLoading from "./DialogLoading.vue";
+import { isEmpty } from "lodash";
+import { isError } from "lodash";
 const toast = useToast();
+
+const isLoading = ref(false);
+
+const baseUrl = "http://localhost:8183/api/v1/ss/download/template"; // Disimpan di child
+const templateUrl = computed(() => {
+    return `${baseUrl}?template_type=${props.templateType}&schemaname=${props.schemaName}&semesterId=${selectedSemester.value?.semesterId}`;
+});
+const selectedSemester = ref({})
+
+
 // ========================
 // Props dari parent
 const props = defineProps({
     visible: Boolean,
     semester: Array,
-    selectedSemester: Object,
-    downloadUrl: {
-        type: String,
-        required: true
-    },
-    fileName: {
-        type: String,
-        default: "template.xlsx"
-    }
+    // selectedSemester: Object,
+    templateType: String,
+    schemaName: String,
+    // semesterId: String,
+
+    // downloadUrl: {
+    //     type: String,
+    //     required: true
+    // },
+    // fileName: {
+    //     type: String,
+    //     // default: "template.xlsx"
+    // }
 });
 
 // Emit event ke parent
@@ -53,7 +70,7 @@ const saveData = async () => {
     // console.log(uploadedFiles.value.files.length)
     const formData = new FormData();
     formData.append("file", file);
-
+    isLoading.value = false;
     try {
         const response = await fetch(uploadUrl, {
             method: "POST",
@@ -76,6 +93,8 @@ const saveData = async () => {
     } catch (error) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Gagal mengunggah file', life: 3000 });
         console.error("Upload error:", error);
+    } finally {
+        isLoading.value = false;
     }
     // Reset input file setelah upload selesai
     if (uploadedFiles.value) {
@@ -116,12 +135,33 @@ const onUpload = async () => {
 
 };
 // Function untuk mengunduh template
+const isErr = ref(false)
 const downloadTemplate = async () => {
+    if (isEmpty(selectedSemester.value)) {
+        // alert("Pilih tahun pelajaran")
+        isErr.value = true
+        return
+    }
     try {
-        const response = await fetch(props.downloadUrl);
+        const response = await fetch(templateUrl.value, {
+            method: "GET",
+            headers: {
+                "Accept": "application/octet-stream",
+            },
+        });
 
         if (!response.ok) {
             throw new Error("Gagal mengunduh file");
+        }
+
+        // Coba ambil nama file dari header Content-Disposition
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "downloaded_file.xlsx"; // Default jika tidak ditemukan
+        if (contentDisposition) {
+            const match = contentDisposition.match(/filename="([^"]+)"/);
+            if (match && match[1]) {
+                fileName = match[1];
+            }
         }
 
         const blob = await response.blob();
@@ -129,7 +169,7 @@ const downloadTemplate = async () => {
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = props.fileName;
+        a.download = fileName;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -139,6 +179,10 @@ const downloadTemplate = async () => {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Terjadi kesalahan saat mengunduh file', life: 3000 });
     }
 };
+
+
+
+
 </script>
 
 <template>
@@ -149,7 +193,7 @@ const downloadTemplate = async () => {
                 <label class="block text-sm font-medium text-gray-700">
                     Tahun Pelajaran <span class="text-red-500">*</span>
                 </label>
-                <Select v-model="props.selectedSemester" :options="props.semester" optionLabel="namaSemester"
+                <Select v-model="selectedSemester" :options="props.semester" optionLabel="namaSemester"
                     placeholder="Pilih Tahun Pelajaran" class="w-full mr-2" />
             </div>
 
@@ -162,7 +206,7 @@ const downloadTemplate = async () => {
                         :customUpload="true" @before-upload="onBeforeUpload" @upload="onUpload" severity="secondary" />
                 </div>
                 <p class="mt-2 text-sm text-gray-500">
-                    Unduh Template Import data Penerima Ijazah
+                    Unduh Template Import data
                     <a href="#" @click.prevent="downloadTemplate"
                         class="text-indigo-600 hover:text-indigo-500">Disini</a>
                 </p>
@@ -173,5 +217,12 @@ const downloadTemplate = async () => {
             <Button label="Batal" icon="pi pi-times" text @click="closeDialog" />
             <Button label="Simpan" icon="pi pi-check" text @click="saveData" />
         </template>
+    </Dialog>
+
+    <DialogLoading v-model="isLoading"> Memuat data, harap tunggu... </DialogLoading>
+    <Dialog v-model:visible="isErr" header="Warning!">
+        <div>
+            Pilih <b>Tahun Pelajaran</b> terlebih dahulu!
+        </div>
     </Dialog>
 </template>

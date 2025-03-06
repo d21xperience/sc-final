@@ -128,6 +128,7 @@ func (r *GenericRepository[T]) Delete(ctx context.Context, id string, schemaName
 	})
 }
 func (r *GenericRepository[T]) SaveMany(ctx context.Context, schemaName string, entities []*T, batchSize int) error {
+	fmt.Println("eksekusi di savemany")
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		// Set schema
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
@@ -334,4 +335,23 @@ func (r *GenericRepository[T]) FindWithRelations(
 	}
 
 	return results, nil
+}
+
+func (r *GenericRepository[T]) CountRows(ctx context.Context, schemaName, semesterIdColumn, semesterId string) (int64, error) {
+	var count int64
+
+	// 🔥 Set schema terlebih dahulu
+	if err := r.db.WithContext(ctx).Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+		return 0, fmt.Errorf("failed to set schema: %w", err)
+	}
+
+	// 🔥 Query COUNT dengan filter berdasarkan `semester_id`
+	if err := r.db.WithContext(ctx).
+		Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
+		Where(fmt.Sprintf("%s = ?", semesterIdColumn), semesterId).
+		Count(&count).Error; err != nil {
+		return 0, fmt.Errorf("failed to count rows in schema %s with semester_id %s: %w", schemaName, semesterId, err)
+	}
+
+	return count, nil
 }

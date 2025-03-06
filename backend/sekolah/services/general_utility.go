@@ -1,12 +1,22 @@
 package services
 
 import (
+	"context"
 	"fmt"
 	"sekolah/models"
+	"sekolah/repositories"
 	"time"
 
 	"github.com/xuri/excelize/v2"
+	"gorm.io/gorm"
 )
+
+type ParamTemplate struct {
+	templateType string
+	schemaname   string
+	filePath     string
+	semesterId   string
+}
 
 // // RequestRequirement digunakan untuk menyimpan dependensi service dan protobuf
 // type RequestRequirement[S any, P any] struct {
@@ -46,13 +56,52 @@ func ConvertModelToPB[T any, U any](model *T, converter func(*T) *U) *U {
 	return converter(model)
 }
 
-// Fungsi generik untuk membaca file Excel dan memproses data berdasarkan jenis
-func UploadDataSekolah[T any](filePath, uploadType string) ([]T, error) {
-	f, err := excelize.OpenFile(filePath)
+// Fungsi untuk membaca file Excel dan memproses data berdasarkan jenis
+func BacaDataExcel(param ParamTemplate) ([][]string, error) {
+	f, err := excelize.OpenFile(param.filePath)
 	if err != nil {
 		return nil, fmt.Errorf("gagal membaca file Excel: %w", err)
 	}
 	defer f.Close()
+
+	ret, err := f.GetDocProps()
+	if err != nil {
+		return nil, err
+	}
+	if ret.Keywords != param.schemaname || ret.ContentStatus != param.templateType {
+		return nil, err
+	}
+
+	rows, err := f.GetRows(f.GetSheetName(0))
+	if err != nil {
+		return nil, fmt.Errorf("gagal mengambil data dari sheet: %w", err)
+	}
+
+	if len(rows) < 2 {
+		return nil, fmt.Errorf("file Excel kosong atau tidak memiliki data yang valid")
+	}
+
+	return rows, nil
+}
+
+// Fungsi generik untuk membaca file Excel dan memproses data berdasarkan jenis
+func UploadDataSekolah[T any](param ParamTemplate) ([]T, error) {
+	f, err := excelize.OpenFile(param.filePath)
+	if err != nil {
+		return nil, fmt.Errorf("gagal membaca file Excel: %w", err)
+	}
+	defer f.Close()
+
+	ret, err := f.GetDocProps()
+	if err != nil {
+		return nil, err
+	}
+	// ContentStatus: param.templateType,
+	// Category:      param.semesterId,
+	// Keywords:      param.schemaname,
+	if ret.Keywords != param.schemaname || ret.ContentStatus != param.templateType {
+		return nil, err
+	}
 
 	rows, err := f.GetRows(f.GetSheetName(0))
 	if err != nil {
@@ -64,7 +113,7 @@ func UploadDataSekolah[T any](filePath, uploadType string) ([]T, error) {
 	}
 
 	// Parsing data berdasarkan uploadType
-	switch uploadType {
+	switch param.templateType {
 	case "siswa":
 		if v, ok := any(parseSiswa(rows)).([]T); ok {
 			return v, nil
@@ -77,25 +126,29 @@ func UploadDataSekolah[T any](filePath, uploadType string) ([]T, error) {
 		if v, ok := any(parseKelas(rows)).([]T); ok {
 			return v, nil
 		}
-	case "nilaiAkhir":
+	case "nilai_akhir":
+		if v, ok := any(parseNilaiAkhir(rows)).([]T); ok {
+			return v, nil
+		}
+	case "ijazah":
 		if v, ok := any(parseNilaiAkhir(rows)).([]T); ok {
 			return v, nil
 		}
 	default:
-		return nil, fmt.Errorf("jenis unggahan tidak dikenali: %s", uploadType)
+		return nil, fmt.Errorf("jenis unggahan tidak dikenali: %s", param.templateType)
 	}
 
 	return nil, fmt.Errorf("gagal memproses data dengan tipe yang diberikan")
 }
 
 // Fungsi parsing untuk siswa
-func parseSiswa(rows [][]string) []*models.PesertaDidik {
-	var siswaList []*models.PesertaDidik
+func parseSiswa(rows [][]string) []models.PesertaDidik {
+	var siswaList []models.PesertaDidik
 	for _, row := range rows[1:] {
 		if len(row) < 3 {
 			continue
 		}
-		siswa := &models.PesertaDidik{
+		siswa := models.PesertaDidik{
 			PesertaDidikId:  row[0],
 			Nis:             row[1],
 			Nisn:            row[2],
@@ -167,96 +220,203 @@ func parseNilaiAkhir(rows [][]string) []*models.NilaiAkhir {
 }
 
 // GenerateTemplate membuat template XLSX untuk berbagai jenis data
-func GenerateTemplate(templateType, filePath string) error {
+func GenerateTemplate(param ParamTemplate, db *gorm.DB) error {
 	f := excelize.NewFile()
 	sheetName := "Template"
 	f.SetSheetName("Sheet1", sheetName)
 
 	// Tentukan header berdasarkan jenis template
 	var headers []string
+	templates := map[string][]string{
+		"siswa":           {"peserta_didik_id(uuid)", "nm_kelas","nis", "nisn", "nm_siswa", "tempat_lahir", "tanggal_lahir(yyyy-mm-dd)", "jenis_kelamin(L/P)", "agama", "alamat_siswa", "telepon_siswa", "diterima_tanggal(yyyy-mm-dd)", "nm_ayah", "nm_ibu", "pekerjaan_ayah", "pekerjaan_ibu", "nm_wali", "semester_id", "rombongan_belajar_id"},
+		"siswa_pelengkap": {"peserta_didik_id(uuid)", "nm_siswa", "semester_id", "status_dalam_kel", "anak_ke", "sekolah_asal", "diterima_kelas", "alamat_ortu", "telepon_ortu", "alamat_wali", "telepon_wali", "foto_siswa"},
+		"nilai_akhir":     {"peserta_didik_id(uuid)", "nm_siswa", "semester_id"},
+		"ijazah":          {"peserta_didik_id(uuid)", "nm_siswa", "semester_id", "nis", "nomor_ijazah", "tahun_lulus"},
+		"kelas":           {"rombongan_belajar_id(uuid)", "nm_siswa", "semester_id", "sekolah_id", "semester_id", "jurusan_id", "ptk_id", "nm_kelas", "tingkat_pendidikan_id", "jenis_rombel", "nama_jurusan_sp", "jurusan_sp_id", "kurikulum_id"},
+		"guru":            {"ptk_id(uuid)", "nama", "tahun_ajaran_id", "nip", "jenis_ptk_id", "jenis_kelamin", "tempat_lahir", "tanggal_lahir", "nuptk", "alamat_jalan", "status_keaktifan_id"},
+	}
+	headers, exists := templates[param.templateType]
+	if !exists {
+		return fmt.Errorf("template type %s tidak ditemukan", param.templateType)
+	}
 
-	switch templateType {
-	case "siswa":
-		headers = []string{"peserta_didik_id", "nis", "nisn", "nm_siswa", "tempat_lahir", "tanggal_lahir", "jenis_kelamin", "agama", "alamat_siswa", "telepon_siswa", "diterima_tanggal", "nm_ayah", "nm_ibu", "pekerjaan_ayah", "pekerjaan_ibu", "nm_wali"}
-	case "siswa_pelengkap":
-		headers = []string{"pelengkap_siswa_id", "peserta_didik_id", "status_dalam_kel", "anak_ke", "sekolah_asal", "diterima_kelas", "alamat_ortu", "telepon_ortu", "alamat_wali", "telepon_wali", "foto_siswa"}
+	for col, header := range headers {
+		cell := fmt.Sprintf("%c1", 'A'+col)
+		f.SetCellValue(sheetName, cell, header)
+	}
+	err := f.SetDocProps(&excelize.DocProperties{
+		ContentStatus: param.templateType,
+		Category:      param.semesterId,
+		Keywords:      param.schemaname,
+	})
+	if err != nil {
+		return fmt.Errorf("gagal membuat properties %s: %w", param.templateType, err)
+	}
+
+	// Jika templatetype adalah siswa
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	switch param.templateType {
+
 	case "nilai_akhir":
-		headers = []string{"NIS", "NamaSiswa", "MataPelajaran", "NilaiAkhir"}
-	case "guru":
-		headers = []string{"ptk_id", "nama", "nip", "jenis_ptk_id", "jenis_kelamin", "tempat_lahir", "tanggal_lahir", "nuptk", "alamat_jalan", "status_keaktifan_id"}
-	case "kelas":
-		headers = []string{"rombongan_belajar_id", "sekolah_id", "semester_id", "jurusan_id", "ptk_id", "nm_kelas", "tingkat_pendidikan_id", "jenis_rombel", "nama_jurusan_sp", "jurusan_sp_id", "kurikulum_id"}
+		err := templateNilaiAkhir(ctx, db, f, param, sheetName)
+		if err != nil {
+			return err
+		}
 	case "ijazah":
-		headers = []string{"NIS", "NamaSiswa", "NomorIjazah", "TahunLulus"}
-	default:
-		return fmt.Errorf("jenis template tidak dikenali: %s", templateType)
+		err := templateIjazah(ctx, db, f, param, sheetName)
+		if err != nil {
+			return err
+		}
+		// default:
+		// 	return fmt.Errorf("template type %s tidak ditemukan", param.templateType)
 	}
-
-	// Tulis header ke Excel
-	for i, header := range headers {
-		col := string(rune('A'+i)) + "1"
-		f.SetCellValue(sheetName, col, header)
-	}
-	f.SetCellValue(sheetName, "Y1", "Timestamp")
-	f.SetCellValue(sheetName, "Y2", time.Now().Format("2006-01-02 15:04:05")) // Isi dengan waktu saat ini
-
-	f.SetCellValue(sheetName, "Z1", "UserID")
-	f.SetCellValue(sheetName, "Z2", "123456") // Bisa diisi dengan ID pengguna yang mengunduh template
-
-	f.SetColVisible(sheetName, "Y", false) // Sembunyikan kolom Timestamp
-	f.SetColVisible(sheetName, "Z", false) // Sembunyikan kolom UserID
-
-	sampleData := []interface{}{"12345", "987654321", "Budi Santoso", "Jakarta", "2005-08-10", "Laki-laki", "Islam"}
-	for i, data := range sampleData {
-		col := string(rune('A'+i)) + "2"
-		f.SetCellValue(sheetName, col, data)
-	}
-
-	// Buat validasi dropdown untuk JenisKelamin
-	dv := excelize.NewDataValidation(true)
-	dv.Sqref = "F2:F1000" // Rentang sel yang divalidasi
-	dv.SetDropList([]string{"L", "P"})
-
-	if err := f.AddDataValidation(sheetName, dv); err != nil {
-		return fmt.Errorf("gagal menambahkan validasi: %w", err)
-	}
-
-	// Validasi NilaiAkhir hanya angka 0-100
-	dvNilai := excelize.NewDataValidation(true)
-	dvNilai.Sqref = "D2:D100"
-	// dvNilai.SetWholeNumber(0, 100)
-
-	if err := f.AddDataValidation(sheetName, dvNilai); err != nil {
-		return fmt.Errorf("gagal menambahkan validasi angka: %w", err)
-	}
-
-	// err := f.ProtectSheet(sheetName, &excelize.SheetProtectionOptions{
-	// 	FormatCells:      false, // Tidak bisa ubah format
-	// 	FormatColumns:    false, // Tidak bisa ubah kolom
-	// 	FormatRows:       false, // Tidak bisa ubah baris
-	// 	InsertRows:       true,  // Bisa menambah baris baru
-	// 	InsertColumns:    false, // Tidak bisa menambah kolom baru
-	// 	InsertHyperlinks: false,
-	// 	DeleteRows:       false, // Tidak bisa hapus baris
-	// 	DeleteColumns:    false, // Tidak bisa hapus kolom
-	// 	// SelectLockedCells:   false,
-	// 	// SelectUnlockedCells: true,
-	// })
-	// if err != nil {
-	// 	return err
-	// }
-
-	f.NewSheet("Panduan")
-	f.SetCellValue("Panduan", "A1", "Panduan Pengisian Template")
-	f.SetCellValue("Panduan", "A2", "1. Isi semua kolom sesuai dengan contoh yang diberikan.")
-	f.SetCellValue("Panduan", "A3", "2. Gunakan dropdown untuk memilih data yang tersedia.")
-	f.SetCellValue("Panduan", "A4", "3. Pastikan semua data terisi sebelum mengunggah ke sistem.")
 
 	// Simpan ke file
-	err := f.SaveAs(filePath)
+	err = f.SaveAs(param.filePath)
 	if err != nil {
-		return fmt.Errorf("gagal membuat template %s: %w", templateType, err)
+		return fmt.Errorf("gagal membuat template %s: %w", param.templateType, err)
 	}
 
 	return nil
 }
+
+func templateNilaiAkhir(ctx context.Context, db *gorm.DB, f *excelize.File, param ParamTemplate, sheetName string) error {
+	// TODO: Implementasi template nilai akhir
+	// sheetName := "Template"
+	f.SetSheetName("Sheet1", sheetName)
+	repoAnggotaKelas := repositories.NewRombelAnggotaRepository(db)
+	joins := []string{
+		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
+		// "JOIN ref.jurusan ON tabel_kelas.jurusan_id = ref.jurusan.jurusan_id",
+	}
+	preloads := []string{"PesertaDidik"}
+	var conditions = map[string]interface{}{
+		"semester_id": param.semesterId,
+	}
+	groupByColumns := []string{"tabel_anggotakelas.anggota_rombel_id"} // Hindari duplikasi
+	anggotaKelasModel, err := repoAnggotaKelas.FindWithPreloadAndJoins(ctx, param.schemaname, joins, preloads, conditions, groupByColumns)
+	if err != nil {
+		return err
+	}
+
+	for row, pd := range anggotaKelasModel {
+		f.SetCellValue(sheetName, fmt.Sprintf("A%d", row+2), pd.PesertaDidik.PesertaDidikId)
+		f.SetCellValue(sheetName, fmt.Sprintf("B%d", row+2), pd.PesertaDidik.NmSiswa)
+		f.SetCellValue(sheetName, fmt.Sprintf("C%d", row+2), pd.SemesterId)
+	}
+	f.SetColVisible(sheetName, "A", false)
+	return nil
+}
+func templateIjazah(ctx context.Context, db *gorm.DB, f *excelize.File, param ParamTemplate, sheetName string) error {
+	// TODO: Implementasi template nilai akhir
+	// sheetName := "Template"
+	f.SetSheetName("Sheet1", sheetName)
+	repoAnggotaKelas := repositories.NewRombelAnggotaRepository(db)
+	joins := []string{
+		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
+		// "JOIN ref.jurusan ON tabel_kelas.jurusan_id = ref.jurusan.jurusan_id",
+	}
+	preloads := []string{"PesertaDidik"}
+	var conditions = map[string]interface{}{
+		"semester_id": param.semesterId,
+	}
+	groupByColumns := []string{"tabel_anggotakelas.anggota_rombel_id"} // Hindari duplikasi
+	anggotaKelasModel, err := repoAnggotaKelas.FindWithPreloadAndJoins(ctx, param.schemaname, joins, preloads, conditions, groupByColumns)
+	if err != nil {
+		return err
+	}
+
+	for row, pd := range anggotaKelasModel {
+		f.SetCellValue(sheetName, fmt.Sprintf("A%d", row+2), pd.PesertaDidik.PesertaDidikId)
+		f.SetCellValue(sheetName, fmt.Sprintf("B%d", row+2), pd.PesertaDidik.NmSiswa)
+		f.SetCellValue(sheetName, fmt.Sprintf("C%d", row+2), pd.SemesterId)
+	}
+	f.SetColVisible(sheetName, "A", false)
+	return nil
+}
+
+// ============================
+// s header ke Excel
+// for i, header := range headers {
+// 	col := string(rune('A'+i)) + "1"
+// 	f.SetCellValue(sheetName, col, header)
+// }
+// f.SetCellValue(sheetName, "Y1", "Timestamp")
+// f.SetCellValue(sheetName, "Y2", time.Now().Format("2006-01-02 15:04:05")) // Isi dengan waktu saat ini
+
+// f.SetCellValue(sheetName, "Z1", "UserID")
+// f.SetCellValue(sheetName, "Z2", "123456") // Bisa diisi dengan ID pengguna yang mengunduh template
+
+// f.SetColVisible(sheetName, "Y", false) // Sembunyikan kolom Timestamp
+// f.SetColVisible(sheetName, "Z", false) // Sembunyikan kolom UserID
+
+// sampleData := []interface{}{"12345", "987654321", "Budi Santoso", "Jakarta", "2005-08-10", "Laki-laki", "Islam"}
+// for i, data := range sampleData {
+// 	col := string(rune('A'+i)) + "2"
+// 	f.SetCellValue(sheetName, col, data)
+// }
+
+// // Buat validasi dropdown untuk JenisKelamin
+// dv := excelize.NewDataValidation(true)
+// dv.Sqref = "F2:F1000" // Rentang sel yang divalidasi
+// dv.SetDropList([]string{"L", "P"})
+
+// if err := f.AddDataValidation(sheetName, dv); err != nil {
+// 	return fmt.Errorf("gagal menambahkan validasi: %w", err)
+// }
+
+// // Validasi NilaiAkhir hanya angka 0-100
+// dvNilai := excelize.NewDataValidation(true)
+// dvNilai.Sqref = "D2:D100"
+// // dvNilai.SetWholeNumber(0, 100)
+
+// if err := f.AddDataValidation(sheetName, dvNilai); err != nil {
+// 	return fmt.Errorf("gagal menambahkan validasi angka: %w", err)
+// }
+
+// err := f.ProtectSheet(sheetName, &excelize.SheetProtectionOptions{
+// 	FormatCells:      false, // Tidak bisa ubah format
+// 	FormatColumns:    false, // Tidak bisa ubah kolom
+// 	FormatRows:       false, // Tidak bisa ubah baris
+// 	InsertRows:       true,  // Bisa menambah baris baru
+// 	InsertColumns:    false, // Tidak bisa menambah kolom baru
+// 	InsertHyperlinks: false,
+// 	DeleteRows:       false, // Tidak bisa hapus baris
+// 	DeleteColumns:    false, // Tidak bisa hapus kolom
+// 	// SelectLockedCells:   false,
+// 	// SelectUnlockedCells: true,
+// })
+// if err != nil {
+// 	return err
+// }
+
+// f.NewSheet("Panduan")
+// f.SetCellValue("Panduan", "A1", "Panduan Pengisian Template")
+// f.SetCellValue("Panduan", "A2", "1. Isi semua kolom sesuai dengan contoh yang diberikan.")
+// f.SetCellValue("Panduan", "A3", "2. Gunakan dropdown untuk memilih data yang tersedia.")
+// f.SetCellValue("Panduan", "A4", "3. Pastikan semua data terisi sebelum mengunggah ke sistem.")
+
+// ============================
+
+// func parseData[T any](rows [][]string, parser func([]string) *T) []*T {
+// 	var dataList []*T
+
+// 	// Pastikan ada lebih dari satu baris (karena baris pertama biasanya header)
+// 	if len(rows) < 2 {
+// 		return dataList
+// 	}
+
+// 	for _, row := range rows[1:] { // Lewati header
+// 		if len(row) == 0 {
+// 			continue
+// 		}
+
+// 		item := parser(row)
+// 		if item != nil {
+// 			dataList = append(dataList, item)
+// 		}
+// 	}
+
+// 	return dataList
+// }

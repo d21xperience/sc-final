@@ -155,7 +155,7 @@
     <Dialog v-model:visible="deleteKelasDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
         <div class="flex items-center gap-4">
             <i class="pi pi-exclamation-triangle !text-3xl" />
-            <span v-if="product">Apakah kelas ini akan dihapus?</span>
+            <span v-if="product">Apakah data ini akan dihapus?</span>
         </div>
         <template #footer>
             <Button label="Tidak" icon="pi pi-times" text @click="deleteKelasDialog = false" />
@@ -351,7 +351,7 @@ const fetchData = async () => {
     try {
         let payload = {
             schema_name: "tabel_D4DA6B98FCFD71C58F5A",
-            tahun_ajaran_id: "2023"
+            tahun_ajaran_id: selectedSemester.value?.tahunAjaranId
         }
         const results = await store.dispatch("sekolahService/fetchPTK", payload)
         console.log(results)

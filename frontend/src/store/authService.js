@@ -20,7 +20,7 @@ const state = {
   refreshToken: null,
   loading: false,
   error: null,
-  schemaname: ''
+  schemaname: "",
 };
 
 const mutations = {
@@ -84,13 +84,39 @@ const actions = {
         commit("setToken", response.data.token);
         commit("setUser", response.data.user);
         commit("setUserRole", response.data.user.role);
-        return true;
+        return true; // Indikasi login berhasil
+      } else {
+        throw new Error(response.data.message || "Login gagal");
       }
     } catch (error) {
-      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
-      console.error("Login failed:", error.response ? error.response.data : error.message);
-      return error; // Menghindari mengembalikan error langsung
-      // return false; // Menghindari mengembalikan error langsung
+      let errorMessage = error.response.data.message;
+      // let errorMessage = "";
+      // console.log(error)
+      // if (error.response) {
+      //   const statusCode = error.response.status;
+      //   switch (statusCode) {
+      //     case 400:
+      //       errorMessage = "Bad request. Please check your input.";
+      //       break;
+      //     case 401:
+      //       errorMessage = "Unauthorized. Incorrect username or password.";
+      //       break;
+      //     case 500:
+      //       errorMessage = "Internal server error. Please try again later.";
+      //       break;
+      //     default:
+      //       errorMessage =
+      //         error.response.data?.message || "An unknown error occurred.";
+      //   }
+      // } else if (error.message) {
+      //   // Menangani error lainnya seperti masalah jaringan
+      //   errorMessage = error.message.includes("Network Error")
+      //     ? "Network error. Please check your connection."
+      //     : "Something went wrong. Please try again.";
+      // } else {
+      //   errorMessage = "An unexpected error occurred.";
+      // }
+      throw new Error(errorMessage);
     } finally {
       commit("SET_LOADING", false);
     }
@@ -106,7 +132,7 @@ const actions = {
   },
   async registerAdmin({ commit }, payload) {
     try {
-      console.log(payload)
+      console.log(payload);
       const response = await api.post("/auth/register", payload);
       // console.log(response);
 

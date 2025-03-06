@@ -201,6 +201,26 @@ const actions = {
       commit("SET_LOADING", false);
     }
   },
+  async fetchSiswaCount({ commit }, payload) {
+    try {
+      console.log(payload);
+      const response = await api.get(`/ss/dashboard/countsiswa`, {
+        params: {
+          schemaname: payload.schemaname,
+          semester_id: payload.semesterId,
+        },
+      });
+      console.log(response.data.anggotaKelas);
+      // commit("SET_TABELSISWA", response.data.anggotaKelas);
+      return response.data; // Mengembalikan data sekolah
+    } catch (error) {
+      // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal membuat semester:", error);
+      return null;
+    } finally {
+      // commit("SET_LOADING", false);
+    }
+  },
 };
 
 const getters = {

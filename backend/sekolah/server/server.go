@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sekolah/services"
 	"sync"
 	"syscall"
 	"time"
@@ -49,6 +50,8 @@ func StartServer() {
 	// HTTP Gateway
 	// =========================================
 	// Inisialisasi mux untuk HTTP Gateway
+	// Inisialisasi UploadServiceServer sebelum dipakai
+	UploadService := services.NewUploadServiceServer()
 	mux := runtime.NewServeMux()
 	method, pattern := createPattern("POST", "api", "v1", "ss", "upload", "rest")
 	mux.Handle(method, pattern, func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
@@ -121,7 +124,7 @@ func corsMiddleware(h http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
-
+		w.Header().Set("Access-Control-Expose-Headers", "Content-Disposition")
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return

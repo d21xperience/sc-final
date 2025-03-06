@@ -37,3 +37,7 @@ type Ijazah struct {
 	// PesertaDidik PesertaDidik `gorm:"foreignKey:PesertaDidikID"`
 	// NilaiUjianSekolah NIlaiRerataAkhir
 }
+
+func (Ijazah) TableName() string {
+	return "ijazah"
+}

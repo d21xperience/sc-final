@@ -21,6 +21,8 @@
                             <div class="mb-2">
                                 <Toolbar>
                                     <template #start>
+                                        <Button icon="pi pi-plus" severity="success" class="mr-2" @click="openNew"
+                                            v-tooltip.bottom="'Tambah data'" />
                                         <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
                                             :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2"
                                             class="mr-2" />
@@ -211,10 +213,11 @@
 
         <!-- import data -->
         <!-- DIALOG IMPORT -->
-        <DialogImport v-model:visible="dialogImport" :semester="semester" :selectedSemester="selectedSemester"
-            @save="saveImport" @cancel="cancelImport" :downloadUrl="templateUrl" fileName="template_siswa.xlsx" />
+        <DialogImport v-model:visible="dialogImport" :semester="semester" @save="saveImport" @cancel="cancelImport"
+            template-type="siswa" :schema-name="schemaname" />
 
         <!-- end of import data -->
+        <DialogLoading v-model="isLoading"> Memuat data, harap tunggu... </DialogLoading>
 
     </div>
 </template>
@@ -244,17 +247,23 @@ import Image from 'primevue/image';
 // =====================================
 
 
-onMounted(() => {
+onMounted(async () => {
+    // isLoading.value = true
+    // await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulasi fetch
+
     fetchSemester()
     fetchSiswa()
     // DataLulusanService.getProducts().then((data) => (products.value = data));
+    // isLoading.value = false
 
 });
 // watch(selectedSemester, (newVal, oldVal) => {
 //     console.log(newVal)
 //     // fetchRombel()
 // })
+import DialogLoading from "@/components/DialogLoading.vue";
 
+const isLoading = ref(false);
 
 const dataConnected = ref(true)
 const toast = useToast();
@@ -345,7 +354,9 @@ const createId = () => {
     return id;
 }
 const exportCSV = () => {
-    dt.value.exportCSV();
+    isLoading.value = true
+    // alert("hello")
+    // dt.value.exportCSV();
 };
 const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
@@ -432,6 +443,8 @@ const fetchSemester = async () => {
     }
 }
 
+const schemaname = ref("tabel_D4DA6B98FCFD71C58F5A")
+// const 
 // ==================================
 // ==================================
 // =======Siswa=============
@@ -473,7 +486,7 @@ const cancelImport = () => {
     console.log("Import dibatalkan");
     dialogImport.value = false;
 };
-const templateUrl = ref("http://localhost:8183/api/v1/ss/download/template?template-type=siswa");
+// const templateUrl = ref("http://localhost:8183/api/v1/ss/download/template?template_type=siswa&schemaname=tabel_D4DA6B98FCFD71C58F5A&semesterId=20232");
 // ===========================================
 
 

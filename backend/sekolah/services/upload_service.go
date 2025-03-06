@@ -8,21 +8,38 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sekolah/config"
 	pb "sekolah/generated"
+	"sekolah/models"
+	"sekolah/repositories"
 	"sekolah/utils"
-	"strconv"
 	"strings"
 )
 
 // UploadService menangani penyimpanan file yang diunggah
 type UploadServiceServer struct {
 	pb.UnimplementedUploadDataSekolahServiceServer
-	uploadDir string
+	uploadDir        string
+	repoSiswa        repositories.GenericRepository[models.PesertaDidik]
+	repoKelas        repositories.GenericRepository[models.RombonganBelajar]
+	repoKelasAnggota repositories.GenericRepository[models.RombelAnggota]
+	repoGuru         repositories.GenericRepository[models.TabelPTK]
 }
 
 func NewUploadServiceServer() *UploadServiceServer {
+	repoSiswa := repositories.NewSiswaRepository(config.DB)
+	repoKelas := repositories.NewrombonganBelajarRepository(config.DB)
+	repoKelasAnggota := repositories.NewRombelAnggotaRepository(config.DB)
+	repoGuru := repositories.NewPTKRepository(config.DB)
+	// if repoSiswa == nil {
+	// 	log.Fatal("❌ ERROR: Gagal menginisialisasi repoSiswa") // Debugging
+	// }
 	return &UploadServiceServer{
-		uploadDir: "uploads",
+		uploadDir:        "uploads",
+		repoSiswa:        *repoSiswa,
+		repoKelas:        *repoKelas,
+		repoKelasAnggota: *repoKelasAnggota,
+		repoGuru:         *repoGuru,
 	}
 }
 
@@ -46,16 +63,30 @@ func (s *UploadServiceServer) UploadDataSekolah(ctx context.Context, req *pb.Upl
 
 // UploadFileHTTP menangani upload file melalui REST API dengan multipart/form-data
 func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	paramValue := r.URL.Query().Get("upload_type")
+	if paramValue == "" {
+		http.Error(w, "param_name tidak boleh kosong", http.StatusBadRequest)
+		return
+	}
 	// Parse form data
-	err := r.ParseMultipartForm(10 << 20) // Batas ukuran file 10MB
+	err = r.ParseMultipartForm(10 << 20) // Batas ukuran file 10MB
 	if err != nil {
 		http.Error(w, "Gagal mem-parsing form data", http.StatusBadRequest)
 		return
 	}
 
 	// Ambil parameter dan file
-	uploadType := r.FormValue("upload_type")
+	// schemaname := r.FormValue("schemaname")
+	// semesterId := r.FormValue("semester_id")
+	// uploadType := r.FormValue("upload_type")
 	fileHeader := r.MultipartForm.File["file"]
+	param := ParamTemplate{
+		templateType: r.FormValue("upload_type"),
+		schemaname:   r.FormValue("schemaname"),
+		semesterId:   r.FormValue("semester_id"),
+	}
 	if len(fileHeader) == 0 {
 		http.Error(w, "File tidak ditemukan", http.StatusBadRequest)
 		return
@@ -88,16 +119,57 @@ func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Requ
 		http.Error(w, "Gagal menyimpan file sementara", http.StatusInternalServerError)
 		return
 	}
-	// filePath := tempFile.Name()
-	// Proses file (gunakan service jika diperlukan)
-	if uploadType == "siswa" {
-		// data, err := uploadData[models.PesertaDidik](filePath, uploadType)
-		// if err != nil {
-		// 	http.Error(w, fmt.Sprintf("Gagal memproses file: %v", err), http.StatusInternalServerError)
-		// 	return
-		// }
-		// h.service.
+	param.filePath = tempFile.Name()
+	// Gunakan map untuk memilih fungsi yang sesuai berdasarkan uploadType
+	uploadHandlers := map[string]func() error{
+		"siswa": func() error {
+			return s.processUploadSiswa(
+				context.Background(), param,
+				BacaDataExcel,
+			)
+		},
+		"guru": func() error {
+			return processUpload(
+				context.Background(), param,
+				UploadDataSekolah[models.TabelPTK],
+				s.repoGuru.Save,
+			)
+		},
+		// Tambahkan tipe lain di sini...
 	}
+
+	// Periksa apakah uploadType valid
+	if handler, exists := uploadHandlers[param.templateType]; exists {
+		if err := handler(); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		fmt.Println("Upload sukses!")
+	} else {
+		http.Error(w, "Tipe upload tidak dikenali", http.StatusBadRequest)
+	}
+	// var data []interface{}
+	// if uploadType == "siswa" {
+	// 	data, err = UploadDataSekolah[models.PesertaDidik](filePath, uploadType)
+	// 	if err != nil {
+	// 		http.Error(w, fmt.Sprintf("Gagal memproses file: %v", err), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	// 	defer cancel()
+	// 	for i := range data {
+	// 		utils.HandleNilPointers(&data[i])
+	// 		// pesertaDidikPointers = append(pesertaDidikPointers, &data[i])
+	// 		if s == nil {
+	// 			log.Fatal("❌ ERROR: s is nil! Periksa inisialisasi UploadServiceServer")
+	// 		}
+	// 		err = s.repoSiswa.Save(ctx, &data[i], schemaname)
+	// 		if err != nil {
+	// 			fmt.Println(err.Error())
+	// 		}
+	// 		fmt.Println("sukses")
+	// 	}
+	// }
 
 	// Berikan respon
 	w.Header().Set("Content-Type", "application/json")
@@ -118,10 +190,15 @@ func (s *UploadServiceServer) DownloadDataSekolah(ctx context.Context, req *pb.D
 	}
 	templateType := req.GetDownloadType()
 	templatePath := fmt.Sprintf("templates/template_%s.xlsx", templateType)
-
+	var param = ParamTemplate{
+		schemaname:   "",
+		filePath:     "",
+		semesterId:   "",
+		templateType: templateType,
+	}
 	// Buat file template jika belum ada
 	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
-		err := GenerateTemplate(templateType, templatePath)
+		err := GenerateTemplate(param, config.DB)
 		if err != nil {
 			return nil, fmt.Errorf("gagal membuat template %s: %w", templateType, err)
 		}
@@ -142,17 +219,22 @@ func (s *UploadServiceServer) DownloadDataSekolah(ctx context.Context, req *pb.D
 // HandleDownloadTemplate adalah handler untuk mengunduh file template .xlsx.
 func (h *UploadServiceServer) DownloadTemplateHTTP(w http.ResponseWriter, r *http.Request) {
 	// Ambil nama file dari query parameter
-	templateType := r.URL.Query().Get("template-type")
+	templateType := r.URL.Query().Get("template_type")
 	if templateType == "" {
 		http.Error(w, "template-type is required", http.StatusBadRequest)
 		return
 	}
 	// Lokasi direktori template
-	templatePath := fmt.Sprintf("templates/template_%s.xlsx", templateType)
-
+	var param = ParamTemplate{
+		schemaname:   r.FormValue("schemaname"),
+		semesterId:   r.FormValue("semesterId"),
+		templateType: templateType,
+	}
+	templatePath := fmt.Sprintf("templates/template_%s_%s_%s.xlsx", templateType, param.schemaname, param.semesterId)
+	param.filePath = templatePath
 	// Buat file template jika belum ada
 	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
-		err := GenerateTemplate(templateType, templatePath)
+		err := GenerateTemplate(param, config.DB)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Gagal membuat template: %v", err), http.StatusInternalServerError)
 			return
@@ -173,14 +255,80 @@ func (h *UploadServiceServer) DownloadTemplateHTTP(w http.ResponseWriter, r *htt
 		http.Error(w, fmt.Sprintf("Gagal mendapatkan informasi file: %v", err), http.StatusInternalServerError)
 		return
 	}
-	// Set header response untuk file download
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", fileInfo.Name()))
-	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	w.Header().Set("Content-Length", strconv.FormatInt(fileInfo.Size(), 10))
 
-	// Kirim file ke response
+	// w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"; filename*=UTF-8''%s", fileInfo.Name(), url.QueryEscape(fileInfo.Name())))
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", fileInfo.Name()))
+
+	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") // MIME type untuk Excel
+	w.Header().Set("Content-Transfer-Encoding", "binary")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Pragma", "no-cache")
+
+	// Kirim file
 	if _, err := io.Copy(w, file); err != nil {
 		http.Error(w, fmt.Sprintf("Gagal mengirim file: %v", err), http.StatusInternalServerError)
 		return
 	}
+
+}
+
+// Definisikan fungsi untuk menangani upload berdasarkan tipe data
+func processUpload[T any](
+	ctx context.Context,
+	param ParamTemplate,
+	uploadFunc func(ParamTemplate) ([]T, error),
+	saveFunc func(context.Context, *T, string) error,
+) error {
+	// Ambil data dari file
+	data, err := uploadFunc(param)
+	if err != nil {
+		return fmt.Errorf("gagal memproses file: %v", err)
+	}
+
+	// Iterasi data dan simpan ke database
+	for i := range data {
+		utils.HandleNilPointers(&data[i]) // Hindari pointer nil
+
+		// Simpan ke database
+		if err := saveFunc(ctx, &data[i], param.schemaname); err != nil {
+			return fmt.Errorf("gagal menyimpan data: %v", err)
+		}
+	}
+	return nil
+}
+func (s *UploadServiceServer) processUploadSiswa(
+	ctx context.Context,
+	param ParamTemplate,
+	uploadFunc func(ParamTemplate) ([][]string, error),
+) error {
+	// Ambil data dari file
+	data, err := uploadFunc(param)
+	if err != nil {
+		return fmt.Errorf("gagal memproses file: %v", err)
+	}
+
+	// Iterasi data dan simpan ke database
+	for i := range data {
+		utils.HandleNilPointers(&data[i]) // Hindari pointer nil
+
+		// Simpan ke database
+		// database tabel_siswa
+		err := s.repoSiswa.Save(ctx, &models.PesertaDidik{
+			PesertaDidikId: "",
+		}, param.schemaname)
+		if err != nil {
+			return err
+		}
+		// database tabel_anggotakelas
+		err = s.repoKelasAnggota.Save(ctx, &models.RombelAnggota{
+			AnggotaRombelId: "tes",
+		}, param.schemaname)
+		if err != nil {
+			return err
+		}
+		// if err := saveFunc(ctx, &data[i], param.schemaname); err != nil {
+		// 	return fmt.Errorf("gagal menyimpan data: %v", err)
+		// }
+	}
+	return nil
 }
