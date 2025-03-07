@@ -1,11 +1,13 @@
 CREATE SCHEMA IF NOT EXISTS ref;
 -- Buat ENUM type untuk jenis jaringan blockchain jika belum ada
+
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'network_type') THEN
         CREATE TYPE network_type AS ENUM ('mainnet', 'testnet', 'private');
     END IF;
 END $$ LANGUAGE plpgsql;
+
 
 
 CREATE TABLE IF NOT EXISTS ref.networks (
@@ -53,3 +55,4 @@ VALUES
     ('Polygon Edge PRIVATE', -5, 'http://127.0.0.1:10002', NULL, 'MATIC', 'private', false,false,'EVM'),
     ('Avalanche Subnet PRIVATE', -6, 'http://127.0.0.1:9650/ext/bc/C/rpc', NULL, 'AVAX', 'private', false,false,'EVM')
 ON CONFLICT (chain_id) DO NOTHING;
+

@@ -115,7 +115,26 @@ func (r *GenericRepository[T]) FindAllByConditions(
 	return entities, nil
 }
 
+// func (r *GenericRepository[T]) Update(ctx context.Context, entity *T, schemaName, idColumn, id string) error {
+// 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+// 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+// 			return fmt.Errorf("failed to set schema: %w", err)
+// 		}
+
+// 		if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
+// 			Where(fmt.Sprintf("%s = ?", idColumn), id).
+// 			Updates(entity).Error; err != nil {
+// 			return fmt.Errorf("failed to update record in schema %s: %w", schemaName, err)
+// 		}
+
+//			return nil
+//		})
+//	}
 func (r *GenericRepository[T]) Update(ctx context.Context, entity *T, schemaName, idColumn, id string) error {
+	if entity == nil {
+		return fmt.Errorf("entity cannot be nil or invalid pointer")
+	}
+
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
 			return fmt.Errorf("failed to set schema: %w", err)

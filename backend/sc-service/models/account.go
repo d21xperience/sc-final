@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -20,6 +21,18 @@ const (
 	ImportAccount NetworkType = "imported"
 	Keystore      NetworkType = "keystore"
 )
+
+type BCPlatform struct {
+	ID           uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	NmBlockchain string    `gorm:"type:varchar(50);not null;unique"`
+	Active       bool      `gorm:"default:false"`
+	CreatedAt    time.Time `gorm:"default:now()"`
+	UpdatedAt    time.Time `gorm:"default:now()"`
+}
+
+func (BCPlatform) TableName() string {
+	return "blockchain_platform"
+}
 
 // WalletTransaction menyimpan riwayat transaksi pengguna
 type WalletTransaction struct {
@@ -58,8 +71,6 @@ type Network struct {
 	// kolom NetworkAvailable digunakan jika logic bisnis sudah dibuat, saat ini baru tersedia ethereum, quorum dan hyperledger fabric
 	Available    bool   `gorm:"default:false"`
 	Architecture string `gorm:"size:100;not null"` // Nama jaringan (Ethereum, Polygon, BSC)
-
-	// Digunakan untuk menampilkan jaringan secara default
 }
 
 // Account menyimpan alamat Ethereum pengguna

@@ -15,9 +15,9 @@ type SchemaService interface {
 	SimpanSchemaSekolah(SekolahTenant *models.SekolahTenant) error
 	GetSchemaBySekolahID(int) (*models.SekolahTenant, error)
 	GetSchemaByName(string) (*models.SekolahTenant, error)
-	GetOrCreateSchema(ctx context.Context, adminSekolah *AdminSekolah) (*models.SekolahTenant, string, error)
+	GetOrCreateSchema(ctx context.Context, TenantSekolah *TenantSekolah) (*models.SekolahTenant, string, error)
 }
-type AdminSekolah struct {
+type TenantSekolah struct {
 	SekolahId       int32
 	UserId          int32
 	Password        string
@@ -86,11 +86,11 @@ func (s *schemaServiceImpl) GetSchemaByName(schemaname string) (*models.SekolahT
 	}
 	return sc, nil
 }
-func (s *schemaServiceImpl) GetOrCreateSchema(ctx context.Context, adminSekolah *AdminSekolah) (*models.SekolahTenant, string, error) {
+func (s *schemaServiceImpl) GetOrCreateSchema(ctx context.Context, TenantSekolah *TenantSekolah) (*models.SekolahTenant, string, error) {
 	var schema *models.SekolahTenant
 	var err error
 
-	schema, err = s.GetSchemaByName(adminSekolah.Schemaname)
+	schema, err = s.GetSchemaByName(TenantSekolah.Schemaname)
 	// Jika error selain "schema tidak ditemukan", return error
 	if err != nil && !errors.Is(err, ErrSchemaNotFound) {
 		return nil, "", fmt.Errorf("gagal mengambil schema: %w", err)
@@ -98,31 +98,31 @@ func (s *schemaServiceImpl) GetOrCreateSchema(ctx context.Context, adminSekolah 
 	// Jika schema sudah ada, kembalikan error
 	if schema != nil {
 		return schema, schema.SchemaName, ErrSchemaFound
-		// return schema, schema.SchemaName, fmt.Errorf("schema '%s' sudah ada", adminSekolah.Schemaname)
+		// return schema, schema.SchemaName, fmt.Errorf("schema '%s' sudah ada", TenantSekolah.Schemaname)
 	}
 
 	// ==================================CEK ULANG DARI DATA admin sekolah============
-	schema, err = s.GetSchemaByName(adminSekolah.SekolahIdEnkrip)
+	schema, err = s.GetSchemaByName(TenantSekolah.SekolahIdEnkrip)
 	// Jika error selain "schema tidak ditemukan", return error
 	if err != nil && !errors.Is(err, ErrSchemaNotFound) {
 		return nil, "", fmt.Errorf("gagal mengambil schema: %w", err)
 	}
 	// Jika schema sudah ada, kembalikan error
 	if schema != nil {
-		// return schema, schema.SchemaName, fmt.Errorf("schema '%s' sudah ada", adminSekolah.Schemaname)
+		// return schema, schema.SchemaName, fmt.Errorf("schema '%s' sudah ada", TenantSekolah.Schemaname)
 		return schema, schema.SchemaName, ErrSchemaFound
 	}
 
 	// Registrasi schema baru
-	if err := s.RegistrasiSekolah(ctx, adminSekolah.SekolahIdEnkrip); err != nil {
-		return nil, "", fmt.Errorf("gagal registrasi schema '%s': %w", adminSekolah.Schemaname, err)
+	if err := s.RegistrasiSekolah(ctx, TenantSekolah.SekolahIdEnkrip); err != nil {
+		return nil, "", fmt.Errorf("gagal registrasi schema '%s': %w", TenantSekolah.Schemaname, err)
 	}
 	// Simpan informasi schema sekolah
 	err = s.SimpanSchemaSekolah(&models.SekolahTenant{
-		NamaSekolah: adminSekolah.NamaSekolah,
-		UserId:      adminSekolah.UserId,
-		SekolahId:   adminSekolah.SekolahId,
-		SchemaName:  adminSekolah.SekolahIdEnkrip,
+		NamaSekolah: TenantSekolah.NamaSekolah,
+		UserId:      TenantSekolah.UserId,
+		SekolahId:   TenantSekolah.SekolahId,
+		SchemaName:  TenantSekolah.SekolahIdEnkrip,
 	})
 	if err != nil {
 		return nil, "", err

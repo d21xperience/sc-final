@@ -15,7 +15,7 @@ import (
 
 type BlockchainAccountService struct {
 	pb.UnimplementedBlockchainAccountServiceServer
-	config   *Config   // Konfigurasi runtime
+	config   *Config          // Konfigurasi runtime
 	client   BlockchainClient // Client yang digunakan (Ethereum/Quorum)
 	schema   SchemaService
 	repoAkun *repositories.GenericRepository[models.Account]
@@ -39,7 +39,7 @@ func (s *BlockchainAccountService) CreateBlockchainAccount(ctx context.Context, 
 		return nil, errors.New("client belum dikonfigurasi")
 	}
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"Admin", "Network"}
+	requiredFields := []string{"AkunParam", "schemaname"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
@@ -49,19 +49,19 @@ func (s *BlockchainAccountService) CreateBlockchainAccount(ctx context.Context, 
 		return nil, errors.New("schemaname tidak boleh kosong")
 	}
 
-	var adminSekolah = AdminSekolah{
-		SekolahId:       req.Admin.SekolahId,
-		UserId:          req.Admin.UserId,
-		Password:        req.Admin.Password,
-		NamaSekolah:     req.Admin.NamaSekolah,
-		SekolahIdEnkrip: req.Admin.SekolahIdEnkrip,
-		Schemaname:      req.GetSchemaname(),
+	var tenantSekolah = TenantSekolah{
+		// SekolahId:       req.AkunParam.SekolahId,
+		UserId:      req.AkunParam.UserId,
+		Password:    req.AkunParam.Password,
+		NamaSekolah: req.AkunParam.Organization,
+		// SekolahIdEnkrip: req.AkunParam.SekolahIdEnkrip,
+		Schemaname: req.GetSchemaname(),
 	}
-	schemaModel, schemaName, err := s.schema.GetOrCreateSchema(ctx, &adminSekolah)
+	schemaModel, schemaName, err := s.schema.GetOrCreateSchema(ctx, &tenantSekolah)
 	if err != nil {
 		return nil, err
 	}
-	contractAddress, err := s.client.GenerateNewAccount(ctx, adminSekolah.UserId, adminSekolah.Password)
+	contractAddress, err := s.client.GenerateNewAccount(ctx, tenantSekolah.UserId, tenantSekolah.Password)
 	if err != nil {
 		log.Printf("Gagal membuat akun: %v", err)
 		return nil, fmt.Errorf("gagal membuat akun: %w", err)
@@ -84,12 +84,12 @@ func (s *BlockchainAccountService) CreateBlockchainAccount(ctx context.Context, 
 	// Simpan ke database
 	s.repoAkun.Save(ctx, &models.Account{
 		Username:          "",
-		UserID:            adminSekolah.UserId,
+		UserID:            tenantSekolah.UserId,
 		Type:              models.AccountType("KEYSTORE"),
 		Address:           address,
 		Password:          pass,
 		KeystrokeFilename: key,
-		NetworkID:         req.Network.Id,
+		NetworkID:         uint32(req.AkunParam.NetworkId),
 		Organization:      schemaModel.NamaSekolah,
 	}, schemaName)
 	// txHash := ""
@@ -101,7 +101,7 @@ func (s *BlockchainAccountService) CreateBlockchainAccount(ctx context.Context, 
 
 func (s *BlockchainAccountService) GetBlockchainAccounts(ctx context.Context, req *pb.GetBlockchainAccountsRequest) (*pb.GetBlockchainAccountsResponse, error) {
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"Schemaname", "UserId", "NetworkId"}
+	requiredFields := []string{"Schemaname"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
@@ -112,8 +112,7 @@ func (s *BlockchainAccountService) GetBlockchainAccounts(ctx context.Context, re
 	}
 	// accounts, err := s.client.GetAccounts(ctx, req.GetUserId(), req.GetSchemaname())
 	var condition = map[string]interface{}{
-		"user_id":    req.GetUserId(),
-		"network_id": req.GetNetworkId(),
+		"schemaname": req.GetSchemaname(),
 	}
 	accounts, err := s.repoAkun.FindAllByConditions(ctx, req.GetSchemaname(), condition, 100, 0)
 
@@ -138,47 +137,45 @@ func (s *BlockchainAccountService) GetBlockchainAccounts(ctx context.Context, re
 		Blockchainaccounts: results,
 	}, nil
 }
-func (s *BlockchainAccountService) ImportBlockchainAccount(ctx context.Context, req *pb.ImportBlockchainAccountRequest) (*pb.ImportBlockchainAccountResponse, error) {
-	// Daftar field yang wajib diisi
-	requiredFields := []string{"Admin", "Network"}
-	// Validasi request
-	err := utils.ValidateFields(req, requiredFields)
-	if err != nil {
-		return nil, err
-	}
-	// GetOrCreate(schemaname)
-	var adminSekolah = AdminSekolah{
-		SekolahId:       req.Admin.SekolahId,
-		UserId:          req.Admin.UserId,
-		Password:        req.Admin.Password,
-		NamaSekolah:     req.Admin.NamaSekolah,
-		SekolahIdEnkrip: req.Admin.SekolahIdEnkrip,
-		Schemaname:      req.GetSchemaname(),
-	}
-	schemaModel, schemaName, err := s.schema.GetOrCreateSchema(ctx, &adminSekolah)
-	if !errors.Is(err, ErrSchemaFound) {
-		return nil, err
-	}
-	address, err := ImportPrivateKey(req.GetPrivateKey())
-	if err != nil {
-		log.Printf("Gagal membuat akun: %v", err)
-		return nil, fmt.Errorf("gagal membuat akun: %w", err)
-	}
-	err = s.repoAkun.Save(ctx, &models.Account{
-		Username:     "",
-		UserID:       adminSekolah.UserId,
-		Type:         models.AccountType("import"),
-		Address:      address.Hex(),
-		NetworkID:    req.Network.Id,
-		Organization: schemaModel.NamaSekolah,
-	}, schemaName)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.ImportBlockchainAccountResponse{
-		Status:  true,
-		Message: "Akun berhasi diimport dengan address " + address.Hex(),
-	}, nil
-}
-
-
+// func (s *BlockchainAccountService) ImportBlockchainAccount(ctx context.Context, req *pb.ImportBlockchainAccountRequest) (*pb.ImportBlockchainAccountResponse, error) {
+// 	// Daftar field yang wajib diisi
+// 	requiredFields := []string{"Admin", "Network"}
+// 	// Validasi request
+// 	err := utils.ValidateFields(req, requiredFields)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	// GetOrCreate(schemaname)
+// 	var tenantSekolah = tenantSekolah{
+// 		SekolahId:       req.Admin.SekolahId,
+// 		UserId:          req.Admin.UserId,
+// 		Password:        req.Admin.Password,
+// 		NamaSekolah:     req.Admin.NamaSekolah,
+// 		SekolahIdEnkrip: req.Admin.SekolahIdEnkrip,
+// 		Schemaname:      req.GetSchemaname(),
+// 	}
+// 	schemaModel, schemaName, err := s.schema.GetOrCreateSchema(ctx, &tenantSekolah)
+// 	if !errors.Is(err, ErrSchemaFound) {
+// 		return nil, err
+// 	}
+// 	address, err := ImportPrivateKey(req.GetPrivateKey())
+// 	if err != nil {
+// 		log.Printf("Gagal membuat akun: %v", err)
+// 		return nil, fmt.Errorf("gagal membuat akun: %w", err)
+// 	}
+// 	err = s.repoAkun.Save(ctx, &models.Account{
+// 		Username:     "",
+// 		UserID:       tenantSekolah.UserId,
+// 		Type:         models.AccountType("import"),
+// 		Address:      address.Hex(),
+// 		NetworkID:    req.Network.Id,
+// 		Organization: schemaModel.NamaSekolah,
+// 	}, schemaName)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &pb.ImportBlockchainAccountResponse{
+// 		Status:  true,
+// 		Message: "Akun berhasi diimport dengan address " + address.Hex(),
+// 	}, nil
+// }

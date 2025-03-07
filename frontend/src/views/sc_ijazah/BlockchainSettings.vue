@@ -284,16 +284,16 @@ const buildSmartContract = async () => {
     try {
         const payload = {
             // ambil akun
-            account_type : akun.value.type,
-            gas_limit : 300000,
+            account_type: akun.value.type,
+            gas_limit: 300000,
             // private_key: 
         }
-        
+
         const response = await store.dispatch("scService/deployIjazahContract", payload)
-        
-        
+
+
     } catch (error) {
-        
+
     }
 }
 
@@ -377,7 +377,8 @@ const buildSmartContract = async () => {
                             </p>
                         </div>
                         <div class="flex flex-col items-center">
-                            <Button icon="pi pi-exchange" severity="info" aria-label="pertukaran" rounded @click="dialogBuildSmartContract = true"/>
+                            <Button icon="pi pi-exchange" severity="info" aria-label="pertukaran" rounded
+                                @click="dialogBuildSmartContract = true" />
                             <p class="text-xs mt-1">
                                 Smart contract
                             </p>
@@ -495,12 +496,12 @@ const buildSmartContract = async () => {
 
         <div v-show="!BCPlatformActivate?.Name">
             <div class="text-center">
-                <h2 class="text-3xl uppercase">Anda Belum terhubung ke jaringan Blockahain</h2>
-                <p class="my-3">Silahkankan <span class="font-semibold">pilih jaringan</span> yang ingin digunakan</p>
-                <p class="mt-5"><i class="pi pi-sort-alt-slash" style="font-size: 3rem;"></i></p>
+                <h2 class="text-3xl uppercase">Anda Belum terhubung ke Platform Blockchain</h2>
+                <p class="my-3">Silahkankan <span class="font-semibold">pilih platform</span> yang ingin digunakan</p>
+                <!-- <p class="mt-5"><i class="pi pi-sort-alt-slash" style="font-size: 3rem;"></i></p>
                 <p class="my-6">atau lihat <span class="font-bold">daftar jaringan untuk </span>menambahkan</p>
                 <Button @click="router.push({ name: 'listBCNetwork' })" icon="pi pi-cloud" label="Daftar Jaringan"
-                    severity="warn" />
+                    severity="warn" /> -->
             </div>
         </div>
         <!-- </div> -->
@@ -601,7 +602,7 @@ const buildSmartContract = async () => {
 
     <!-- ########################################### -->
     <!-- Dialog Select Network -->
-    <Dialog v-model:visible="dialogSelectNetwork" modal header="Pilih Jaringan" position="top">
+    <!-- <Dialog v-model:visible="dialogSelectNetwork" modal header="Pilih Jaringan" position="top">
         <ul>
             <li class="text-sm text-slate-400">Mainnet Network</li>
             <template v-for="(bc, index) in BCPlatformAvailable" :key="index">
@@ -634,5 +635,29 @@ const buildSmartContract = async () => {
                         class="pi pi-plus"></i>Tambahkan Jaringan</button></li>
         </ul>
 
+    </Dialog> -->
+
+
+    <Dialog v-model:visible="dialogSelectNetwork" modal header="Pilih Platform" position="top">
+        <div>
+            <div class="my-2 flex space-x-1">
+                <input type="radio" name="platform-bc" id="ethereum">
+                <label for="ethereum">Ethererum</label>
+            </div>
+            <div class="my-2 flex space-x-1">
+                <input type="radio" name="platform-bc" id="quorum">
+                <label for="quorum">Quorum</label>
+            </div>
+            <div class="my-2 flex space-x-1">
+                <input type="radio" name="platform-bc" id="fabric">
+                <label for="fabric">Hyperledger Fabric</label>
+            </div>
+            <div class="flex justify-center">
+                <button type="button" class="bg-blue-400 p-2 rounded-md text-white ">Simpan</button>
+            </div>
+        </div>
     </Dialog>
+
+
+
 </template>

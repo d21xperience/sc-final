@@ -1,5 +1,5 @@
 <script setup>
-import { loadWeb3, getAccounts } from '@/utils/metamask';
+import { loadWeb3, getAccounts } from '@/utils/web3';
 import { ref } from 'vue';
 
 const account = ref("")

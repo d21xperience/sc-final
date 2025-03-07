@@ -3,7 +3,7 @@ import "./assets/main.css";
 import { createApp } from "vue";
 import App from "./App.vue";
 import PrimeVue from "primevue/config";
-import Aura from "@primevue/themes/aura";
+import Aura from '@primeuix/themes/aura';
 import ToastService from "primevue/toastservice";
 import DialogService from "primevue/dialogservice";
 import Tooltip from 'primevue/tooltip';

@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.accounts (
     updated_at TIMESTAMPTZ NULL DEFAULT NULL,
     UNIQUE (address),
     CONSTRAINT fk_accounts_network FOREIGN KEY (network_id) REFERENCES ref.networks (id) 
-        ON UPDATE NO ACTION ON DELETE NO ACTION
+        ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- Membuat indeks secara terpisah
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.contracts (
     updated_at TIMESTAMPTZ,
     UNIQUE (contract_address),
     CONSTRAINT fk_contracts_network FOREIGN KEY (network_id) REFERENCES ref.networks (id) 
-        ON UPDATE NO ACTION ON DELETE NO ACTION
+        ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE INDEX idx_contracts_network_id ON {{schema_name}}.contracts (network_id);
@@ -50,13 +50,42 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.transactions (
     timestamp TIMESTAMPTZ,
     UNIQUE (tx_hash),
     CONSTRAINT fk_transactions_account FOREIGN KEY (account_id) REFERENCES {{schema_name}}.accounts (id) 
-        ON UPDATE NO ACTION ON DELETE NO ACTION,
+        ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT fk_transactions_contract FOREIGN KEY (contract_id) REFERENCES {{schema_name}}.contracts (id) 
-        ON UPDATE NO ACTION ON DELETE NO ACTION,
+        ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT fk_transactions_network FOREIGN KEY (network_id) REFERENCES ref.networks (id) 
-        ON UPDATE NO ACTION ON DELETE NO ACTION
+        ON UPDATE CASCADE ON DELETE SET NULL
 );
 -- 
 CREATE INDEX idx_transactions_account_id ON {{schema_name}}.transactions (account_id);
 CREATE INDEX idx_transactions_network_id ON {{schema_name}}.transactions (network_id);
 CREATE INDEX idx_transactions_contract_id ON {{schema_name}}.transactions (contract_id);
+
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE {{schema_name}}.blockchain_platform (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    nm_blockchain VARCHAR(50) NOT NULL UNIQUE,
+    active BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE FUNCTION {{schema_name}}.update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_update_timestamp
+BEFORE UPDATE ON {{schema_name}}.blockchain_platform
+FOR EACH ROW
+EXECUTE FUNCTION {{schema_name}}.update_timestamp();
+
+INSERT INTO {{schema_name}}.blockchain_platform (nm_blockchain, active) VALUES
+('Ethereum', FALSE),
+('Quorum', FALSE),
+('Hyperledger Fabric', FALSE);

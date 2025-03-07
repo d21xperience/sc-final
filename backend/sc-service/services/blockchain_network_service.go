@@ -52,7 +52,7 @@ func (s *BlockchainNetworkService) CreateBCNetwork(ctx context.Context, req *pb.
 			Type:        networkType,
 		}
 	})
-	err = s.repo.SaveMany(ctx, "public", modelNetwork, 100)
+	err = s.repo.SaveMany(ctx, "ref", modelNetwork, 100)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (s *BlockchainNetworkService) GetBCNetwork(ctx context.Context, req *pb.Get
 		condition := map[string]interface{}{
 			"name": req.GetNetworkName(),
 		}
-		modelNetwork, err = s.repo.FindAllByConditions(ctx, "public", condition, 100, 0)
+		modelNetwork, err = s.repo.FindAllByConditions(ctx, "ref", condition, 100, 0)
 		if err != nil {
 			return nil, err
 		}
@@ -88,7 +88,7 @@ func (s *BlockchainNetworkService) GetBCNetwork(ctx context.Context, req *pb.Get
 		}
 
 	} else {
-		modelNetwork, err = s.repo.FindAll(ctx, "public", 100, 0)
+		modelNetwork, err = s.repo.FindAll(ctx, "ref", 100, 0)
 		if err != nil {
 			return nil, err
 		}
@@ -141,7 +141,7 @@ func (s *BlockchainNetworkService) UpdateBCNetwork(ctx context.Context, req *pb.
 	})
 
 	str := utils.ConvertUintToString(req.Network.Id)
-	err = s.repo.Update(ctx, modelAkun, "public", "id", str)
+	err = s.repo.Update(ctx, modelAkun, "ref", "id", str)
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +161,7 @@ func (s *BlockchainNetworkService) DeleteBCNetwork(ctx context.Context, req *pb.
 	}
 	id_network := utils.ConvertUintToString(req.NetworkId)
 
-	err = s.repo.Delete(ctx, id_network, "public", "id")
+	err = s.repo.Delete(ctx, id_network, "ref", "id")
 	if err != nil {
 		return nil, err
 	}
