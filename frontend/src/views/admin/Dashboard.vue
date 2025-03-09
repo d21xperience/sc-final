@@ -250,12 +250,13 @@
 import router from '@/router';
 import Chart from 'primevue/chart';
 
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import CardInfo from '@/components/CardInfo.vue';
 
 import { useStore } from "vuex";
 const store = useStore();
 onMounted(() => {
+    fetchTabelTenant()
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();
     fetchCountSiswa()
@@ -314,19 +315,29 @@ const setChartOptions = () => {
     };
 }
 
-
+// ambil data untuk tampilan di dashboard beserta variabel yang dibutuhkan
 const totalBlocks = ref(10215845);
 const totalSiswa = ref(800);
 const totalGuru = ref(50);
 const totalKelas = ref(28);
 const fetchCountSiswa = async () => {
+    // console.log(schemaname.value)
     let payload = {
-        schemaname: "tabel_D4DA6B98FCFD71C58F5A",
+        schemaname: schemaname.value,
         semester_id: "20241"
     }
     const resp = await store.dispatch("sekolahService/fetchSiswaCount", payload)
-    console.log(resp)
-
+    // console.log(resp)
+}
+// Tenant Table
+const schemaname = computed(() => {
+    let res = store.getters["sekolahService/getTabeltenant"]
+    return res?.schemaName
+})
+// Perikasa dan perbaiki kode sesuai dengan praktek terbaik.
+const fetchTabelTenant = async () => {
+    let sekolahId = store.getters["authService/getUserProfile"]
+    const te = await store.dispatch("sekolahService/fetchTabeltenant", sekolahId?.sekolahId)
 }
 const handleUpdate = (newValue) => {
     totalBlocks.value = newValue;

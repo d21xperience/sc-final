@@ -18,14 +18,18 @@ import CountryService from "@/service/CountryService";
 onMounted(() => {
     CountryService.getSekolah().then((data) => (countries.value = data));
 });
-const initialValues = ref({
-    country: { name: '' }
-});
+// const initialValues = ref({
+//     country: { name: '' }
+// });
 
 const countries = ref();
 const filteredCountries = ref();
 // const toast = useToast();
-
+const handleKeydown = (event) => {
+    if (event.key === " ") {
+        searchTerm.value += " "; // Menambahkan spasi ke query
+    }
+};
 const search = (event) => {
     setTimeout(() => {
         if (!event.query.trim().length) {
@@ -49,6 +53,7 @@ const store = useStore();
 const items = ref([])
 const searchTerm = ref('');
 const loading = ref(false);
+
 const onSearch = async () => {
     // console.log("onSearch")
     if (searchTerm.value.trim().length < 4) {
@@ -117,8 +122,6 @@ const onFormSubmit = async ({ valid, values }) => {
         }
     }
     dataReg.sekolah = formatValues(dataReg.sekolah);
-    // console.log(dataReg.sekolah)
-    // return
     if (valid) {
         try {
             isLoading.value = true
@@ -161,7 +164,6 @@ const infoSekolah = ref(false)
 const statusSekolahTerdaftar = ref(false)
 const cekSekolah = async () => {
     npsn.value = searchTerm.value?.npsn
-    // console.log(npsn./value)
     try {
         error.value = ""; // Reset error
         sekolah.value = null; // Reset data sekolah
@@ -197,8 +199,8 @@ const batalPersetujuan = () => {
 // loading
 import ProgressSpinner from 'primevue/progressspinner';
 const isLoading = ref(false)
-const isError = ref(false)
-const errorMessage = ref(null)
+// const isError = ref(false)
+// const errorMessage = ref(null)
 </script>
 
 
@@ -233,7 +235,7 @@ const errorMessage = ref(null)
                                     <IconField>
                                         <AutoComplete name="nama_sekolah" optionLabel="nama_sekolah"
                                             v-model="searchTerm" :suggestions="filteredCountries" @complete="search"
-                                            fluid size="small" />
+                                            fluid size="small" @keydown.space.prevent="handleKeydown" />
                                         <InputIcon class="pi pi-building-columns" />
                                     </IconField>
                                     <label for="sekolah">NPSN/Nama Sekolah</label>

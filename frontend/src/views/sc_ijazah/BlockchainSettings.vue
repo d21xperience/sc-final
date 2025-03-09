@@ -1,9 +1,5 @@
 <script setup>
 // Dialog
-
-
-// import Menu from 'primevue/menu';
-
 import Dialog from 'primevue/dialog';
 import { useDialog } from 'primevue/usedialog';
 const dialog = useDialog();
@@ -12,7 +8,6 @@ import Button from 'primevue/button';
 import { computed, ref, toRaw, onMounted } from 'vue';
 
 // Ambil dari database
-const BCPlatform = ref(null)
 const BCPlatformAvailable = ref([])
 const BCPlatformActivate = ref({})
 
@@ -132,7 +127,7 @@ const selectNetwork = (e) => {
     getAccount(BCPlatformActivate.value)
 }
 onMounted(() => {
-    fetchBlockchainNetworks();
+    // fetchBlockchainNetworks();
     // getAccount()
     user.value = toRaw(store.getters["authService/getUserProfile"])
     sekolah.value = toRaw(store.getters["authService/getSekolah"])
@@ -141,27 +136,28 @@ onMounted(() => {
 const user = ref(null)
 const sekolah = ref({})
 // Mengambil bcplatform dari backend
-const fetchBlockchainNetworks = async () => {
-    try {
-        const response = await store.dispatch("scService/fetchBlockchainNetworks");
-        if (!response) {
-            return;
-        }
-        const { network } = response;
-        BCPlatform.value = network
-        network.forEach((bc, i) => {
-            if (bc.Available) {
-                BCPlatformAvailable.value.push(bc)
-                if (bc.Activate) {
-                    BCPlatformActivate.value = bc
-                    networkActive.value = true
-                }
-            }
-        });
-    } catch (error) {
-        console.error("Error connecting to blockchain network:", error);
-    }
-}
+// const fetchBlockchainNetworks = async () => {
+//     try {
+//         const response = await store.dispatch("scService/fetchBlockchainNetworks");
+//         if (!response) {
+//             return;
+//         }
+//         const { network } = response;
+//         BCPlatform.value = network
+//         network.forEach((bc, i) => {
+//             if (bc.Available) {
+//                 BCPlatformAvailable.value.push(bc)
+//                 if (bc.Activate) {
+//                     BCPlatformActivate.value = bc
+//                     networkActive.value = true
+//                 }
+//             }
+//         });
+//     } catch (error) {
+//         console.error("Error connecting to blockchain network:", error);
+//     }
+// }
+
 
 // Set aktive current Blockchain network
 const setActiveCurrentBC = async (id) => {
@@ -175,11 +171,7 @@ const setActiveCurrentBC = async (id) => {
         console.log('error', error)
     }
 }
-// Set diaktive current Blockchain network
-const networkDiactive = async () => {
-    BCPlatformActivate.value = {}
-    doesntHaveAccount.value = false
-}
+
 const pVKey = ref('')
 const importAccount = async () => {
     try {
@@ -296,25 +288,13 @@ const buildSmartContract = async () => {
 
     }
 }
+// blockchain platform
 
 </script>
 
 
 <template>
-    <div class="w-full bg-white shadow-md p-2">
-        <div class="flex justify-between p-2">
-            <div class="">
-                <button @click="dialogSelectNetwork = true"
-                    class="rounded-full bg-slate-300 py-2 px-4 hover:opacity-80">
-                    <span v-if="BCPlatformActivate">{{ BCPlatformActivate?.Name ?? "Pilih Jaringan" }}</span>
-                    <i class="ml-2 pi pi-angle-up "></i></button>
-            </div>
-            <div v-show="BCPlatformActivate?.Name" class="flex items-center">
-                <button class="bg-red-400 py-2 px-3 rounded-full hover:opacity-70 flex items-center gap-2"
-                    @click="networkDiactive"><i class="pi pi-times"></i> Disconect</button>
-            </div>
-        </div>
-    </div>
+
     <div class="p-4">
         <div v-show="networkActive">
             <h3 class="text-center font-bold text-3xl">{{ BCPlatformActivate?.Name }} </h3>
@@ -638,25 +618,7 @@ const buildSmartContract = async () => {
     </Dialog> -->
 
 
-    <Dialog v-model:visible="dialogSelectNetwork" modal header="Pilih Platform" position="top">
-        <div>
-            <div class="my-2 flex space-x-1">
-                <input type="radio" name="platform-bc" id="ethereum">
-                <label for="ethereum">Ethererum</label>
-            </div>
-            <div class="my-2 flex space-x-1">
-                <input type="radio" name="platform-bc" id="quorum">
-                <label for="quorum">Quorum</label>
-            </div>
-            <div class="my-2 flex space-x-1">
-                <input type="radio" name="platform-bc" id="fabric">
-                <label for="fabric">Hyperledger Fabric</label>
-            </div>
-            <div class="flex justify-center">
-                <button type="button" class="bg-blue-400 p-2 rounded-md text-white ">Simpan</button>
-            </div>
-        </div>
-    </Dialog>
+
 
 
 

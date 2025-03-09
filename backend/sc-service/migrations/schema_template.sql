@@ -85,6 +85,33 @@ BEFORE UPDATE ON {{schema_name}}.blockchain_platform
 FOR EACH ROW
 EXECUTE FUNCTION {{schema_name}}.update_timestamp();
 
+CREATE OR REPLACE FUNCTION {{schema_name}}.enforce_single_active_blockchain()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Set semua baris lain menjadi false sebelum menyimpan yang baru sebagai true
+    IF NEW.active AND (OLD.active IS DISTINCT FROM TRUE) THEN
+        -- Kunci tabel untuk menghindari race condition
+        LOCK TABLE {{schema_name}}.blockchain_platform IN EXCLUSIVE MODE;
+         -- Set semua baris lain menjadi false sebelum menyimpan yang baru sebagai true
+        UPDATE {{schema_name}}.blockchain_platform 
+        SET active = FALSE 
+        WHERE id <> NEW.id;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_single_active_blockchain
+BEFORE INSERT OR UPDATE ON {{schema_name}}.blockchain_platform
+FOR EACH ROW
+EXECUTE FUNCTION {{schema_name}}.enforce_single_active_blockchain();
+
+
+
+
+
+
 INSERT INTO {{schema_name}}.blockchain_platform (nm_blockchain, active) VALUES
 ('Ethereum', FALSE),
 ('Quorum', FALSE),

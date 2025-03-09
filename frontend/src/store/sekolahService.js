@@ -48,7 +48,7 @@ const actions = {
       const response = await api.get(
         `/sekolah/sekolah-terdaftar?sekolah_id=${sekolahId}`
       );
-      // commit("SET_TABELTENANT", response.data);
+      commit("SET_TABELTENANT", response.data);
       // console.log(response.data);
       return response.data; // Mengembalikan data sekolah
     } catch (error) {
@@ -203,14 +203,13 @@ const actions = {
   },
   async fetchSiswaCount({ commit }, payload) {
     try {
-      console.log(payload);
+      // console.log(payload);
       const response = await api.get(`/ss/dashboard/countsiswa`, {
         params: {
           schemaname: payload.schemaname,
           semester_id: payload.semesterId,
         },
       });
-      console.log(response.data.anggotaKelas);
       // commit("SET_TABELSISWA", response.data.anggotaKelas);
       return response.data; // Mengembalikan data sekolah
     } catch (error) {

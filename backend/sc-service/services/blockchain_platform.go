@@ -44,7 +44,7 @@ func (s *BCPlatformServiceServer) GetBCPlatform(ctx context.Context, req *pb.Get
 		return &pb.BCPlatform{
 			Id:     model.ID.String(),
 			Name:   model.NmBlockchain,
-			Active: model.Active,
+			Active: &model.Active,
 		}
 	})
 	return &pb.GetBCPlatformResponse{
@@ -68,17 +68,10 @@ func (s *BCPlatformServiceServer) SetBCPlatform(ctx context.Context, req *pb.Set
 			log.Printf("error parsing UUID from string: %v", err)
 			return nil
 		}
-		// bcId, err := utils.ConvertUUIDToStringViceVersa(parsedUUID)
-		// if err != nil {
-		// 	log.Printf("error converting UUID: %v", err)
-		// 	return nil
-		// }
-		log.Printf("error value of active: %v", mod.Active)
-
 		return &models.BCPlatform{
 			ID:           parsedUUID,
 			NmBlockchain: mod.Name,
-			Active:       mod.Active,
+			Active:       *mod.Active,
 		}
 	})
 	if bcPlatformModel == nil {
@@ -89,6 +82,6 @@ func (s *BCPlatformServiceServer) SetBCPlatform(ctx context.Context, req *pb.Set
 		return nil, err
 	}
 	return &pb.SetBCPlatformResponse{
-		Message: "sukses",
+		Message: "sukses update platform",
 	}, nil
 }

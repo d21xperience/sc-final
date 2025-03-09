@@ -166,26 +166,26 @@ const router = createRouter({
                 },
               ],
             },
-            {
-              path: "list-bcnetwork",
-              name: "listBCNetwork",
-              meta: {
-                title: "Daftar Blockhain",
-                requiresAuth: true,
-                role: "admin",
-              },
-              component: () => import("../views/sc_ijazah/ListBCNetwork.vue"),
-            },
-            {
-              path: "add-ipfsnetworks",
-              name: "addIPFSNetworks",
-              component: () => import("../views/sc_ijazah/AddBCNetwork.vue"),
-            },
-            {
-              path: "ipfs-ijazah",
-              name: "ipfsIjazah",
-              component: () => import("../views/ipfs_ijazah/IPFSIjazah.vue"),
-            },
+            // {
+            //   path: "list-bcnetwork",
+            //   name: "listBCNetwork",
+            //   meta: {
+            //     title: "Daftar Blockhain",
+            //     requiresAuth: true,
+            //     role: "admin",
+            //   },
+            //   component: () => import("../views/sc_ijazah/ListBCNetwork.vue"),
+            // },
+            // {
+            //   path: "add-ipfsnetworks",
+            //   name: "addIPFSNetworks",
+            //   component: () => import("../views/sc_ijazah/AddBCNetwork.vue"),
+            // },
+            // {
+            //   path: "ipfs-ijazah",
+            //   name: "ipfsIjazah",
+            //   component: () => import("../views/ipfs_ijazah/IPFSIjazah.vue"),
+            // },
             // {
             //   path: "daftar-trx",
             //   name: "daftarTrx",

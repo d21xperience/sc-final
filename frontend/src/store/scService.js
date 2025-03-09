@@ -12,10 +12,10 @@ const api = axios.create({
 const state = {
   loading: false,
   error: null,
-  BCPlatformActivate: {},
+  BCPlatformSelected: {},
   BCAccountActivate: {},
-  BCNETWORK: JSON.parse(localStorage.getItem("BCNETWORK")) || null,
-  BCACCOUNT: JSON.parse(localStorage.getItem("BCACCOUNT")) || null,
+  // BCNETWORK: JSON.parse(localStorage.getItem("BCNETWORK")) || null,
+  // BCACCOUNT: JSON.parse(localStorage.getItem("BCACCOUNT")) || null,
 };
 
 const mutations = {
@@ -33,8 +33,8 @@ const mutations = {
     state.BCACCOUNT = value;
     localStorage.setItem("BCACCOUNT", JSON.stringify(value));
   },
-  setBCPlatformActivate(state, value) {
-    state.BCPlatformActivate = value;
+  setBCPlatformSelected(state, value) {
+    state.BCPlatformSelected = value;
   },
   setBCAccountActivate(state, value) {
     state.BCAccountActivate = value;
@@ -42,7 +42,56 @@ const mutations = {
 };
 
 const actions = {
-  // Fitur baru ceknpsn
+  async fetchBCPlatform({ commit }, payload) {
+    try {
+      const response = await api.get(`/sc/platform`, {
+        params: {
+          schemaname: payload.schemaname,
+        },
+      });
+      console.log(response.data.bcPlatform);
+      response.data.bcPlatform.find((platform) => {
+        if (platform.active) {
+          commit("setBCPlatformSelected", platform);
+        }
+      });
+      return response.data; // Mengembalikan data sekolah
+    } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal memuat network:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
+
+  async setBCPlatform({ commit }, payload) {
+    console.log("in vuex: ", payload);
+    const py = {
+      bc_platform: {
+        id: payload.bc_platform.id,
+        name: payload.bc_platform.name,
+        active: payload.bc_platform.active,
+      },
+      schemaname: payload.schemaname,
+    };
+
+    console.log(py);
+    try {
+      const response = await api.put("/sc/platform", py);
+      commit("setBCPlatformSelected", response.data.bcPlatform);
+      return response.data; // Mengembalikan data sekolah
+    } catch (error) {
+      console.error("Gagal set BC platform:", error);
+      return null;
+    }
+    // console.log(response);
+  },
+  // ================================
+  async updateBCPlatformSelected({ commit }, value) {
+    commit("setBCPlatformSelected", value);
+  },
+
   async fetchBlockchainNetworks({ commit }) {
     // console.log(sekolahId);
     commit("SET_LOADING", true);
@@ -192,10 +241,6 @@ const actions = {
   },
   // ================================
 
-  // ================================
-  async updateBCPlatformActivate({ commit }, value) {
-    commit("setBCPlatformActivate", value);
-  },
   async updateBCAccountActivate({ commit }, value) {
     commit("setBCAccountActivate", value);
   },
@@ -207,7 +252,7 @@ const getters = {
   isLoading: (state) => state.loading,
   getError: (state) => state.error,
   getBCNETWORK: (state) => state.BCNETWORK,
-  getBCPlatformActivate: (state) => state.BCPlatformActivate,
+  getBCPlatformSelected: (state) => state.BCPlatformSelected,
   getBCAccount: (state) => state.BCACCOUNT,
   getBCAccountActivate: (state) => state.BCAccountActivate,
 };
