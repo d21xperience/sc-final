@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"reflect"
 	"strings"
 	"time"
 
@@ -130,19 +131,65 @@ func (r *GenericRepository[T]) FindAllByConditions(
 //			return nil
 //		})
 //	}
+// func (r *GenericRepository[T]) Update(ctx context.Context, entity *T, schemaName, idColumn, id string) error {
+// 	if entity == nil {
+// 		return fmt.Errorf("entity cannot be nil or invalid pointer")
+// 	}
+
+// 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+// 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+// 			return fmt.Errorf("failed to set schema: %w", err)
+// 		}
+
+// 		// if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
+// 		// 	Where(fmt.Sprintf("%s = ?", idColumn), id).
+// 		// 	// Updates(entity).Error; err != nil {
+// 		// 	UpdateColumns(entity).Error; err != nil {
+// 		// 	return fmt.Errorf("failed to update record in schema %s: %w", schemaName, err)
+// 		// }
+
+// 		// Debugging: Log entity sebelum update
+// 		log.Printf("Updating entity in schema %s: %+v", schemaName, entity)
+
+// 		// Pastikan field yang akan diupdate tidak diabaikan (termasuk false)
+// 		if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
+// 			Where(fmt.Sprintf("%s = ?", idColumn), id).
+// 			Select("active"). // Memaksa hanya kolom active yang diperbarui
+// 			Updates(entity).Error; err != nil {
+// 			return fmt.Errorf("failed to update record in schema %s: %w", schemaName, err)
+// 		}
+
+//			return nil
+//		})
+//	}
 func (r *GenericRepository[T]) Update(ctx context.Context, entity *T, schemaName, idColumn, id string) error {
 	if entity == nil {
 		return fmt.Errorf("entity cannot be nil or invalid pointer")
 	}
 
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// Pastikan schema di-set dengan benar
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
 			return fmt.Errorf("failed to set schema: %w", err)
 		}
 
-		if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
-			Where(fmt.Sprintf("%s = ?", idColumn), id).
-			Updates(entity).Error; err != nil {
+		// Debugging: Log entity sebelum update
+		log.Printf("Updating entity in schema %s: %+v", schemaName, entity)
+
+		// Gunakan refleksi untuk mengecek apakah field `active` ada
+		val := reflect.ValueOf(entity).Elem()
+		hasActiveField := val.FieldByName("Active").IsValid()
+
+		query := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
+			Where(fmt.Sprintf("%s = ?", idColumn), id)
+
+		// Jika ada field `active`, gunakan Select agar tetap diperbarui
+		if hasActiveField {
+			query = query.Select("active")
+		}
+
+		// Eksekusi update
+		if err := query.Updates(entity).Error; err != nil {
 			return fmt.Errorf("failed to update record in schema %s: %w", schemaName, err)
 		}
 
