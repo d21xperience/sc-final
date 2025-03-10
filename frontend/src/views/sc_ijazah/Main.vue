@@ -1,23 +1,23 @@
 <template>
-    <div class="w-full bg-white shadow-md p-2">
-        <div class="flex justify-between p-2">
-            <div class="">
-                <button @click="dialogSelectplatforms = true"
-                    class="rounded-full bg-slate-300 py-2 px-4 hover:opacity-80">
-                    <span v-if="platformsActivate">{{ platformsActivate?.name ?? "Pilih Platform" }}</span>
-                    <i class="ml-2 pi pi-angle-up "></i></button>
-            </div>
-            <div v-show="platformsActivate?.name" class="flex items-center">
-                <button class="bg-red-400 py-2 px-3 rounded-full hover:opacity-70 flex items-center gap-2"
-                    @click="platformDiactive"><i class="pi pi-times"></i> Disconect</button>
+    <div class="container">
+        <div class="w-full bg-white shadow-md p-2">
+            <div class="flex justify-between p-2">
+                <div class="">
+                    <button @click="dialogSelectplatforms = true"
+                        class="rounded-full bg-slate-300 py-2 px-4 hover:opacity-80">
+                        <span v-if="platformsActivate">{{ platformsActivate?.name ?? "Pilih Platform" }}</span>
+                        <i class="ml-2 pi pi-angle-up "></i></button>
+                </div>
+                <div v-show="platformsActivate?.name" class="flex items-center">
+                    <button class="bg-red-400 py-2 px-3 rounded-full hover:opacity-70 flex items-center gap-2"
+                        @click="platformDiactive"><i class="pi pi-times"></i> Disconect</button>
+                </div>
             </div>
         </div>
+        <div>
+            <RouterView></RouterView>
+        </div>
     </div>
-    <!-- <MetamaskConnect /> -->
-    <div>
-        <RouterView></RouterView>
-    </div>
-
     <Dialog v-model:visible="dialogSelectplatforms" modal header="Pilih Platform" position="top">
         <div>
             <div v-for="platform in platforms" :key="platform.id" class="my-2 flex space-x-1">
@@ -36,7 +36,6 @@
 </template>
 
 <script setup>
-import MetamaskConnect from '@/components/MetamaskConnect.vue';
 import { useStore } from "vuex";
 const store = useStore();
 import { computed, ref, watch, onMounted } from 'vue';
@@ -63,17 +62,6 @@ const fetchPlatforms = async () => {
 let payload = {}
 // Fungsi untuk mengubah platform yang aktif
 const setPlatform = async () => {
-    // if (!platformsActivate.value) return;
-
-    // payload.bc_platform = platformsActivate.value;
-    // console.log("set platform: ", payload);
-
-    // try {
-    //     const res = await store.dispatch("scService/setBCPlatform", payload);
-    //     console.log("Response:", res);
-    // } catch (error) {
-    //     console.error("Error setting platform:", error);
-    // }
     if (!platformsActivate.value) return;
 
     payload.bc_platform = { ...platformsActivate.value }; // Pastikan objek tidak reaktif

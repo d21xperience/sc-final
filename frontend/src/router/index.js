@@ -134,7 +134,7 @@ const router = createRouter({
             {
               path: "sc-ijazah",
               name: "scIjazah",
-              component: () => import("../views/sc_ijazah/SCIjazah.vue"),
+              component: () => import("../views/sc_ijazah/IssueDegreeForm.vue"),
             },
             {
               path: "daftar-trx",
