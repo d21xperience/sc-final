@@ -131,14 +131,14 @@ const menuItems = ref([
                     router.push({ name: 'dapodikNilaiSiswa' })
                 }
             },
-            {
-                label: 'Data Ijazah',
-                icon: 'pi pi-file-check',
+            // {
+            //     label: 'Data Ijazah',
+            //     icon: 'pi pi-file-check',
 
-                command: () => {
-                    router.push({ name: 'dapodikDataIjazah' })
-                }
-            },
+            //     command: () => {
+            //         router.push({ name: 'dapodikDataIjazah' })
+            //     }
+            // },
             // {
             //     label: 'Sync Dapodik',
             //     icon: 'pi pi-refresh',
@@ -195,6 +195,7 @@ const menuItems = ref([
                     router.push({ name: 'listBCNetwork' })
                 }
             },
+
             {
                 label: 'SC-Ijazah',
                 icon: 'pi pi-file',
@@ -202,6 +203,7 @@ const menuItems = ref([
                     router.push({ name: 'scIjazah' })
                 }
             },
+
             {
                 label: 'Transaksi',
                 icon: 'pi pi-chart-line',

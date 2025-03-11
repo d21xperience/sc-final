@@ -3,9 +3,9 @@
     <div class="">
         <div class="card">
             <div v-if="dataConnected">
-                <div class="fixed top-0 w-full left-0 z-20 bg-white">
-                    <div class="lg:ml-[250px] my-2 ">
-                        <div class="container ">
+                <div class="">
+                    <div class="my-2 ">
+                        <div class="">
                             <div class="flex flex-wrap justify-between items-center mb-2">
                                 <h4 class="font-bold text-xl md:text-2xl">Data Transkrip Nilai</h4>
                                 <div class="md:flex md:items-center md:space-x-2">
@@ -72,7 +72,7 @@
                     dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[10, 20, 50]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" class="mt-56"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                     @rowExpand="onRowExpand" @rowCollapse="onRowCollapse">
                     <template #header>
                         <div class="flex flex-wrap justify-end gap-2">

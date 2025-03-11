@@ -5,15 +5,15 @@ contract VerifikasiIjazah {
     address public owner;
 
     struct Subject {
-        bytes32 name; // Menggunakan bytes32 daripada string
+        bytes32 name; 
         uint8 grade;
     }
 
     struct Degree {
         bytes32 degreeHash;
-        bytes32 sekolah; // Menggunakan bytes32 daripada string
+        bytes32 sekolah; 
         uint256 issueDate;
-        bytes32 ipfsUrl; // Menggunakan bytes32 daripada string
+        bytes32 ipfsUrl; 
         bool exists; // Flag untuk menandai keberadaan ijazah
     }
 

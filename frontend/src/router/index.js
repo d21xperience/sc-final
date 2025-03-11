@@ -134,8 +134,14 @@ const router = createRouter({
             {
               path: "sc-ijazah",
               name: "scIjazah",
-              component: () => import("../views/sc_ijazah/IssueDegreeForm.vue"),
+              meta: {
+                title: "Input Ijazah",
+                requiresAuth: true,
+                role: "admin",
+              },
+              component: () => import("../views/sc_ijazah/SCIjazah.vue"),
             },
+
             {
               path: "daftar-trx",
               name: "daftarTrx",
@@ -231,12 +237,6 @@ const router = createRouter({
           name: "dapodikNilaiSiswa",
           component: () => import("../views/dapodik/DataNilai.vue"),
           meta: { title: "Data Nilai", requiresAuth: true, role: "admin" },
-        },
-        {
-          path: "data-ijazah",
-          name: "dapodikDataIjazah",
-          component: () => import("../views/dapodik/DataIjazah.vue"),
-          meta: { title: "Data Ijazah", requiresAuth: true, role: "admin" },
         },
         {
           path: "data-kelas",

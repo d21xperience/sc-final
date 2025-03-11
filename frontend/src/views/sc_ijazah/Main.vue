@@ -2,7 +2,8 @@
     <div class="container">
         <div class="w-full bg-white shadow-md p-2">
             <div class="flex justify-between p-2">
-                <div class="">
+                <div class="flex space-x-2 items-center">
+                    <p class="text-gray-500">Platform</p>
                     <button @click="dialogSelectplatforms = true"
                         class="rounded-full bg-slate-300 py-2 px-4 hover:opacity-80">
                         <span v-if="platformsActivate">{{ platformsActivate?.name ?? "Pilih Platform" }}</span>

@@ -34,9 +34,9 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "sekolah",
-						"type": "bytes32"
+						"type": "string"
 					},
 					{
 						"indexed": false,
@@ -46,9 +46,9 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "ipfsUrl",
-						"type": "bytes32"
+						"type": "string"
 					}
 				],
 				"name": "DegreeIssued",
@@ -70,9 +70,9 @@
 						"type": "bytes32"
 					},
 					{
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "sekolah",
-						"type": "bytes32"
+						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -80,14 +80,9 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "ipfsUrl",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bool",
-						"name": "exists",
-						"type": "bool"
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -117,9 +112,9 @@
 				"name": "getDegree",
 				"outputs": [
 					{
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "",
-						"type": "bytes32"
+						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -127,14 +122,14 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "",
-						"type": "bytes32"
+						"type": "string"
 					},
 					{
-						"internalType": "bytes32[]",
+						"internalType": "string[]",
 						"name": "",
-						"type": "bytes32[]"
+						"type": "string[]"
 					},
 					{
 						"internalType": "uint8[]",
@@ -153,9 +148,9 @@
 						"type": "bytes32"
 					},
 					{
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "_sekolah",
-						"type": "bytes32"
+						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -163,14 +158,14 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "_ipfsUrl",
-						"type": "bytes32"
+						"type": "string"
 					},
 					{
-						"internalType": "bytes32[]",
+						"internalType": "string[]",
 						"name": "_mataPelajaran",
-						"type": "bytes32[]"
+						"type": "string[]"
 					},
 					{
 						"internalType": "uint8[]",
@@ -185,41 +180,25 @@
 			},
 			{
 				"inputs": [],
-				"name": "owner",
+				"name": "listDegrees",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "bytes32[]",
 						"name": "",
-						"type": "address"
+						"type": "bytes32[]"
 					}
 				],
 				"stateMutability": "view",
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "transcripts",
+				"inputs": [],
+				"name": "owner",
 				"outputs": [
 					{
-						"internalType": "bytes32",
-						"name": "name",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "grade",
-						"type": "uint8"
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -239,7 +218,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Desktop/Smart Contract/sc_ijazah/backend/sc-service/smartcontract/contracts/ijazah_v3.sol": "VerifikasiIjazah"
+			"Desktop/Smart Contract/sc_ijazah/backend/sc-service/smartcontract/contracts/ijazah_v2.sol": "VerifikasiIjazah"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -253,12 +232,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"Desktop/Smart Contract/sc_ijazah/backend/sc-service/smartcontract/contracts/ijazah_v3.sol": {
-			"keccak256": "0x283b3e797864885f43e6bd45a8904bb5029044707564ed0f2714cc0008fbdb12",
+		"Desktop/Smart Contract/sc_ijazah/backend/sc-service/smartcontract/contracts/ijazah_v2.sol": {
+			"keccak256": "0x150dc9928ef708f54b177ce39e0dd235a99ef941269583445a89b738270900d6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9a73adfd5ed7f45f37989f721c8d5353fa778a447f0b7015af2617f2b08e9bfd",
-				"dweb:/ipfs/QmVpXRKvNxHJduniEkS7kvrzLMr6egft7u9DBTUDCcC8RS"
+				"bzz-raw://c77c0d68acc130e4e60fdae9325069db2a03cc5bf70bdfe7b527241a599951f5",
+				"dweb:/ipfs/QmYmTKG9JiDEgPHfKfAMYfezPZMh9Bq3aETXyECiK67efm"
 			]
 		}
 	},

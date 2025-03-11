@@ -1,96 +1,47 @@
+version: '3.6'
 services:
-  node_sekolah:
-    image: quorumengineering/quorum:latest
+  node1:
+    image: quorumengineering/quorum:24.4.1
     container_name: node_sekolah
     ports:
-      - "21000:21000"   # RPC Port
-      - "30303:30303"   # P2P Port
-    networks:
-      - quorum-net
+      - "22000:8545"
+      - "21000:30303"
     volumes:
-      - ./data/node_sekolah:/qdata
-    command: [
-      "--nodiscover",
-      "--networkid", "10",
-      "--raft",
-      "--rpc",
-      "--rpcaddr", "0.0.0.0",
-      "--rpcport", "21000",
-      "--rpcapi", "admin,eth,debug,miner,net,txpool,personal,web3",
-      "--port", "30303"
-    ]
+      - ./node1/data:/quorum
+      - ./node1/static-nodes.json:/quorum/static-nodes.json
+      - ./node1/nodekey:/quorum/nodekey
+    environment:
+      - PRIVATE_CONFIG=ignore
+    command: >
+      sh -c "
+      geth --datadir=/quorum init /config/genesis.json;
+      geth --datadir=/quorum --nodiscover --verbosity 5 --networkid 1337 --rpc --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum --emitcheckpoints
+      "
 
-  # node_disdik:
-    # image: quorumengineering/quorum:latest
-    # container_name: node_disdik
+  # node2:
+    # image: quorumengineering/quorum:24.4.1
+    # container_name: node_dinas_pendidikan
     # ports:
-      # - "21001:21000"
-      # - "30304:30303"
-    # networks:
-      # - quorum-net
+      # - "22001:8545"
+      # - "21001:30303"
     # volumes:
-      # - ./data/node_disdik:/qdata
-    # command: [
-      # "--nodiscover",
-      # "--networkid", "10",
-      # "--raft",
-      # "--rpc",
-      # "--rpcaddr", "0.0.0.0",
-      # "--rpcport", "21000",
-      # "--rpcapi", "admin,eth,debug,miner,net,txpool,personal,web3",
-      # "--port", "30303"
-    # ]
+      # - ./node2/data:/quorum
+      # - ./node2/static-nodes.json:/quorum/static-nodes.json
+      # - ./node2/nodekey:/quorum/nodekey
+    # environment:
+      # - PRIVATE_CONFIG=ignore
+    # command: --datadir /quorum --nodiscover --verbosity 5 --networkid 1337 --rpc --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum --emitcheckpoints
 
-  # node_lpms:
-    # image: quorumengineering/quorum:latest
-    # container_name: node_lpms
+  # node3:
+    # image: quorumengineering/quorum:24.4.1
+    # container_name: node_lembaga_penjamin_mutu
     # ports:
-      # - "21002:21000"
-      # - "30305:30303"
-    # networks:
-      # - quorum-net
+      # - "22002:8545"
+      # - "21002:30303"
     # volumes:
-      # - ./data/node_lpms:/qdata
-    # command: [
-      # "--nodiscover",
-      # "--networkid", "10",
-      # "--raft",
-      # "--rpc",
-      # "--rpcaddr", "0.0.0.0",
-      # "--rpcport", "21000",
-      # "--rpcapi", "admin,eth,debug,miner,net,txpool,personal,web3",
-      # "--port", "30303"
-    # ]
-
-  tessera_sekolah:
-    image: quorumengineering/tessera:latest
-    container_name: tessera_sekolah
-    ports:
-      - "9001:9001"
-    networks:
-      - quorum-net
-    volumes:
-      - ./data/tessera_sekolah:/qdata
-
-  # tessera_disdik:
-    # image: quorumengineering/tessera:latest
-    # container_name: tessera_disdik
-    # ports:
-      # - "9002:9001"
-    # networks:
-      # - quorum-net
-    # volumes:
-      # - ./data/tessera_disdik:/qdata
-
-  # tessera_lpms:
-    # image: quorumengineering/tessera:latest
-    # container_name: tessera_lpms
-    # ports:
-      # - "9003:9001"
-    # networks:
-      # - quorum-net
-    # volumes:
-      # - ./data/tessera_lpms:/qdata
-
-networks:
-  quorum-net:
+      # - ./node3/data:/quorum
+      # - ./node3/static-nodes.json:/quorum/static-nodes.json
+      # - ./node3/nodekey:/quorum/nodekey
+    # environment:
+      # - PRIVATE_CONFIG=ignore
+    # command: --datadir /quorum --nodiscover --verbosity 5 --networkid 1337 --rpc --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum --emitcheckpoints

@@ -14,6 +14,7 @@ const state = {
   error: null,
   BCPlatformSelected: {},
   BCAccountActivate: {},
+  
   // BCNETWORK: JSON.parse(localStorage.getItem("BCNETWORK")) || null,
   // BCACCOUNT: JSON.parse(localStorage.getItem("BCACCOUNT")) || null,
 };

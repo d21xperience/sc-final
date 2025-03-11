@@ -1,20 +1,27 @@
 <template>
-    ETHEREUM
-    <div>
+
+    <!-- ETHEREUM -->
+
+
+
+    <MetamaskConnect/>
+
+    <!-- <div>
         <input type="text">
         <label for="address"></label>
-    </div>
+    </div> -->
 </template>
 
 <script setup>
 
 defineProps({
-    platformSelected:{
+    platformSelected: {
         type: Object,
 
     }
 })
 // Dialog
+
 import Dialog from 'primevue/dialog';
 import { useDialog } from 'primevue/usedialog';
 const dialog = useDialog();
@@ -255,11 +262,7 @@ const getAccount = async (network) => {
 // -------------------------------------------------------------------------------
 
 
-// Mempersingkat address
-const shortenText = (text) => {
-    if (text.length <= 10) return text; // Tidak dipersingkat jika terlalu pendek
-    return `${text.slice(0, 5)}...${text.slice(-5)}`;
-};
+
 
 // Fungsi untuk mengonversi ETH ke Fiat (USD)
 const fiatAmount = ref(null); // Menyimpan hasil konversi
@@ -277,26 +280,7 @@ async function convertToFiatCurrency(amount) {
     }
 }
 
-// copy to clipboard
-const textToCopy = ref(null); // Reference for the text element
-const isCopied = ref(false); // State for success message visibility
 
-const copyText = async () => {
-    try {
-        if (textToCopy.value) {
-            // Use clipboard API to copy text
-            await navigator.clipboard.writeText(textToCopy.value.textContent);
-            isCopied.value = true;
-
-            // Hide the success message after 2 seconds
-            setTimeout(() => {
-                isCopied.value = false;
-            }, 2000);
-        }
-    } catch (err) {
-        console.error("Failed to copy text:", err);
-    }
-};
 
 const dialogBuildSmartContract = ref(false)
 const buildSmartContract = async () => {
