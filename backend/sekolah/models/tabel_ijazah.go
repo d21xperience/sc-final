@@ -32,7 +32,7 @@ type Ijazah struct {
 	CreatedAt                   time.Time
 	UpdatedAt                   time.Time
 	DeletedAt                   gorm.DeletedAt `gorm:"index"`
-
+	Status                      string         `json:"status"` // DRAFT, PENDING, ACTIVE, REVOKED
 	// Relasi
 	// PesertaDidik PesertaDidik `gorm:"foreignKey:PesertaDidikID"`
 	// NilaiUjianSekolah NIlaiRerataAkhir

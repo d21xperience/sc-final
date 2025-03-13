@@ -231,23 +231,6 @@ const router = createRouter({
           name: "dapodikSiswa",
           component: () => import("../views/dapodik/DataSiswa.vue"),
           meta: { title: "Data Siswa", requiresAuth: true, role: "admin" },
-          children: [
-            {
-              path: "",
-              name: "readSiswa",
-              component: () => import("../views/dapodik/data_siswa/Read.vue"),
-            },
-            {
-              path: "input",
-              name: "inputSiswa",
-              component: () => import("../views/dapodik/data_siswa/Add.vue"),
-            },
-            {
-              path: "edit-siswa",
-              name: "editSiswa",
-              component: () => import("../views/dapodik/data_siswa/Add.vue"),
-            },
-          ],
         },
         {
           path: "data-nilai",

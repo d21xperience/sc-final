@@ -1,0 +1,4 @@
+<template>
+
+    Quorum
+</template>
