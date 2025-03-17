@@ -230,7 +230,7 @@ const router = createRouter({
           path: "data-siswa",
           name: "dapodikSiswa",
           component: () => import("../views/dapodik/DataSiswa.vue"),
-          meta: { title: "Data Siswa", requiresAuth: true, role: "admin" },
+          // meta: { title: "Data Siswa", requiresAuth: true, role: "admin" },
           children: [
             {
               path: "",
@@ -243,7 +243,7 @@ const router = createRouter({
               component: () => import("../views/dapodik/data_siswa/Add.vue"),
             },
             {
-              path: "edit-siswa",
+              path: "edit-siswa/:id",
               name: "editSiswa",
               component: () => import("../views/dapodik/data_siswa/Add.vue"),
             },

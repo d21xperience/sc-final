@@ -14,20 +14,24 @@ import (
 	"sekolah/repositories"
 	"sekolah/utils"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 // UploadService menangani penyimpanan file yang diunggah
 type UploadServiceServer struct {
 	pb.UnimplementedUploadDataSekolahServiceServer
-	uploadDir        string
-	repoSiswa        repositories.GenericRepository[models.PesertaDidik]
-	repoKelas        repositories.GenericRepository[models.RombonganBelajar]
-	repoKelasAnggota repositories.GenericRepository[models.RombelAnggota]
-	repoGuru         repositories.GenericRepository[models.TabelPTK]
+	uploadDir          string
+	repoSiswa          repositories.GenericRepository[models.PesertaDidik]
+	repoSiswaPelengkap repositories.GenericRepository[models.PesertaDidikPelengkap]
+	repoKelas          repositories.GenericRepository[models.RombonganBelajar]
+	repoKelasAnggota   repositories.GenericRepository[models.RombelAnggota]
+	repoGuru           repositories.GenericRepository[models.TabelPTK]
 }
 
 func NewUploadServiceServer() *UploadServiceServer {
 	repoSiswa := repositories.NewSiswaRepository(config.DB)
+	repoSiswaPelengkap := repositories.NewSiswaPelengkapRepository(config.DB)
 	repoKelas := repositories.NewrombonganBelajarRepository(config.DB)
 	repoKelasAnggota := repositories.NewRombelAnggotaRepository(config.DB)
 	repoGuru := repositories.NewPTKRepository(config.DB)
@@ -35,11 +39,12 @@ func NewUploadServiceServer() *UploadServiceServer {
 	// 	log.Fatal("❌ ERROR: Gagal menginisialisasi repoSiswa") // Debugging
 	// }
 	return &UploadServiceServer{
-		uploadDir:        "uploads",
-		repoSiswa:        *repoSiswa,
-		repoKelas:        *repoKelas,
-		repoKelasAnggota: *repoKelasAnggota,
-		repoGuru:         *repoGuru,
+		uploadDir:          "uploads",
+		repoSiswa:          *repoSiswa,
+		repoSiswaPelengkap: *repoSiswaPelengkap,
+		repoKelas:          *repoKelas,
+		repoKelasAnggota:   *repoKelasAnggota,
+		repoGuru:           *repoGuru,
 	}
 }
 
@@ -77,10 +82,6 @@ func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	// Ambil parameter dan file
-	// schemaname := r.FormValue("schemaname")
-	// semesterId := r.FormValue("semester_id")
-	// uploadType := r.FormValue("upload_type")
 	fileHeader := r.MultipartForm.File["file"]
 	param := ParamTemplate{
 		templateType: r.FormValue("upload_type"),
@@ -128,13 +129,13 @@ func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Requ
 				BacaDataExcel,
 			)
 		},
-		"guru": func() error {
-			return processUpload(
-				context.Background(), param,
-				UploadDataSekolah[models.TabelPTK],
-				s.repoGuru.Save,
-			)
-		},
+		// "guru": func() error {
+		// 	return processUpload(
+		// 		context.Background(), param,
+		// 		UploadDataSekolah[models.TabelPTK],
+		// 		s.repoGuru.Save,
+		// 	)
+		// },
 		// Tambahkan tipe lain di sini...
 	}
 
@@ -273,55 +274,90 @@ func (h *UploadServiceServer) DownloadTemplateHTTP(w http.ResponseWriter, r *htt
 }
 
 // Definisikan fungsi untuk menangani upload berdasarkan tipe data
-func processUpload[T any](
-	ctx context.Context,
-	param ParamTemplate,
-	uploadFunc func(ParamTemplate) ([]T, error),
-	saveFunc func(context.Context, *T, string) error,
-) error {
-	// Ambil data dari file
-	data, err := uploadFunc(param)
-	if err != nil {
-		return fmt.Errorf("gagal memproses file: %v", err)
-	}
+// func processUpload[T any](
+// 	ctx context.Context,
+// 	param ParamTemplate,
+// 	uploadFunc func(ParamTemplate) ([]T, error),
+// 	saveFunc func(context.Context, *T, string) error,
+// ) error {
+// 	// Ambil data dari file
+// 	data, err := uploadFunc(param)
+// 	if err != nil {
+// 		return fmt.Errorf("gagal memproses file: %v", err)
+// 	}
 
-	// Iterasi data dan simpan ke database
-	for i := range data {
-		utils.HandleNilPointers(&data[i]) // Hindari pointer nil
+// 	// Iterasi data dan simpan ke database
+// 	for i := range data {
+// 		utils.HandleNilPointers(&data[i]) // Hindari pointer nil
 
-		// Simpan ke database
-		if err := saveFunc(ctx, &data[i], param.schemaname); err != nil {
-			return fmt.Errorf("gagal menyimpan data: %v", err)
-		}
-	}
-	return nil
-}
+//			// Simpan ke database
+//			if err := saveFunc(ctx, &data[i], param.schemaname); err != nil {
+//				return fmt.Errorf("gagal menyimpan data: %v", err)
+//			}
+//		}
+//		return nil
+//	}
 func (s *UploadServiceServer) processUploadSiswa(
 	ctx context.Context,
 	param ParamTemplate,
-	uploadFunc func(ParamTemplate) ([][]string, error),
+	uploadFunc func(*ParamTemplate) ([][]string, error),
 ) error {
 	// Ambil data dari file
-	data, err := uploadFunc(param)
+	data, err := uploadFunc(&param)
 	if err != nil {
 		return fmt.Errorf("gagal memproses file: %v", err)
 	}
 
 	// Iterasi data dan simpan ke database
 	for i := range data {
-		utils.HandleNilPointers(&data[i]) // Hindari pointer nil
+		// utils.HandleNilPointers(&data[i]) // Hindari pointer nil
 
 		// Simpan ke database
 		// database tabel_siswa
+		pesertaDidikId := uuid.New()
+		pelengkapSiswaId := uuid.New()
+		anggotaRombelId := uuid.New()
+		alamatSiswa := fmt.Sprintf("%s RT.%s RW.%s, Desa %s Kec. %s Kab. %s Prov. %s %s",data[i][9])
 		err := s.repoSiswa.Save(ctx, &models.PesertaDidik{
-			PesertaDidikId: "",
+			PesertaDidikId: pesertaDidikId.String(),
+			NmSiswa:        data[i][0],
+			Nis:            data[i][1],
+			JenisKelamin:   data[i][2],
+			Nisn:           data[i][3],
+			TempatLahir:    data[i][4],
+			TanggalLahir:   data[i][5],
+			Agama:          data[i][7],
+			AlamatSiswa:    &aalamatSiswa,
+			TeleponSiswa:   data[i][18],
+			// DiterimaTanggal: data[i][1],
+			NmAyah:        data[i][23],
+			PekerjaanAyah: data[i][26],
+			NmIbu:         data[i][29],
+			PekerjaanIbu:  data[i][32],
+			NmWali:        &data[i][39],
+			PekerjaanWali: &data[i][41],
+		}, param.schemaname)
+		if err != nil {
+			return err
+		}
+		err = s.repoSiswaPelengkap.Save(ctx, &models.PesertaDidikPelengkap{
+			PelengkapSiswaId: pelengkapSiswaId.String(),
+			PesertaDidikId:   func(s string) *string { return &s }(pesertaDidikId.String()),
+			SekolahAsal:      data[i][55],
+			AnakKe:           &data[i][56],
+			// FotoSiswa: ,
 		}, param.schemaname)
 		if err != nil {
 			return err
 		}
 		// database tabel_anggotakelas
 		err = s.repoKelasAnggota.Save(ctx, &models.RombelAnggota{
-			AnggotaRombelId: "tes",
+			AnggotaRombelId: anggotaRombelId.String(),
+			PesertaDidikId:  pesertaDidikId.String(),
+			// SemesterId: ,
+			RombonganBelajar: models.RombonganBelajar{
+				NmKelas: data[i][55],
+			},
 		}, param.schemaname)
 		if err != nil {
 			return err

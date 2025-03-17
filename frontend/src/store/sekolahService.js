@@ -15,6 +15,8 @@ const state = {
   tabelTenant: JSON.parse(localStorage.getItem("tabelTenant")) || null,
   // tabelSemester: JSON.parse(localStorage.getItem("tabelSemester")) || null,
   tabelSiswa: JSON.parse(localStorage.getItem("tabelSiswa")) || null,
+  selectedSemester:
+    JSON.parse(localStorage.getItem("selectedSemester")) || null,
 };
 
 const mutations = {
@@ -36,14 +38,15 @@ const mutations = {
     state.tabelSiswa = tabelSiswa;
     localStorage.setItem("tabelSiswa", JSON.stringify(tabelSiswa));
   },
+  SET_SELECTEDSEMESTER(state, value) {
+    state.selectedSemester = value;
+    localStorage.setItem("selectedSemester", JSON.stringify(value));
+  },
 };
 
 const actions = {
   // Fitur baru ceknpsn
   async fetchTabeltenant({ commit }, sekolahId) {
-    // console.log(sekolahId);
-    // commit("SET_LOADING", true);
-    // commit("SET_ERROR", null);
     try {
       const response = await api.get(
         `/sekolah/sekolah-terdaftar?sekolah_id=${sekolahId}`
@@ -103,6 +106,11 @@ const actions = {
       commit("SET_LOADING", false);
     }
   },
+
+  async fetchSelectedSemester({ commit }, payload) {
+    commit("SET_SELECTEDSEMESTER", payload);
+  },
+
   async fetchRombel({ commit }, payload) {
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);
@@ -181,12 +189,15 @@ const actions = {
     }
   },
   async fetchSiswa({ commit }, payload) {
+    console.log(payload.schemaName)
+    
     try {
       const response = await api.get(
         `/ss/${payload.schemaName}/anggota-kelas`,
         {
           params: {
             semester_id: payload.semesterId,
+            schemaname : payload.schemaName
           },
         }
       );
@@ -228,6 +239,7 @@ const getters = {
   getTabeltenant: (state) => state.tabelTenant,
   getSemester: (state) => state.tabelSemester,
   getSiswa: (state) => state.tabelSiswa,
+  getSelectedSemester: (state) => state.selectedSemester,
 };
 
 export default {

@@ -1,68 +1,56 @@
 <template>
 
-    <div class="">
-        <div class="card">
-            <div v-if="dataConnected">
-                <div class="fixed top-0 w-full left-0 z-20 bg-white">
-                    <div class="lg:ml-[250px] my-2 ">
-                        <div class="container ">
-                            <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Siswa </h4>
-                                <div class="md:flex md:items-center md:space-x-2">
-                                    <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
-                                    <div>
-                                        <Select v-model="selectedSemester" :options="semester"
-                                            optionLabel="namaSemester" placeholder="Tahun Pelajaran"
-                                            class="w-full md:w-52 mr-2" />
-
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Breadcrumb -->
-                            <div>
-                                <Breadcrumb :home="home" :model="breadcrumbItems">
-                                    <template #item="{ item, props }">
-                                        <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route"
-                                            custom>
-                                            <a :href="href" v-bind="props.action" @click="navigate">
-                                                <span :class="[item.icon, 'text-color']" />
-                                                <span class="text-primary font-semibold">{{ item.label }}</span>
-                                            </a>
-                                        </router-link>
-                                        <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-                                            <span class="text-surface-700 dark:text-surface-0">{{ item.label }}</span>
-                                        </a>
-                                    </template>
-
-                                </Breadcrumb>
-                            </div>
-                        </div>
+    <div class="container">
+        <!-- <div class="fixed top-0 w-full left-0 z-20 bg-white"> -->
+        <div class="my-2 ">
+            <div class=" ">
+                <div class="flex flex-wrap justify-between items-center mb-2">
+                    <h4 class="font-bold text-xl md:text-2xl">Data Siswa </h4>
+                    <div class="md:flex md:items-center md:space-x-2">
+                        <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
                         <div>
-                            <RouterView />
+                            <Select v-model="selectedSemester" :options="semester" optionLabel="namaSemester"
+                                placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" />
+
                         </div>
-
-
                     </div>
                 </div>
+                <!-- Breadcrumb -->
+                <div>
+                    <Breadcrumb :home="home" :model="breadcrumbItems">
+                        <template #item="{ item, props }">
+                            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                                <a :href="href" v-bind="props.action" @click="navigate">
+                                    <span :class="[item.icon, 'text-color']" />
+                                    <span class="text-primary font-semibold">{{ item.label }}</span>
+                                </a>
+                            </router-link>
+                            <a v-else :href="item.url" :target="item.target" v-bind="props.action">
+                                <span class="text-surface-700 dark:text-surface-0">{{ item.label }}</span>
+                            </a>
+                        </template>
 
-
-            </div>
-            <div v-else>
-                <EmptyData @profileFetched="handleProfileFetched" @fetchError="handleFetchError" />
+                    </Breadcrumb>
+                </div>
             </div>
         </div>
-
-
+        <!-- </div> -->
+    </div>
+    <div>
+        <RouterView/>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted,computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useStore } from "vuex";
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const store = useStore();
+
+console.log(route.matched) // Cek apakah child route aktif
+
 // =====================================
 import Breadcrumb from 'primevue/breadcrumb';
 
@@ -111,21 +99,23 @@ const selectedSemester = ref();
 const semester = ref(null);
 const fetchSemester = async () => {
     try {
-
-        console.log(route.fullPath)
-        
         const results = await store.dispatch("sekolahService/fetchSemester")
-        console.log(results)
         if (results) {
             semester.value = store.getters["sekolahService/getSemester"]
             // Ambil semester terbaru berdasarkan ID terbesar
             selectedSemester.value = semester.value.reduce((latest, current) =>
                 current.semesterId > latest.semesterId ? current : latest
             );
+              // tetapkan semester yang dipilih
+              store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedSemester.value)
+
         }
     } catch (error) {
 
     }
 }
+watch(selectedSemester,()=>{
+    store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedSemester.value)
 
+})
 </script>

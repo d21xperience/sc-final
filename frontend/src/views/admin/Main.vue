@@ -120,7 +120,7 @@ const menuItems = ref([
                 icon: 'pi pi-users',
 
                 command: () => {
-                    router.push({ name: 'dapodikSiswa' })
+                    router.push({ name: 'readSiswa' })
                 }
             },
             {

@@ -58,7 +58,7 @@ const closeDialog = () => {
 // Refs untuk FileUpload dan file yang diunggah
 // const fileupload = ref();
 const uploadedFiles = ref();
-const uploadUrl = "http://localhost:8183/api/v1/ss/upload/rest"
+const uploadUrl = `http://localhost:8183/api/v1/ss/upload/rest?upload_type=${props.templateType}`
 
 // Function untuk menyimpan data
 const saveData = async () => {

@@ -195,10 +195,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useStore } from "vuex";
 const store = useStore();
-import FileUpload from 'primevue/fileupload';
+// import FileUpload from 'primevue/fileupload';
 
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -221,14 +221,9 @@ import Image from 'primevue/image';
 
 // ==============================
 onMounted(async () => {
-    // isLoading.value = true
-    // await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulasi fetch
-
-    fetchSemester()
+    semester.value = store.getters["sekolahService/getSemester"]
+    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaName
     fetchSiswa()
-    // DataLulusanService.getProducts().then((data) => (products.value = data));
-    // isLoading.value = false
-
 });
 // watch(selectedSemester, (newVal, oldVal) => {
 //     console.log(newVal)
@@ -263,7 +258,7 @@ const formatCurrency = (value) => {
     return;
 };
 const openNew = () => {
-    router.push({name:"inputSiswa"})
+    router.push({ name: "inputSiswa" })
 };
 const hideDialog = () => {
     productDialog.value = false;
@@ -396,26 +391,11 @@ const dialogStatus = ref(false)
 
 // ==================================
 // =======SEMESTER=============
-const selectedSemester = ref();
-const semester = ref(null);
-const fetchSemester = async () => {
-    try {
-        const results = await store.dispatch("sekolahService/fetchSemester")
-        console.log(results)
-        if (results) {
-            semester.value = store.getters["sekolahService/getSemester"]
-            // Ambil semester terbaru berdasarkan ID terbesar
-            selectedSemester.value = semester.value.reduce((latest, current) =>
-                current.semesterId > latest.semesterId ? current : latest
-            );
-        }
-    } catch (error) {
+// const selectedSemester = ref();
+const semester = ref()
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"]);
 
-    }
-}
-
-const schemaname = ref("tabel_D4DA6B98FCFD71C58F5A")
-// const 
+const schemaname = ref("")
 // ==================================
 // ==================================
 // =======Siswa=============
@@ -423,12 +403,10 @@ const selectedSiswa = ref();
 const siswa = ref(null);
 const fetchSiswa = async () => {
     try {
-        console.log("fethcSiswa")
         let payload = {
-            semesterId: 20232,
-            schemaName: "tabel_D4DA6B98FCFD71C58F5A"
+            semesterId: selectedSemester.value?.semesterId,
+            schemaName: schemaname.value
         }
-        console.log(payload)
         const results = await store.dispatch("sekolahService/fetchSiswa", payload)
         // console.log(results)
         if (results) {
@@ -450,7 +428,7 @@ import DialogImport from '@/components/DialogImport.vue'
 import router from '@/router';
 const dialogImport = ref(false)
 const saveImport = (e) => {
-    console.log("Data disimpan:", e);
+    // console.log("Data disimpan:", e);
     dialogImport.value = false;
 };
 
@@ -458,7 +436,6 @@ const cancelImport = () => {
     console.log("Import dibatalkan");
     dialogImport.value = false;
 };
-// const templateUrl = ref("http://localhost:8183/api/v1/ss/download/template?template_type=siswa&schemaname=tabel_D4DA6B98FCFD71C58F5A&semesterId=20232");
 // ===========================================
 
 

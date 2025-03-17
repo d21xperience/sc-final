@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sekolah/models"
 	"sekolah/repositories"
+	"strings"
 	"time"
 
 	"github.com/xuri/excelize/v2"
@@ -57,7 +58,7 @@ func ConvertModelToPB[T any, U any](model *T, converter func(*T) *U) *U {
 }
 
 // Fungsi untuk membaca file Excel dan memproses data berdasarkan jenis
-func BacaDataExcel(param ParamTemplate) ([][]string, error) {
+func BacaDataExcel(param *ParamTemplate) ([][]string, error) {
 	f, err := excelize.OpenFile(param.filePath)
 	if err != nil {
 		return nil, fmt.Errorf("gagal membaca file Excel: %w", err)
@@ -68,10 +69,10 @@ func BacaDataExcel(param ParamTemplate) ([][]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	if ret.Keywords != param.schemaname || ret.ContentStatus != param.templateType {
+	if !strings.EqualFold(ret.Keywords, param.schemaname) || !strings.EqualFold(ret.ContentStatus, param.templateType) {
 		return nil, err
 	}
-
+	param.semesterId = ret.Category
 	rows, err := f.GetRows(f.GetSheetName(0))
 	if err != nil {
 		return nil, fmt.Errorf("gagal mengambil data dari sheet: %w", err)
@@ -228,12 +229,12 @@ func GenerateTemplate(param ParamTemplate, db *gorm.DB) error {
 	// Tentukan header berdasarkan jenis template
 	var headers []string
 	templates := map[string][]string{
-		"siswa":           {"peserta_didik_id(uuid)", "nm_kelas","nis", "nisn", "nm_siswa", "tempat_lahir", "tanggal_lahir(yyyy-mm-dd)", "jenis_kelamin(L/P)", "agama", "alamat_siswa", "telepon_siswa", "diterima_tanggal(yyyy-mm-dd)", "nm_ayah", "nm_ibu", "pekerjaan_ayah", "pekerjaan_ibu", "nm_wali", "semester_id", "rombongan_belajar_id"},
-		"siswa_pelengkap": {"peserta_didik_id(uuid)", "nm_siswa", "semester_id", "status_dalam_kel", "anak_ke", "sekolah_asal", "diterima_kelas", "alamat_ortu", "telepon_ortu", "alamat_wali", "telepon_wali", "foto_siswa"},
-		"nilai_akhir":     {"peserta_didik_id(uuid)", "nm_siswa", "semester_id"},
-		"ijazah":          {"peserta_didik_id(uuid)", "nm_siswa", "semester_id", "nis", "nomor_ijazah", "tahun_lulus"},
-		"kelas":           {"rombongan_belajar_id(uuid)", "nm_siswa", "semester_id", "sekolah_id", "semester_id", "jurusan_id", "ptk_id", "nm_kelas", "tingkat_pendidikan_id", "jenis_rombel", "nama_jurusan_sp", "jurusan_sp_id", "kurikulum_id"},
-		"guru":            {"ptk_id(uuid)", "nama", "tahun_ajaran_id", "nip", "jenis_ptk_id", "jenis_kelamin", "tempat_lahir", "tanggal_lahir", "nuptk", "alamat_jalan", "status_keaktifan_id"},
+		"siswa": {"Nama", "NIPD", "JK", "NISN", "Tempat Lahir", "Tanggal Lahir", "NIK", "Agama", "Alamat", "RT", "RW", "Dusun", "Kelurahan", "Kecamatan", "Kode Pos", "Jenis Tinggal", "Alat Transportasi", "Telepon", "HP", "E-Mail", "SKHUN", "Penerima KPS", "No. KPS", "Nama Ayah", "Tahun Lahir Ayah", "Jenjang Pendidikan Ayah", "Pekerjaan Ayah", "Penghasilan Ayah", "NIK Ayah", "Nama Ibu", "Tahun Lahir Ibu", "Jenjang Pendidikan Ibu", "Pekerjaan Ibu", "Penghasilan Ibu", "NIK Ibu", "Nama Wali", "Tahun Lahir Wali", "Jenjang Pendidikan Wali", "Pekerjaan Wali", "Penghasilan Wali", "NIK Wali", "Rombel Saat Ini", "No Peserta Ujian Nasional", "No Seri Ijazah", "Penerima KIP", "Nomor KIP", "Nama di KIP", "Nomor KKS", "No Registrasi Akta Lahir", "Bank", "Nomor Rekening Bank", "Rekening Atas Nama", "Layak PIP (usulan dari sekolah)", "Alasan Layak PIP", "Kebutuhan Khusus", "Sekolah Asal", "Anak ke-berapa", "Lintang", "Bujur", "No KK", "Berat Badan", "Tinggi Badan", "Lingkar Kepala", "Jml. Saudara Kandung", "Jarak Rumah ke Sekolah (KM)"},
+
+		"nilai_akhir": {"peserta_didik_id(uuid)", "nm_siswa", "semester_id"},
+		"ijazah":      {"peserta_didik_id(uuid)", "nm_siswa", "semester_id", "nis", "nomor_ijazah", "tahun_lulus"},
+		"kelas":       {"rombongan_belajar_id(uuid)", "nm_siswa", "semester_id", "sekolah_id", "semester_id", "jurusan_id", "ptk_id", "nm_kelas", "tingkat_pendidikan_id", "jenis_rombel", "nama_jurusan_sp", "jurusan_sp_id", "kurikulum_id"},
+		"guru":        {"ptk_id(uuid)", "nama", "tahun_ajaran_id", "nip", "jenis_ptk_id", "jenis_kelamin", "tempat_lahir", "tanggal_lahir", "nuptk", "alamat_jalan", "status_keaktifan_id"},
 	}
 	headers, exists := templates[param.templateType]
 	if !exists {
@@ -241,7 +242,7 @@ func GenerateTemplate(param ParamTemplate, db *gorm.DB) error {
 	}
 
 	for col, header := range headers {
-		cell := fmt.Sprintf("%c1", 'A'+col)
+		cell := fmt.Sprintf("%s1", getExcelColumnName(col))
 		f.SetCellValue(sheetName, cell, header)
 	}
 	err := f.SetDocProps(&excelize.DocProperties{
@@ -334,6 +335,15 @@ func templateIjazah(ctx context.Context, db *gorm.DB, f *excelize.File, param Pa
 	}
 	f.SetColVisible(sheetName, "A", false)
 	return nil
+}
+
+func getExcelColumnName(col int) string {
+	result := ""
+	for col >= 0 {
+		result = string(rune('A'+(col%26))) + result
+		col = col/26 - 1
+	}
+	return result
 }
 
 // ============================
