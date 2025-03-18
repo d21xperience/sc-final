@@ -26,19 +26,8 @@ const selectedSemester = ref({})
 const props = defineProps({
     visible: Boolean,
     semester: Array,
-    // selectedSemester: Object,
     templateType: String,
     schemaName: String,
-    // semesterId: String,
-
-    // downloadUrl: {
-    //     type: String,
-    //     required: true
-    // },
-    // fileName: {
-    //     type: String,
-    //     // default: "template.xlsx"
-    // }
 });
 
 // Emit event ke parent
@@ -70,6 +59,9 @@ const saveData = async () => {
     // console.log(uploadedFiles.value.files.length)
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("upload_type", props.templateType);
+    formData.append("schemaname", props.schemaName);
+    formData.append("semester_id", props.semester);
     isLoading.value = false;
     try {
         const response = await fetch(uploadUrl, {

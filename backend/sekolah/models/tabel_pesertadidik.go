@@ -1,25 +1,29 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type PesertaDidik struct {
-	PesertaDidikId  string  `gorm:"column:peserta_didik_id;primaryKey"` // STRING
-	Nis             string  `gorm:"column:nis"`                         // String
-	Nisn            string  `gorm:"column:nisn"`                        // String
-	NmSiswa         string  `gorm:"column:nm_siswa"`                    // String
-	TempatLahir     string  `gorm:"column:tempat_lahir"`                // String
-	TanggalLahir    string  `gorm:"column:tanggal_lahir"`               // String (format tanggal, bisa diubah ke time.Time jika perlu)
-	JenisKelamin    string  `gorm:"column:jenis_kelamin"`               // String
-	Agama           string  `gorm:"column:agama"`                       // String
-	AlamatSiswa     *string `gorm:"column:alamat_siswa"`                // Nullable string
-	TeleponSiswa    string  `gorm:"column:telepon_siswa"`               // String
-	DiterimaTanggal string  `gorm:"column:diterima_tanggal"`            // String (format tanggal, bisa diubah ke time.Time jika perlu)
-	NmAyah          string  `gorm:"column:nm_ayah"`                     // String
-	NmIbu           string  `gorm:"column:nm_ibu"`                      // String
-	PekerjaanAyah   string  `gorm:"column:pekerjaan_ayah"`              // String
-	PekerjaanIbu    string  `gorm:"column:pekerjaan_ibu"`               // String
-	NmWali          *string `gorm:"column:nm_wali"`                     // Nullable string
-	PekerjaanWali   *string `gorm:"column:pekerjaan_wali"`              // Nullable string
+	PesertaDidikId  string     `gorm:"column:peserta_didik_id;primaryKey"` // STRING
+	Nis             string     `gorm:"column:nis"`                         // String
+	Nisn            string     `gorm:"column:nisn"`                        // String
+	NmSiswa         string     `gorm:"column:nm_siswa"`                    // String
+	TempatLahir     string     `gorm:"column:tempat_lahir"`                // String
+	TanggalLahir    *time.Time `gorm:"column:tanggal_lahir"`               // String (format tanggal, bisa diubah ke time.Time jika perlu)
+	JenisKelamin    string     `gorm:"column:jenis_kelamin"`               // String
+	Agama           string     `gorm:"column:agama"`                       // String
+	AlamatSiswa     *string    `gorm:"column:alamat_siswa"`                // Nullable string
+	TeleponSiswa    string     `gorm:"column:telepon_siswa"`               // String
+	DiterimaTanggal *time.Time `gorm:"column:diterima_tanggal"`            // String (format tanggal, bisa diubah ke time.Time jika perlu)
+	NmAyah          string     `gorm:"column:nm_ayah"`                     // String
+	NmIbu           string     `gorm:"column:nm_ibu"`                      // String
+	PekerjaanAyah   string     `gorm:"column:pekerjaan_ayah"`              // String
+	PekerjaanIbu    string     `gorm:"column:pekerjaan_ibu"`               // String
+	NmWali          *string    `gorm:"column:nm_wali"`                     // Nullable string
+	PekerjaanWali   *string    `gorm:"column:pekerjaan_wali"`              // Nullable string
 }
 
 type PesertaDidikPelengkap struct {

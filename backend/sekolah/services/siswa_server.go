@@ -43,12 +43,12 @@ func (s *SiswaServiceServer) CreateSiswa(ctx context.Context, req *pb.CreateSisw
 		Nisn:            siswa.Nisn,
 		NmSiswa:         siswa.NmSiswa,
 		TempatLahir:     siswa.TempatLahir,
-		TanggalLahir:    siswa.TanggalLahir,
+		TanggalLahir:    utils.ConvertToTimePointer(siswa.TanggalLahir),
 		JenisKelamin:    siswa.JenisKelamin,
 		Agama:           siswa.Agama,
 		AlamatSiswa:     &siswa.AlamatSiswa,
 		TeleponSiswa:    siswa.TeleponSiswa,
-		DiterimaTanggal: siswa.DiterimaTanggal,
+		DiterimaTanggal: utils.ConvertToTimePointer(siswa.DiterimaTanggal),
 		NmAyah:          siswa.NmAyah,
 		NmIbu:           siswa.NmIbu,
 		PekerjaanAyah:   siswa.PekerjaanAyah,
@@ -82,18 +82,26 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 	siswa := req.Siswa
 
 	siswaModels := ConvertPBToModels(siswa, func(sis *pb.Siswa) *models.PesertaDidik {
+		tglLahir, err := utils.StringToTime(sis.TanggalLahir, "2006-01-02")
+		if err != nil {
+			return nil
+		}
+		tglDiterima, err := utils.StringToTime(sis.DiterimaTanggal, "2006-01-02")
+		if err != nil {
+			return nil
+		}
 		return &models.PesertaDidik{
 			PesertaDidikId:  sis.PesertaDidikId,
 			Nis:             sis.Nis,
 			Nisn:            sis.Nisn,
 			NmSiswa:         sis.NmSiswa,
 			TempatLahir:     sis.TempatLahir,
-			TanggalLahir:    sis.TanggalLahir,
+			TanggalLahir:    &tglLahir,
 			JenisKelamin:    sis.JenisKelamin,
 			Agama:           sis.Agama,
 			AlamatSiswa:     &sis.AlamatSiswa,
 			TeleponSiswa:    sis.TeleponSiswa,
-			DiterimaTanggal: sis.DiterimaTanggal,
+			DiterimaTanggal: &tglDiterima,
 			NmAyah:          sis.NmAyah,
 			NmIbu:           sis.NmIbu,
 			PekerjaanAyah:   sis.PekerjaanAyah,
@@ -144,12 +152,12 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 			Nisn:            siswa.Nisn,
 			NmSiswa:         siswa.NmSiswa,
 			TempatLahir:     siswa.TempatLahir,
-			TanggalLahir:    siswa.TanggalLahir,
+			TanggalLahir:    utils.TimeToString(*siswa.TanggalLahir, "2006-01-02"),
 			JenisKelamin:    siswa.JenisKelamin,
 			Agama:           siswa.Agama,
 			AlamatSiswa:     *siswa.AlamatSiswa,
 			TeleponSiswa:    siswa.TeleponSiswa,
-			DiterimaTanggal: siswa.DiterimaTanggal,
+			DiterimaTanggal: utils.TimeToString(*siswa.DiterimaTanggal, "2006-01-02"),
 			NmAyah:          siswa.NmAyah,
 			NmIbu:           siswa.NmIbu,
 			PekerjaanAyah:   siswa.PekerjaanAyah,

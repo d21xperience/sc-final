@@ -84,6 +84,19 @@ func ConvertUintToString[T uint8 | uint16 | uint32 | uint64](num T) string {
 	return strconv.FormatUint(uint64(num), 10)
 }
 
+func ConvertToTimePointer(dateStr string) *time.Time {
+	if dateStr == "" {
+		return nil
+	}
+
+	parsedDate, err := time.Parse("2006-01-02", dateStr)
+	if err != nil {
+		return nil // Bisa juga return error jika ingin menangani kesalahan parsing
+	}
+
+	return &parsedDate
+}
+
 // FUNGSI untuk Menangani ERROR pada POINTER
 
 // fungsi helper untuk menangani pointer nil pada string

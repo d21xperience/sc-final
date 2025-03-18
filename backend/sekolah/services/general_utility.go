@@ -81,8 +81,9 @@ func BacaDataExcel(param *ParamTemplate) ([][]string, error) {
 	if len(rows) < 2 {
 		return nil, fmt.Errorf("file Excel kosong atau tidak memiliki data yang valid")
 	}
+	// Kembalikan data mulai dari baris kedua (tanpa header)
+	return rows[1:], nil
 
-	return rows, nil
 }
 
 // Fungsi generik untuk membaca file Excel dan memproses data berdasarkan jenis
@@ -155,12 +156,12 @@ func parseSiswa(rows [][]string) []models.PesertaDidik {
 			Nisn:            row[2],
 			NmSiswa:         row[3],
 			TempatLahir:     row[4],
-			TanggalLahir:    row[5],
+			// TanggalLahir:    row[5],
 			JenisKelamin:    row[6],
 			Agama:           row[7],
 			AlamatSiswa:     &row[8],
 			TeleponSiswa:    row[9],
-			DiterimaTanggal: row[10],
+			// DiterimaTanggal: row[10],
 			// Umur:   parseInt(row[1]), // Fungsi parseInt bisa digunakan untuk mengubah string ke int
 			// Alamat: row[2],
 		}

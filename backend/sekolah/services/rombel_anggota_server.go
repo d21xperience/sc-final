@@ -131,6 +131,7 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 	}
 
 	banyakAnggotaKelasList := utils.ConvertModelsToPB(anggotaRombelModel, func(anggota models.RombelAnggota) *pb.AnggotaKelas {
+
 		return &pb.AnggotaKelas{
 			RombonganBelajarId: anggota.RombonganBelajarId,
 			AnggotaRombelId:    anggota.AnggotaRombelId,
@@ -142,12 +143,12 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 				Nisn:            anggota.PesertaDidik.Nisn,
 				NmSiswa:         anggota.PesertaDidik.NmSiswa,
 				TempatLahir:     anggota.PesertaDidik.TempatLahir,
-				TanggalLahir:    anggota.PesertaDidik.TanggalLahir,
+				TanggalLahir:    utils.TimeToString(*anggota.PesertaDidik.TanggalLahir, "2006-01-02"),
 				JenisKelamin:    anggota.PesertaDidik.JenisKelamin,
 				Agama:           anggota.PesertaDidik.Agama,
 				AlamatSiswa:     *anggota.PesertaDidik.AlamatSiswa,
 				TeleponSiswa:    anggota.PesertaDidik.TeleponSiswa,
-				DiterimaTanggal: anggota.PesertaDidik.DiterimaTanggal,
+				DiterimaTanggal: utils.TimeToString(*anggota.PesertaDidik.DiterimaTanggal, "2006-01-02"),
 				NmAyah:          anggota.PesertaDidik.NmAyah,
 				NmIbu:           anggota.PesertaDidik.NmIbu,
 				PekerjaanAyah:   anggota.PesertaDidik.PekerjaanAyah,

@@ -14,6 +14,7 @@ import (
 	"sekolah/repositories"
 	"sekolah/utils"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -316,8 +317,29 @@ func (s *UploadServiceServer) processUploadSiswa(
 		// database tabel_siswa
 		pesertaDidikId := uuid.New()
 		pelengkapSiswaId := uuid.New()
-		anggotaRombelId := uuid.New()
-		alamatSiswa := fmt.Sprintf("%s RT.%s RW.%s, Desa %s Kec. %s Kab. %s Prov. %s %s",data[i][9])
+		// anggotaRombelId := uuid.New()
+		alamatSiswa := fmt.Sprintf("%s RT.%s RW.%s, Desa %s Kec. %s %s", data[i][8], data[i][9], data[i][10], data[i][12], data[i][13], data[i][14])
+
+		// Validasi tanggal lahir
+
+		var tanggalLahir time.Time
+		tanggalLahirStr := data[i][5]
+		if tanggalLahirStr != "" {
+			tanggalLahir, err = time.Parse("2006-01-02", tanggalLahirStr)
+			if err == nil {
+				// tanggalLahir = &tanggalLahir
+			}
+		}
+
+		// Validasi diterima_tanggal
+		// diterimaTanggalStr := data[i][5]
+		// if diterimaTanggalStr != "" {
+		// 	parsedDate, err := time.Parse("2006-01-02", diterimaTanggalStr)
+		// 	if err == nil {
+		// 		siswa.DiterimaTgl = &parsedDate
+		// 	}
+		// }
+
 		err := s.repoSiswa.Save(ctx, &models.PesertaDidik{
 			PesertaDidikId: pesertaDidikId.String(),
 			NmSiswa:        data[i][0],
@@ -325,9 +347,9 @@ func (s *UploadServiceServer) processUploadSiswa(
 			JenisKelamin:   data[i][2],
 			Nisn:           data[i][3],
 			TempatLahir:    data[i][4],
-			TanggalLahir:   data[i][5],
+			TanggalLahir:   &tanggalLahir,
 			Agama:          data[i][7],
-			AlamatSiswa:    &aalamatSiswa,
+			AlamatSiswa:    &alamatSiswa,
 			TeleponSiswa:   data[i][18],
 			// DiterimaTanggal: data[i][1],
 			NmAyah:        data[i][23],
@@ -336,6 +358,7 @@ func (s *UploadServiceServer) processUploadSiswa(
 			PekerjaanIbu:  data[i][32],
 			NmWali:        &data[i][39],
 			PekerjaanWali: &data[i][41],
+			// DiterimaTanggal: ,
 		}, param.schemaname)
 		if err != nil {
 			return err
@@ -345,23 +368,25 @@ func (s *UploadServiceServer) processUploadSiswa(
 			PesertaDidikId:   func(s string) *string { return &s }(pesertaDidikId.String()),
 			SekolahAsal:      data[i][55],
 			AnakKe:           &data[i][56],
+
 			// FotoSiswa: ,
 		}, param.schemaname)
 		if err != nil {
 			return err
 		}
+		
 		// database tabel_anggotakelas
-		err = s.repoKelasAnggota.Save(ctx, &models.RombelAnggota{
-			AnggotaRombelId: anggotaRombelId.String(),
-			PesertaDidikId:  pesertaDidikId.String(),
-			// SemesterId: ,
-			RombonganBelajar: models.RombonganBelajar{
-				NmKelas: data[i][55],
-			},
-		}, param.schemaname)
-		if err != nil {
-			return err
-		}
+		// err = s.repoKelasAnggota.Save(ctx, &models.RombelAnggota{
+		// 	AnggotaRombelId: anggotaRombelId.String(),
+		// 	PesertaDidikId:  pesertaDidikId.String(),
+		// 	// SemesterId: ,
+		// 	RombonganBelajar: models.RombonganBelajar{
+		// 		NmKelas: data[i][41],
+		// 	},
+		// }, param.schemaname)
+		// if err != nil {
+		// 	return err
+		// }
 		// if err := saveFunc(ctx, &data[i], param.schemaname); err != nil {
 		// 	return fmt.Errorf("gagal menyimpan data: %v", err)
 		// }
