@@ -317,7 +317,7 @@ func (s *UploadServiceServer) processUploadSiswa(
 		// database tabel_siswa
 		pesertaDidikId := uuid.New()
 		pelengkapSiswaId := uuid.New()
-		// anggotaRombelId := uuid.New()
+		anggotaRombelId := uuid.New()
 		alamatSiswa := fmt.Sprintf("%s RT.%s RW.%s, Desa %s Kec. %s %s", data[i][8], data[i][9], data[i][10], data[i][12], data[i][13], data[i][14])
 
 		// Validasi tanggal lahir
@@ -374,22 +374,27 @@ func (s *UploadServiceServer) processUploadSiswa(
 		if err != nil {
 			return err
 		}
-		
+
 		// database tabel_anggotakelas
-		// err = s.repoKelasAnggota.Save(ctx, &models.RombelAnggota{
-		// 	AnggotaRombelId: anggotaRombelId.String(),
-		// 	PesertaDidikId:  pesertaDidikId.String(),
-		// 	// SemesterId: ,
-		// 	RombonganBelajar: models.RombonganBelajar{
-		// 		NmKelas: data[i][41],
-		// 	},
-		// }, param.schemaname)
-		// if err != nil {
-		// 	return err
-		// }
-		// if err := saveFunc(ctx, &data[i], param.schemaname); err != nil {
-		// 	return fmt.Errorf("gagal menyimpan data: %v", err)
-		// }
+		// Jika kelas kosong abaikan
+		if data[i][41] != "" {
+			err = s.repoKelasAnggota.Save(ctx, &models.RombelAnggota{
+				AnggotaRombelId: anggotaRombelId.String(),
+				PesertaDidikId:  pesertaDidikId.String(),
+				// SemesterId: ,
+				// SemesterId: ,
+				RombonganBelajar: models.RombonganBelajar{
+					NmKelas: data[i][41],
+				},
+			}, param.schemaname)
+			if err != nil {
+				return err
+			}
+			// if err := saveFunc(ctx, &data[i], param.schemaname); err != nil {
+			// 	return fmt.Errorf("gagal menyimpan data: %v", err)
+			// }
+		}
+
 	}
 	return nil
 }

@@ -104,8 +104,8 @@
                                 </Column>
                                 <Column field="status" header="Smt6" sortable>
                                     <template #body="slotProps">
-                                        <Tag :value="slotProps.data.status.toLowerCase()"
-                                            :severity="getOrderSeverity(slotProps.data)" />
+                                        <!-- <Tag :value="slotProps.data.status.toLowerCase()"
+                                            :severity="getOrderSeverity(slotProps.data)" /> -->
                                     </template>
                                 </Column>
                                 <Column headerStyle="width:4rem">
@@ -197,9 +197,10 @@
 
 
 
+        <!-- import data -->
         <!-- DIALOG IMPORT -->
-        <DialogImport v-model:visible="dialogImport" :semester="semester" :selectedSemester="selectedSemester"
-            @save="saveImport" @cancel="cancelImport" :downloadUrl="templateUrl" fileName="template_siswa.xlsx" />
+        <DialogImport v-model:visible="dialogImport" :semester="semester" @save="saveImport" @cancel="cancelImport"
+            template-type="nilai_akhir" :schema-name="schemaname" />
     </div>
 </template>
 
@@ -237,9 +238,16 @@ import Image from 'primevue/image';
 onMounted(() => {
     fetchSemester()
     fetchSiswa()
+    getParamDialogImport()
 });
 
+const semester = ref()
+const schemaname = ref("")
+const getParamDialogImport = () => {
+    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaName
+    semester.value = store.getters["sekolahService/getSemester"]
 
+}
 const dataConnected = ref(true)
 const toast = useToast();
 const dt = ref();
@@ -399,7 +407,7 @@ const dialogStatus = ref(false)
 // ==================================
 // =======SEMESTER=============
 const selectedSemester = ref();
-const semester = ref(null);
+// const semester = ref(null);
 const fetchSemester = async () => {
     try {
         const results = await store.dispatch("sekolahService/fetchSemester")

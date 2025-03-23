@@ -8,24 +8,26 @@
                         <div class="mb-2">
                             <Toolbar>
                                 <template #start>
-                                    <Button icon="pi pi-plus" severity="success" class="mr-2" @click="openNew"
-                                        v-tooltip.bottom="'Tambah data'" />
+                                    <Button icon="pi pi-plus" severity="success" class="mr-2 text-lg" @click="openNew"
+                                        v-tooltip.bottom="'Tambah siswa'" />
                                     <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
                                         :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2"
-                                        class="mr-2" />
-                                    <Button icon="pi pi-trash" severity="danger" class="mr-2"
-                                        @click="confirmDeleteSelected"
-                                        :disabled="!dataLulusan || !dataLulusan.length" />
-                                    <Button label="Lulus" severity="help" class="mr-2" @click="dialogStatus = true"
-                                        :disabled="!dataLulusan || !dataLulusan.length" />
-                                    <Button label="Naik" severity="success" class="mr-2" @click="openNew"
-                                        :disabled="!dataLulusan || !dataLulusan.length" />
+                                        class="mr-2" v-tooltip.bottom="'Edit siswa'" />
+                                    <Button icon="pi pi-trash" severity="danger" class="mr-2 text-lg"
+                                        @click="confirmDeleteSelected" :disabled="!dataLulusan || !dataLulusan.length"
+                                        v-tooltip.bottom="'Hapus siswa'" />
+                                    <Button label="Lulus" severity="help" class="mr-2 text-sm"
+                                        @click="dialogStatus = true" :disabled="!dataLulusan || !dataLulusan.length"
+                                        v-tooltip.bottom="'Luluskan siswa'" />
+                                    <Button label="Naik" severity="success" class="mr-2 text-sm" @click="openNew"
+                                        :disabled="!dataLulusan || !dataLulusan.length"
+                                        v-tooltip.bottom="'Naikan siswa'" />
                                 </template>
                                 <template #end>
                                     <Button label="Import" icon="pi pi-download" severity="warn"
-                                        @click="dialogImport = true" class="mr-2" />
+                                        @click="dialogImport = true" class="mr-2 text-sm" v-tooltip.bottom="'Import siswa'"/>
                                     <Button label="Export" icon="pi pi-upload" severity="help"
-                                        @click="exportCSV($event)" class="mr-2" />
+                                        @click="exportCSV($event)" class="mr-2 text-sm" />
                                     <!-- <Button label="Proses" icon="pi pi-send" severity="info"
                                             @click="exportCSV($event)" /> -->
                                 </template>

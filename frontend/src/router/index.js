@@ -235,17 +235,17 @@ const router = createRouter({
             {
               path: "",
               name: "readSiswa",
-              component: () => import("../views/dapodik/data_siswa/Read.vue"),
+              component: () => import("../views/dapodik/data_siswa/ReadSiswa.vue"),
             },
             {
               path: "input",
               name: "inputSiswa",
-              component: () => import("../views/dapodik/data_siswa/Add.vue"),
+              component: () => import("../views/dapodik/data_siswa/AddSiswa.vue"),
             },
             {
               path: "edit-siswa/:id",
               name: "editSiswa",
-              component: () => import("../views/dapodik/data_siswa/Add.vue"),
+              component: () => import("../views/dapodik/data_siswa/AddSiswa.vue"),
             },
           ],
         },
@@ -260,11 +260,26 @@ const router = createRouter({
           name: "dapodikKelas",
           component: () => import("../views/dapodik/DataKelas.vue"),
           meta: { title: "Data Kelas", requiresAuth: true, role: "admin" },
-          // children:[
-          //   {
-          //     path:""
-          //   }
-          // ]
+          children: [
+            {
+              path: "",
+              name: "readKelas",
+              component: () =>
+                import("../views/dapodik/data_kelas/ReadKelas.vue"),
+            },
+            {
+              path: "tambah-kelas",
+              name: "addKelas",
+              component: () =>
+                import("../views/dapodik/data_kelas/AddKelas.vue"),
+            },
+            {
+              path: "edit-kelas",
+              name: "editKelas",
+              component: () =>
+                import("../views/dapodik/data_kelas/AddKelas.vue"),
+            },
+          ],
         },
 
         // Data akademik siswa

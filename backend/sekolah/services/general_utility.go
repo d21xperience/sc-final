@@ -151,16 +151,16 @@ func parseSiswa(rows [][]string) []models.PesertaDidik {
 			continue
 		}
 		siswa := models.PesertaDidik{
-			PesertaDidikId:  row[0],
-			Nis:             row[1],
-			Nisn:            row[2],
-			NmSiswa:         row[3],
-			TempatLahir:     row[4],
+			PesertaDidikId: row[0],
+			Nis:            row[1],
+			Nisn:           row[2],
+			NmSiswa:        row[3],
+			TempatLahir:    row[4],
 			// TanggalLahir:    row[5],
-			JenisKelamin:    row[6],
-			Agama:           row[7],
-			AlamatSiswa:     &row[8],
-			TeleponSiswa:    row[9],
+			JenisKelamin: row[6],
+			Agama:        row[7],
+			AlamatSiswa:  &row[8],
+			TeleponSiswa: row[9],
 			// DiterimaTanggal: row[10],
 			// Umur:   parseInt(row[1]), // Fungsi parseInt bisa digunakan untuk mengubah string ke int
 			// Alamat: row[2],
@@ -232,10 +232,12 @@ func GenerateTemplate(param ParamTemplate, db *gorm.DB) error {
 	templates := map[string][]string{
 		"siswa": {"Nama", "NIPD", "JK", "NISN", "Tempat Lahir", "Tanggal Lahir", "NIK", "Agama", "Alamat", "RT", "RW", "Dusun", "Kelurahan", "Kecamatan", "Kode Pos", "Jenis Tinggal", "Alat Transportasi", "Telepon", "HP", "E-Mail", "SKHUN", "Penerima KPS", "No. KPS", "Nama Ayah", "Tahun Lahir Ayah", "Jenjang Pendidikan Ayah", "Pekerjaan Ayah", "Penghasilan Ayah", "NIK Ayah", "Nama Ibu", "Tahun Lahir Ibu", "Jenjang Pendidikan Ibu", "Pekerjaan Ibu", "Penghasilan Ibu", "NIK Ibu", "Nama Wali", "Tahun Lahir Wali", "Jenjang Pendidikan Wali", "Pekerjaan Wali", "Penghasilan Wali", "NIK Wali", "Rombel Saat Ini", "No Peserta Ujian Nasional", "No Seri Ijazah", "Penerima KIP", "Nomor KIP", "Nama di KIP", "Nomor KKS", "No Registrasi Akta Lahir", "Bank", "Nomor Rekening Bank", "Rekening Atas Nama", "Layak PIP (usulan dari sekolah)", "Alasan Layak PIP", "Kebutuhan Khusus", "Sekolah Asal", "Anak ke-berapa", "Lintang", "Bujur", "No KK", "Berat Badan", "Tinggi Badan", "Lingkar Kepala", "Jml. Saudara Kandung", "Jarak Rumah ke Sekolah (KM)"},
 
-		"nilai_akhir": {"peserta_didik_id(uuid)", "nm_siswa", "semester_id"},
-		"ijazah":      {"peserta_didik_id(uuid)", "nm_siswa", "semester_id", "nis", "nomor_ijazah", "tahun_lulus"},
-		"kelas":       {"rombongan_belajar_id(uuid)", "nm_siswa", "semester_id", "sekolah_id", "semester_id", "jurusan_id", "ptk_id", "nm_kelas", "tingkat_pendidikan_id", "jenis_rombel", "nama_jurusan_sp", "jurusan_sp_id", "kurikulum_id"},
-		"guru":        {"ptk_id(uuid)", "nama", "tahun_ajaran_id", "nip", "jenis_ptk_id", "jenis_kelamin", "tempat_lahir", "tanggal_lahir", "nuptk", "alamat_jalan", "status_keaktifan_id"},
+		"nilai_akhir": {"peserta_didik_id(uuid)", "nm_siswa", "mata_pelajaran_id"},
+		"ijazah":      {"peserta_didik_id(uuid)", "nm_siswa", "nis", "nomor_ijazah", "tahun_lulus"},
+
+		"kelas": {"Jenis Rombel", "Tingkat", "Nama Rombel", "Kurikulum", "Program/Kompetensi Keahlian", "Nama PTK", "NUPTK", "PTK Induk", "Kepegawaian", "Nama Matpel", "Kode Matpel", "JJM", "Jml Siswa", "Tgl SK Mengajar", "SK Mengajar", "Status di Kurikulum"},
+
+		"guru": {"Nama", "NUPTK", "JK", "Tempat Lahir", "Tanggal Lahir", "NIP", "Status Kepegawaian", "Jenis PTK", "Agama", "Alamat Jalan", "RT", "RW", "Nama Dusun", "Desa/Kelurahan", "Kecamatan", "Kode Pos", "Telepon", "HP", "Email", "Tugas Tambahan", "SK CPNS", "Tanggal CPNS", "SK Pengangkatan", "TMT Pengangkatan", "Lembaga Pengangkatan", "Pangkat Golongan", "Sumber Gaji", "Nama Ibu Kandung", "Status Perkawinan", "Nama Suami/Istri", "NIP Suami/Istri", "Pekerjaan Suami/Istri", "TMT PNS", "Sudah Lisensi Kepala Sekolah", "Pernah Diklat Kepengawasan", "Keahlian Braille", "Keahlian Bahasa Isyarat", "NPWP", "Nama Wajib Pajak", "Kewarganegaraan", "Bank", "Nomor Rekening Bank", "Rekening Atas Nama", "NIK", "No KK", "Karpeg", "Karis/Karsu", "Lintang", "Bujur", "NUKS"},
 	}
 	headers, exists := templates[param.templateType]
 	if !exists {
@@ -265,6 +267,7 @@ func GenerateTemplate(param ParamTemplate, db *gorm.DB) error {
 		if err != nil {
 			return err
 		}
+		// Tambahkan mata pelajaran
 	case "ijazah":
 		err := templateIjazah(ctx, db, f, param, sheetName)
 		if err != nil {

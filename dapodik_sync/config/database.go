@@ -1,28 +1,26 @@
 package config
 
 import (
-	"fmt"
 	"log"
 
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
 
 func InitDatabase(cfg Config) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
-		cfg.Host, cfg.User, cfg.Password, cfg.DBName, cfg.Port)
-
 	var err error
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	// Inisialisasi database SQLite
+	DB, err = gorm.Open(sqlite.Open(cfg.DBName), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("Gagal koneksi ke database: %v", err)
+		log.Fatal("Gagal koneksi ke database:", err)
 	}
+
+	
 
 	sqlDB, _ := DB.DB()
 	sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
 	sqlDB.SetConnMaxLifetime(cfg.ConnMaxLifetime)
 }
-

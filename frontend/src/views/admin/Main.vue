@@ -95,18 +95,6 @@ const menuItems = ref([
                     router.push({ name: 'dapodikSekolah' })
                 }
             },
-
-            {
-                label: 'Data Kelas',
-                icon: 'pi pi-building',
-                command: () => {
-                    router.push({ name: 'dapodikKelas' })
-                }
-            },
-            {
-                label: 'Data Mapel',
-                icon: 'pi pi-book'
-            },
             {
                 label: 'Data Guru',
                 icon: 'pi pi-graduation-cap',
@@ -114,6 +102,18 @@ const menuItems = ref([
                     router.push({ name: 'dapodikGuru' })
                 }
             },
+            {
+                label: 'Data Kelas',
+                icon: 'pi pi-building',
+                command: () => {
+                    router.push({ name: 'readKelas' })
+                }
+            },
+            {
+                label: 'Data Mapel',
+                icon: 'pi pi-book'
+            },
+
 
             {
                 label: 'Data Siswa',

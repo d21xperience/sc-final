@@ -1,23 +1,10 @@
 <template>
-    <div class="">
+    <div class="container">
         <div class="card">
             <div v-if="dataConnected">
-                <div class="fixed top-0 w-full left-0 z-20 bg-white">
-                    <div class="lg:ml-[250px] my-2 ">
-                        <div class="container ">
-                            <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Guru </h4>
-                                <div class="md:flex md:items-center md:space-x-2">
-                                    <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
-                                    <div>
-                                        <Select v-model="selectedSemester" :options="semester"
-                                            optionLabel="namaSemester" placeholder="Tahun Pelajaran"
-                                            class="w-full md:w-52 mr-2" />
-
-                                    </div>
-                                </div>
-
-                            </div>
+                <div class=" bg-white">
+                    <div class="my-2 ">
+                        <div class=" ">
                             <div class="mb-2">
                                 <Toolbar>
                                     <template #start>
@@ -37,7 +24,7 @@
                                         <Button label="Export" icon="pi pi-upload" severity="help"
                                             @click="exportCSV($event)" class="mr-2" />
                                         <!-- <Button label="Proses" icon="pi pi-send" severity="info"
-                                            @click="exportCSV($event)" v-tooltip.right="'Menyimpan ke database'"
+                                            @click="exportCSV($event)" v-tooltip.bottom="'Menyimpan ke database'"
                                             badge="2" /> -->
                                     </template>
 
@@ -45,7 +32,7 @@
                             </div>
 
                             <Toolbar>
-                                <!-- <template #start>
+                                <template #start>
                                     <div class="flex flex-wrap gap-2 items-center justify-between">
                                         <div class="flex">
                                             <MultiSelect v-model="selectedJurusan" :options="jurusan" optionLabel="name"
@@ -55,15 +42,15 @@
                                                 optionLabel="name" placeholder="Tingkat" class="mr-2" />
                                         </div>
                                     </div>
-                                </template> -->
-                                <template #end>
+                                </template>
+                                <!-- <template #end>
                                     <IconField>
                                         <InputIcon>
                                             <i class="pi pi-search" />
                                         </InputIcon>
-                                        <InputText v-model="filters['global'].value" placeholder="Cari nama..." />
+                                        <InputText v-model="filters['global'].value" placeholder="Search..." />
                                     </IconField>
-                                </template>
+                                </template> -->
                             </Toolbar>
                         </div>
                     </div>
@@ -71,24 +58,52 @@
 
 
                 <DataTable ref="dt" v-model:selection="selectedKelas" stripedRows size="small" :value="rombel"
-                    scrollable scrollHeight="400px" dataKey="ptkTerdaftarId" :paginator="true" :rows="10"
+                    scrollable scrollHeight="400px" dataKey="rombonganBelajarId" :paginator="true" :rows="10"
                     :filters="filters" tableStyle="min-width: 50rem"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[10, 20, 30]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} kelas" class="mt-56">
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} kelas" class="mt-2">
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                    <Column field="ptk.nama" header="Nama" sortable></Column>
-                    <Column field="ptk.jenisKelamin" header="JK" sortable></Column>
-                    <Column field="ptk.tempatLahir" header="Tpt Lahir"></Column>
-                    <Column field="tglLahir" header="Tgl Lahir">
+                    <!-- <Column field="name" header="Foto">
                         <template #body="slotProps">
-                            {{ new Date(slotProps.data.ptk.tanggalLahir).toLocaleDateString("id-ID", {
-                                day: "2-digit",
-                                month: "2-digit", year: "numeric"
-                            }) }}
+                            <Image :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
+                                :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
+                        </template>
+                    </Column> -->
+                    <Column field="nmKelas" header="Nama Kelas"></Column>
+                    <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
+                    <!-- Jika SMK/MAK Program Keahlian & Kompetensi Keahlian akan muncul-->
+                    <div v-if="['smk', 'mak'].includes(bentukPendidikan)">
+                        <Column field="namaJurusanSp" header="Jurusan" sortable></Column>
+                    </div>
+                    <Column field="code" header="Wali kelas">
+                        <template #body="slotProps">
+                            {{ slotProps.data.ptk.nama }}
                         </template>
                     </Column>
-                    <Column field="ptk.nuptk" header="NUPTK"></Column>
+                    <Column field="code" header="Anggota Kelas">
+                        <template #body="slotProps">
+                            <!-- <Button icon="pi pi-bullseye" outlined rounded class="mr-2" @click="editProduct(slotProps.data)" /> -->
+                            <Button icon="pi pi-bullseye" outlined rounded class="mr-2"
+                                @click="dialogAnggotaRombel(slotProps.data)" />
+                        </template>
+                    </Column>
+                    <!--<Column field="name" header="JK"></Column> -->
+                    <!-- <Column field="name" header="Tpt.Lahir"></Column>
+                    <Column field="name" header="Tgl.Lahir"></Column>
+                    <Column field="name" header="Agama"></Column>
+                    <Column field="category" header="Ayah"></Column>
+                    <Column field="category" header="Ibu"></Column> -->
+                    <!-- <Column field="category" header="Pekerjaan Ayah"></Column>
+                    <Column field="category" header="Pekerjaan Ibu"></Column> -->
+                    <!-- <Column field="category" header="Alamat"></Column> -->
+
+                    <!-- <Column field="inventoryStatus" header="Status" sortable>
+                        <template #body="slotProps">
+                            <Tag :value="slotProps.data.inventoryStatus"
+                                :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
+                        </template>
+                    </Column> -->
                 </DataTable>
 
             </div>
@@ -104,17 +119,17 @@
             <div class="flex space-x-2">
                 <div class="w-full mb-2">
                     <!-- <p>{{ product.name }}</p> -->
-                    <label for="name" class="block font-bold">Nama</label>
+                    <label for="name" class="block font-bold">Nama Kelas</label>
                     <InputText id="name" v-model.trim="kelas.nama" required="true" :invalid="submitted && !kelas.nama"
                         fluid />
-                    <small v-if="submitted && !kelas.nama" class="text-red-500">Nama harus diisi.</small>
+                    <small v-if="submitted && !kelas.nama" class="text-red-500">Nama Kelas harus diisi.</small>
 
 
                 </div>
                 <div>
-                    <label for="name" class="block font-bold ">JK</label>
+                    <label for="name" class="block font-bold ">Tingkat</label>
                     <Select v-model.trim="kelas.tingkat" showClear :options="tingkat" optionLabel="name"
-                        placeholder="JK" class="mr-2" />
+                        placeholder="Tingkat" class="mr-2" />
                     <!-- <InputText id="name" v-model.trim="product.name" required="true" 
                     :invalid="submitted && !product.name" fluid /> -->
                     <small v-if="submitted && !kelas.tingkat" class="text-red-500">Kelas is required.</small>
@@ -155,7 +170,7 @@
     <Dialog v-model:visible="deleteKelasDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
         <div class="flex items-center gap-4">
             <i class="pi pi-exclamation-triangle !text-3xl" />
-            <span v-if="product">Apakah data ini akan dihapus?</span>
+            <span v-if="product">Apakah kelas ini akan dihapus?</span>
         </div>
         <template #footer>
             <Button label="Tidak" icon="pi pi-times" text @click="deleteKelasDialog = false" />
@@ -166,16 +181,15 @@
     <!-- import data -->
     <!-- DIALOG IMPORT -->
     <DialogImport v-model:visible="dialogImport" :semester="semester" @save="saveImport" @cancel="cancelImport"
-        template-type="guru" :schema-name="schemaname" />
-
+        template-type="kelas" :schema-name="schemaname" />
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useStore } from "vuex";
-import DialogImport from '../../components/DialogImport.vue'
 const store = useStore();
-// import FileUpload from 'primevue/fileupload';
+import DialogImport from '@/components/DialogImport.vue'
+import FileUpload from 'primevue/fileupload';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
@@ -190,10 +204,9 @@ import RuangKelasService from '@/service/ProductService.js';
 
 
 onMounted(() => {
-
-    getParamDialogImport()
     fetchSemester()
-    fetchData()
+    fetchRombel()
+    getParamDialogImport()
     // RuangKelasService.getProducts().then((data) => (products.value = data));
 });
 
@@ -204,6 +217,8 @@ const getParamDialogImport = () => {
     semester.value = store.getters["sekolahService/getSemester"]
 
 }
+
+
 
 
 const dataConnected = ref(true)
@@ -233,11 +248,12 @@ const submitted = ref(false);
 
 const judulHeader = ref("")
 const openNew = () => {
-    judulHeader.value = "Tambah Data"
-    product.value = {};
-    selectedKelas.value = []
-    submitted.value = false;
-    kelasDialog.value = true;
+    router.push({ name: "addKelas" })
+    // judulHeader.value = "Tambah Data"
+    // product.value = {};
+    // selectedKelas.value = []
+    // submitted.value = false;
+    // kelasDialog.value = true;
 };
 const hideDialog = () => {
     kelasDialog.value = false;
@@ -338,7 +354,9 @@ import Select from 'primevue/select';
 import MultiSelect from 'primevue/multiselect';
 
 import EmptyData from '@/components/EmptyData.vue';
-
+import router from '@/router';
+// ==================================
+// =======SEMESTER=============
 const selectedSemester = ref();
 // const semester = ref(null);
 const fetchSemester = async () => {
@@ -358,19 +376,23 @@ const fetchSemester = async () => {
 }
 watch(selectedSemester, (newVal, oldVal) => {
     console.log(newVal)
-    fetchData()
+    console.log("mengambil data ...")
+    fetchRombel()
 })
-const fetchData = async () => {
+// ==================================
+
+const fetchRombel = async () => {
     try {
         let payload = {
-            schema_name: "tabel_D4DA6B98FCFD71C58F5A",
-            tahun_ajaran_id: selectedSemester.value?.tahunAjaranId
+            "schema_name": "tabel_d4da6b98fcfd71c58f5a",
+            "semester_id": selectedSemester.value.semesterId//"20232"
         }
-        const results = await store.dispatch("sekolahService/fetchPTK", payload)
+        console.log(payload)
+        const results = await store.dispatch("sekolahService/fetchRombel", payload)
         console.log(results)
         rombel.value = results
         // if (results) {
-        //     rombel.value = store.getters["sekolahService/fetchData"]
+        //     rombel.value = store.getters["sekolahService/fetchRombel"]
         //     // Ambil semester terbaru berdasarkan ID terbesar
         //     // selectedSemester.value = semester.value.reduce((latest, current) =>
         //     //     current.semesterId > latest.semesterId ? current : latest
@@ -424,15 +446,6 @@ const downloadTemplate = async () => {
 const dialogAnggotaRombel = (d) => {
     console.log(d)
 }
-const saveImport = () => {
-    console.log("Data disimpan:", selectedSemester.value);
-    dialogImport.value = false;
-};
-
-const cancelImport = () => {
-    console.log("Import dibatalkan");
-    dialogImport.value = false;
-};
-const templateUrl = ref("http://localhost:8183/api/v1/ss/download/template?template-type=siswa");
+const bentukPendidikan = ref("sma")
 
 </script>
