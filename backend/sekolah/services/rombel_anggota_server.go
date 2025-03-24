@@ -169,7 +169,7 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 					JenisKelamin:      anggota.RombonganBelajar.PTK.JenisKelamin,
 					TempatLahir:       anggota.RombonganBelajar.PTK.TempatLahir,
 					StatusKeaktifanId: anggota.RombonganBelajar.PTK.StatusKeaktifanID,
-					TanggalLahir:      anggota.RombonganBelajar.PTK.TanggalLahir,
+					TanggalLahir:      anggota.RombonganBelajar.PTK.TanggalLahir.Format("2006-01-02"),
 					Nuptk:             utils.SafeString(anggota.RombonganBelajar.PTK.NUPTK),
 					AlamatJalan:       anggota.RombonganBelajar.PTK.AlamatJalan,
 				},

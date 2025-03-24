@@ -99,7 +99,7 @@ const menuItems = ref([
                 label: 'Data Guru',
                 icon: 'pi pi-graduation-cap',
                 command: () => {
-                    router.push({ name: 'dapodikGuru' })
+                    router.push({ name: 'readGuru' })
                 }
             },
             {

@@ -208,76 +208,98 @@ const router = createRouter({
         },
 
         // Data DAPODIK
+        // {
+        //   path: "seting-dapodik",
+        //   name: "syncDapodik",
+        //   component: () => import("../views/dapodik/SetingDapodik.vue"),
+        //   meta: { title: "Seting Dapodik", requiresAuth: true, role: "admin" },
+        // },
         {
-          path: "seting-dapodik",
-          name: "syncDapodik",
-          component: () => import("../views/dapodik/SetingDapodik.vue"),
-          meta: { title: "Seting Dapodik", requiresAuth: true, role: "admin" },
-        },
-        {
-          path: "data-sekolah",
-          name: "dapodikSekolah",
-          component: () => import("../views/dapodik/DataSekolah.vue"),
-          meta: { title: "Data Sekolah", requiresAuth: true, role: "admin" },
-        },
-        {
-          path: "data-guru",
-          name: "dapodikGuru",
-          component: () => import("../views/dapodik/DataGuru.vue"),
-          meta: { title: "Data Guru", requiresAuth: true, role: "admin" },
-        },
-        {
-          path: "data-siswa",
-          name: "dapodikSiswa",
-          component: () => import("../views/dapodik/DataSiswa.vue"),
-          // meta: { title: "Data Siswa", requiresAuth: true, role: "admin" },
+          path: "data-dapodik",
+          name: "dataDapodik",
+          component: () => import("../views/dapodik/Main.vue"),
+          meta: { requiresAuth: true, role: "admin" },
           children: [
             {
-              path: "",
-              name: "readSiswa",
-              component: () => import("../views/dapodik/data_siswa/ReadSiswa.vue"),
+              path: "sekolah",
+              name: "dapodikSekolah",
+              component: () => import("../views/dapodik/DataSekolah.vue"),
+              meta: {
+                title: "Data Sekolah",
+                requiresAuth: true,
+                role: "admin",
+              },
             },
             {
-              path: "input",
-              name: "inputSiswa",
-              component: () => import("../views/dapodik/data_siswa/AddSiswa.vue"),
+              path: "guru",
+              name: "dapodikGuru",
+              // component: () => import("../views/dapodik/DataGuru.vue"),
+              meta: { title: "Data Guru", requiresAuth: true, role: "admin" },
+              children: [
+                {
+                  path: "",
+                  name: "readGuru",
+                  component: () =>
+                    import("../views/dapodik/data_guru/ReadGuru.vue"),
+                },
+              ],
             },
             {
-              path: "edit-siswa/:id",
-              name: "editSiswa",
-              component: () => import("../views/dapodik/data_siswa/AddSiswa.vue"),
-            },
-          ],
-        },
-        {
-          path: "data-nilai",
-          name: "dapodikNilaiSiswa",
-          component: () => import("../views/dapodik/DataNilai.vue"),
-          meta: { title: "Data Nilai", requiresAuth: true, role: "admin" },
-        },
-        {
-          path: "data-kelas",
-          name: "dapodikKelas",
-          component: () => import("../views/dapodik/DataKelas.vue"),
-          meta: { title: "Data Kelas", requiresAuth: true, role: "admin" },
-          children: [
-            {
-              path: "",
-              name: "readKelas",
-              component: () =>
-                import("../views/dapodik/data_kelas/ReadKelas.vue"),
-            },
-            {
-              path: "tambah-kelas",
-              name: "addKelas",
-              component: () =>
-                import("../views/dapodik/data_kelas/AddKelas.vue"),
+              path: "siswa",
+              name: "dapodikSiswa",
+              meta: { title: "Data Siswa", requiresAuth: true, role: "admin" },
+              children: [
+                {
+                  path: "",
+                  name: "readSiswa",
+                  component: () =>
+                    import("../views/dapodik/data_siswa/ReadSiswa.vue"),
+                },
+                {
+                  path: "input",
+                  name: "inputSiswa",
+                  component: () =>
+                    import("../views/dapodik/data_siswa/AddSiswa.vue"),
+                },
+                {
+                  path: "edit-siswa/:id",
+                  name: "editSiswa",
+                  component: () =>
+                    import("../views/dapodik/data_siswa/AddSiswa.vue"),
+                },
+              ],
             },
             {
-              path: "edit-kelas",
-              name: "editKelas",
-              component: () =>
-                import("../views/dapodik/data_kelas/AddKelas.vue"),
+              path: "data-nilai",
+              name: "dapodikNilaiSiswa",
+              component: () => import("../views/dapodik/DataNilai.vue"),
+              meta: { title: "Data Nilai", requiresAuth: true, role: "admin" },
+            },
+            {
+              path: "data-kelas",
+              name: "dapodikKelas",
+              // component: () => import("../views/dapodik/DataKelas.vue"),
+              meta: { title: "Data Kelas", requiresAuth: true, role: "admin" },
+              children: [
+                {
+                  path: "",
+                  name: "readKelas",
+                  component: () =>
+                    import("../views/dapodik/data_kelas/ReadKelas.vue"),
+                },
+                {
+                  path: "tambah-kelas",
+                  name: "addKelas",
+                  component: () =>
+                    import("../views/dapodik/data_kelas/AddKelas.vue"),
+                },
+                {
+                  path: "edit-kelas",
+                  name: "editKelas",
+                  component: () =>
+                    import("../views/dapodik/data_kelas/AddKelas.vue"),
+                },
+              ],
             },
           ],
         },

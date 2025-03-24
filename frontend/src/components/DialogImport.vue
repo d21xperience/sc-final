@@ -9,14 +9,14 @@ import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
 import DialogLoading from "./DialogLoading.vue";
 import { isEmpty } from "lodash";
-import { isError } from "lodash";
+// import { isError } from "lodash";
 const toast = useToast();
 
 const isLoading = ref(false);
 
-const baseUrl = "http://localhost:8183/api/v1/ss/download/template"; // Disimpan di child
+const baseUrl = "http://localhost:8183/api/v1/ss"; // Disimpan di child
 const templateUrl = computed(() => {
-    return `${baseUrl}?template_type=${props.templateType}&schemaname=${props.schemaName}&semesterId=${selectedSemester.value?.semesterId}`;
+    return `${baseUrl}/download/template?template_type=${props.templateType}&schemaname=${props.schemaName}&semesterId=${selectedSemester.value?.semesterId}`;
 });
 const selectedSemester = ref({})
 
@@ -47,22 +47,27 @@ const closeDialog = () => {
 // Refs untuk FileUpload dan file yang diunggah
 // const fileupload = ref();
 const uploadedFiles = ref();
-const uploadUrl = `http://localhost:8183/api/v1/ss/upload/rest?upload_type=${props.templateType}`
+const uploadUrl = `${baseUrl}/upload/rest?upload_type=${props.templateType}`
 
 // Function untuk menyimpan data
+// const saveData = () => {
+//     console.log("sedang upload")
+//     // console.log(uploadedFiles.value)
+//     // uploadedFiles.value.upload()
+// }
 const saveData = async () => {
     if (uploadedFiles.value.files.length == 0) {
         toast.add({ severity: 'warn', summary: 'Gagal', detail: 'Silakan unggah file terlebih dahulu!', life: 3000 });
         return;
     }
-    const file = uploadedFiles.value.file
-    // console.log(uploadedFiles.value.files.length)
+    const file = uploadedFiles.value.files[0]
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_type", props.templateType);
-    formData.append("schemaname", props.schemaName);
-    formData.append("semester_id", props.semester);
+    // formData.append("schemaname", props.schemaName);
+    // formData.append("semester_id", props.semester);
     isLoading.value = false;
+    console.log(uploadUrl)
     try {
         const response = await fetch(uploadUrl, {
             method: "POST",
@@ -74,7 +79,7 @@ const saveData = async () => {
         }
 
         const result = await response.json();
-        uploadedFiles.value.push(file);
+        // uploadedFiles.value.push(file);
 
         toast.add({ severity: 'success', summary: 'Sukses', detail: 'File berhasil diunggah!', life: 3000 });
 
@@ -119,9 +124,9 @@ const onBeforeUpload = (event) => {
 };
 
 // Handle upload file
-const onUpload = async () => {
+const onUpload = (event) => {
     console.log("sedang upload files")
-
+    console.log(event.xhr.response);
     // uploadedFiles.value = event.files;
     toast.add({ severity: 'info', summary: 'Success', detail: 'File berhasil diunggah!', life: 3000 });
 
@@ -193,9 +198,13 @@ const downloadTemplate = async () => {
                 <label class="block text-sm font-medium text-gray-700">
                     Unggah File Excel (Pastikan sesuai dengan Template yang disediakan)
                 </label>
-                <div class="mt-2 flex flex-col gap-6 items-center justify-center">
+                <!-- <div class="mt-2 flex flex-col gap-6 items-center justify-center">
                     <FileUpload ref="uploadedFiles" mode="basic" name="file" accept=".xlsx" :maxFileSize="2000000"
                         :customUpload="true" @before-upload="onBeforeUpload" @upload="onUpload" severity="secondary" />
+                </div> -->
+                <div class="mt-2 flex flex-col gap-6 items-center justify-center">
+                    <FileUpload ref="uploadedFiles" mode="basic" name="file" accept=".xlsx" :maxFileSize="2000000"
+                        :customUpload="true" @upload="saveData" severity="secondary" />
                 </div>
                 <p class="mt-2 text-sm text-gray-500">
                     Unduh Template Import data

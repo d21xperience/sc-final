@@ -1,18 +1,22 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type TabelPTK struct {
-	PtkID             string  `gorm:"column:ptk_id;primaryKey"`   // UUID
-	Nama              string  `gorm:"column:nama"`                // String
-	NIP               *string `gorm:"column:nip"`                 // Nullable string
-	JenisPtkID        int32   `gorm:"column:jenis_ptk_id"`        // String
-	JenisKelamin      string  `gorm:"column:jenis_kelamin"`       // String
-	TempatLahir       string  `gorm:"column:tempat_lahir"`        // String
-	TanggalLahir      string  `gorm:"column:tanggal_lahir"`       // String (format tanggal, bisa diubah ke time.Time jika perlu)
-	NUPTK             *string `gorm:"column:nuptk"`               // Nullable string
-	AlamatJalan       string  `gorm:"column:alamat_jalan"`        // String
-	StatusKeaktifanID int32   `gorm:"column:status_keaktifan_id"` // String
+	PtkID             string     `gorm:"column:ptk_id;primaryKey"`   // UUID
+	Nama              string     `gorm:"column:nama"`                // String
+	NIP               *string    `gorm:"column:nip"`                 // Nullable string
+	JenisPtkID        int32      `gorm:"column:jenis_ptk_id"`        // String
+	JenisKelamin      string     `gorm:"column:jenis_kelamin"`       // String
+	TempatLahir       string     `gorm:"column:tempat_lahir"`        // String
+	TanggalLahir      *time.Time `gorm:"column:tanggal_lahir"`       // String (format tanggal, bisa diubah ke time.Time jika perlu)
+	NUPTK             *string    `gorm:"column:nuptk"`               // Nullable string
+	AlamatJalan       string     `gorm:"column:alamat_jalan"`        // String
+	StatusKeaktifanID int32      `gorm:"column:status_keaktifan_id"` // String
 }
 
 type PTKPelengkap struct {

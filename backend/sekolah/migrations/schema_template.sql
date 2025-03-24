@@ -74,9 +74,9 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_ptk (
 	tempat_lahir VARCHAR(32) NOT NULL,
 	tanggal_lahir DATE NOT NULL,
 	nuptk VARCHAR(16) NULL DEFAULT NULL,
-	alamat_jalan VARCHAR(80) NOT NULL,
-	status_keaktifan_id NUMERIC(2,0) NOT NULL,
-	soft_delete NUMERIC(1,0) NOT NULL,
+	alamat_jalan VARCHAR(200) NOT NULL,
+	status_keaktifan_id NUMERIC(2,0) NOT NULL DEFAULT 1,  -- Contoh nilai default
+    soft_delete NUMERIC(1,0) NOT NULL DEFAULT 0,  -- 0 = aktif, 1 = terhapus
 	PRIMARY KEY (ptk_id)
 );
 
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_ptk_terdaftar (
 	ptk_id UUID NOT NULL,
 	tahun_ajaran_id VARCHAR(4) NULL DEFAULT NULL,
 	jenis_keluar_id CHAR(1) NULL DEFAULT NULL,
-	soft_delete NUMERIC(1,0) NOT NULL,
+	soft_delete NUMERIC(1,0) NOT NULL DEFAULT 0,  -- 0 = aktif, 1 = terhapus
 	PRIMARY KEY (ptk_terdaftar_id),
 	CONSTRAINT "FK_tabel_ptk_terdaftar_tabel_ptk" FOREIGN KEY (ptk_id) REFERENCES {{schema_name}}.tabel_ptk (ptk_id) ON UPDATE CASCADE ON DELETE CASCADE
 );

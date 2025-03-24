@@ -5,7 +5,7 @@
         <div class="my-2 ">
             <div class=" ">
                 <div class="flex flex-wrap justify-between items-center mb-2">
-                    <h4 class="font-bold text-xl md:text-2xl">Data Siswa </h4>
+                    <h4 class="text-xl md:text-2xl">Data Dapodik {{ tabelTenant?.namaSekolah }}</h4>
                     <div class="md:flex md:items-center md:space-x-2">
                         <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
                         <div>
@@ -49,7 +49,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const store = useStore();
 
-console.log(route.matched) // Cek apakah child route aktif
+// console.log(route.matched) // Cek apakah child route aktif
 
 // =====================================
 import Breadcrumb from 'primevue/breadcrumb';
@@ -75,24 +75,14 @@ const breadcrumbItems = computed(() => {
     });
 });
 // ==============================
-onMounted(async () => fetchSemester());
+onMounted(async () => {
+    fetchSemester()
+    fetchTabelTenant()
+});
 
-const dataConnected = ref(true)
+// const dataConnected = ref(true)
 
 import Select from 'primevue/select';
-import EmptyData from '@/components/EmptyData.vue';
-import { isEmpty } from 'lodash';
-
-// Fungsi yang menangkap event emit dari child
-const handleProfileFetched = (data) => {
-    dataConnected.value = data;
-    console.log("Data sekolah diterima di parent:", data);
-};
-
-const handleFetchError = (error) => {
-    dataConnected.value = data;
-    console.error("Error diterima di parent:", error);
-};
 
 // ==================================
 // =======SEMESTER=============
@@ -118,6 +108,25 @@ const fetchSemester = async () => {
 
     }
 }
+
+// ==================================
+// =======DATA SEKOLAH=============
+const tabelTenant = ref(null)
+const fetchTabelTenant = async () => {
+    try {
+        tabelTenant.value = store.getters["sekolahService/getTabeltenant"]
+        // console.log(tabelTenant.value)
+        if (tabelTenant.value == null) {
+            await store.dispatch("sekolahService/fetchTabeltenant")
+            tabelTenant.value = store.getters["sekolahService/getTabeltenant"]
+        }
+    }
+    catch (error) {
+
+    }
+}
+
+
 watch(selectedSemester, () => {
     store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedSemester.value)
 

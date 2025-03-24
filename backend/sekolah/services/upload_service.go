@@ -28,6 +28,7 @@ type UploadServiceServer struct {
 	repoKelas          repositories.GenericRepository[models.RombonganBelajar]
 	repoKelasAnggota   repositories.GenericRepository[models.RombelAnggota]
 	repoGuru           repositories.GenericRepository[models.TabelPTK]
+	repoGuruTerdaftar  repositories.GenericRepository[models.PTKTerdaftar]
 }
 
 func NewUploadServiceServer() *UploadServiceServer {
@@ -36,6 +37,7 @@ func NewUploadServiceServer() *UploadServiceServer {
 	repoKelas := repositories.NewrombonganBelajarRepository(config.DB)
 	repoKelasAnggota := repositories.NewRombelAnggotaRepository(config.DB)
 	repoGuru := repositories.NewPTKRepository(config.DB)
+	repoGuruTerdaftar := repositories.NewPTKTerdaftarRepository(config.DB)
 	// if repoSiswa == nil {
 	// 	log.Fatal("❌ ERROR: Gagal menginisialisasi repoSiswa") // Debugging
 	// }
@@ -46,6 +48,7 @@ func NewUploadServiceServer() *UploadServiceServer {
 		repoKelas:          *repoKelas,
 		repoKelasAnggota:   *repoKelasAnggota,
 		repoGuru:           *repoGuru,
+		repoGuruTerdaftar:  *repoGuruTerdaftar,
 	}
 }
 
@@ -87,7 +90,7 @@ func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Requ
 	param := ParamTemplate{
 		templateType: r.FormValue("upload_type"),
 		schemaname:   r.FormValue("schemaname"),
-		semesterId:   r.FormValue("semester_id"),
+		// semesterId:   r.FormValue("semester_id"),
 	}
 	if len(fileHeader) == 0 {
 		http.Error(w, "File tidak ditemukan", http.StatusBadRequest)
@@ -130,13 +133,12 @@ func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Requ
 				BacaDataExcel,
 			)
 		},
-		// "guru": func() error {
-		// 	return processUpload(
-		// 		context.Background(), param,
-		// 		UploadDataSekolah[models.TabelPTK],
-		// 		s.repoGuru.Save,
-		// 	)
-		// },
+		"guru": func() error {
+			return s.processUploadGuru(
+				context.Background(), param,
+				BacaDataExcel,
+			)
+		},
 		// Tambahkan tipe lain di sini...
 	}
 
@@ -395,6 +397,70 @@ func (s *UploadServiceServer) processUploadSiswa(
 			// }
 		}
 
+	}
+	return nil
+}
+
+func (s *UploadServiceServer) processUploadGuru(
+	ctx context.Context,
+	param ParamTemplate,
+	uploadFunc func(*ParamTemplate) ([][]string, error),
+) error {
+	// Ambil data dari file
+	data, err := uploadFunc(&param)
+	if err != nil {
+		return fmt.Errorf("gagal memproses file: %v", err)
+	}
+
+	// Iterasi data dan simpan ke database
+	for i := range data {
+		// utils.HandleNilPointers(&data[i]) // Hindari pointer nil
+
+		// Simpan ke database
+		// database tabel_siswa
+		ptkId := uuid.New()
+		ptkTerdaftarId := uuid.New()
+		// anggotaRombelId := uuid.New()
+		alamatPtk := fmt.Sprintf("%s RT.%s RW.%s, Desa %s Kec. %s %s", data[i][10], data[i][11], data[i][12], data[i][14], data[i][15], data[i][16])
+
+		// Validasi tanggal lahir
+
+		var tanggalLahir time.Time
+		tanggalLahirStr := data[i][5]
+		if tanggalLahirStr != "" {
+			tanggalLahir, err = time.Parse("2006-01-02", tanggalLahirStr)
+			if err == nil {
+				// tanggalLahir = &tanggalLahir
+			}
+		}
+
+		err := s.repoGuru.Save(ctx, &models.TabelPTK{
+			PtkID:        ptkId.String(),
+			Nama:         data[i][1],
+			NUPTK:        &data[i][2],
+			JenisKelamin: data[i][3],
+			TempatLahir:  data[i][4],
+			TanggalLahir: &tanggalLahir,
+			NIP:          &data[i][6],
+			AlamatJalan:  alamatPtk,
+
+			// JenisPtkID:        data[i][0],
+			// StatusKeaktifanID: data[i][0],
+			// DiterimaTanggal: ,
+
+		}, param.schemaname)
+		if err != nil {
+			return err
+		}
+		err = s.repoGuruTerdaftar.Save(ctx, &models.PTKTerdaftar{
+			PtkTerdaftarId: ptkTerdaftarId,
+			PtkID:          ptkId,
+			TahunAjaranId:  param.semesterId[:4],
+			// FotoSiswa: ,
+		}, param.schemaname)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

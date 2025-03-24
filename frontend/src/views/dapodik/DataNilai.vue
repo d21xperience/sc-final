@@ -237,8 +237,8 @@ import Image from 'primevue/image';
 
 onMounted(() => {
     fetchSemester()
-    fetchSiswa()
     getParamDialogImport()
+    fetchSiswa()
 });
 
 const semester = ref()
@@ -410,8 +410,9 @@ const selectedSemester = ref();
 // const semester = ref(null);
 const fetchSemester = async () => {
     try {
+        
         const results = await store.dispatch("sekolahService/fetchSemester")
-        console.log(results)
+        // console.log(results)
         if (results) {
             semester.value = store.getters["sekolahService/getSemester"]
             // Ambil semester terbaru berdasarkan ID terbesar
@@ -433,8 +434,8 @@ const fetchSiswa = async () => {
     try {
         console.log("fethcSiswa")
         let payload = {
-            semesterId: 20232,
-            schemaName: "tabel_D4DA6B98FCFD71C58F5A"
+            semesterId: semester.value,
+            schemaName: schemaname.value
         }
         console.log(payload)
         const results = await store.dispatch("sekolahService/fetchSiswa", payload)
@@ -481,4 +482,10 @@ const cancelImport = () => {
 };
 const templateUrl = ref("http://localhost:8183/api/v1/ss/download/template?template-type=siswa");
 // ===========================================
+
+
+
+
+
+
 </script>

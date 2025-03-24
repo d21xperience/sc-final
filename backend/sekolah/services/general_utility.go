@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"sekolah/models"
 	"sekolah/repositories"
-	"strings"
 	"time"
 
 	"github.com/xuri/excelize/v2"
@@ -69,10 +68,11 @@ func BacaDataExcel(param *ParamTemplate) ([][]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	if !strings.EqualFold(ret.Keywords, param.schemaname) || !strings.EqualFold(ret.ContentStatus, param.templateType) {
-		return nil, err
-	}
+	// if !strings.EqualFold(ret.Keywords, param.schemaname) || !strings.EqualFold(ret.ContentStatus, param.templateType) {
+	// 	return nil, err
+	// }
 	param.semesterId = ret.Category
+	param.schemaname = ret.Keywords
 	rows, err := f.GetRows(f.GetSheetName(0))
 	if err != nil {
 		return nil, fmt.Errorf("gagal mengambil data dari sheet: %w", err)

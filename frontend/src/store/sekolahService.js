@@ -15,6 +15,7 @@ const state = {
   tabelTenant: JSON.parse(localStorage.getItem("tabelTenant")) || null,
   // tabelSemester: JSON.parse(localStorage.getItem("tabelSemester")) || null,
   tabelSiswa: JSON.parse(localStorage.getItem("tabelSiswa")) || null,
+  tabelGuru: JSON.parse(localStorage.getItem("tabelGuru")) || null,
   selectedSemester:
     JSON.parse(localStorage.getItem("selectedSemester")) || null,
 };
@@ -37,6 +38,10 @@ const mutations = {
   SET_TABELSISWA(state, tabelSiswa) {
     state.tabelSiswa = tabelSiswa;
     localStorage.setItem("tabelSiswa", JSON.stringify(tabelSiswa));
+  },
+  SET_TABELGURU(state, tabelGuru) {
+    state.tabelGuru = tabelGuru;
+    localStorage.setItem("tabelGuru", JSON.stringify(tabelGuru));
   },
   SET_SELECTEDSEMESTER(state, value) {
     state.selectedSemester = value;
@@ -132,18 +137,19 @@ const actions = {
     }
   },
   async fetchPTK({ commit }, payload) {
+    console.log("guru");
+
     commit("SET_LOADING", true);
     commit("SET_ERROR", null);
-    console.log(payload);
     try {
       const response = await api.get("/ss/ptk-terdaftar", {
         params: {
-          schema_name: payload.schema_name,
-          tahun_ajaran_id: payload.tahun_ajaran_id,
+          schema_name: payload.schemaname,
+          tahun_ajaran_id: payload.tahunAjaranId,
         },
       });
-      // console.log(response.data);
-      // commit("SET_TABELSEMESTER", response.data.semester);
+      console.log(response.data);
+      commit("SET_TABELGURU", response.data.ptkTerdaftar);
       return response.data.ptkTerdaftar; // Mengembalikan data sekolah
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
@@ -178,7 +184,7 @@ const actions = {
       const response = await api.get(`/ss/${payload.schemaName}/sekolah`);
       // console.log(response.data.semester);
       // commit("SET_TABELSEMESTER", response.data.semester);
-      console.log(response.data.sekolah);
+      // console.log(response.data.sekolah);
       return response.data.sekolah; // Mengembalikan data sekolah
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
@@ -189,19 +195,17 @@ const actions = {
     }
   },
   async fetchSiswa({ commit }, payload) {
-    console.log(payload.schemaName)
-    
     try {
       const response = await api.get(
         `/ss/${payload.schemaName}/anggota-kelas`,
         {
           params: {
             semester_id: payload.semesterId,
-            schemaname : payload.schemaName
+            schemaname: payload.schemaName,
           },
         }
       );
-      console.log(response.data.anggotaKelas);
+      // console.log(response.data.anggotaKelas);
       commit("SET_TABELSISWA", response.data.anggotaKelas);
       return response.data; // Mengembalikan data sekolah
     } catch (error) {
@@ -214,7 +218,6 @@ const actions = {
   },
   async fetchSiswaCount({ commit }, payload) {
     try {
-      // console.log(payload);
       const response = await api.get(`/ss/dashboard/countsiswa`, {
         params: {
           schemaname: payload.schemaname,
@@ -239,6 +242,7 @@ const getters = {
   getTabeltenant: (state) => state.tabelTenant,
   getSemester: (state) => state.tabelSemester,
   getSiswa: (state) => state.tabelSiswa,
+  getGuru: (state) => state.tabelGuru,
   getSelectedSemester: (state) => state.selectedSemester,
 };
 

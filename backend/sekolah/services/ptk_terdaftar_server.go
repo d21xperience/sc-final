@@ -135,6 +135,10 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 		if err != nil {
 			return nil
 		}
+		// tglLahir, err := ptk.PTK.TanggalLahir, "2006-01-02")
+		// if err != nil {
+		// 	return nil
+		// }
 		return &pb.PTKTerdaftar{
 			PtkTerdaftarId: ptkTerdaftarId.(string),
 			TahunAjaranId:  ptk.TahunAjaranId,
@@ -144,7 +148,7 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 				JenisKelamin:      ptk.PTK.JenisKelamin,
 				JenisPtkId:        ptk.PTK.JenisPtkID,
 				TempatLahir:       ptk.PTK.TempatLahir,
-				TanggalLahir:      ptk.PTK.TanggalLahir,
+				TanggalLahir:      ptk.PTK.TanggalLahir.Format("2006-01-02"),
 				AlamatJalan:       ptk.PTK.AlamatJalan,
 				StatusKeaktifanId: ptk.PTK.StatusKeaktifanID,
 				Nuptk:             utils.SafeString(ptk.PTK.NUPTK),
