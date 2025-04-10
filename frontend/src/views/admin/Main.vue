@@ -111,7 +111,10 @@ const menuItems = ref([
             },
             {
                 label: 'Data Mapel',
-                icon: 'pi pi-book'
+                icon: 'pi pi-book',
+                command: () => {
+                    router.push({ name: 'readMapel' })
+                }
             },
 
 

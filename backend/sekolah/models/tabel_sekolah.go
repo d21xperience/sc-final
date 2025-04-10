@@ -30,9 +30,11 @@ type Sekolah struct {
 
 type SekolahTabelTenant struct {
 	gorm.Model
-	NamaSekolah string `gorm:"unique;not null"`
-	SekolahID   int    `gorm:"unique;not null"`
-	SchemaName  string `gorm:"unique;not null"`
+	NamaSekolah        string           `gorm:"unique;not null"`
+	SekolahID          int              `gorm:"unique;not null"`
+	SchemaName         string           `gorm:"unique;not null"`
+	// BentukPendidikanID uint16           `gorm:"not null;default:0;column:bentuk_pendidikan_id"`
+	// BentukPendidikan   BentukPendidikan `gorm:"foreignKey:BentukPendidikanID;references:BentukPendidikanID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 }
 
 type SchemaLog struct {

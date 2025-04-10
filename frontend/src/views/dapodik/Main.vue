@@ -10,28 +10,24 @@
                         <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
                         <div>
                             <Select v-model="selectedSemester" :options="semester" optionLabel="namaSemester"
-                                placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" />
+                                placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" :disabled="isDisabled" />
 
                         </div>
                     </div>
                 </div>
                 <!-- Breadcrumb -->
-                <div>
+                <!-- <div>
                     <Breadcrumb :home="home" :model="breadcrumbItems">
                         <template #item="{ item, props }">
                             <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
                                 <a :href="href" v-bind="props.action" @click="navigate">
-                                    <span :class="[item.icon, 'text-color']" />
                                     <span class="text-primary font-semibold">{{ item.label }}</span>
                                 </a>
                             </router-link>
-                            <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-                                <span class="text-surface-700 dark:text-surface-0">{{ item.label }}</span>
-                            </a>
+                            <span v-else class="text-surface-700 dark:text-surface-0">{{ item.label }}</span>
                         </template>
-
                     </Breadcrumb>
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- </div> -->
@@ -53,26 +49,39 @@ const store = useStore();
 
 // =====================================
 import Breadcrumb from 'primevue/breadcrumb';
-
+const isDisabled = computed(() => route.meta.disableSelect);
 
 
 // Breadcrumb
 // ==============================
-const home = ref({
-    icon: 'pi pi-home',
-    route: `${route.fullPath}`,
+// Mencari parent route
+const parentRoute = computed(() => {
+    return route.matched.length > 1 ? route.matched[route.matched.length - 2] : null;
 });
-const breadcrumbItems = computed(() => {
-    const pathArray = route.path.split('/').filter((p) => p);
-    let path = '';
 
-    return pathArray.map((segment, index) => {
-        path += `/${segment}`;
-        return {
-            label: segment.charAt(0).toUpperCase() + segment.slice(1),
-            to: index < pathArray.length - 1 ? path : undefined // Hanya halaman terakhir yang tidak memiliki link
+// Home Breadcrumb akan menunjuk ke parent route (data-kelas)
+const home = computed(() => {
+    return parentRoute.value
+        ? {
+            icon: "pi pi-home",
+            route: parentRoute.value.path,
+            label: parentRoute.value.meta.title || "Home",
+        }
+        : {
+            icon: "pi pi-home",
+            route: "/",
+            label: "Home",
         };
-    });
+});
+
+// Breadcrumb items
+const breadcrumbItems = computed(() => {
+    return route.matched
+        .filter((r) => r !== parentRoute.value) // Hapus parent agar tidak duplikasi
+        .map((r) => ({
+            label: r.meta.breadcrumb || r.meta.title || r.name, // Gunakan meta.breadcrumb atau title
+            route: r.path !== route.path ? r.path : null, // Halaman aktif tidak diklik
+        }));
 });
 // ==============================
 onMounted(async () => {

@@ -154,6 +154,10 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 				Nuptk:             utils.SafeString(ptk.PTK.NUPTK),
 				Nip:               utils.SafeString(ptk.PTK.NIP),
 			},
+			// PtkPelengkap: &pb.PTKPelengkap{
+			// 	PtkPelengkapId: ptk.PTKPelengkap.PTKID,
+			// 	GelarDepan: ptk.PTK.,
+			// },
 			// Isi field sesuai kebutuhan
 		}
 	})

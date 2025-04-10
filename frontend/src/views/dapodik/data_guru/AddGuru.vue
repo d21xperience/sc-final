@@ -41,13 +41,13 @@ const pesertaDidik = ref({
     pesertaDidikId: '',
     nis: '',
     nisn: '',
-    nmSiswa: '',
+    nmGuru: '',
     tempatLahir: '',
     tanggalLahir: '',
     jenisKelamin: '',
     agama: '',
-    alamatSiswa: computed(() => `${alamatLengkap.value.alamatJalan} RT.${alamatLengkap.value.rt} RW.${alamatLengkap.value.rw} Desa ${alamatLengkap.value.desa} Kec. ${alamatLengkap.value.kec} Kab. ${alamatLengkap.value.kab} Prov. ${alamatLengkap.value.prov}`),
-    teleponSiswa: '',
+    alamatGuru: computed(() => `${alamatLengkap.value.alamatJalan} RT.${alamatLengkap.value.rt} RW.${alamatLengkap.value.rw} Desa ${alamatLengkap.value.desa} Kec. ${alamatLengkap.value.kec} Kab. ${alamatLengkap.value.kab} Prov. ${alamatLengkap.value.prov}`),
+    teleponGuru: '',
     diterimaTanggal: '',
     nmAyah: '',
     nmIbu: '',
@@ -59,7 +59,7 @@ const pesertaDidik = ref({
 
 // Model Peserta Didik Pelengkap
 const pesertaDidikPelengkap = ref({
-    pelengkapSiswaId: '',
+    pelengkapGuruId: '',
     pesertaDidikId: '',
     statusDalamKel: '',
     anakKe: '',
@@ -69,7 +69,7 @@ const pesertaDidikPelengkap = ref({
     teleponOrtu: '',
     alamatWali: '',
     teleponWali: '',
-    fotoSiswa: null
+    fotoGuru: null
 });
 
 // Opsi Dropdown
@@ -90,7 +90,7 @@ const agamaOptions = ref([
 
 // Handle Submit Form
 const submitForm = () => {
-    console.log(pesertaDidik.value.alamatSiswa);
+    console.log(pesertaDidik.value.alamatGuru);
     console.log('Peserta Didik:', pesertaDidik.value);
     console.log('Peserta Didik Pelengkap:', pesertaDidikPelengkap.value);
 
@@ -100,12 +100,12 @@ const submitForm = () => {
 // Handle Upload Foto
 const onUpload = (event) => {
     const file = event.files[0];
-    pesertaDidikPelengkap.value.fotoSiswa = URL.createObjectURL(file);
+    pesertaDidikPelengkap.value.fotoGuru = URL.createObjectURL(file);
     toast.add({ severity: 'info', summary: 'Foto Diunggah', detail: file.name, life: 3000 });
 };
 
 const batal = () => {
-    router.push({ name: 'readSiswa' })
+    router.push({ name: 'readGuru' })
 }
 
 
@@ -122,20 +122,20 @@ const batal = () => {
             <a href="#" class="hover:underline">Students</a> &gt; 
             <span>Registration Form</span>
         </nav> -->
-        <h1 class="text-2xl font-bold mb-6">Form Registrasi Siswa</h1>
+        <h1 class="text-2xl font-bold mb-6">Form Registrasi Guru</h1>
 
         <section class="mb-8">
-            <h2 class="text-xl font-semibold mb-4">Informasi Siswa</h2>
+            <h2 class="text-xl font-semibold mb-4">Informasi Guru</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-gray-700" for="nmSiswa">Nama</label>
-                    <InputText v-model="pesertaDidik.nmSiswa" fluid name="nmSiswa" id="nmSiswa"
+                    <label class="block text-gray-700" for="nmGuru">Nama Lengkap</label>
+                    <InputText v-model="pesertaDidik.nmGuru" fluid name="nmGuru" id="nmGuru"
                         placeholder="Masukan nama" />
                 </div>
                 <div class="w-full">
                     <label class="block text-gray-700">Jenis Kelamin</label>
                     <Select v-model="selectedjenisKelaminOptions" :options="jenisKelaminOptions"
-                        placeholder="Pilih jenis kelamin" optionLabel="label" class="w-full" />
+                        placeholder="Pilih jenis kelamin" optionLabel="label" class="w-full"/>
                 </div>
                 <div>
                     <div class="md:flex md:space-x-1">
@@ -159,20 +159,20 @@ const batal = () => {
                         optionLabel="label" fluid class="w-full" />
                 </div>
                 <div>
-                    <label class="block text-gray-700" for="nis">NIS</label>
+                    <label class="block text-gray-700" for="nis">Kewarganegaraan</label>
                     <InputText v-model="pesertaDidik.nis" fluid name="nis" id="nis" placeholder="Masukan NIS" />
                 </div>
                 <div>
-                    <label class="block text-gray-700" for="nisn">NISN</label>
+                    <label class="block text-gray-700" for="nisn">Status Perkawinan</label>
                     <InputText v-model="pesertaDidik.nisn" fluid name="nisn" id="nisn" placeholder="Masukan NISN" />
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-gray-700" for="nmSiswa">Alamat Jalan</label>
-                    <InputText v-model="alamatLengkap.alamatJalan" fluid name="nmSiswa" id="nmSiswa"
-                        placeholder="Masukan nama" />
+                    <label class="block text-gray-700" for="alamatLengkap">Alamat Jalan</label>
+                    <InputText v-model="alamatLengkap.alamatJalan" fluid name="alamatLengkap" id="alamatLengkap"
+                        placeholder="Masukan alamat" />
                 </div>
                 <div class="flex space-x-1">
                     <div class="w-1/2">
@@ -294,6 +294,36 @@ const batal = () => {
             </div>
             <div>
                 <label class="block text-gray-700">No.Tlp. Wali</label>
+                <div class="relative">
+                    <input type="text" placeholder="Enter guardian's phone number"
+                        class="w-full p-2 border border-gray-300 rounded">
+                    <i class="fas fa-phone-alt absolute right-3 top-3 text-gray-400"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Riwayat Pendidikan</h2>
+            <h3 class="text-xl font-semibold mb-4">Pendidikan formal di dalam dan luar negeri</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-gray-700">Jenis Pendidikan</label>
+                    <input type="text" placeholder="Enter guardian's name (if applicable)"
+                        class="w-full p-2 border border-gray-300 rounded">
+                </div>
+                <div>
+                    <label class="block text-gray-700">Jurusan</label>
+                    <input type="text" placeholder="Enter guardian's occupation"
+                        class="w-full p-2 border border-gray-300 rounded">
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Tahun masuk</label>
+                <textarea placeholder="Enter guardian's address"
+                    class="w-full p-2 border border-gray-300 rounded"></textarea>
+            </div>
+            <div>
+                <label class="block text-gray-700">Tahun Keluar</label>
                 <div class="relative">
                     <input type="text" placeholder="Enter guardian's phone number"
                         class="w-full p-2 border border-gray-300 rounded">

@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -37,21 +38,42 @@ func (r *GenericRepository[T]) Save(ctx context.Context, entity *T, schemaName s
 	})
 }
 
+// func (r *GenericRepository[T]) FindByID(ctx context.Context, id string, schemaName, idColumn string) (*T, error) {
+// 	var entity T
+// 	if err := r.db.WithContext(ctx).Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+// 		return nil, fmt.Errorf("failed to set schema: %w", err)
+// 	}
+
+// 	if err := r.db.WithContext(ctx).
+// 		Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
+// 		First(&entity, fmt.Sprintf("%s = ?", idColumn), id).Error; err != nil {
+// 		return nil, fmt.Errorf("failed to find record in schema %s: %w", schemaName, err)
+// 	}
+
+//		return &entity, nil
+//	}
 func (r *GenericRepository[T]) FindByID(ctx context.Context, id string, schemaName, idColumn string) (*T, error) {
 	var entity T
+
+	// Set Schema (Multi-Tenant)
 	if err := r.db.WithContext(ctx).Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
 		return nil, fmt.Errorf("failed to set schema: %w", err)
 	}
 
-	if err := r.db.WithContext(ctx).
+	// Query Data
+	err := r.db.WithContext(ctx).
 		Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
-		First(&entity, fmt.Sprintf("%s = ?", idColumn), id).Error; err != nil {
+		First(&entity, fmt.Sprintf("%s = ?", idColumn), id).Error
+
+	// Handle jika data tidak ditemukan
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil // Mengembalikan nil tanpa error jika tidak ditemukan
+	} else if err != nil {
 		return nil, fmt.Errorf("failed to find record in schema %s: %w", schemaName, err)
 	}
 
 	return &entity, nil
 }
-
 func (r *GenericRepository[T]) FindAll(ctx context.Context, schemaName string, limit, offset int) ([]*T, error) {
 	var entities []*T
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -70,7 +92,7 @@ func (r *GenericRepository[T]) FindAll(ctx context.Context, schemaName string, l
 func (r *GenericRepository[T]) FindAllByConditions(
 	ctx context.Context,
 	schemaName string,
-	conditions map[string]interface{}, // Parameter untuk kondisi WHERE
+	conditions map[string]any, // Parameter untuk kondisi WHERE
 	limit, offset int,
 ) ([]*T, error) {
 	var entities []*T
@@ -128,7 +150,7 @@ func (r *GenericRepository[T]) Delete(ctx context.Context, id string, schemaName
 	})
 }
 func (r *GenericRepository[T]) SaveMany(ctx context.Context, schemaName string, entities []*T, batchSize int) error {
-	fmt.Println("eksekusi di savemany")
+	// fmt.Println("eksekusi di savemany")
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		// Set schema
 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
@@ -340,12 +362,12 @@ func (r *GenericRepository[T]) FindWithRelations(
 func (r *GenericRepository[T]) CountRows(ctx context.Context, schemaName, semesterIdColumn, semesterId string) (int64, error) {
 	var count int64
 
-	// 🔥 Set schema terlebih dahulu
+	//  Set schema terlebih dahulu
 	if err := r.db.WithContext(ctx).Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
 		return 0, fmt.Errorf("failed to set schema: %w", err)
 	}
 
-	// 🔥 Query COUNT dengan filter berdasarkan `semester_id`
+	//  Query COUNT dengan filter berdasarkan `semester_id`
 	if err := r.db.WithContext(ctx).
 		Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
 		Where(fmt.Sprintf("%s = ?", semesterIdColumn), semesterId).
@@ -355,3 +377,147 @@ func (r *GenericRepository[T]) CountRows(ctx context.Context, schemaName, semest
 
 	return count, nil
 }
+
+// Fungsi untuk pencarian data berdasarkan kolom, seperti nama
+// Fungsi Generic untuk Preload One-To-Many dengan Pagination dan Pencarian Nama
+func (r *GenericRepository[T]) SearchByColumnNamePreloadAndJoins(
+	ctx context.Context,
+	schemaName string,
+	joins []string,
+	preloads []string,
+	conditions map[string]interface{},
+	groupByColumns []string,
+	limit int,
+	offset int,
+	nameColumn string, // Kolom yang akan dicari berdasarkan nama
+	nameValue string, // Nilai yang akan dicari dalam kolom nama
+) ([]T, int64, error) {
+	var results []T
+	var totalCount int64
+	tx := r.db.WithContext(ctx)
+
+	// Set Schema (Multi-Tenant)
+	if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", schemaName)).Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to set schema: %w", err)
+	}
+
+	// Hitung total data sebelum paginasi
+	countTx := tx.Model(new(T))
+	for _, join := range joins {
+		countTx = countTx.Joins(join)
+	}
+
+	// Tambahkan kondisi pencarian berdasarkan nama (LIKE)
+	if nameColumn != "" && nameValue != "" {
+		searchPattern := fmt.Sprintf("%%%s%%", nameValue) // LIKE '%nameValue%'
+		countTx = countTx.Where(fmt.Sprintf("%s ILIKE ?", nameColumn), searchPattern)
+	}
+
+	if err := countTx.Where(conditions).Count(&totalCount).Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to count records: %w", err)
+	}
+
+	// Tambahkan DISTINCT untuk menghindari duplikasi
+	tx = tx.Distinct()
+
+	// Tambahkan Joins jika ada
+	for _, join := range joins {
+		tx = tx.Joins(join)
+	}
+
+	// Tambahkan Preload untuk relasi One-To-Many
+	for _, preload := range preloads {
+		tx = tx.Preload(preload)
+	}
+
+	// Tambahkan GROUP BY jika diperlukan
+	if len(groupByColumns) > 0 {
+		tx = tx.Group(strings.Join(groupByColumns, ", "))
+	}
+
+	// Tambahkan kondisi pencarian berdasarkan nama
+	if nameColumn != "" && nameValue != "" {
+		searchPattern := fmt.Sprintf("%%%s%%", nameValue)
+		tx = tx.Where(fmt.Sprintf("%s ILIKE ?", nameColumn), searchPattern)
+	}
+
+	// Tambahkan Pagination
+	if limit > 0 {
+		tx = tx.Limit(limit)
+	}
+	if offset >= 0 {
+		tx = tx.Offset(offset)
+	}
+
+	// Eksekusi Query dengan kondisi
+	if err := tx.Where(conditions).Find(&results).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return results, totalCount, nil
+}
+
+// Fungsi untuk mengambil semua data namun di batasi oleh menggunakan pagination
+// Fungsi Generic untuk Preload One-To-Many dengan Pagination
+func (r *GenericRepository[T]) FindAllWithPagination(
+	ctx context.Context,
+	schemaName string,
+	joins []string,
+	preloads []string,
+	conditions map[string]any,
+	groupByColumns []string,
+	limit int, // Menentukan jumlah data per halaman
+	offset int, // Menentukan posisi mulai data
+) ([]T, int64, error) { // Tambahkan return totalCount untuk mengetahui jumlah total data
+	var results []T
+	var totalCount int64
+	tx := r.db.WithContext(ctx)
+
+	// Set Schema (Multi-Tenant)
+	if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", schemaName)).Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to set schema: %w", err)
+	}
+
+	// Hitung total data sebelum paginasi
+	countTx := tx.Model(new(T))
+	for _, join := range joins {
+		countTx = countTx.Joins(join)
+	}
+	if err := countTx.Where(conditions).Count(&totalCount).Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to count records: %w", err)
+	}
+
+	// Tambahkan DISTINCT untuk menghindari duplikasi
+	tx = tx.Distinct()
+
+	// Tambahkan Joins jika ada
+	for _, join := range joins {
+		tx = tx.Joins(join)
+	}
+
+	// Tambahkan Preload untuk relasi One-To-Many
+	for _, preload := range preloads {
+		tx = tx.Preload(preload)
+	}
+
+	// Tambahkan GROUP BY jika diperlukan
+	if len(groupByColumns) > 0 {
+		tx = tx.Group(strings.Join(groupByColumns, ", "))
+	}
+
+	// Tambahkan Pagination
+	if limit > 0 {
+		tx = tx.Limit(limit)
+	}
+	if offset >= 0 {
+		tx = tx.Offset(offset)
+	}
+
+	// Eksekusi Query dengan kondisi
+	if err := tx.Where(conditions).Find(&results).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return results, totalCount, nil
+}
+

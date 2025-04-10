@@ -68,6 +68,8 @@
                         </Column> -->
                         <Column field="ptk.nama" header="Nama" sortable>
                         </Column>
+                        <Column field="ptk.nama" header="Gelar belakang" sortable>
+                        </Column>
                         <Column field="ptk.jenisKelamin" header="JK">
                         </Column>
                         <Column field="ptk.nuptk" header="NUPTK">
@@ -161,11 +163,11 @@ const filters = ref({
     'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 const submitted = ref(false);
-const statuses = ref([
-    { label: 'INSTOCK', value: 'instock' },
-    { label: 'LOWSTOCK', value: 'lowstock' },
-    { label: 'OUTOFSTOCK', value: 'outofstock' }
-]);
+// const statuses = ref([
+//     { label: 'INSTOCK', value: 'instock' },
+//     { label: 'LOWSTOCK', value: 'lowstock' },
+//     { label: 'OUTOFSTOCK', value: 'outofstock' }
+// ]);
 
 const formatCurrency = (value) => {
     if (value)
@@ -179,28 +181,28 @@ const hideDialog = () => {
     productDialog.value = false;
     submitted.value = false;
 };
-const saveProduct = () => {
-    submitted.value = true;
+// const saveProduct = () => {
+//     submitted.value = true;
 
-    if (product?.value.name?.trim()) {
-        if (product.value.id) {
-            product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
-            products.value[findIndexById(product.value.id)] = product.value;
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-        }
-        else {
-            product.value.id = createId();
-            product.value.code = createId();
-            product.value.image = 'product-placeholder.svg';
-            product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
-            products.value.push(product.value);
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-        }
+//     if (product?.value.name?.trim()) {
+//         if (product.value.id) {
+//             product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
+//             products.value[findIndexById(product.value.id)] = product.value;
+//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+//         }
+//         else {
+//             product.value.id = createId();
+//             product.value.code = createId();
+//             product.value.image = 'product-placeholder.svg';
+//             product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
+//             products.value.push(product.value);
+//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+//         }
 
-        productDialog.value = false;
-        product.value = {};
-    }
-};
+//         productDialog.value = false;
+//         product.value = {};
+//     }
+// };
 // const editProduct = (prod) => {
 //     product.value = { ...prod };
 //     productDialog.value = true;
@@ -255,14 +257,14 @@ const deletedataLulusan = () => {
 import Select from 'primevue/select';
 import EmptyData from '@/components/EmptyData.vue';
 
-const selectedJurusan = ref();
-const jurusan = ref([
-    { name: 'Teknik Kendaraan Ringan', code: 'TKR' },
-    { name: 'Teknik Mesin Sepeda Motor', code: 'TSM' },
-    { name: 'Teknik Komputer dan Jaringan', code: 'TKJ' },
-    { name: 'Otomatisasi Perkantoran', code: 'OTKP' },
-    { name: 'AKuntansi Lembaga', code: 'AKL' }
-]);
+// const selectedJurusan = ref();
+// const jurusan = ref([
+//     { name: 'Teknik Kendaraan Ringan', code: 'TKR' },
+//     { name: 'Teknik Mesin Sepeda Motor', code: 'TSM' },
+//     { name: 'Teknik Komputer dan Jaringan', code: 'TKJ' },
+//     { name: 'Otomatisasi Perkantoran', code: 'OTKP' },
+//     { name: 'AKuntansi Lembaga', code: 'AKL' }
+// ]);
 
 // Fungsi yang menangkap event emit dari child
 const handleProfileFetched = (data) => {
@@ -305,10 +307,10 @@ const fetchGuru = async () => {
             schemaname: schemaname.value
         }
         console.log(payload)
-        const results = await store.dispatch("sekolahService/fetchPTK", payload)
+        const results = await store.dispatch("sekolahService/fetchPTKTerdaftar", payload)
         // console.log(results)
         if (results) {
-            Guru.value = store.getters["sekolahService/getGuru"]
+            Guru.value = store.getters["sekolahService/getPTKTerdaftar"]
             // // Ambil Guru terbaru berdasarkan ID terbesar
             // selectedGuru.value = Guru.value.reduce((latest, current) =>
             //     current.GuruId > latest.GuruId ? current : latest

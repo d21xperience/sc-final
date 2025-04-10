@@ -1,10 +1,13 @@
 package services
 
 import (
+	"context"
+	"log"
 	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
 	"sekolah/repositories"
+	"sekolah/utils"
 )
 
 type PTKServiceServer struct {
@@ -48,22 +51,57 @@ func NewPTKServiceServer() *PTKServiceServer {
 // }
 
 // **GetPTK**
-// func (s *PTKServiceServer) GetPTK(ctx context.Context, req *pb.GetPTKRequest) (*pb.GetPTKResponse, error) {
-// 	schemaName := req.GetSchemaname()
-// 	PTKID := req.GetPTKId()
+func (s *PTKServiceServer) GetPTK(ctx context.Context, req *pb.GetPTKRequest) (*pb.GetPTKResponse, error) {
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SchemaName"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	ptkId := req.GetPTKId()
+	var conditions = map[string]any{
+		"soft_delete": 0,
+	}
+	if ptkId != "" {
+		conditions["tabel_ptk.ptk_id"] = ptkId
+	}
+	joins := []string{
+		// "JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
+		// "JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = tabel_anggotakelas.rombongan_belajar_id",
+		// "JOIN tabel_ptk ON tabel_ptk.ptk_id = tabel_kelas.ptk_id",
+	}
+	preloads := []string{}
 
-// 	PTK, err := s.PTKService.FindByID(ctx, PTKID, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal menemukan PTK: %v", err)
-// 		return nil, fmt.Errorf("gagal menemukan PTK: %w", err)
-// 	}
+	orderBy := []string{"tabel_ptk.nama ASC"} // Hindari duplikasi
+	anggotaPTKModel, err := s.repo.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
+	if err != nil {
+		return nil, err
+	}
 
-// 	return &pb.GetPTKResponse{
-// 		PTK: &pb.PTK{
-// 			PTKID: PTK.PTKID,
-// 		},
-// 	}, nil
-// }
+	ptkList := utils.ConvertModelsToPB(anggotaPTKModel, func(item models.TabelPTK) *pb.PTK {
+
+		return &pb.PTK{
+			PtkId:             item.PtkID,
+			Nama:              item.Nama,
+			Nuptk:             utils.SafeString(item.NUPTK),
+			JenisKelamin:      item.JenisKelamin,
+			TempatLahir:       item.TempatLahir,
+			AlamatJalan:       item.AlamatJalan,
+			Nip:               utils.SafeString(item.NIP),
+			JenisPtkId:        item.JenisPtkID,
+			TanggalLahir:      item.TanggalLahir.Format("2006-01-02"),
+			StatusKeaktifanId: item.StatusKeaktifanID,
+			// SoftDelete: item,
+		}
+	})
+
+	return &pb.GetPTKResponse{
+		PTK: ptkList,
+	}, nil
+}
 
 // **UpdatePTK**
 // func (s *PTKServiceServer) UpdatePTK(ctx context.Context, req *pb.UpdatePTKRequest) (*pb.UpdatePTKResponse, error) {

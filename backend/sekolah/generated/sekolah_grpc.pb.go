@@ -468,6 +468,7 @@ const (
 	SekolahService_GetSekolahTabelTenant_FullMethodName = "/sekolah.SekolahService/GetSekolahTabelTenant"
 	SekolahService_CreateSekolah_FullMethodName         = "/sekolah.SekolahService/CreateSekolah"
 	SekolahService_GetSekolah_FullMethodName            = "/sekolah.SekolahService/GetSekolah"
+	SekolahService_UpdateSekolah_FullMethodName         = "/sekolah.SekolahService/UpdateSekolah"
 )
 
 // SekolahServiceClient is the client API for SekolahService service.
@@ -480,6 +481,7 @@ type SekolahServiceClient interface {
 	// // CRUD for Sekolah
 	CreateSekolah(ctx context.Context, in *CreateSekolahRequest, opts ...grpc.CallOption) (*CreateSekolahResponse, error)
 	GetSekolah(ctx context.Context, in *GetSekolahRequest, opts ...grpc.CallOption) (*GetSekolahResponse, error)
+	UpdateSekolah(ctx context.Context, in *UpdateSekolahRequest, opts ...grpc.CallOption) (*UpdateSekolahResponse, error)
 }
 
 type sekolahServiceClient struct {
@@ -540,6 +542,16 @@ func (c *sekolahServiceClient) GetSekolah(ctx context.Context, in *GetSekolahReq
 	return out, nil
 }
 
+func (c *sekolahServiceClient) UpdateSekolah(ctx context.Context, in *UpdateSekolahRequest, opts ...grpc.CallOption) (*UpdateSekolahResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateSekolahResponse)
+	err := c.cc.Invoke(ctx, SekolahService_UpdateSekolah_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SekolahServiceServer is the server API for SekolahService service.
 // All implementations must embed UnimplementedSekolahServiceServer
 // for forward compatibility.
@@ -550,6 +562,7 @@ type SekolahServiceServer interface {
 	// // CRUD for Sekolah
 	CreateSekolah(context.Context, *CreateSekolahRequest) (*CreateSekolahResponse, error)
 	GetSekolah(context.Context, *GetSekolahRequest) (*GetSekolahResponse, error)
+	UpdateSekolah(context.Context, *UpdateSekolahRequest) (*UpdateSekolahResponse, error)
 	mustEmbedUnimplementedSekolahServiceServer()
 }
 
@@ -574,6 +587,9 @@ func (UnimplementedSekolahServiceServer) CreateSekolah(context.Context, *CreateS
 }
 func (UnimplementedSekolahServiceServer) GetSekolah(context.Context, *GetSekolahRequest) (*GetSekolahResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSekolah not implemented")
+}
+func (UnimplementedSekolahServiceServer) UpdateSekolah(context.Context, *UpdateSekolahRequest) (*UpdateSekolahResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSekolah not implemented")
 }
 func (UnimplementedSekolahServiceServer) mustEmbedUnimplementedSekolahServiceServer() {}
 func (UnimplementedSekolahServiceServer) testEmbeddedByValue()                        {}
@@ -686,6 +702,24 @@ func _SekolahService_GetSekolah_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SekolahService_UpdateSekolah_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSekolahRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SekolahServiceServer).UpdateSekolah(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SekolahService_UpdateSekolah_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SekolahServiceServer).UpdateSekolah(ctx, req.(*UpdateSekolahRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SekolahService_ServiceDesc is the grpc.ServiceDesc for SekolahService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -713,6 +747,10 @@ var SekolahService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetSekolah",
 			Handler:    _SekolahService_GetSekolah_Handler,
 		},
+		{
+			MethodName: "UpdateSekolah",
+			Handler:    _SekolahService_UpdateSekolah_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "sekolah.proto",
@@ -724,6 +762,7 @@ const (
 	SiswaService_GetSiswa_FullMethodName          = "/sekolah.SiswaService/GetSiswa"
 	SiswaService_UpdateSiswa_FullMethodName       = "/sekolah.SiswaService/UpdateSiswa"
 	SiswaService_DeleteSiswa_FullMethodName       = "/sekolah.SiswaService/DeleteSiswa"
+	SiswaService_SearchSiswa_FullMethodName       = "/sekolah.SiswaService/SearchSiswa"
 )
 
 // SiswaServiceClient is the client API for SiswaService service.
@@ -739,6 +778,7 @@ type SiswaServiceClient interface {
 	GetSiswa(ctx context.Context, in *GetSiswaRequest, opts ...grpc.CallOption) (*GetSiswaResponse, error)
 	UpdateSiswa(ctx context.Context, in *UpdateSiswaRequest, opts ...grpc.CallOption) (*UpdateSiswaResponse, error)
 	DeleteSiswa(ctx context.Context, in *DeleteSiswaRequest, opts ...grpc.CallOption) (*DeleteSiswaResponse, error)
+	SearchSiswa(ctx context.Context, in *SearchSiswaRequest, opts ...grpc.CallOption) (*SearchSiswaResponse, error)
 }
 
 type siswaServiceClient struct {
@@ -799,6 +839,16 @@ func (c *siswaServiceClient) DeleteSiswa(ctx context.Context, in *DeleteSiswaReq
 	return out, nil
 }
 
+func (c *siswaServiceClient) SearchSiswa(ctx context.Context, in *SearchSiswaRequest, opts ...grpc.CallOption) (*SearchSiswaResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchSiswaResponse)
+	err := c.cc.Invoke(ctx, SiswaService_SearchSiswa_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SiswaServiceServer is the server API for SiswaService service.
 // All implementations must embed UnimplementedSiswaServiceServer
 // for forward compatibility.
@@ -812,6 +862,7 @@ type SiswaServiceServer interface {
 	GetSiswa(context.Context, *GetSiswaRequest) (*GetSiswaResponse, error)
 	UpdateSiswa(context.Context, *UpdateSiswaRequest) (*UpdateSiswaResponse, error)
 	DeleteSiswa(context.Context, *DeleteSiswaRequest) (*DeleteSiswaResponse, error)
+	SearchSiswa(context.Context, *SearchSiswaRequest) (*SearchSiswaResponse, error)
 	mustEmbedUnimplementedSiswaServiceServer()
 }
 
@@ -836,6 +887,9 @@ func (UnimplementedSiswaServiceServer) UpdateSiswa(context.Context, *UpdateSiswa
 }
 func (UnimplementedSiswaServiceServer) DeleteSiswa(context.Context, *DeleteSiswaRequest) (*DeleteSiswaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteSiswa not implemented")
+}
+func (UnimplementedSiswaServiceServer) SearchSiswa(context.Context, *SearchSiswaRequest) (*SearchSiswaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchSiswa not implemented")
 }
 func (UnimplementedSiswaServiceServer) mustEmbedUnimplementedSiswaServiceServer() {}
 func (UnimplementedSiswaServiceServer) testEmbeddedByValue()                      {}
@@ -948,6 +1002,24 @@ func _SiswaService_DeleteSiswa_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SiswaService_SearchSiswa_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchSiswaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SiswaServiceServer).SearchSiswa(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SiswaService_SearchSiswa_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SiswaServiceServer).SearchSiswa(ctx, req.(*SearchSiswaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SiswaService_ServiceDesc is the grpc.ServiceDesc for SiswaService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -974,6 +1046,10 @@ var SiswaService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteSiswa",
 			Handler:    _SiswaService_DeleteSiswa_Handler,
+		},
+		{
+			MethodName: "SearchSiswa",
+			Handler:    _SiswaService_SearchSiswa_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1121,268 +1197,6 @@ var UploadDataSekolahService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DownloadDataSekolah",
 			Handler:    _UploadDataSekolahService_DownloadDataSekolah_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "sekolah.proto",
-}
-
-const (
-	MapelService_CreateMapel_FullMethodName       = "/sekolah.MapelService/CreateMapel"
-	MapelService_CreateBanyakMapel_FullMethodName = "/sekolah.MapelService/CreateBanyakMapel"
-	MapelService_GetMapel_FullMethodName          = "/sekolah.MapelService/GetMapel"
-	MapelService_UpdateMapel_FullMethodName       = "/sekolah.MapelService/UpdateMapel"
-	MapelService_DeleteMapel_FullMethodName       = "/sekolah.MapelService/DeleteMapel"
-)
-
-// MapelServiceClient is the client API for MapelService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// =======================================
-// MATA PELAJARAN SERVICE
-type MapelServiceClient interface {
-	// CRUD for Mapel
-	CreateMapel(ctx context.Context, in *CreateMapelRequest, opts ...grpc.CallOption) (*CreateMapelResponse, error)
-	CreateBanyakMapel(ctx context.Context, in *CreateBanyakMapelRequest, opts ...grpc.CallOption) (*CreateBanyakMapelResponse, error)
-	GetMapel(ctx context.Context, in *GetMapelRequest, opts ...grpc.CallOption) (*GetMapelResponse, error)
-	UpdateMapel(ctx context.Context, in *UpdateMapelRequest, opts ...grpc.CallOption) (*UpdateMapelResponse, error)
-	DeleteMapel(ctx context.Context, in *DeleteMapelRequest, opts ...grpc.CallOption) (*DeleteMapelResponse, error)
-}
-
-type mapelServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewMapelServiceClient(cc grpc.ClientConnInterface) MapelServiceClient {
-	return &mapelServiceClient{cc}
-}
-
-func (c *mapelServiceClient) CreateMapel(ctx context.Context, in *CreateMapelRequest, opts ...grpc.CallOption) (*CreateMapelResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateMapelResponse)
-	err := c.cc.Invoke(ctx, MapelService_CreateMapel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mapelServiceClient) CreateBanyakMapel(ctx context.Context, in *CreateBanyakMapelRequest, opts ...grpc.CallOption) (*CreateBanyakMapelResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateBanyakMapelResponse)
-	err := c.cc.Invoke(ctx, MapelService_CreateBanyakMapel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mapelServiceClient) GetMapel(ctx context.Context, in *GetMapelRequest, opts ...grpc.CallOption) (*GetMapelResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMapelResponse)
-	err := c.cc.Invoke(ctx, MapelService_GetMapel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mapelServiceClient) UpdateMapel(ctx context.Context, in *UpdateMapelRequest, opts ...grpc.CallOption) (*UpdateMapelResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateMapelResponse)
-	err := c.cc.Invoke(ctx, MapelService_UpdateMapel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mapelServiceClient) DeleteMapel(ctx context.Context, in *DeleteMapelRequest, opts ...grpc.CallOption) (*DeleteMapelResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteMapelResponse)
-	err := c.cc.Invoke(ctx, MapelService_DeleteMapel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// MapelServiceServer is the server API for MapelService service.
-// All implementations must embed UnimplementedMapelServiceServer
-// for forward compatibility.
-//
-// =======================================
-// MATA PELAJARAN SERVICE
-type MapelServiceServer interface {
-	// CRUD for Mapel
-	CreateMapel(context.Context, *CreateMapelRequest) (*CreateMapelResponse, error)
-	CreateBanyakMapel(context.Context, *CreateBanyakMapelRequest) (*CreateBanyakMapelResponse, error)
-	GetMapel(context.Context, *GetMapelRequest) (*GetMapelResponse, error)
-	UpdateMapel(context.Context, *UpdateMapelRequest) (*UpdateMapelResponse, error)
-	DeleteMapel(context.Context, *DeleteMapelRequest) (*DeleteMapelResponse, error)
-	mustEmbedUnimplementedMapelServiceServer()
-}
-
-// UnimplementedMapelServiceServer must be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedMapelServiceServer struct{}
-
-func (UnimplementedMapelServiceServer) CreateMapel(context.Context, *CreateMapelRequest) (*CreateMapelResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateMapel not implemented")
-}
-func (UnimplementedMapelServiceServer) CreateBanyakMapel(context.Context, *CreateBanyakMapelRequest) (*CreateBanyakMapelResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateBanyakMapel not implemented")
-}
-func (UnimplementedMapelServiceServer) GetMapel(context.Context, *GetMapelRequest) (*GetMapelResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMapel not implemented")
-}
-func (UnimplementedMapelServiceServer) UpdateMapel(context.Context, *UpdateMapelRequest) (*UpdateMapelResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateMapel not implemented")
-}
-func (UnimplementedMapelServiceServer) DeleteMapel(context.Context, *DeleteMapelRequest) (*DeleteMapelResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteMapel not implemented")
-}
-func (UnimplementedMapelServiceServer) mustEmbedUnimplementedMapelServiceServer() {}
-func (UnimplementedMapelServiceServer) testEmbeddedByValue()                      {}
-
-// UnsafeMapelServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MapelServiceServer will
-// result in compilation errors.
-type UnsafeMapelServiceServer interface {
-	mustEmbedUnimplementedMapelServiceServer()
-}
-
-func RegisterMapelServiceServer(s grpc.ServiceRegistrar, srv MapelServiceServer) {
-	// If the following call pancis, it indicates UnimplementedMapelServiceServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&MapelService_ServiceDesc, srv)
-}
-
-func _MapelService_CreateMapel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateMapelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MapelServiceServer).CreateMapel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MapelService_CreateMapel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MapelServiceServer).CreateMapel(ctx, req.(*CreateMapelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MapelService_CreateBanyakMapel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateBanyakMapelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MapelServiceServer).CreateBanyakMapel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MapelService_CreateBanyakMapel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MapelServiceServer).CreateBanyakMapel(ctx, req.(*CreateBanyakMapelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MapelService_GetMapel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMapelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MapelServiceServer).GetMapel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MapelService_GetMapel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MapelServiceServer).GetMapel(ctx, req.(*GetMapelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MapelService_UpdateMapel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateMapelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MapelServiceServer).UpdateMapel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MapelService_UpdateMapel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MapelServiceServer).UpdateMapel(ctx, req.(*UpdateMapelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MapelService_DeleteMapel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteMapelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MapelServiceServer).DeleteMapel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MapelService_DeleteMapel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MapelServiceServer).DeleteMapel(ctx, req.(*DeleteMapelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// MapelService_ServiceDesc is the grpc.ServiceDesc for MapelService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var MapelService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "sekolah.MapelService",
-	HandlerType: (*MapelServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "CreateMapel",
-			Handler:    _MapelService_CreateMapel_Handler,
-		},
-		{
-			MethodName: "CreateBanyakMapel",
-			Handler:    _MapelService_CreateBanyakMapel_Handler,
-		},
-		{
-			MethodName: "GetMapel",
-			Handler:    _MapelService_GetMapel_Handler,
-		},
-		{
-			MethodName: "UpdateMapel",
-			Handler:    _MapelService_UpdateMapel_Handler,
-		},
-		{
-			MethodName: "DeleteMapel",
-			Handler:    _MapelService_DeleteMapel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -3821,6 +3635,604 @@ var DashboardService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCountKelas",
 			Handler:    _DashboardService_GetCountKelas_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sekolah.proto",
+}
+
+const (
+	ReferensiService_GetBentukPendidikan_FullMethodName  = "/sekolah.ReferensiService/GetBentukPendidikan"
+	ReferensiService_GetJenjang_FullMethodName           = "/sekolah.ReferensiService/GetJenjang"
+	ReferensiService_GetTingkatPendidikan_FullMethodName = "/sekolah.ReferensiService/GetTingkatPendidikan"
+	ReferensiService_GetStatusKepemilikan_FullMethodName = "/sekolah.ReferensiService/GetStatusKepemilikan"
+	ReferensiService_GetJurusan_FullMethodName           = "/sekolah.ReferensiService/GetJurusan"
+	ReferensiService_GetKurikulum_FullMethodName         = "/sekolah.ReferensiService/GetKurikulum"
+	ReferensiService_GetMapel_FullMethodName             = "/sekolah.ReferensiService/GetMapel"
+)
+
+// ReferensiServiceClient is the client API for ReferensiService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// =========================================
+// =============Tabel Referensi=============
+// =========================================
+type ReferensiServiceClient interface {
+	GetBentukPendidikan(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetBentukPendidikanResponse, error)
+	GetJenjang(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetJenjangResponse, error)
+	GetTingkatPendidikan(ctx context.Context, in *GetTingkatPendidikanRequest, opts ...grpc.CallOption) (*GetTingkatPendidikanResponse, error)
+	GetStatusKepemilikan(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetStatusKepemilikanResponse, error)
+	GetJurusan(ctx context.Context, in *GetJurusanRequest, opts ...grpc.CallOption) (*GetJurusanResponse, error)
+	GetKurikulum(ctx context.Context, in *GetKurikulumRequest, opts ...grpc.CallOption) (*GetKurikulumResponse, error)
+	GetMapel(ctx context.Context, in *GetMapelRequest, opts ...grpc.CallOption) (*GetMapelResponse, error)
+}
+
+type referensiServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewReferensiServiceClient(cc grpc.ClientConnInterface) ReferensiServiceClient {
+	return &referensiServiceClient{cc}
+}
+
+func (c *referensiServiceClient) GetBentukPendidikan(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetBentukPendidikanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBentukPendidikanResponse)
+	err := c.cc.Invoke(ctx, ReferensiService_GetBentukPendidikan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *referensiServiceClient) GetJenjang(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetJenjangResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetJenjangResponse)
+	err := c.cc.Invoke(ctx, ReferensiService_GetJenjang_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *referensiServiceClient) GetTingkatPendidikan(ctx context.Context, in *GetTingkatPendidikanRequest, opts ...grpc.CallOption) (*GetTingkatPendidikanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTingkatPendidikanResponse)
+	err := c.cc.Invoke(ctx, ReferensiService_GetTingkatPendidikan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *referensiServiceClient) GetStatusKepemilikan(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetStatusKepemilikanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetStatusKepemilikanResponse)
+	err := c.cc.Invoke(ctx, ReferensiService_GetStatusKepemilikan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *referensiServiceClient) GetJurusan(ctx context.Context, in *GetJurusanRequest, opts ...grpc.CallOption) (*GetJurusanResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetJurusanResponse)
+	err := c.cc.Invoke(ctx, ReferensiService_GetJurusan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *referensiServiceClient) GetKurikulum(ctx context.Context, in *GetKurikulumRequest, opts ...grpc.CallOption) (*GetKurikulumResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetKurikulumResponse)
+	err := c.cc.Invoke(ctx, ReferensiService_GetKurikulum_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *referensiServiceClient) GetMapel(ctx context.Context, in *GetMapelRequest, opts ...grpc.CallOption) (*GetMapelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMapelResponse)
+	err := c.cc.Invoke(ctx, ReferensiService_GetMapel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ReferensiServiceServer is the server API for ReferensiService service.
+// All implementations must embed UnimplementedReferensiServiceServer
+// for forward compatibility.
+//
+// =========================================
+// =============Tabel Referensi=============
+// =========================================
+type ReferensiServiceServer interface {
+	GetBentukPendidikan(context.Context, *Empty) (*GetBentukPendidikanResponse, error)
+	GetJenjang(context.Context, *Empty) (*GetJenjangResponse, error)
+	GetTingkatPendidikan(context.Context, *GetTingkatPendidikanRequest) (*GetTingkatPendidikanResponse, error)
+	GetStatusKepemilikan(context.Context, *Empty) (*GetStatusKepemilikanResponse, error)
+	GetJurusan(context.Context, *GetJurusanRequest) (*GetJurusanResponse, error)
+	GetKurikulum(context.Context, *GetKurikulumRequest) (*GetKurikulumResponse, error)
+	GetMapel(context.Context, *GetMapelRequest) (*GetMapelResponse, error)
+	mustEmbedUnimplementedReferensiServiceServer()
+}
+
+// UnimplementedReferensiServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedReferensiServiceServer struct{}
+
+func (UnimplementedReferensiServiceServer) GetBentukPendidikan(context.Context, *Empty) (*GetBentukPendidikanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBentukPendidikan not implemented")
+}
+func (UnimplementedReferensiServiceServer) GetJenjang(context.Context, *Empty) (*GetJenjangResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetJenjang not implemented")
+}
+func (UnimplementedReferensiServiceServer) GetTingkatPendidikan(context.Context, *GetTingkatPendidikanRequest) (*GetTingkatPendidikanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTingkatPendidikan not implemented")
+}
+func (UnimplementedReferensiServiceServer) GetStatusKepemilikan(context.Context, *Empty) (*GetStatusKepemilikanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStatusKepemilikan not implemented")
+}
+func (UnimplementedReferensiServiceServer) GetJurusan(context.Context, *GetJurusanRequest) (*GetJurusanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetJurusan not implemented")
+}
+func (UnimplementedReferensiServiceServer) GetKurikulum(context.Context, *GetKurikulumRequest) (*GetKurikulumResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetKurikulum not implemented")
+}
+func (UnimplementedReferensiServiceServer) GetMapel(context.Context, *GetMapelRequest) (*GetMapelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMapel not implemented")
+}
+func (UnimplementedReferensiServiceServer) mustEmbedUnimplementedReferensiServiceServer() {}
+func (UnimplementedReferensiServiceServer) testEmbeddedByValue()                          {}
+
+// UnsafeReferensiServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ReferensiServiceServer will
+// result in compilation errors.
+type UnsafeReferensiServiceServer interface {
+	mustEmbedUnimplementedReferensiServiceServer()
+}
+
+func RegisterReferensiServiceServer(s grpc.ServiceRegistrar, srv ReferensiServiceServer) {
+	// If the following call pancis, it indicates UnimplementedReferensiServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ReferensiService_ServiceDesc, srv)
+}
+
+func _ReferensiService_GetBentukPendidikan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferensiServiceServer).GetBentukPendidikan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferensiService_GetBentukPendidikan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferensiServiceServer).GetBentukPendidikan(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReferensiService_GetJenjang_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferensiServiceServer).GetJenjang(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferensiService_GetJenjang_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferensiServiceServer).GetJenjang(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReferensiService_GetTingkatPendidikan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTingkatPendidikanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferensiServiceServer).GetTingkatPendidikan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferensiService_GetTingkatPendidikan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferensiServiceServer).GetTingkatPendidikan(ctx, req.(*GetTingkatPendidikanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReferensiService_GetStatusKepemilikan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferensiServiceServer).GetStatusKepemilikan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferensiService_GetStatusKepemilikan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferensiServiceServer).GetStatusKepemilikan(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReferensiService_GetJurusan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJurusanRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferensiServiceServer).GetJurusan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferensiService_GetJurusan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferensiServiceServer).GetJurusan(ctx, req.(*GetJurusanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReferensiService_GetKurikulum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetKurikulumRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferensiServiceServer).GetKurikulum(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferensiService_GetKurikulum_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferensiServiceServer).GetKurikulum(ctx, req.(*GetKurikulumRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReferensiService_GetMapel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMapelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferensiServiceServer).GetMapel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferensiService_GetMapel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferensiServiceServer).GetMapel(ctx, req.(*GetMapelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ReferensiService_ServiceDesc is the grpc.ServiceDesc for ReferensiService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ReferensiService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sekolah.ReferensiService",
+	HandlerType: (*ReferensiServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetBentukPendidikan",
+			Handler:    _ReferensiService_GetBentukPendidikan_Handler,
+		},
+		{
+			MethodName: "GetJenjang",
+			Handler:    _ReferensiService_GetJenjang_Handler,
+		},
+		{
+			MethodName: "GetTingkatPendidikan",
+			Handler:    _ReferensiService_GetTingkatPendidikan_Handler,
+		},
+		{
+			MethodName: "GetStatusKepemilikan",
+			Handler:    _ReferensiService_GetStatusKepemilikan_Handler,
+		},
+		{
+			MethodName: "GetJurusan",
+			Handler:    _ReferensiService_GetJurusan_Handler,
+		},
+		{
+			MethodName: "GetKurikulum",
+			Handler:    _ReferensiService_GetKurikulum_Handler,
+		},
+		{
+			MethodName: "GetMapel",
+			Handler:    _ReferensiService_GetMapel_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sekolah.proto",
+}
+
+const (
+	PembelajaranService_CreatePembelajaran_FullMethodName       = "/sekolah.PembelajaranService/CreatePembelajaran"
+	PembelajaranService_CreateBanyakPembelajaran_FullMethodName = "/sekolah.PembelajaranService/CreateBanyakPembelajaran"
+	PembelajaranService_GetPembelajaran_FullMethodName          = "/sekolah.PembelajaranService/GetPembelajaran"
+	PembelajaranService_UpdatePembelajaran_FullMethodName       = "/sekolah.PembelajaranService/UpdatePembelajaran"
+	PembelajaranService_DeletePembelajaran_FullMethodName       = "/sekolah.PembelajaranService/DeletePembelajaran"
+)
+
+// PembelajaranServiceClient is the client API for PembelajaranService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// MATA PELAJARAN SERVICE
+type PembelajaranServiceClient interface {
+	// CRUD for Pembelajaran
+	CreatePembelajaran(ctx context.Context, in *CreatePembelajaranRequest, opts ...grpc.CallOption) (*CreatePembelajaranResponse, error)
+	CreateBanyakPembelajaran(ctx context.Context, in *CreateBanyakPembelajaranRequest, opts ...grpc.CallOption) (*CreateBanyakPembelajaranResponse, error)
+	GetPembelajaran(ctx context.Context, in *GetPembelajaranRequest, opts ...grpc.CallOption) (*GetPembelajaranResponse, error)
+	UpdatePembelajaran(ctx context.Context, in *UpdatePembelajaranRequest, opts ...grpc.CallOption) (*UpdatePembelajaranResponse, error)
+	DeletePembelajaran(ctx context.Context, in *DeletePembelajaranRequest, opts ...grpc.CallOption) (*DeletePembelajaranResponse, error)
+}
+
+type pembelajaranServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPembelajaranServiceClient(cc grpc.ClientConnInterface) PembelajaranServiceClient {
+	return &pembelajaranServiceClient{cc}
+}
+
+func (c *pembelajaranServiceClient) CreatePembelajaran(ctx context.Context, in *CreatePembelajaranRequest, opts ...grpc.CallOption) (*CreatePembelajaranResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreatePembelajaranResponse)
+	err := c.cc.Invoke(ctx, PembelajaranService_CreatePembelajaran_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pembelajaranServiceClient) CreateBanyakPembelajaran(ctx context.Context, in *CreateBanyakPembelajaranRequest, opts ...grpc.CallOption) (*CreateBanyakPembelajaranResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateBanyakPembelajaranResponse)
+	err := c.cc.Invoke(ctx, PembelajaranService_CreateBanyakPembelajaran_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pembelajaranServiceClient) GetPembelajaran(ctx context.Context, in *GetPembelajaranRequest, opts ...grpc.CallOption) (*GetPembelajaranResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPembelajaranResponse)
+	err := c.cc.Invoke(ctx, PembelajaranService_GetPembelajaran_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pembelajaranServiceClient) UpdatePembelajaran(ctx context.Context, in *UpdatePembelajaranRequest, opts ...grpc.CallOption) (*UpdatePembelajaranResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePembelajaranResponse)
+	err := c.cc.Invoke(ctx, PembelajaranService_UpdatePembelajaran_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pembelajaranServiceClient) DeletePembelajaran(ctx context.Context, in *DeletePembelajaranRequest, opts ...grpc.CallOption) (*DeletePembelajaranResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeletePembelajaranResponse)
+	err := c.cc.Invoke(ctx, PembelajaranService_DeletePembelajaran_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PembelajaranServiceServer is the server API for PembelajaranService service.
+// All implementations must embed UnimplementedPembelajaranServiceServer
+// for forward compatibility.
+//
+// MATA PELAJARAN SERVICE
+type PembelajaranServiceServer interface {
+	// CRUD for Pembelajaran
+	CreatePembelajaran(context.Context, *CreatePembelajaranRequest) (*CreatePembelajaranResponse, error)
+	CreateBanyakPembelajaran(context.Context, *CreateBanyakPembelajaranRequest) (*CreateBanyakPembelajaranResponse, error)
+	GetPembelajaran(context.Context, *GetPembelajaranRequest) (*GetPembelajaranResponse, error)
+	UpdatePembelajaran(context.Context, *UpdatePembelajaranRequest) (*UpdatePembelajaranResponse, error)
+	DeletePembelajaran(context.Context, *DeletePembelajaranRequest) (*DeletePembelajaranResponse, error)
+	mustEmbedUnimplementedPembelajaranServiceServer()
+}
+
+// UnimplementedPembelajaranServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPembelajaranServiceServer struct{}
+
+func (UnimplementedPembelajaranServiceServer) CreatePembelajaran(context.Context, *CreatePembelajaranRequest) (*CreatePembelajaranResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePembelajaran not implemented")
+}
+func (UnimplementedPembelajaranServiceServer) CreateBanyakPembelajaran(context.Context, *CreateBanyakPembelajaranRequest) (*CreateBanyakPembelajaranResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBanyakPembelajaran not implemented")
+}
+func (UnimplementedPembelajaranServiceServer) GetPembelajaran(context.Context, *GetPembelajaranRequest) (*GetPembelajaranResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPembelajaran not implemented")
+}
+func (UnimplementedPembelajaranServiceServer) UpdatePembelajaran(context.Context, *UpdatePembelajaranRequest) (*UpdatePembelajaranResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePembelajaran not implemented")
+}
+func (UnimplementedPembelajaranServiceServer) DeletePembelajaran(context.Context, *DeletePembelajaranRequest) (*DeletePembelajaranResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePembelajaran not implemented")
+}
+func (UnimplementedPembelajaranServiceServer) mustEmbedUnimplementedPembelajaranServiceServer() {}
+func (UnimplementedPembelajaranServiceServer) testEmbeddedByValue()                             {}
+
+// UnsafePembelajaranServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PembelajaranServiceServer will
+// result in compilation errors.
+type UnsafePembelajaranServiceServer interface {
+	mustEmbedUnimplementedPembelajaranServiceServer()
+}
+
+func RegisterPembelajaranServiceServer(s grpc.ServiceRegistrar, srv PembelajaranServiceServer) {
+	// If the following call pancis, it indicates UnimplementedPembelajaranServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PembelajaranService_ServiceDesc, srv)
+}
+
+func _PembelajaranService_CreatePembelajaran_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePembelajaranRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PembelajaranServiceServer).CreatePembelajaran(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PembelajaranService_CreatePembelajaran_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PembelajaranServiceServer).CreatePembelajaran(ctx, req.(*CreatePembelajaranRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PembelajaranService_CreateBanyakPembelajaran_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBanyakPembelajaranRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PembelajaranServiceServer).CreateBanyakPembelajaran(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PembelajaranService_CreateBanyakPembelajaran_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PembelajaranServiceServer).CreateBanyakPembelajaran(ctx, req.(*CreateBanyakPembelajaranRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PembelajaranService_GetPembelajaran_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPembelajaranRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PembelajaranServiceServer).GetPembelajaran(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PembelajaranService_GetPembelajaran_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PembelajaranServiceServer).GetPembelajaran(ctx, req.(*GetPembelajaranRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PembelajaranService_UpdatePembelajaran_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePembelajaranRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PembelajaranServiceServer).UpdatePembelajaran(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PembelajaranService_UpdatePembelajaran_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PembelajaranServiceServer).UpdatePembelajaran(ctx, req.(*UpdatePembelajaranRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PembelajaranService_DeletePembelajaran_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePembelajaranRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PembelajaranServiceServer).DeletePembelajaran(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PembelajaranService_DeletePembelajaran_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PembelajaranServiceServer).DeletePembelajaran(ctx, req.(*DeletePembelajaranRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PembelajaranService_ServiceDesc is the grpc.ServiceDesc for PembelajaranService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PembelajaranService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sekolah.PembelajaranService",
+	HandlerType: (*PembelajaranServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreatePembelajaran",
+			Handler:    _PembelajaranService_CreatePembelajaran_Handler,
+		},
+		{
+			MethodName: "CreateBanyakPembelajaran",
+			Handler:    _PembelajaranService_CreateBanyakPembelajaran_Handler,
+		},
+		{
+			MethodName: "GetPembelajaran",
+			Handler:    _PembelajaranService_GetPembelajaran_Handler,
+		},
+		{
+			MethodName: "UpdatePembelajaran",
+			Handler:    _PembelajaranService_UpdatePembelajaran_Handler,
+		},
+		{
+			MethodName: "DeletePembelajaran",
+			Handler:    _PembelajaranService_DeletePembelajaran_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -59,7 +59,7 @@ func (PesertaDidik) TableName() string {
 	return "tabel_siswa"
 }
 func (PesertaDidikPelengkap) TableName() string {
-	return "siswa_pelengkap"
+	return "tabel_siswa_pelengkap"
 }
 func (TabelKenaikan) TableName() string {
 	return "tabel_kenaikan"

@@ -193,6 +193,7 @@ func (s *SekolahService) GetSekolah(ctx context.Context, req *pb.GetSekolahReque
 		Sekolah: &pb.SekolahDapo{
 			SekolahId:           sekolah.SekolahID,
 			Nama:                sekolah.Nama,
+			Nss:                 sekolah.Nss,
 			Npsn:                sekolah.Npsn,
 			Alamat:              sekolah.Alamat,
 			KdPos:               sekolah.KdPos,
@@ -216,3 +217,38 @@ func (s *SekolahService) GetSekolah(ctx context.Context, req *pb.GetSekolahReque
 }
 
 // Tambahkan fitur tambahan DELET, UPDATE , dan LIST digunakan untuk SUPER ADMIN
+func (s *SekolahService) UpdateSekolah(ctx context.Context, req *pb.UpdateSekolahRequest) (*pb.UpdateSekolahResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	requiredFields := []string{"SchemaName", "Sekolah"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	sekolah := req.GetSekolah()
+
+	modSekolah, err := s.sekolahService.FindByID(ctx, sekolah.SekolahId, schemaName)
+	if err != nil {
+		return nil, err
+	}
+	d := models.Sekolah{
+		SekolahID:           modSekolah.SekolahID,
+		Website:             sekolah.Website,
+		Email:               sekolah.Email,
+		Nss:                 sekolah.Nss,
+		NmKepsek:            sekolah.NmKepsek,
+		BentukPendidikanId:  sekolah.BentukPendidikanId,
+		JenjangPendidikanId: sekolah.JenjangPendidikanId,
+	}
+	err = s.sekolahService.Update(ctx, &d, schemaName)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UpdateSekolahResponse{
+		Message: "Sekolah berhasil diupdate",
+		Status:  true,
+	}, nil
+}

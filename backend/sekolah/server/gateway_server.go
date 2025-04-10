@@ -49,12 +49,24 @@ func RunHTTPGateway(ctx context.Context, mux *runtime.ServeMux, grpcServerEndpoi
 	if err != nil {
 		log.Fatalf("Failed to register gRPC Upload data Sekolah Gateway: %v", err)
 	}
+	err = pb.RegisterPTKServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Upload PTK service Gateway: %v", err)
+	}
 	err = pb.RegisterPTKTerdaftarServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 	if err != nil {
-		log.Fatalf("Failed to register gRPC Upload data Sekolah Gateway: %v", err)
+		log.Fatalf("Failed to register gRPC Upload PTK Terdaftar service Gateway: %v", err)
 	}
 	err = pb.RegisterDashboardServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 	if err != nil {
 		log.Fatalf("Failed to register gRPC Dashboard Service Gateway: %v", err)
+	}
+	err = pb.RegisterReferensiServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Reference Table Service Gateway: %v", err)
+	}
+	err = pb.RegisterPembelajaranServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Pembelajaran Service Gateway: %v", err)
 	}
 }

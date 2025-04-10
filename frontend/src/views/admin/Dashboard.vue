@@ -77,7 +77,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <card-info title="Jumlah Siswa" date="22 - 29 May 2016" :value="totalSiswa" :percentage="33.87"
             @updateData="handleUpdate" bgColor="bg-blue-100" routePath="/admin/data-siswa"></card-info>
-        <card-info title="Jumlah Guru Aktif" date="22 - 29 May 2016" :value="totalGuru" :percentage="33.87"
+        <card-info title="Jumlah Guru Aktif" date="22 - 29 May 2016" :value="Number(totalGuru)" :percentage="33.87"
             @updateData="handleUpdate" bgColor="bg-red-200" routePath="/dashboard"></card-info>
         <card-info title="Jumlah Kelas" date="22 - 29 May 2016" :value="totalKelas" :percentage="33.87"
             @updateData="handleUpdate" bgColor="bg-blue-100" routePath="/dashboard"></card-info>
@@ -250,7 +250,7 @@
 import router from '@/router';
 import Chart from 'primevue/chart';
 
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import CardInfo from '@/components/CardInfo.vue';
 
 import { useStore } from "vuex";
@@ -259,7 +259,7 @@ onMounted(() => {
     fetchTabelTenant()
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();
-    fetchCountSiswa()
+    fetchCountGuru()
 });
 
 const chartData = ref();
@@ -315,11 +315,30 @@ const setChartOptions = () => {
     };
 }
 
+
+
+
+
+
+// Tenant Table
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaName)
+const tahunAjaranId = computed(() => store.getters["sekolahService/getSelectedSemester"]?.tahunAjaranId)
+
+// Perikasa dan perbaiki kode sesuai dengan praktek terbaik.
+const fetchTabelTenant = async () => {
+    let sekolahId = store.getters["authService/getUserProfile"]
+    const te = await store.dispatch("sekolahService/fetchTabeltenant", sekolahId?.sekolahId)
+}
+const handleUpdate = (newValue) => {
+    totalBlocks.value = newValue;
+};
+
 // ambil data untuk tampilan di dashboard beserta variabel yang dibutuhkan
 const totalBlocks = ref(10215845);
 const totalSiswa = ref(800);
-const totalGuru = ref(50);
+const totalGuru = ref(0);
 const totalKelas = ref(28);
+
 const fetchCountSiswa = async () => {
     // console.log(schemaname.value)
     let payload = {
@@ -329,17 +348,30 @@ const fetchCountSiswa = async () => {
     const resp = await store.dispatch("sekolahService/fetchSiswaCount", payload)
     // console.log(resp)
 }
-// Tenant Table
-const schemaname = computed(() => {
-    let res = store.getters["sekolahService/getTabeltenant"]
-    return res?.schemaName
-})
-// Perikasa dan perbaiki kode sesuai dengan praktek terbaik.
-const fetchTabelTenant = async () => {
-    let sekolahId = store.getters["authService/getUserProfile"]
-    const te = await store.dispatch("sekolahService/fetchTabeltenant", sekolahId?.sekolahId)
+
+const fetchCountGuru = async () => {
+    const payload = {
+        schemaname: schemaname.value,
+        tahun_ajaran_id:tahunAjaranId.value
+    }
+    totalGuru.value = await store.dispatch("sekolahService/fetchGuruCount", payload)
 }
-const handleUpdate = (newValue) => {
-    totalBlocks.value = newValue;
-};
+
+// watch(semesterId, async (newSemester) => {
+//     console.log("watch")
+//     if (!newSemester) return;
+
+//     const payload = {
+//         schemaname: schemaname.value,
+//         tahun_ajaran_id: newSemester,
+//     };
+
+//     try {
+//         totalGuru.value = await store.dispatch("sekolahService/fetchGuruCount", payload);
+//     } catch (error) {
+//         console.error("Gagal mengambil jumlah guru:", error);
+//         totalGuru.value = 0;
+//     }
+// });
+
 </script>

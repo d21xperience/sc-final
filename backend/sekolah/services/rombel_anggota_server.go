@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"sekolah/config"
@@ -9,6 +10,8 @@ import (
 	"sekolah/models"
 	"sekolah/repositories"
 	"sekolah/utils"
+
+	"gorm.io/gorm"
 )
 
 type RombelAnggotaService struct {
@@ -17,14 +20,14 @@ type RombelAnggotaService struct {
 }
 
 func NewRombelAnggotaService() *RombelAnggotaService {
-	repoAnggotaBelajar := repositories.NewRombelAnggotaRepository(config.DB)
+	repoRombelAnggota := repositories.NewRombelAnggotaRepository(config.DB)
 	return &RombelAnggotaService{
-		repo: *repoAnggotaBelajar,
+		repo: *repoRombelAnggota,
 	}
 }
 
 // **CreateKelas**
-// func (s *RombelAnggotaServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKelasRequest) (*pb.CreateKelasResponse, error) {
+// func (s *RombelAnggotaService) CreateKelas(ctx context.Context, req *pb.CreateAnggotaKelasRequest) (*pb.CreateAnggotaKelasResponse, error) {
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received Sekolah data request: %+v\n", req)
 // 	// Daftar field yang wajib diisi
@@ -83,9 +86,9 @@ func (s *RombelAnggotaService) CreateBanyakAnggotaKelas(ctx context.Context, req
 
 	anggotaRombel := ConvertPBToModels(anggotaKelas, func(anggota *pb.AnggotaKelas) *models.RombelAnggota {
 		return &models.RombelAnggota{
-			RombonganBelajarId: anggota.RombonganBelajarId,
-			AnggotaRombelId:    anggota.AnggotaRombelId,
-			PesertaDidikId:     anggota.PesertaDidikId,
+			RombonganBelajarId: utils.StringToUUID(anggota.RombonganBelajarId),
+			AnggotaRombelId:    utils.StringToUUID(anggota.AnggotaRombelId),
+			PesertaDidikId:     utils.StringToUUID(anggota.PesertaDidikId),
 			SemesterId:         anggota.SemesterId,
 		}
 	})
@@ -114,16 +117,20 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 	}
 	schemaName := req.GetSchemaName()
 	semesterId := req.GetSemesterId()
+	rombelId := req.GetRombonganBelajarId()
+	var conditions = map[string]any{
+		"tabel_anggotakelas.semester_id": semesterId,
+	}
+	if rombelId != "" {
+		conditions["tabel_anggotakelas.rombongan_belajar_id"] = rombelId
+	}
 	joins := []string{
 		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
 		"JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = tabel_anggotakelas.rombongan_belajar_id",
 		"JOIN tabel_ptk ON tabel_ptk.ptk_id = tabel_kelas.ptk_id",
 	}
 	preloads := []string{"PesertaDidik", "RombonganBelajar", "RombonganBelajar.PTK"}
-	var conditions = map[string]interface{}{
-		// Edit karena terjadi ERROR: column reference "semester_id" is ambiguous (SQLSTATE 42702)
-		"tabel_anggotakelas.semester_id": semesterId,
-	}
+
 	orderBy := []string{"tabel_kelas.nm_kelas ASC"} // Hindari duplikasi
 	anggotaRombelModel, err := s.repo.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
 	if err != nil {
@@ -133,30 +140,30 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 	banyakAnggotaKelasList := utils.ConvertModelsToPB(anggotaRombelModel, func(anggota models.RombelAnggota) *pb.AnggotaKelas {
 
 		return &pb.AnggotaKelas{
-			RombonganBelajarId: anggota.RombonganBelajarId,
-			AnggotaRombelId:    anggota.AnggotaRombelId,
-			PesertaDidikId:     anggota.PesertaDidikId,
+			RombonganBelajarId: anggota.RombonganBelajarId.String(),
+			AnggotaRombelId:    anggota.AnggotaRombelId.String(),
+			PesertaDidikId:     anggota.PesertaDidikId.String(),
 			SemesterId:         anggota.SemesterId,
 			PesertaDidik: &pb.Siswa{
-				// PesertaDidikId: anggota.PesertaDidikId,
-				Nis:             anggota.PesertaDidik.Nis,
-				Nisn:            anggota.PesertaDidik.Nisn,
-				NmSiswa:         anggota.PesertaDidik.NmSiswa,
-				TempatLahir:     anggota.PesertaDidik.TempatLahir,
-				TanggalLahir:    utils.TimeToString(*anggota.PesertaDidik.TanggalLahir, "2006-01-02"),
-				JenisKelamin:    anggota.PesertaDidik.JenisKelamin,
-				Agama:           anggota.PesertaDidik.Agama,
-				AlamatSiswa:     *anggota.PesertaDidik.AlamatSiswa,
-				TeleponSiswa:    anggota.PesertaDidik.TeleponSiswa,
-				DiterimaTanggal: utils.TimeToString(*anggota.PesertaDidik.DiterimaTanggal, "2006-01-02"),
-				NmAyah:          anggota.PesertaDidik.NmAyah,
-				NmIbu:           anggota.PesertaDidik.NmIbu,
-				PekerjaanAyah:   anggota.PesertaDidik.PekerjaanAyah,
-				PekerjaanIbu:    anggota.PesertaDidik.PekerjaanIbu,
+				PesertaDidikId: anggota.PesertaDidikId.String(),
+				Nis:            anggota.PesertaDidik.Nis,
+				Nisn:           anggota.PesertaDidik.Nisn,
+				NmSiswa:        anggota.PesertaDidik.NmSiswa,
+				TempatLahir:    anggota.PesertaDidik.TempatLahir,
+				TanggalLahir:   anggota.PesertaDidik.TanggalLahir.Format("2006-01-02"),
+				JenisKelamin:   anggota.PesertaDidik.JenisKelamin,
+				Agama:          anggota.PesertaDidik.Agama,
+				AlamatSiswa:    utils.SafeString(anggota.PesertaDidik.AlamatSiswa),
+				TeleponSiswa:   anggota.PesertaDidik.TeleponSiswa,
+				// DiterimaTanggal: utils.SafeString(anggota.PesertaDidik.DiterimaTanggal),
+				NmAyah:        anggota.PesertaDidik.NmAyah,
+				NmIbu:         anggota.PesertaDidik.NmIbu,
+				PekerjaanAyah: anggota.PesertaDidik.PekerjaanAyah,
+				PekerjaanIbu:  anggota.PesertaDidik.PekerjaanIbu,
 			},
 			RombonganBelajar: &pb.Kelas{
 				NmKelas:             anggota.RombonganBelajar.NmKelas,
-				PtkId:               anggota.RombonganBelajar.PtkID,
+				PtkId:               anggota.RombonganBelajar.PtkID.String(),
 				TingkatPendidikanId: anggota.RombonganBelajar.TingkatPendidikanId,
 				JurusanId:           anggota.RombonganBelajar.JurusanId,
 				NamaJurusanSp:       anggota.RombonganBelajar.NamaJurusanSp,
@@ -181,61 +188,77 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 	}, nil
 }
 
-// // **GetKelas**
-// func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetAnggotaKelasRequest) (*pb.GetAnggotaKelasResponse, error) {
-// 	// Debugging: Cek nilai request yang diterima
-// 	log.Printf("Received Sekolah data request: %+v\n", req)
-// 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "SemesterId"}
-// 	// Validasi request
-// 	err := utils.ValidateFields(req, requiredFields)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	schemaName := req.GetSchemaName()
-// 	kelasId := req.GetKelasId()
-// 	semesterId := req.GetSemesterId()
-// 	var conditions = map[string]interface{}{
-// 		"semester_id": semesterId,
-// 	}
+func (s *RombelAnggotaService) SearchAnggotaKelas(ctx context.Context, req *pb.SearchAnggotaKelasRequest) (*pb.SearchAnggotaKelasResponse, error) {
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SchemaName", "SemesterId"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	switch schemaName {
+	case "":
+		return nil, fmt.Errorf("schema name is required")
+	case "\"\"":
+		return nil, fmt.Errorf("schema name cannot nul value")
+	}
+	semesterId := req.GetSemesterId()
+	var banyakSiswa []models.RombelAnggota
+	pesertaDidikId := utils.SafeString(req.PesertaDidikId)
+	rombelId := utils.SafeString(req.RombonganBelajarId)
 
-// 	if kelasId != "" {
-// 		// Ambil data Kelas berdasarkan PesertaDidikId
-// 		RombelAnggota, err := s.repo.FindByID(ctx, kelasId, schemaName, "anggota_rombel_id")
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		return &pb.GetAnggotaKelasResponse{
-// 			AnggotaKelas: []*pb.AnggotaKelas{
-// 				ConvertModelToPB(RombelAnggota, func(anggota *models.RombelAnggota) *pb.AnggotaKelas {
-// 					return &pb.AnggotaKelas{
-// 						RombonganBelajarId: anggota.RombonganBelajarId,
-// 						AnggotaRombelId:    anggota.AnggotaRombelId,
-// 						PesertaDidikId:     anggota.PesertaDidikId,
-// 						SemesterId:         anggota.SemesterId,
-// 					}
-// 				}),
-// 			},
-// 		}, nil
-// 	}
-// 	// Ambil semua data Kelas
-// 	banyakAnggotaKelas, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(req.GetLimit()), int(req.GetOffset()))
-// 	if err != nil {
-// 		log.Printf("[ERROR] Gagal menemukan Kelas di schema '%s': %v", schemaName, err)
-// 		return nil, fmt.Errorf("gagal menemukan Kelas di schema '%s': %w", schemaName, err)
-// 	}
-// 	banyakAnggotaKelasList := ConvertModelsToPB(banyakAnggotaKelas, func(anggota *models.RombelAnggota) *pb.AnggotaKelas {
-// 		return &pb.AnggotaKelas{
-// 			RombonganBelajarId: anggota.RombonganBelajarId,
-// 			AnggotaRombelId:    anggota.AnggotaRombelId,
-// 			PesertaDidikId:     anggota.PesertaDidikId,
-// 			SemesterId:         anggota.SemesterId,
-// 		}
-// 	})
-// 	return &pb.GetAnggotaKelasResponse{
-// 		AnggotaKelas: banyakAnggotaKelasList,
-// 	}, nil
-// }
+	joins := []string{
+		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
+		"JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = tabel_anggotakelas.rombongan_belajar_id",
+		"JOIN tabel_ptk ON tabel_ptk.ptk_id = tabel_kelas.ptk_id",
+	}
+	preloads := []string{"PesertaDidik", "RombonganBelajar", "RombonganBelajar.PTK"}
+	conditions := map[string]any{
+		"tabel_anggotakelas.semester_id": semesterId,
+	}
+	// orderBy := []string{"tabel_kelas.nm_kelas ASC"} // Hindari duplikasi
+	if pesertaDidikId != "" {
+		// mod, err := s.repo.FindByID(ctx, pesertaDidikId, schemaName, "peserta_didik_id")
+		conditions["tabel_anggotakelas.peserta_didik_id"] = pesertaDidikId
+		mod, err := s.repo.FindWithRelations(ctx, schemaName, joins, preloads, conditions, nil)
+		if err != nil {
+			// 2. Jika ada error (selain not found), kembalikan error
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Printf("[ERROR] Gagal mencari siswa dengan ID %s di schema %s: %v", pesertaDidikId, schemaName, err)
+				return nil, fmt.Errorf("gagal mencari siswa: %w", err)
+			}
+			// 1. Jika record tidak ditemukan, kembalikan nil tanpa error
+			return nil, nil
+		}
+
+		banyakSiswa = mod
+	} else if rombelId != "" {
+		conditions := map[string]any{
+			"semester_id": semesterId,
+		}
+		mod, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, 100, 0)
+		if err != nil {
+			log.Printf("[ERROR] Gagal menemukan siswa di schema '%s': %v", schemaName, err)
+			return nil, fmt.Errorf("gagal menemukan siswa di schema '%s': %w", schemaName, err)
+		}
+		banyakSiswa = utils.PointerToSlice(mod)
+	}
+	banyakSiswaList := utils.ConvertModelsToPB(banyakSiswa, func(siswa models.RombelAnggota) *pb.AnggotaKelas {
+		return &pb.AnggotaKelas{
+			AnggotaRombelId:    siswa.AnggotaRombelId.String(),
+			PesertaDidikId:     siswa.PesertaDidikId.String(),
+			RombonganBelajarId: siswa.RombonganBelajarId.String(),
+			RombonganBelajar: &pb.Kelas{
+				NmKelas: siswa.RombonganBelajar.NmKelas,
+			},
+		}
+	})
+	return &pb.SearchAnggotaKelasResponse{
+		AnggotaKelas: banyakSiswaList,
+	}, nil
+}
 
 // **UpdateKelas**
 // func (s *RombelAnggotaServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKelasRequest) (*pb.UpdateKelasResponse, error) {
@@ -288,22 +311,37 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 // 	}, nil
 // }
 
-// // // **DeleteKelas**
-// func (s *RombelAnggotaServiceServer) DeleteKelas(ctx context.Context, req *pb.DeleteKelasRequest) (*pb.DeleteKelasResponse, error) {
-// 	schemaName := req.GetSchemaName()
-// 	KelasID := req.GetKelasId()
+// // **DeleteKelas**
+func (s *RombelAnggotaService) DeleteAnggotaKelas(ctx context.Context, req *pb.DeleteAnggotaKelasRequest) (*pb.DeleteAnggotaKelasResponse, error) {
+	var err error
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SchemaName", "AnggotaRombelId"}
+	// Validasi request
+	err = utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	switch schemaName {
+	case "":
+		return nil, fmt.Errorf("schema name is required")
+	case "\"\"":
+		return nil, fmt.Errorf("schema name cannot nul value")
+	}
+	anggotaRombelId := req.GetAnggotaRombelId()
 
-// 	err := s.pesertaDidikService.Delete(ctx, KelasID, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal menghapus Kelas: %v", err)
-// 		return nil, fmt.Errorf("gagal menghapus Kelas: %w", err)
-// 	}
+	err = s.repo.Delete(ctx, anggotaRombelId, schemaName, "anggota_rombel_id")
+	if err != nil {
+		log.Printf("Gagal menghapus Kelas: %v", err)
+		return nil, fmt.Errorf("gagal menghapus Kelas: %w", err)
+	}
 
-// 	return &pb.DeleteKelasResponse{
-// 		Message: "Kelas berhasil dihapus",
-// 		Status:  true,
-// 	}, nil
-// }
+	return &pb.DeleteAnggotaKelasResponse{
+		Message: "Anggota Kelas berhasil dihapus",
+		Status:  true,
+	}, nil
+}
 
 // // UploadKelas mengunggah data Kelas dari file Excel
 // func (s *RombelAnggotaServiceServer) UploadKelas(ctx context.Context, req *pb.UploadKelasRequest) (*pb.UploadKelasResponse, error) {

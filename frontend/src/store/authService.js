@@ -57,6 +57,14 @@ const mutations = {
     localStorage.removeItem("BCNETWORK");
     localStorage.removeItem("BCACCOUNT");
     localStorage.removeItem("tabelSemester");
+    localStorage.removeItem("selectedSemester");
+    localStorage.removeItem("tabelGuru");
+    localStorage.removeItem("tabelKurikulum");
+    localStorage.removeItem("tabelSekolah");
+    localStorage.removeItem("tabelSiswa");
+    localStorage.removeItem("tabelSiswaAktif");
+    localStorage.removeItem("tabelPTKTerdaftar");
+    localStorage.removeItem("tabelMapel");
   },
   SET_SEKOLAH(state, sekolah) {
     state.sekolah = sekolah;

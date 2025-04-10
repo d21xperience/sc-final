@@ -242,6 +242,37 @@ const router = createRouter({
                   component: () =>
                     import("../views/dapodik/data_guru/ReadGuru.vue"),
                 },
+                {
+                  path: "input-guru",
+                  name: "inputGuru",
+                  meta: { disableSelect: true },
+                  component: () =>
+                    import("../views/dapodik/data_guru/AddGuru.vue"),
+                },
+              ],
+            },
+            {
+              path: "mapel",
+              name: "dapodikMapel",
+              // component: () => import("../views/dapodik/DataGuru.vue"),
+              meta: {
+                title: "Data Mata pelajaran",
+                requiresAuth: true,
+                role: "admin",
+              },
+              children: [
+                {
+                  path: "",
+                  name: "readMapel",
+                  component: () =>
+                    import("../views/dapodik/data_matapelajaran/ReadMapel.vue"),
+                },
+                {
+                  path: "input-matapelajaran",
+                  name: "inputMapel",
+                  component: () =>
+                    import("../views/dapodik/data_matapelajaran/AddMapel.vue"),
+                },
               ],
             },
             {
@@ -258,6 +289,7 @@ const router = createRouter({
                 {
                   path: "input",
                   name: "inputSiswa",
+                  meta: { disableSelect: true },
                   component: () =>
                     import("../views/dapodik/data_siswa/AddSiswa.vue"),
                 },
@@ -273,23 +305,29 @@ const router = createRouter({
               path: "data-nilai",
               name: "dapodikNilaiSiswa",
               component: () => import("../views/dapodik/DataNilai.vue"),
-              meta: { title: "Data Nilai", requiresAuth: true, role: "admin" },
+              meta: {
+                breadcrumb: "Parent Page",
+                title: "Data Nilai",
+                requiresAuth: true,
+                role: "admin",
+              },
             },
             {
               path: "data-kelas",
               name: "dapodikKelas",
-              // component: () => import("../views/dapodik/DataKelas.vue"),
               meta: { title: "Data Kelas", requiresAuth: true, role: "admin" },
               children: [
                 {
                   path: "",
                   name: "readKelas",
+                  meta: { title: "Data Kelas" },
                   component: () =>
                     import("../views/dapodik/data_kelas/ReadKelas.vue"),
                 },
                 {
                   path: "tambah-kelas",
                   name: "addKelas",
+                  meta: { disableSelect: true, title: "Tambah Kelas" },
                   component: () =>
                     import("../views/dapodik/data_kelas/AddKelas.vue"),
                 },
@@ -298,6 +336,7 @@ const router = createRouter({
                   name: "editKelas",
                   component: () =>
                     import("../views/dapodik/data_kelas/AddKelas.vue"),
+                  // props: true,
                 },
               ],
             },

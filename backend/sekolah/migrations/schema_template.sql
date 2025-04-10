@@ -106,7 +106,9 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_kelas (
 	CONSTRAINT "FK_tabel_kelas_ref.jurusan" FOREIGN KEY (jurusan_id) REFERENCES ref.jurusan (jurusan_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT "FK_tabel_kelas_ref.kurikulum" FOREIGN KEY (kurikulum_id) REFERENCES ref.kurikulum (kurikulum_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT "FK_tabel_kelas_ref.semester" FOREIGN KEY (semester_id) REFERENCES ref.semester (semester_id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT "FK_tabel_kelas_ref.tingkat_pendidikan" FOREIGN KEY (tingkat_pendidikan_id) REFERENCES ref.tingkat_pendidikan (tingkat_pendidikan_id) ON UPDATE CASCADE ON DELETE CASCADE
+	CONSTRAINT "FK_tabel_kelas_ref.tingkat_pendidikan" FOREIGN KEY (tingkat_pendidikan_id) REFERENCES ref.tingkat_pendidikan (tingkat_pendidikan_id) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT "FK_tabel_kelas_tabel_ptk" FOREIGN KEY (ptk_id) REFERENCES {{schema_name}}.tabel_ptk (ptk_id) ON UPDATE CASCADE ON DELETE CASCADE
+
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_anggotakelas (
@@ -134,7 +136,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_pembelajaran (
 	CONSTRAINT "FK_tabel_pembelajaran_ref.mata_pelajaran" FOREIGN KEY (mata_pelajaran_id) REFERENCES ref.mata_pelajaran (mata_pelajaran_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT "FK_tabel_pembelajaran_ref.semester" FOREIGN KEY (semester_id) REFERENCES ref.semester (semester_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT "FK_tabel_pembelajaran_tabel_kelas" FOREIGN KEY (rombongan_belajar_id) REFERENCES {{schema_name}}.tabel_kelas (rombongan_belajar_id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT "FK_tabel_pembelajaran_tabel_ptk" FOREIGN KEY (ptk_terdaftar_id) REFERENCES {{schema_name}}.tabel_ptk (ptk_id) ON UPDATE CASCADE ON DELETE CASCADE
+	CONSTRAINT "FK_tabel_pembelajaran_tabel_ptk_terdaftar" FOREIGN KEY (ptk_terdaftar_id) REFERENCES {{schema_name}}.tabel_ptk_terdaftar (ptk_terdaftar_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_nilaiakhir (

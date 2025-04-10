@@ -34,7 +34,8 @@ type PTKTerdaftar struct {
 
 	// Relasi ke PTK
 	PTK          TabelPTK       `gorm:"foreignKey:PtkID;references:PtkID"`
-	Pembelajaran []Pembelajaran `gorm:"foreignKey:PtkTerdaftarId;references:PtkTerdaftarId"`
+	// Pembelajaran []Pembelajaran `gorm:"foreignKey:PtkTerdaftarId;references:PtkTerdaftarId"`
+	PTKPelengkap PTKPelengkap   `gorm:"foreignKey:PTKID;references:PtkID"` // Menyertakan PTKPelengkap
 }
 
 // Menentukan nama tabel kustom

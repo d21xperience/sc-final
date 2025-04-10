@@ -381,8 +381,8 @@ func (s *UploadServiceServer) processUploadSiswa(
 		// Jika kelas kosong abaikan
 		if data[i][41] != "" {
 			err = s.repoKelasAnggota.Save(ctx, &models.RombelAnggota{
-				AnggotaRombelId: anggotaRombelId.String(),
-				PesertaDidikId:  pesertaDidikId.String(),
+				AnggotaRombelId: utils.StringToUUID(anggotaRombelId.String()),
+				PesertaDidikId:  utils.StringToUUID(pesertaDidikId.String()),
 				// SemesterId: ,
 				// SemesterId: ,
 				RombonganBelajar: models.RombonganBelajar{

@@ -41,6 +41,10 @@ func RunGRPCServer() *grpc.Server {
 	UploadService := services.NewUploadServiceServer()
 	pb.RegisterUploadDataSekolahServiceServer(grpcServer, UploadService)
 
+	// REGISTER PTKSERVICE
+	ptkService := services.NewPTKServiceServer()
+	pb.RegisterPTKServiceServer(grpcServer, ptkService)
+
 	// REGISTER PTK TERDAFTAR SERVICE
 	ptkTerdaftarService := services.NewPTKTerdaftarServiceServer()
 	pb.RegisterPTKTerdaftarServiceServer(grpcServer, ptkTerdaftarService)
@@ -48,6 +52,14 @@ func RunGRPCServer() *grpc.Server {
 	// REGISTER DASHBOARD SERVICE
 	dashboardService := services.NewDashboardServiceServer()
 	pb.RegisterDashboardServiceServer(grpcServer, dashboardService)
+
+	// REGISTER REFERENSI TABEL SERVICE
+	referensiService := services.NewReferensiServiceServer()
+	pb.RegisterReferensiServiceServer(grpcServer, referensiService)
+	
+	// REGISTER PEMBELAJARAN SERVICE
+	pembelajaranService := services.NewPembelajaranServiceServer()
+	pb.RegisterPembelajaranServiceServer(grpcServer, pembelajaranService)
 
 	return grpcServer
 }

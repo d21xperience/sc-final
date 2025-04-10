@@ -26,11 +26,13 @@
     "primevue": "^4.0.5",
     "qrcode.vue": "^3.6.0",
     "tailwindcss-primeui": "^0.3.4",
+    "uuid": "^11.1.0",
     "vue": "^3.4.29",
     "vue-recaptcha": "^3.0.0-alpha.2",
     "vue-router": "^4.3.3",
     "vuex": "^4.1.0",
-    "web3": "^4.11.1"
+    "web3": "^4.11.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",

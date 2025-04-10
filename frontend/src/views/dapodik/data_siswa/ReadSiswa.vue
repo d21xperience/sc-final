@@ -25,7 +25,8 @@
                                 </template>
                                 <template #end>
                                     <Button label="Import" icon="pi pi-download" severity="warn"
-                                        @click="dialogImport = true" class="mr-2 text-sm" v-tooltip.bottom="'Import siswa'"/>
+                                        @click="dialogImport = true" class="mr-2 text-sm"
+                                        v-tooltip.bottom="'Import siswa'" />
                                     <Button label="Export" icon="pi pi-upload" severity="help"
                                         @click="exportCSV($event)" class="mr-2 text-sm" />
                                     <!-- <Button label="Proses" icon="pi pi-send" severity="info"
@@ -59,51 +60,31 @@
 
 
                     <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa"
-                        dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
+                    scrollable scrollHeight="450px" dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         :rowsPerPageOptions="[10, 20, 50]"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} siswa">
                         <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                        <Column field="name" header="Foto">
+                        <!-- <Column field="name" header="Foto">
                             <template #body="slotProps">
                                 <Image
                                     :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
                                     :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
                             </template>
-                        </Column>
-                        <Column field="nama" header="Nama" sortable>
-                            <template #body="slotProps">
-                                {{ slotProps.data.pesertaDidik.nmSiswa }}
-                            </template>
-                        </Column>
-                        <Column field="jk" header="JK">
-                            <template #body="slotProps">
-                                {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                            </template>
-                        </Column>
-                        <Column field="nisn" header="NISN">
-                            <template #body="slotProps">
-                                {{ slotProps.data.pesertaDidik.nisn }}
-                            </template>
-                        </Column>
-
-
-                        <Column field="nis" header="NIS" sortable>
-                            <template #body="slotProps">
-                                {{ slotProps.data.pesertaDidik.nis }}
-                            </template>
-                        </Column>
-                        <Column field="tingkat" header="Tingkat" sortable>
-                            <!-- rombonganBelajar -->
+                        </Column> -->
+                        <Column field="pesertaDidik.nmSiswa" header="Nama" sortable></Column>
+                        <Column field="pesertaDidik.jenisKelamin" header="JK"></Column>
+                        <Column field="pesertaDidik.nisn" header="NISN"></Column>
+                        <Column field="pesertaDidik.nis" header="NIS" sortable></Column>
+                        <Column field="pesertaDidik.agama" header="Agama"></Column>
+                        <Column field="pesertaDidik.tempatLahir" header="Tpt Lahir"></Column>
+                        <Column field="pesertaDidik.tanggalLahir" header="Tgl Lahir"></Column>
+                        <!-- <Column field="tingkat" header="Tingkat" sortable>
                             <template #body="slotProps">
                                 {{ slotProps.data.rombonganBelajar.tingkatPendidikanId }}
                             </template>
-                        </Column>
-                        <Column field="rombel" header="Rombel" sortable>
-                            <template #body="slotProps">
-                                {{ slotProps.data.rombonganBelajar.nmKelas }}
-                            </template>
-                        </Column>
+                        </Column> -->
+                        <Column field="rombonganBelajar.nmKelas" header="Rombel" sortable></Column>
                     </DataTable>
 
                 </div>
@@ -248,17 +229,17 @@ const filters = ref({
     'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 const submitted = ref(false);
-const statuses = ref([
-    { label: 'INSTOCK', value: 'instock' },
-    { label: 'LOWSTOCK', value: 'lowstock' },
-    { label: 'OUTOFSTOCK', value: 'outofstock' }
-]);
+// const statuses = ref([
+//     { label: 'INSTOCK', value: 'instock' },
+//     { label: 'LOWSTOCK', value: 'lowstock' },
+//     { label: 'OUTOFSTOCK', value: 'outofstock' }
+// ]);
 
-const formatCurrency = (value) => {
-    if (value)
-        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    return;
-};
+// const formatCurrency = (value) => {
+//     if (value)
+//         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+//     return;
+// };
 const openNew = () => {
     router.push({ name: "inputSiswa" })
 };
@@ -288,14 +269,14 @@ const saveProduct = () => {
         product.value = {};
     }
 };
-const editProduct = (prod) => {
-    product.value = { ...prod };
-    productDialog.value = true;
-};
-const confirmDeleteProduct = (prod) => {
-    product.value = prod;
-    deleteProductDialog.value = true;
-};
+// const editProduct = (prod) => {
+//     product.value = { ...prod };
+//     productDialog.value = true;
+// };
+// const confirmDeleteProduct = (prod) => {
+//     product.value = prod;
+//     deleteProductDialog.value = true;
+// };
 const deleteProduct = () => {
     products.value = products.value.filter(val => val.id !== product.value.id);
     deleteProductDialog.value = false;
@@ -396,14 +377,33 @@ const dialogStatus = ref(false)
 // const selectedSemester = ref();
 const semester = ref()
 const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"]);
-
+watch(selectedSemester, (e, b) => {
+    fetchSiswa()
+})
 const schemaname = ref("")
 // ==================================
 // ==================================
 // =======Siswa=============
 const selectedSiswa = ref();
-const siswa = ref(null);
+const siswa = ref([]);
 const fetchSiswa = async () => {
+    const payload = {
+        // page: 1,
+        semesterId: selectedSemester.value.semesterId,
+        schemaName: schemaname.value,
+    }
+    console.log(payload)
+    const results = await store.dispatch("sekolahService/fetchSiswaAktif", payload)
+    console.log(results)
+    siswa.value = results
+    // results.forEach(item => {
+    //     siswa.value.push(item)
+    // });
+}
+
+
+
+/*const fetchSiswa = async () => {
     try {
         let payload = {
             semesterId: selectedSemester.value?.semesterId,
@@ -422,12 +422,13 @@ const fetchSiswa = async () => {
 
     }
 }
-
+*/
 // ==================================
 
 // ========IMPORT DATA========
 import DialogImport from '@/components/DialogImport.vue'
 import router from '@/router';
+import { result } from 'lodash';
 const dialogImport = ref(false)
 const saveImport = (e) => {
     // console.log("Data disimpan:", e);

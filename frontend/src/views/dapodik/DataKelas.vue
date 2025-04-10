@@ -1,7 +1,5 @@
 <template>
-
-    <div class="container">
-        <!-- <div class="fixed top-0 w-full left-0 z-20 bg-white"> -->
+    <!-- <div class="container">
         <div class="my-2 ">
             <div class=" ">
                 <div class="flex flex-wrap justify-between items-center mb-2">
@@ -15,7 +13,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Breadcrumb -->
                 <div>
                     <Breadcrumb :home="home" :model="breadcrumbItems">
                         <template #item="{ item, props }">
@@ -30,92 +27,91 @@
                             </a>
                         </template>
 
-                    </Breadcrumb>
-                </div>
-            </div>
-        </div>
-        <!-- </div> -->
-    </div>
-    <div>
-        <RouterView />
-    </div>
+</Breadcrumb>
+</div>
+</div>
+</div>
+</div>
+<div>
+    <RouterView />
+</div> -->
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
-import { useStore } from "vuex";
-import { useRoute } from 'vue-router';
+// import { ref, onMounted, computed, watch } from 'vue';
+// import { useStore } from "vuex";
+// import { useRoute } from 'vue-router';
 
-const route = useRoute();
-const store = useStore();
+// const route = useRoute();
+// const store = useStore();
 
-console.log(route.matched) // Cek apakah child route aktif
+// console.log(route.matched) // Cek apakah child route aktif
 
-// =====================================
-import Breadcrumb from 'primevue/breadcrumb';
+// // =====================================
+// import Breadcrumb from 'primevue/breadcrumb';
 
 
 
-// Breadcrumb
-// ==============================
-const home = ref({
-    icon: 'pi pi-home',
-    route: `${route.fullPath}`,
-});
-const breadcrumbItems = computed(() => {
-    const pathArray = route.path.split('/').filter((p) => p);
-    let path = '';
+// // Breadcrumb
+// // ==============================
+// const home = ref({
+//     icon: 'pi pi-home',
+//     route: `${route.fullPath}`,
+// });
+// const breadcrumbItems = computed(() => {
+//     const pathArray = route.path.split('/').filter((p) => p);
+//     let path = '';
 
-    return pathArray.map((segment, index) => {
-        path += `/${segment}`;
-        return {
-            label: segment.charAt(0).toUpperCase() + segment.slice(1),
-            to: index < pathArray.length - 1 ? path : undefined // Hanya halaman terakhir yang tidak memiliki link
-        };
-    });
-});
-// ==============================
-onMounted(async () => fetchSemester());
+//     return pathArray.map((segment, index) => {
+//         path += `/${segment}`;
+//         return {
+//             label: segment.charAt(0).toUpperCase() + segment.slice(1),
+//             to: index < pathArray.length - 1 ? path : undefined // Hanya halaman terakhir yang tidak memiliki link
+//         };
+//     });
+// });
+// // ==============================
+// onMounted(async () => fetchSemester());
 
-const dataConnected = ref(true)
+// const dataConnected = ref(true)
 
-import Select from 'primevue/select';
-import EmptyData from '@/components/EmptyData.vue';
+// import Select from 'primevue/select';
+// import EmptyData from '@/components/EmptyData.vue';
 
-// Fungsi yang menangkap event emit dari child
-const handleProfileFetched = (data) => {
-    dataConnected.value = data;
-    console.log("Data sekolah diterima di parent:", data);
-};
+// // Fungsi yang menangkap event emit dari child
+// const handleProfileFetched = (data) => {
+//     dataConnected.value = data;
+//     console.log("Data sekolah diterima di parent:", data);
+// };
 
-const handleFetchError = (error) => {
-    dataConnected.value = data;
-    console.error("Error diterima di parent:", error);
-};
+// const handleFetchError = (error) => {
+//     dataConnected.value = data;
+//     console.error("Error diterima di parent:", error);
+// };
 
-// ==================================
-// =======SEMESTER=============
-const selectedSemester = ref();
-const semester = ref(null);
-const fetchSemester = async () => {
-    try {
-        const results = await store.dispatch("sekolahService/fetchSemester")
-        if (results) {
-            semester.value = store.getters["sekolahService/getSemester"]
-            // Ambil semester terbaru berdasarkan ID terbesar
-            selectedSemester.value = semester.value.reduce((latest, current) =>
-                current.semesterId > latest.semesterId ? current : latest
-            );
-            // tetapkan semester yang dipilih
-            store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedSemester.value)
+// // ==================================
+// // =======SEMESTER=============
+// const selectedSemester = ref();
+// const semester = ref(null);
+// const fetchSemester = async () => {
+//     try {
+//         const results = await store.dispatch("sekolahService/fetchSemester")
+//         if (results) {
+//             semester.value = store.getters["sekolahService/getSemester"]
+//             // Ambil semester terbaru berdasarkan ID terbesar
+//             selectedSemester.value = semester.value.reduce((latest, current) =>
+//                 current.semesterId > latest.semesterId ? current : latest
+//             );
+//             // tetapkan semester yang dipilih
+//             store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedSemester.value)
 
-        }
-    } catch (error) {
+//         }
+//     } catch (error) {
 
-    }
-}
-watch(selectedSemester, () => {
-    store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedSemester.value)
+//     }
+// }
+// watch(selectedSemester, () => {
+//     store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedSemester.value)
 
-})
+// })
 </script>
