@@ -87,8 +87,6 @@ const mutations = {
 };
 
 const actions = {
-  // Fitur baru ceknpsn
-
   // ================================================
   // Semester
   // ================================================
@@ -192,6 +190,27 @@ const actions = {
     });
     return response.data.countGuru;
   },
+  async saveGuru({ commit }, payload) {
+    try {
+      const response = await api.post("/ss/ptk/create", payload);
+      return response.data.status;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  async savePTKTerdaftar({ commit }, payload) {
+    try {
+      const response = await api.post(
+        `/ss/${payload.schema_name}/ptk-terdaftar/create`,
+        payload
+      );
+      // console.log(response);
+      return response.data.status;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   // =============================================
 
   async getTemplate({ commit }, payload) {
@@ -297,7 +316,7 @@ const actions = {
       );
       // console.log(response.data.anggotaKelas);
       // commit("SET_TABELSISWAAKTIF", response.data.anggotaKelas);
-      return response.data.anggotaKelas; // Mengembalikan data sekolah
+      return response.data.anggotaKelas; 
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal membuat semester:", error);
@@ -516,13 +535,10 @@ const actions = {
 
   async createKelas({ commit }, payload) {
     try {
-      console.log("Payload:", payload);
       const response = await api.post(
         `/ss/${payload.schema_name}/tambah-kelas`,
         payload
       );
-      console.log(response.data);
-      // commit("SET_TABELSEMESTER", response.data.semester);
       return response.data; // Mengembalikan data sekolah
     } catch (error) {
       // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch, toRaw } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useRoute } from "vue-router";
 const route = useRoute();
 
@@ -16,6 +16,7 @@ import router from '@/router';
 import { useStore } from "vuex";
 const store = useStore();
 import AnggotaKelas from '@/components/AnggotaKelas.vue';
+import { result } from 'lodash';
 
 const schemaName = ref('')
 const selectedSemester = computed(() => {
@@ -27,6 +28,7 @@ let isEdit = false
 const sekolah = computed(() => store.getters["sekolahService/getSekolah"])
 const selectedTingkat = ref(null)
 const tingkatPendidikanOptions = ref([])
+const submitted = ref(false)
 // Model Kelas
 const rombel = ref({
     rombonganBelajarId: '',
@@ -51,7 +53,14 @@ const rombel = ref({
     }
 });
 
-
+const anggotaKelas = ref({
+    anggotaRombelId: '',
+    pesertaDidikId: '',
+    rombonganBelajarId: '',
+    semesterId: '',
+    pesertaDidik: [],
+    rombonganBelajar: {}
+})
 const fetchTingkat = async () => {
     const payload = {
         jenjang_pendidikan_id: sekolah.value?.jenjangPendidikanId
@@ -119,8 +128,14 @@ const handleKeydown = (event) => {
 };
 
 watch(selectedJurusan, (newVal) => {
+
     if (typeof (newVal) === "object") {
-        fetchKurikulum()
+        if (!newVal) {
+            // console.log(newVal)
+        } else {
+            fetchKurikulum()
+
+        }
     }
 })
 // ===================================
@@ -179,41 +194,58 @@ const fetchKelas = async () => {
 const generateUUID = () => crypto.randomUUID();
 // Handle Submit Form
 const submitForm = async () => {
-    // Cek apakah kelas sedang dibuat
-    // mengisi data input
-    console.log("submitForm execute!")
-    if (rombel.value.nmKelas != "") {
-        addKelas()
-        let anggota = addSiswaBaru()
-        // simpanKelas(rombel.value, anggota)
+    submitted.value = true
+    if (!isEdit) {
+        if (rombel.value.nmKelas) {
+            addKelas()
+        }
+
+    } else {
+        addAnggotaKelas()
     }
 
-    // // Cek apakah siswa
-    // const cek = await addSiswaBaru()
-    // // console.log(cek)
-    // if (cek) {
-    //     // fungsi untuk menambahkan siswa ke anggota kelas dimana siswa sudah ada di database sebelumnya.    
-    // } else {
-    //     await addAnggotaKelas()
-    //     toast.add({ severity: 'warn', summary: 'Gagal', detail: 'Terjadi error pada saat penambahan siswa baru', life: 3000 });
-    // }
 };
 const addKelas = async () => {
     // console.log("addKelas execute!")
-    rombel.value.ptkId = selectedGuru.value.ptk?.ptkId
+    rombel.value.rombonganBelajarId = generateUUID()
+    rombel.value.sekolahId = sekolah.value?.sekolah_id
     rombel.value.semesterId = await store.getters["sekolahService/getSelectedSemester"]?.semesterId
-    rombel.value.tingkatPendidikanId = selectedTingkat.value?.tingkatPendidikanId
-    rombel.value.kurikulumId = selectedKurikulum.value?.kurikulumId
     rombel.value.jurusanId = selectedJurusan.value?.jurusanId
-    rombel.value.namaJurusanSp = selectedJurusan.value?.namaJurusan
-    rombel.value.sekolahId = await store.getters["sekolahService/getSekolah"]?.sekolahId
+    rombel.value.ptkId = selectedGuru.value.ptk?.ptkId
+    rombel.value.tingkatPendidikanId = selectedTingkat.value?.tingkatPendidikanId
     rombel.value.jenisRombel = Number(rombel.value.jenisRombel) || 1;
-    rombel.value.sekolahId = sekolah.value.sekolahId
+    rombel.value.namaJurusanSp = selectedJurusan.value?.namaJurusan
+    rombel.value.kurikulumId = selectedKurikulum.value?.kurikulumId
+    // rombel.value.sekolahId = await store.getters["sekolahService/getSekolah"]?.sekolahId
     rombel.value.ptk = {}
+    const payload = {
+        schema_name: schemaName.value,
+        kelas: [rombel.value],
+    }
+    try {
+        const results = await store.dispatch("sekolahService/createKelas", payload)
+        // console.log(results)
+        toast.add({ severity: 'success', summary: 'Sukses', detail: 'Data berhasil disimpan', life: 3000 });
+
+        submitted.value = false
+        Object.keys(rombel.value).forEach(key => {
+            rombel.value[key] = '';
+        });
+        selectedJurusan.value = null
+        selectedKurikulum.value = null
+        selectedGuru.value = {}
+        selectedTingkat.value = ""
+    } catch (error) {
+        console.log(error)
+    }
 }
-const addSiswaBaru = async () => {
+const addAnggotaKelas = async () => {
     const savedData = JSON.parse(localStorage.getItem("unsavedPesertaDidikBaru"));
-    // console.log(savedData)
+    console.log(savedData)
+    anggotaKelas.value.anggotaRombelId = generateUUID()
+    anggotaKelas.value.pesertaDidik = savedData
+
+    // return
     if (savedData) {
         try {
             const payload = {
@@ -222,7 +254,7 @@ const addSiswaBaru = async () => {
             }
             const results = await store.dispatch("sekolahService/createBanyakSiswa", payload)
             //console.log(results)
-            localStorage.removeItem("unsavedPesertaDidikBaru");
+            // localStorage.removeItem("unsavedPesertaDidikBaru");
             return results
         } catch (error) {
             console.log(error)
@@ -235,25 +267,25 @@ const addSiswaBaru = async () => {
 
 const simpanKelas = async (kelas, anggotaKelas) => {
     try {
-        const payload = {
-            schema_name: schemaName.value,
-            kelas: kelas,
-            anggota_kelas: anggotaKelas
-        }
+        // const payload = {
+        //     schema_name: schemaName.value,
+        //     kelas: kelas,
+        //     anggota_kelas: anggotaKelas
+        // }
 
         let results = null
         if (isEdit) {
             payload.kelas_id = kelasId
             results = await store.dispatch("sekolahService/editKelas", payload)
         } else {
-            results = await store.dispatch("sekolahService/createKelas", payload)
-            Object.keys(rombel.value).forEach(key => {
-                rombel.value[key] = '';
-            });
-            selectedJurusan.value = {}
-            selectedKurikulum.value = {}
-            selectedGuru.value = {}
-            selectedTingkat.value = ""
+            // results = await store.dispatch("sekolahService/createKelas", payload)
+            // Object.keys(rombel.value).forEach(key => {
+            //     rombel.value[key] = '';
+            // });
+            // selectedJurusan.value = {}
+            // selectedKurikulum.value = {}
+            // selectedGuru.value = {}
+            // selectedTingkat.value = ""
         }
         if (results != null) {
             toast.add({ severity: 'success', summary: 'Sukses', detail: 'Data berhasil disimpan', life: 3000 });
@@ -269,7 +301,8 @@ const simpanKelas = async (kelas, anggotaKelas) => {
 }
 
 
-const batal = () => {
+const batal = async () => {
+    await nextTick();
     router.push({ name: 'readKelas' })
 }
 
@@ -299,19 +332,26 @@ onMounted(() => {
                     <div class="w-full">
                         <label class="block text-gray-700" for="nmKelas">Nama Kelas</label>
                         <InputText v-model="rombel.nmKelas" fluid name="nmKelas" id="nmKelas"
-                            placeholder="contoh: x tbsm a" />
+                            placeholder="contoh: x tbsm a" :invalid="submitted && !rombel.nmKelas" />
+                        <small v-if="submitted && !rombel.nmKelas" class="text-red-500">Nama harus
+                            diisi.</small>
                     </div>
                     <div class="w-full md:w-40">
                         <label class="block text-gray-700">Tingkat</label>
                         <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
-                            placeholder="Pilih tingkat" optionLabel="nama" class="w-full" />
+                            placeholder="Pilih tingkat" optionLabel="nama" class="w-full"
+                            :invalid="submitted && !selectedTingkat" />
+                        <small v-if="submitted && !selectedTingkat" class="text-red-500">Tingkat harus
+                            diisi.</small>
                     </div>
                 </div>
                 <div class="">
                     <label class="block text-gray-700">Wali kelas</label>
                     <div class="relative">
                         <Select v-model="selectedGuru" :options="guruList" placeholder="Pilih Wali kelas"
-                            optionLabel="ptk.nama" class="w-full" />
+                            optionLabel="ptk.nama" class="w-full" :invalid="submitted && !selectedGuru" />
+                        <small v-if="submitted && !selectedGuru" class="text-red-500">Wali kelas harus
+                            diisi.</small>
                     </div>
                 </div>
             </div>
@@ -322,14 +362,19 @@ onMounted(() => {
                     <div class="relative">
                         <AutoComplete v-model="selectedJurusan" :suggestions="filteredJurusan" optionLabel="namaJurusan"
                             @complete="searchJurusan" @keydown.space.prevent="handleKeydown"
-                            placeholder="Cari Jurusan..." class="w-full" fluid dropdown />
+                            placeholder="Cari Jurusan..." class="w-full" fluid dropdown
+                            :invalid="submitted && !selectedJurusan" />
+                        <small v-if="submitted && !selectedJurusan" class="text-red-500">Jurusan harus
+                            diisi.</small>
                     </div>
                 </div>
                 <div>
                     <label class="block text-gray-700">Kurikulum</label>
                     <div class="relative">
                         <Select v-model="selectedKurikulum" :options="kurikulumList" placeholder="Pilih Kurikulum"
-                            optionLabel="namaKurikulum" class="w-full" />
+                            optionLabel="namaKurikulum" class="w-full" :invalid="submitted && !selectedKurikulum" />
+                        <small v-if="submitted && !selectedKurikulum" class="text-red-500">Kurikulum harus
+                            diisi.</small>
                     </div>
                 </div>
             </div>
@@ -338,7 +383,7 @@ onMounted(() => {
 
         <Toast />
         <!-- Daftar anggota rombel -->
-        <div>
+        <div v-show=isEdit>
             <h2 class="text-xl font-semibold mb-4">Anggota Kelas</h2>
             <!-- Anggota Kelas -->
             <AnggotaKelas :rombongan-belajar-id="kelasId" :is-edit="isEdit" />

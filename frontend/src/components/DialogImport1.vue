@@ -12,6 +12,10 @@ import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
 import DialogLoading from "./DialogLoading.vue";
 import { isEmpty } from "lodash";
+import { useExcelUpload } from "@/composables/useExcelUpload";
+
+const { excelData, loading, error, handleFileUpload, uploadToBackend } = useExcelUpload();
+// const { excelData, loading, error, handleFileUpload } = useExcelUpload();
 // import { isError } from "lodash";
 const toast = useToast();
 
@@ -48,86 +52,85 @@ const closeDialog = () => {
 
 // Refs untuk FileUpload dan file yang diunggah
 // const fileupload = ref();
-const uploadedFiles = ref();
+// const uploadedFiles = ref();
 // const uploadUrl = `${baseUrl}/upload/rest?upload_type=${props.templateType}`
-const uploadUrl = `${baseUrl}/upload`
 
-const saveData = async () => {
-    if (uploadedFiles.value.files.length == 0) {
-        toast.add({ severity: 'warn', summary: 'Gagal', detail: 'Silakan unggah file terlebih dahulu!', life: 3000 });
-        return;
-    }
-    const file = uploadedFiles.value.files[0]
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_type", props.templateType);
-    formData.append("schemaname", props.schemaName);
-    // formData.append("semester_id", props.semester);
-    isLoading.value = false;
-    console.log(uploadUrl)
-    try {
-        const response = await fetch(uploadUrl, {
-            method: "POST",
-            body: formData,
-        });
+// const saveData = async () => {
+//     if (uploadedFiles.value.files.length == 0) {
+//         toast.add({ severity: 'warn', summary: 'Gagal', detail: 'Silakan unggah file terlebih dahulu!', life: 3000 });
+//         return;
+//     }
+//     const file = uploadedFiles.value.files[0]
+//     const formData = new FormData();
+//     formData.append("file", file);
+//     formData.append("upload_type", props.templateType);
+//     // formData.append("schemaname", props.schemaName);
+//     // formData.append("semester_id", props.semester);
+//     isLoading.value = false;
+//     console.log(uploadUrl)
+//     try {
+//         const response = await fetch(uploadUrl, {
+//             method: "POST",
+//             body: formData,
+//         });
 
-        if (!response.ok) {
-            throw new Error("Gagal mengunggah file");
-        }
+//         if (!response.ok) {
+//             throw new Error("Gagal mengunggah file");
+//         }
 
-        const result = await response.json();
-        // uploadedFiles.value.push(file);
+//         const result = await response.json();
+//         // uploadedFiles.value.push(file);
 
-        toast.add({ severity: 'success', summary: 'Sukses', detail: 'File berhasil diunggah!', life: 3000 });
+//         toast.add({ severity: 'success', summary: 'Sukses', detail: 'File berhasil diunggah!', life: 3000 });
 
-        // Reset input file setelah upload selesai
-        if (uploadedFiles.value) {
-            uploadedFiles.value.clear();
-        }
-    } catch (error) {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Gagal mengunggah file', life: 3000 });
-        console.error("Upload error:", error);
-    } finally {
-        isLoading.value = false;
-    }
-    // Reset input file setelah upload selesai
-    if (uploadedFiles.value) {
-        uploadedFiles.value.clear();
-    }
-    emit("save", uploadedFiles.value);
-    closeDialog();
-};
-const upload = () => {
-    uploadedFiles.value.upload()
-}
+//         // Reset input file setelah upload selesai
+//         if (uploadedFiles.value) {
+//             uploadedFiles.value.clear();
+//         }
+//     } catch (error) {
+//         toast.add({ severity: 'error', summary: 'Error', detail: 'Gagal mengunggah file', life: 3000 });
+//         console.error("Upload error:", error);
+//     } finally {
+//         isLoading.value = false;
+//     }
+//     // Reset input file setelah upload selesai
+//     if (uploadedFiles.value) {
+//         uploadedFiles.value.clear();
+//     }
+//     emit("save", uploadedFiles.value);
+//     closeDialog();
+// };
+// const upload = () => {
+//     uploadedFiles.value.upload()
+// }
 // Handle sebelum upload (validasi file)
-const onBeforeUpload = (event) => {
-    const file = event.files[0]; // Ambil file pertama
-    const allowedExtensions = ["xlsx"];
-    const maxFileSize = 2 * 1024 * 1024; // 2MB
+// const onBeforeUpload = (event) => {
+//     const file = event.files[0]; // Ambil file pertama
+//     const allowedExtensions = ["xlsx"];
+//     const maxFileSize = 2 * 1024 * 1024; // 2MB
 
-    const fileExtension = file.name.split(".").pop().toLowerCase();
-    if (!allowedExtensions.includes(fileExtension)) {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Format file harus .xlsx!', life: 3000 });
-        return false;
-    }
+//     const fileExtension = file.name.split(".").pop().toLowerCase();
+//     if (!allowedExtensions.includes(fileExtension)) {
+//         toast.add({ severity: 'error', summary: 'Error', detail: 'Format file harus .xlsx!', life: 3000 });
+//         return false;
+//     }
 
-    if (file.size > maxFileSize) {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Ukuran file tidak boleh lebih dari 2MB!', life: 3000 });
-        return false;
-    }
+//     if (file.size > maxFileSize) {
+//         toast.add({ severity: 'error', summary: 'Error', detail: 'Ukuran file tidak boleh lebih dari 2MB!', life: 3000 });
+//         return false;
+//     }
 
-    return true; // Izinkan unggahan
-};
+//     return true; // Izinkan unggahan
+// };
 
 // Handle upload file
-const onUpload = (event) => {
-    console.log("sedang upload files")
-    console.log(event.xhr.response);
-    // uploadedFiles.value = event.files;
-    toast.add({ severity: 'info', summary: 'Success', detail: 'File berhasil diunggah!', life: 3000 });
+// const onUpload = (event) => {
+//     console.log("sedang upload files")
+//     console.log(event.xhr.response);
+//     // uploadedFiles.value = event.files;
+//     toast.add({ severity: 'info', summary: 'Success', detail: 'File berhasil diunggah!', life: 3000 });
 
-};
+// };
 // Function untuk mengunduh template
 const isErr = ref(false)
 const downloadTemplate = async () => {
@@ -198,8 +201,15 @@ const semester = computed(() => store.getters["sekolahService/getSemester"])
                         :customUpload="true" @before-upload="onBeforeUpload" @upload="onUpload" severity="secondary" />
                 </div> -->
                 <div class="mt-2 flex flex-col gap-6 items-center justify-center">
-                    <FileUpload ref="uploadedFiles" mode="basic" name="file" accept=".xlsx" :maxFileSize="2000000"
-                        :customUpload="true" severity="secondary" />
+                    <!-- <FileUpload ref="uploadedFiles" mode="basic" name="file" accept=".xlsx" :maxFileSize="2000000"
+                        :customUpload="true" @change="handleFileUpload" severity="secondary" /> -->
+
+                    <input type="file" accept=".xlsx, .xls" @change="handleFileUpload" />
+                    <table v-if="excelData.length">
+                        <tr v-for="(row, index) in excelData.slice(0, 3)" :key="index">
+                            <td v-for="(cell, i) in row" :key="i">{{ cell }}</td>
+                        </tr>
+                    </table>
                 </div>
                 <p class="mt-2 text-sm text-gray-500">
                     Unduh Template Import data
@@ -211,7 +221,8 @@ const semester = computed(() => store.getters["sekolahService/getSemester"])
 
         <template #footer>
             <Button label="Batal" icon="pi pi-times" text @click="closeDialog" />
-            <Button label="Simpan" icon="pi pi-check" text @click="saveData" />
+            <Button label="Simpan" icon="pi pi-check" text @click="uploadToBackend"
+                :disabled="loading || !excelData.length" />
         </template>
     </Dialog>
 

@@ -9,6 +9,8 @@ import (
 	"sekolah/models"
 	"sekolah/repositories"
 	"sekolah/utils"
+
+	"github.com/google/uuid"
 )
 
 type SiswaServiceServer struct {
@@ -89,6 +91,7 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 		if err != nil {
 			return nil
 		}
+
 		// var tglDiterima time.Time
 		// if sis.DiterimaTanggal != "" {
 		// 	tglDiterima, err = utils.StringToTime(sis.DiterimaTanggal, "2006-01-02")
@@ -97,7 +100,7 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 		// 	}
 		// }
 		return &models.PesertaDidik{
-			PesertaDidikId: sis.PesertaDidikId,
+			PesertaDidikId: uuid.New().String(),
 			Nis:            sis.Nis,
 			Nisn:           sis.Nisn,
 			NmSiswa:        sis.NmSiswa,
@@ -116,7 +119,7 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 			PekerjaanWali: &sis.PekerjaanWali,
 		}
 	})
-	err = s.repo.SaveMany(ctx, schemaName, siswaModels, 100)
+	err = s.repo.SaveMany(ctx, schemaName, siswaModels, 1000)
 	if err != nil {
 		log.Printf("Gagal menyimpan siswa: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan siswa: %w", err)

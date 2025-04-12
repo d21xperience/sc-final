@@ -1,3 +1,207 @@
+<script setup>
+import { ref, onMounted, watch, computed } from 'vue';
+import { useSekolahService } from '@/composables/useSekolahService'
+import { useStore } from "vuex";
+const store = useStore();
+
+// import FileUpload from 'primevue/fileupload';
+
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+
+import Button from 'primevue/button';
+
+import Dialog from 'primevue/dialog';
+
+import Toolbar from 'primevue/toolbar';
+import { FilterMatchMode } from '@primevue/core/api';
+import { useToast } from 'primevue/usetoast';
+import InputText from 'primevue/inputtext';
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
+// import DataLulusanService from '@/service/ProductService.js';
+// =============UJI FITUR FOTO========================
+// import Image from 'primevue/image';
+// =====================================
+
+
+// ==============================
+
+// watch(selectedSemester, (newVal, oldVal) => {
+//     console.log(newVal)
+//     // fetchRombel()
+// })
+import DialogLoading from "@/components/DialogLoading.vue";
+
+const isLoading = ref(false);
+
+const dataConnected = ref(true)
+const toast = useToast();
+const dt = ref();
+const products = ref();
+const productDialog = ref(false);
+const deleteProductDialog = ref(false);
+const deleteProductsDialog = ref(false);
+const product = ref({});
+const dataLulusan = ref();
+const filters = ref({
+    'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+});
+const submitted = ref(false);
+
+// const formatCurrency = (value) => {
+//     if (value)
+//         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+//     return;
+// };
+const openNew = () => {
+    router.push({ name: "inputGuru" })
+};
+// const hideDialog = () => {
+//     productDialog.value = false;
+//     submitted.value = false;
+// };
+// const saveProduct = () => {
+//     submitted.value = true;
+
+//     if (product?.value.name?.trim()) {
+//         if (product.value.id) {
+//             product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
+//             products.value[findIndexById(product.value.id)] = product.value;
+//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+//         }
+//         else {
+//             product.value.id = createId();
+//             product.value.code = createId();
+//             product.value.image = 'product-placeholder.svg';
+//             product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
+//             products.value.push(product.value);
+//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+//         }
+
+//         productDialog.value = false;
+//         product.value = {};
+//     }
+// };
+// const editProduct = (prod) => {
+//     product.value = { ...prod };
+//     productDialog.value = true;
+// };
+// const confirmDeleteProduct = (prod) => {
+//     product.value = prod;
+//     deleteProductDialog.value = true;
+// };
+const deleteProduct = () => {
+    products.value = products.value.filter(val => val.id !== product.value.id);
+    deleteProductDialog.value = false;
+    product.value = {};
+    toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+};
+const findIndexById = (id) => {
+    let index = -1;
+    for (let i = 0; i < products.value.length; i++) {
+        if (products.value[i].id === id) {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
+};
+// const createId = () => {
+//     let id = '';
+//     var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//     for (var i = 0; i < 5; i++) {
+//         id += chars.charAt(Math.floor(Math.random() * chars.length));
+//     }
+//     return id;
+// }
+const exportCSV = () => {
+    isLoading.value = true
+    // alert("hello")
+    // dt.value.exportCSV();
+};
+const confirmDeleteSelected = () => {
+    deleteProductsDialog.value = true;
+};
+// const deletedataLulusan = () => {
+//     products.value = products.value.filter(val => !dataLulusan.value.includes(val));
+//     deleteProductsDialog.value = false;
+//     dataLulusan.value = null;
+//     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+// };
+
+
+
+
+import Select from 'primevue/select';
+import EmptyData from '@/components/EmptyData.vue';
+
+// const selectedJurusan = ref();
+// const jurusan = ref([
+//     { name: 'Teknik Kendaraan Ringan', code: 'TKR' },
+//     { name: 'Teknik Mesin Sepeda Motor', code: 'TSM' },
+//     { name: 'Teknik Komputer dan Jaringan', code: 'TKJ' },
+//     { name: 'Otomatisasi Perkantoran', code: 'OTKP' },
+//     { name: 'AKuntansi Lembaga', code: 'AKL' }
+// ]);
+
+// Fungsi yang menangkap event emit dari child
+const handleProfileFetched = (data) => {
+    dataConnected.value = data;
+    console.log("Data sekolah diterima di parent:", data);
+};
+
+const handleFetchError = (error) => {
+    dataConnected.value = data;
+    console.error("Error diterima di parent:", error);
+};
+
+// status Guru naik atau lulus
+const dialogStatus = ref(false)
+
+
+// ==================================
+// =======SEMESTER=============
+
+const selectedSemester = computed(() => {
+    return store.getters["sekolahService/getSelectedSemester"]
+})
+
+
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"].schemaName)
+// ==================================
+// ==================================
+// =======Guru=============
+const selectedGuru = ref();
+// ==================================
+
+// ========IMPORT DATA========
+import DialogImport from '@/components/DialogImport1.vue'
+import router from '@/router';
+const dialogImport = ref(false)
+const saveImport = (e) => {
+    // console.log("Data disimpan:", e);
+    dialogImport.value = false;
+};
+
+const cancelImport = () => {
+    console.log("Import dibatalkan");
+    dialogImport.value = false;
+};
+
+const { guruList, fetchGuru } = useSekolahService(schemaname, selectedSemester)
+// ===========================================
+watch(selectedSemester, async (e, b) => {
+    await fetchGuru()
+})
+
+onMounted(async () => {
+    await fetchGuru()
+});
+
+</script>
+
 <template>
 
     <div class="">
@@ -53,7 +257,7 @@
                     </div>
 
 
-                    <DataTable ref="dt" v-model:selection="selectedGuru" stripedRows size="small" :value="Guru"
+                    <DataTable ref="dt" v-model:selection="selectedGuru" stripedRows size="small" :value="guruList"
                         dataKey="ptkTerdaftarId" :paginator="true" :rows="10" :filters="filters"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         :rowsPerPageOptions="[10, 20, 50]"
@@ -101,242 +305,11 @@
 
         <!-- import data -->
         <!-- DIALOG IMPORT -->
-        <DialogImport v-model:visible="dialogImport" :semester="semester" @save="saveImport" @cancel="cancelImport"
-            template-type="guru" :schema-name="schemaname" />
+        <DialogImport v-model:visible="dialogImport" @save="saveImport" @cancel="cancelImport" template-type="guru"
+            :schema-name="schemaname" />
 
         <!-- end of import data -->
         <DialogLoading v-model="isLoading"> Memuat data, harap tunggu... </DialogLoading>
 
     </div>
 </template>
-
-<script setup>
-import { ref, onMounted, watch, computed } from 'vue';
-import { useStore } from "vuex";
-const store = useStore();
-// import FileUpload from 'primevue/fileupload';
-
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-
-import Button from 'primevue/button';
-
-import Dialog from 'primevue/dialog';
-
-import Toolbar from 'primevue/toolbar';
-import { FilterMatchMode } from '@primevue/core/api';
-import { useToast } from 'primevue/usetoast';
-import InputText from 'primevue/inputtext';
-import IconField from 'primevue/iconfield';
-import InputIcon from 'primevue/inputicon';
-import DataLulusanService from '@/service/ProductService.js';
-// =============UJI FITUR FOTO========================
-import Image from 'primevue/image';
-// =====================================
-
-
-// ==============================
-onMounted(async () => {
-    semester.value = store.getters["sekolahService/getSemester"]
-    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaName
-
-    fetchGuru()
-});
-// watch(selectedSemester, (newVal, oldVal) => {
-//     console.log(newVal)
-//     // fetchRombel()
-// })
-import DialogLoading from "@/components/DialogLoading.vue";
-
-const isLoading = ref(false);
-
-const dataConnected = ref(true)
-const toast = useToast();
-const dt = ref();
-const products = ref();
-const productDialog = ref(false);
-const deleteProductDialog = ref(false);
-const deleteProductsDialog = ref(false);
-const product = ref({});
-const dataLulusan = ref();
-const filters = ref({
-    'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
-});
-const submitted = ref(false);
-// const statuses = ref([
-//     { label: 'INSTOCK', value: 'instock' },
-//     { label: 'LOWSTOCK', value: 'lowstock' },
-//     { label: 'OUTOFSTOCK', value: 'outofstock' }
-// ]);
-
-const formatCurrency = (value) => {
-    if (value)
-        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    return;
-};
-const openNew = () => {
-    router.push({ name: "inputGuru" })
-};
-const hideDialog = () => {
-    productDialog.value = false;
-    submitted.value = false;
-};
-// const saveProduct = () => {
-//     submitted.value = true;
-
-//     if (product?.value.name?.trim()) {
-//         if (product.value.id) {
-//             product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
-//             products.value[findIndexById(product.value.id)] = product.value;
-//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-//         }
-//         else {
-//             product.value.id = createId();
-//             product.value.code = createId();
-//             product.value.image = 'product-placeholder.svg';
-//             product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
-//             products.value.push(product.value);
-//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-//         }
-
-//         productDialog.value = false;
-//         product.value = {};
-//     }
-// };
-// const editProduct = (prod) => {
-//     product.value = { ...prod };
-//     productDialog.value = true;
-// };
-// const confirmDeleteProduct = (prod) => {
-//     product.value = prod;
-//     deleteProductDialog.value = true;
-// };
-const deleteProduct = () => {
-    products.value = products.value.filter(val => val.id !== product.value.id);
-    deleteProductDialog.value = false;
-    product.value = {};
-    toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-};
-const findIndexById = (id) => {
-    let index = -1;
-    for (let i = 0; i < products.value.length; i++) {
-        if (products.value[i].id === id) {
-            index = i;
-            break;
-        }
-    }
-
-    return index;
-};
-const createId = () => {
-    let id = '';
-    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (var i = 0; i < 5; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
-}
-const exportCSV = () => {
-    isLoading.value = true
-    // alert("hello")
-    // dt.value.exportCSV();
-};
-const confirmDeleteSelected = () => {
-    deleteProductsDialog.value = true;
-};
-const deletedataLulusan = () => {
-    products.value = products.value.filter(val => !dataLulusan.value.includes(val));
-    deleteProductsDialog.value = false;
-    dataLulusan.value = null;
-    toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-};
-
-
-
-
-import Select from 'primevue/select';
-import EmptyData from '@/components/EmptyData.vue';
-
-// const selectedJurusan = ref();
-// const jurusan = ref([
-//     { name: 'Teknik Kendaraan Ringan', code: 'TKR' },
-//     { name: 'Teknik Mesin Sepeda Motor', code: 'TSM' },
-//     { name: 'Teknik Komputer dan Jaringan', code: 'TKJ' },
-//     { name: 'Otomatisasi Perkantoran', code: 'OTKP' },
-//     { name: 'AKuntansi Lembaga', code: 'AKL' }
-// ]);
-
-// Fungsi yang menangkap event emit dari child
-const handleProfileFetched = (data) => {
-    dataConnected.value = data;
-    console.log("Data sekolah diterima di parent:", data);
-};
-
-const handleFetchError = (error) => {
-    dataConnected.value = data;
-    console.error("Error diterima di parent:", error);
-};
-
-// status Guru naik atau lulus
-const dialogStatus = ref(false)
-
-
-// ==================================
-// =======SEMESTER=============
-
-const semester = ref(null)
-const selectedSemester = computed(() => {
-    return store.getters["sekolahService/getSelectedSemester"]
-})
-
-watch(selectedSemester, (e, b) => {
-    fetchGuru()
-})
-
-const schemaname = ref("")
-// ==================================
-// ==================================
-// =======Guru=============
-const selectedGuru = ref();
-const Guru = ref(null);
-const fetchGuru = async () => {
-
-    try {
-        let payload = {
-            tahunAjaranId: selectedSemester.value?.tahunAjaranId,
-            schemaname: schemaname.value
-        }
-        console.log(payload)
-        const results = await store.dispatch("sekolahService/fetchPTKTerdaftar", payload)
-        // console.log(results)
-        if (results) {
-            Guru.value = store.getters["sekolahService/getPTKTerdaftar"]
-            // // Ambil Guru terbaru berdasarkan ID terbesar
-            // selectedGuru.value = Guru.value.reduce((latest, current) =>
-            //     current.GuruId > latest.GuruId ? current : latest
-            // );
-        }
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-// ==================================
-
-// ========IMPORT DATA========
-import DialogImport from '@/components/DialogImport.vue'
-import router from '@/router';
-const dialogImport = ref(false)
-const saveImport = (e) => {
-    // console.log("Data disimpan:", e);
-    dialogImport.value = false;
-};
-
-const cancelImport = () => {
-    console.log("Import dibatalkan");
-    dialogImport.value = false;
-};
-// ===========================================
-
-
-</script>

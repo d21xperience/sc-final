@@ -28,6 +28,11 @@ func ConvertModelsToPB[T any, U any](models []T, convert func(T) U) []U {
 //		}
 //		return pbList
 //	}
+
+// konversi pb ke model
+// schemaName := req.GetSchemaName()
+// pbs := req.pb  //repeated proto
+// models := ConvertPBToModels(pbs, func(items *pb.pbs) *models.models {}
 func ConvertPBToModels[T any, U any](pbs []*T, converter func(*T) *U) []*U {
 	var modelList []*U
 	for _, model := range pbs {
@@ -72,6 +77,21 @@ func PointerToUUID(value string) *uuid.UUID {
 		return nil
 	}
 	return &i
+}
+func UUIDToPointer(u uuid.UUID) *uuid.UUID {
+	return &u
+}
+
+// Mengembalikan uuid.UUID dari pointer string. Jika nil atau invalid, kembalikan uuid.Nil
+func PointerStringToUUID(s *string) uuid.UUID {
+	if s == nil || *s == "" {
+		return uuid.Nil
+	}
+	id, err := uuid.Parse(*s)
+	if err != nil {
+		return uuid.Nil
+	}
+	return id
 }
 
 // Generic function untuk konversi antara string dan UUID
@@ -227,6 +247,14 @@ func PointerToSlice[T any](input []*T) []T {
 		if v != nil {
 			output[i] = *v
 		}
+	}
+	return output
+}
+func SliceToPointer[T any](input []T) []*T {
+	output := make([]*T, len(input))
+	for i, v := range input {
+		val := v // buat salinan lokal
+		output[i] = &val
 	}
 	return output
 }

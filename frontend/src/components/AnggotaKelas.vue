@@ -13,8 +13,10 @@
                 <template #end>
                     <a href="#" @click.prevent="downloadTemplate"
                         class="text-indigo-600 hover:text-indigo-500 mr-2">Download template</a>
-                    <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" customUpload
-                        chooseLabel="Import" class="mr-2" auto :chooseButtonProps="{ severity: 'secondary' }" />
+                    <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" customUpload
+                        chooseLabel="Import" class="mr-2" auto :chooseButtonProps="{ severity: 'secondary' }" /> -->
+                    <input type="file" @change="handleFileUpload" />
+                    <Button label="Upload" @click="uploadSiswa" />
                     <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)"
                         v-show="isExport" />
                 </template>
@@ -406,6 +408,9 @@ const addAnggotaSiswaFromInput = () => {
     pesertaDidik.value = {};
 };
 
+import { useExcelUpload } from "@/composables/useExcelUpload";
+const { handleFileUpload, uploadToStore, error, excelData } = useExcelUpload();
+
 const addAnggotaSiswaFromSearch = () => {
 
 }
@@ -643,4 +648,43 @@ const downloadTemplate = async () => {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Terjadi kesalahan saat mengunduh file', life: 3000 });
     }
 };
+
+const uploadSiswa = () => {
+    uploadToStore("sekolahService/CreateBanyakSiswa", "siswa");
+};
+
+// Mapping function
+const mapExcelToPesertaDidikArray = (data) => {
+    // Lewati baris pertama jika itu header
+    const rows = data.slice(1);
+
+    pesertaDidik.value = rows.map((row) => ({
+        pesertaDidikId: row[0] || '',
+        nis: row[1] || '',
+        nisn: row[2] || '',
+        nmSiswa: row[3] || '',
+        tempatLahir: row[4] || '',
+        tanggalLahir: row[5] || '',
+        jenisKelamin: row[6] || '',
+        agama: row[7] || '',
+        alamatSiswa: row[8] || '',
+        teleponSiswa: row[9] || '',
+        diterimaTanggal: row[10] || '',
+        nmAyah: row[11] || '',
+        nmIbu: row[12] || '',
+        pekerjaanAyah: row[13] || '',
+        pekerjaanIbu: row[14] || '',
+        nmWali: row[15] || '',
+        pekerjaanWali: row[16] || '',
+    }));
+};
+
+// Pantau perubahan excelData
+watch(excelData, (newData) => {
+    console.log(newData.length > 0)
+    if (newData.length > 0) {
+        mapExcelToPesertaDidikArray(newData);
+    }
+});
+
 </script>

@@ -126,12 +126,12 @@
 
     <!-- import data -->
     <!-- DIALOG IMPORT -->
-    <DialogImport v-model:visible="dialogImport" :semester="semester" @save="saveImport" @cancel="cancelImport"
-        template-type="kelas" :schema-name="schemaname" />
+    <!-- <DialogImport v-model:visible="dialogImport" @save="saveImport" @cancel="cancelImport"
+        template-type="kelas" :schema-name="schemaname" /> -->
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed, nextTick } from 'vue';
 import { useStore } from "vuex";
 const store = useStore();
 import DialogImport from '@/components/DialogImport.vue'
@@ -160,11 +160,11 @@ onMounted(() => {
     // RuangKelasService.getProducts().then((data) => (products.value = data));
 });
 
-const semester = ref()
+// const semester = ref()
 const schemaname = ref("")
 const getParamDialogImport = () => {
     schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaName
-    semester.value = store.getters["sekolahService/getSemester"]
+    // semester.value = store.getters["sekolahService/getSemester"]
 
 }
 
@@ -196,11 +196,14 @@ const submitted = ref(false);
 //     return;
 // };
 
-const openNew = () => {
+const openNew = async () => {
+    await nextTick();
     router.push({ name: "addKelas" })
 };
 
-const editKelas = () => {
+const editKelas = async () => {
+    await nextTick();
+
     router.push({
         name: "editKelas",
         query: { kelasId: selectedKelas.value[0]?.rombonganBelajarId.toString() }

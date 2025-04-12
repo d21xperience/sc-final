@@ -5,12 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/big"
+	"strings"
 
 	"sc-service/config"
 	pb "sc-service/generated"
 	"sc-service/models"
 	"sc-service/repositories"
 	"sc-service/utils"
+
+	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
 type BlockchainAccountService struct {
@@ -137,6 +141,7 @@ func (s *BlockchainAccountService) GetBlockchainAccounts(ctx context.Context, re
 		Blockchainaccounts: results,
 	}, nil
 }
+
 // func (s *BlockchainAccountService) ImportBlockchainAccount(ctx context.Context, req *pb.ImportBlockchainAccountRequest) (*pb.ImportBlockchainAccountResponse, error) {
 // 	// Daftar field yang wajib diisi
 // 	requiredFields := []string{"Admin", "Network"}
@@ -179,3 +184,26 @@ func (s *BlockchainAccountService) GetBlockchainAccounts(ctx context.Context, re
 // 		Message: "Akun berhasi diimport dengan address " + address.Hex(),
 // 	}, nil
 // }
+
+// IssueDegree mengeluarkan ijazah di Ethereum
+func (e *BlockchainAccountService) IssueDegree(ctx context.Context, contractAddress string, degreeHash [32]byte, sekolah string, issueDate uint64, privateKey string, gasLimit uint64) (string, error) {
+	//  Load ABI
+	parsedABI, err := abi.JSON(strings.NewReader(abiJSON))
+	if err != nil {
+		return "", fmt.Errorf("error parsing ABI: %v", err)
+	}
+
+	//  Encode data untuk fungsi `issueDegree`
+	data, err := parsedABI.Pack("issueDegree", degreeHash, sekolah, big.NewInt(int64(issueDate)))
+	if err != nil {
+		return "", fmt.Errorf("error packing data: %v", err)
+	}
+
+	//  Kirim transaksi menggunakan SendTransactionToContract
+	txHash, err := SendTransactionToContract(ctx, e.client, contractAddress, data, privateKey, gasLimit)
+	if err != nil {
+		return "", fmt.Errorf("transaction failed: %v", err)
+	}
+
+	return txHash, nil
+}

@@ -4,23 +4,20 @@ import { useStore } from "vuex";
 export function useSekolahService(schemaName, selectedSemester) {
   const store = useStore();
   const guruList = ref([]);
-
+  // console.log("schemaName di composable:", schemaName.value);
+  // console.log("selectedSemester di composable:", selectedSemester.value);
   const fetchGuru = async () => {
     try {
-      const existing = await store.getters["sekolahService/getGuru"];
-      if (existing == null) {
-        const payload = {
-          tahunAjaranId: selectedSemester.value?.tahunAjaranId,
-          schemaname: schemaName.value,
-        };
-        const response = await store.dispatch(
-          "sekolahService/fetchGuru",
-          payload
-        );
-        guruList.value = response;
-      } else {
-        guruList.value = existing;
-      }
+      const payload = {
+        tahunAjaranId: selectedSemester.value?.tahunAjaranId,
+        schemaname: schemaName.value,
+      };
+
+      const response = await store.dispatch(
+        "sekolahService/fetchPTKTerdaftar",
+        payload
+      );
+      guruList.value = response;
     } catch (error) {
       console.error("Gagal mengambil data guru:", error);
     }

@@ -229,7 +229,7 @@ const actions = {
         },
       });
 
-      console.log("Response dari server:", response.data);
+      // console.log("Response dari server:", response.data);
 
       if (response.data.status === "success") {
         commit("setUserProfile", response.data.user_profile);

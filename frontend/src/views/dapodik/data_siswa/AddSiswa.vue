@@ -57,6 +57,7 @@ const pesertaDidik = ref({
     pekerjaanWali: ''
 });
 
+
 // Model Peserta Didik Pelengkap
 const pesertaDidikPelengkap = ref({
     pelengkapSiswaId: '',
@@ -107,7 +108,6 @@ const onUpload = (event) => {
 const batal = () => {
     router.push({ name: 'readSiswa' })
 }
-
 
 
 

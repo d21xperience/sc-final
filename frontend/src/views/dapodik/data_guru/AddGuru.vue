@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 import InputText from 'primevue/inputtext';
 import Select from 'primevue/select';
@@ -23,10 +23,18 @@ import InputMask from 'primevue/inputmask';
 
 import Card from 'primevue/card';
 import router from '@/router';
+import { useFormOptions } from '@/composables/useFormOptions'
+const {
+    selectedJenisKelamin,
+    jenisKelaminOptions,
+} = useFormOptions()
 
+import DialogLoading from '@/components/DialogLoading.vue';
+import store from '@/store';
 
-
-
+const selectedSemester = computed(() => {
+    return store.getters["sekolahService/getSelectedSemester"]
+})
 const alamatLengkap = ref({
     alamatJalan: '',
     rt: '',
@@ -36,145 +44,159 @@ const alamatLengkap = ref({
     kab: '',
     prov: ''
 })
-// Model Peserta Didik
-const pesertaDidik = ref({
-    pesertaDidikId: '',
-    nis: '',
-    nisn: '',
-    nmGuru: '',
-    tempatLahir: '',
-    tanggalLahir: '',
-    jenisKelamin: '',
-    agama: '',
-    alamatGuru: computed(() => `${alamatLengkap.value.alamatJalan} RT.${alamatLengkap.value.rt} RW.${alamatLengkap.value.rw} Desa ${alamatLengkap.value.desa} Kec. ${alamatLengkap.value.kec} Kab. ${alamatLengkap.value.kab} Prov. ${alamatLengkap.value.prov}`),
-    teleponGuru: '',
-    diterimaTanggal: '',
-    nmAyah: '',
-    nmIbu: '',
-    pekerjaanAyah: '',
-    pekerjaanIbu: '',
-    nmWali: '',
-    pekerjaanWali: ''
-});
 
 // Model Peserta Didik Pelengkap
-const pesertaDidikPelengkap = ref({
-    pelengkapGuruId: '',
-    pesertaDidikId: '',
-    statusDalamKel: '',
-    anakKe: '',
-    sekolahAsal: '',
-    diterimaKelas: '',
-    alamatOrtu: '',
-    teleponOrtu: '',
-    alamatWali: '',
-    teleponWali: '',
-    fotoGuru: null
+const tabel_ptk_terdaftar = ref({
+    ptk_terdaftar_id: '',
+    ptk_id: '',
+    tahun_ajaran_id: '',
+    jenis_keluar_id: '',
+    soft_delete: '',
+    ptk: {
+        ptk_id: "",
+        nama: "",
+        nip: "",
+        jenis_ptk_id: 8,
+        jenis_kelamin: "",
+        tempat_lahir: "",
+        tanggal_lahir: "",
+        nuptk: "",
+        alamat_jalan: "",
+        status_keaktifan_id: 1,
+    }
 });
 
 // Opsi Dropdown
-const selectedjenisKelaminOptions = ref()
-const jenisKelaminOptions = ref([
-    { label: 'Laki-Laki', value: 'L' },
-    { label: 'Perempuan', value: 'P' }
-]);
-const selectedAgamaOptions = ref()
-const agamaOptions = ref([
-    { label: 'Islam', value: 'Islam' },
-    { label: 'Kristen', value: 'Kristen' },
-    { label: 'Katolik', value: 'Katolik' },
-    { label: 'Hindu', value: 'Hindu' },
-    { label: 'Buddha', value: 'Buddha' },
-    { label: 'Konghucu', value: 'Konghucu' }
-]);
-
+watch(selectedJenisKelamin, () => tabel_ptk_terdaftar.value.ptk.jenis_kelamin = selectedJenisKelamin.value.value)
 // Handle Submit Form
+// onMounted(async () => await store.dispatch("sekolahService/fetchTabeltenant"))
+const schemaName = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaName)
+const isLoading = ref(false)
 const submitForm = () => {
-    console.log(pesertaDidik.value.alamatGuru);
-    console.log('Peserta Didik:', pesertaDidik.value);
-    console.log('Peserta Didik Pelengkap:', pesertaDidikPelengkap.value);
+    submitted.value = true
+    isLoading.value = true
+    if (tabel_ptk_terdaftar.value.ptk.nama?.trim()) {
+        if (saveGuru()) {
+            toast.add({ severity: 'success', summary: 'Sukses', detail: 'Data berhasil disimpan', life: 3000 });
+        } else {
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Data gagal disimpan', life: 3000 });
+        }
+    }
+    isLoading.value = false
 
-    toast.add({ severity: 'success', summary: 'Sukses', detail: 'Data berhasil disimpan', life: 3000 });
 };
+const generateUUID = () => crypto.randomUUID();
+const saveGuru = async () => {
+    try {
+        tabel_ptk_terdaftar.value.ptk_terdaftar_id = generateUUID()
+        tabel_ptk_terdaftar.value.ptk_id = generateUUID()
+        tabel_ptk_terdaftar.value.ptk.ptk_id = tabel_ptk_terdaftar.value.ptk_id
+        tabel_ptk_terdaftar.value.tahun_ajaran_id = `${selectedSemester.value?.tahunAjaranId}`
+        const payload = {
+            schema_name: schemaName.value,
+            ptk_terdaftar: [tabel_ptk_terdaftar.value]
+        }
+        // console.log(payload)
+        // simpan ptk ke database
+        const response = await store.dispatch("sekolahService/savePTKTerdaftar", payload)
+        if (response) {
 
-// Handle Upload Foto
-const onUpload = (event) => {
-    const file = event.files[0];
-    pesertaDidikPelengkap.value.fotoGuru = URL.createObjectURL(file);
-    toast.add({ severity: 'info', summary: 'Foto Diunggah', detail: file.name, life: 3000 });
-};
+        }
+        // simpan ptk terdaftar ke database
+
+    } catch (error) {
+
+    }
+
+}
 
 const batal = () => {
     router.push({ name: 'readGuru' })
 }
 
+const submitted = ref(false)
 
-
-
+const tes = (e) => {
+    console.log(e)
+}
 
 
 </script>
 
 <template>
     <div class="container bg-white p-8 rounded-lg shadow-md">
-        <!-- <nav class="text-sm text-gray-500 mb-6">
-            <a href="#" class="hover:underline">Dashboard</a> &gt; 
-            <a href="#" class="hover:underline">Students</a> &gt; 
-            <span>Registration Form</span>
-        </nav> -->
+        <DialogLoading :modelValue=isLoading @update:modelValue="tes" />
         <h1 class="text-2xl font-bold mb-6">Form Registrasi Guru</h1>
-
         <section class="mb-8">
             <h2 class="text-xl font-semibold mb-4">Informasi Guru</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-gray-700" for="nmGuru">Nama Lengkap</label>
-                    <InputText v-model="pesertaDidik.nmGuru" fluid name="nmGuru" id="nmGuru"
-                        placeholder="Masukan nama" />
+                    <InputText v-model="tabel_ptk_terdaftar.ptk.nama" fluid name="nmGuru" id="nmGuru"
+                        placeholder="Masukan nama" :invalid="submitted && !tabel_ptk_terdaftar.ptk.nama" />
+                    <small v-if="submitted && !tabel_ptk_terdaftar.ptk.nama" class="text-red-500">Nama harus
+                        diisi.</small>
                 </div>
                 <div class="w-full">
                     <label class="block text-gray-700">Jenis Kelamin</label>
-                    <Select v-model="selectedjenisKelaminOptions" :options="jenisKelaminOptions"
-                        placeholder="Pilih jenis kelamin" optionLabel="label" class="w-full"/>
+                    <Select v-model="selectedJenisKelamin" :options="jenisKelaminOptions"
+                        placeholder="Pilih jenis kelamin" optionLabel="label" class="w-full"
+                        :invalid="submitted && !selectedJenisKelamin" />
+                    <small v-if="submitted && !selectedJenisKelamin" class="text-red-500">Jenis kelamin harus
+                        diisi.</small>
                 </div>
                 <div>
                     <div class="md:flex md:space-x-1">
 
-                        <div class="w-full">
+                        <div class="w-3/4">
                             <label class="block text-gray-700" for="tempatLahir">Tpt Lahir</label>
-                            <InputText v-model="pesertaDidik.tempatLahir" fluid name="tempatLahir" id="tempatLahir"
-                                placeholder="Masukan tempat lahir" class=" w-full md:w-64" />
+                            <InputText v-model="tabel_ptk_terdaftar.ptk.tempat_lahir" fluid name="tempatLahir"
+                                id="tempatLahir" placeholder="Masukan tempat lahir"
+                                :invalid="submitted && !tabel_ptk_terdaftar.ptk.tempat_lahir" />
+                            <small v-if="submitted && !tabel_ptk_terdaftar.ptk.tempat_lahir"
+                                class="text-red-500">Tpt.Lahir harus
+                                diisi.</small>
+
                         </div>
-                        <div>
+                        <div class="w-1/4">
                             <label class="block text-gray-700">Tgl Lahir</label>
                             <input type="date" placeholder="YYYY-MM-DD"
-                                class=" w-full p-2 border border-gray-300 rounded" v-model="pesertaDidik.tanggalLahir">
+                                class=" w-full p-2 border border-gray-300 rounded"
+                                v-model="tabel_ptk_terdaftar.ptk.tanggal_lahir"
+                                :class="{ 'border-red-400': submitted && !tabel_ptk_terdaftar.ptk.tanggal_lahir, 'text-red-400': submitted && !tabel_ptk_terdaftar.ptk.tanggal_lahir }">
+                            <small v-if="submitted && !tabel_ptk_terdaftar.ptk.tanggal_lahir"
+                                class="text-red-500">Tgl.Lahir harus
+                                diisi.</small>
+
                         </div>
                     </div>
                 </div>
-
                 <div>
+                    <label class="block text-gray-700" for="alamat-jalan">Alamat Jalan</label>
+                    <InputText v-model="tabel_ptk_terdaftar.ptk.alamat_jalan" fluid name="alamat-jalan"
+                        id="alamat-jalan" placeholder="Masukan alamat"
+                        :invalid="submitted && !tabel_ptk_terdaftar.ptk.alamat_jalan" />
+                    <small v-if="submitted && !tabel_ptk_terdaftar.ptk.alamat_jalan" class="text-red-500">Alamat harus
+                        diisi.</small>
+                </div>
+                <!-- <div>
                     <label class="block text-gray-700">Agama</label>
                     <Select v-model="selectedAgamaOptions" :options="agamaOptions" placeholder="Pilih Agama"
                         optionLabel="label" fluid class="w-full" />
                 </div>
                 <div>
                     <label class="block text-gray-700" for="nis">Kewarganegaraan</label>
-                    <InputText v-model="pesertaDidik.nis" fluid name="nis" id="nis" placeholder="Masukan NIS" />
+                    <InputText v-model="tabel_ptk_terdaftar.ptk.nis" fluid name="nis" id="nis" placeholder="Masukan NIS" />
                 </div>
                 <div>
                     <label class="block text-gray-700" for="nisn">Status Perkawinan</label>
-                    <InputText v-model="pesertaDidik.nisn" fluid name="nisn" id="nisn" placeholder="Masukan NISN" />
-                </div>
+                    <InputText v-model="tabel_ptk_terdaftar.ptk.nisn" fluid name="nisn" id="nisn" placeholder="Masukan NISN" />
+                </div> -->
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-gray-700" for="alamatLengkap">Alamat Jalan</label>
-                    <InputText v-model="alamatLengkap.alamatJalan" fluid name="alamatLengkap" id="alamatLengkap"
-                        placeholder="Masukan alamat" />
-                </div>
-                <div class="flex space-x-1">
+            <!--<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                 <div class="flex space-x-1">
                     <div class="w-1/2">
                         <label class="block text-gray-700" for="rt">RT</label>
                         <InputText v-model="alamatLengkap.rt" fluid name="rt" id="rt" placeholder="Masukan RT" />
@@ -201,18 +223,9 @@ const batal = () => {
                     <label class="block text-gray-700" for="desa">Desa</label>
                     <InputText v-model="alamatLengkap.desa" fluid name="desa" id="desa"
                         placeholder="Masukan nama desa" />
-                </div>
-
-
-
-                <!-- <div class="mb-4">
-                    <label class="block text-gray-700">Address</label>
-                    <textarea placeholder="Enter student's address"
-                        class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
                 </div> -->
-
-            </div>
-            <div class="mb-4">
+            <!-- <div class="mb-4">
                 <label class="block text-gray-700">Phone Number</label>
                 <div class="relative">
                     <input type="text" placeholder="Enter student's phone number"
@@ -231,15 +244,15 @@ const batal = () => {
             <div>
                 <label class="block text-gray-700">Admission Date</label>
                 <input type="date" placeholder="YYYY-MM-DD" class="w-full p-2 border border-gray-300 rounded">
-            </div>
+            </div> -->
         </section>
 
-        <section class="mb-8">
+        <!-- <section class="mb-8">
             <h2 class="text-xl font-semibold mb-4">Informasi Orang tua</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-gray-700" for="nmAyah">Nama Ayah Kandung</label>
-                    <InputText v-model="pesertaDidik.nmAyah" fluid name="nmAyah" id="nmAyah"
+                    <InputText v-model="tabel_ptk_terdaftar.ptk.nmAyah" fluid name="nmAyah" id="nmAyah"
                         placeholder="Masukan nama" />
                 </div>
                 <div>
@@ -364,7 +377,7 @@ const batal = () => {
                     <i class="fas fa-upload absolute right-3 top-3 text-gray-400"></i>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <div class="flex justify-end space-x-4">
             <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"

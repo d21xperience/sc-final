@@ -8,8 +8,8 @@
                         <div class="mb-2">
                             <Toolbar>
                                 <template #start>
-                                    <Button icon="pi pi-plus" severity="success" class="mr-2 text-lg" @click="openNew"
-                                        v-tooltip.bottom="'Tambah siswa'" />
+                                    <!-- <Button icon="pi pi-plus" severity="success" class="mr-2 text-lg" @click="openNew"
+                                        v-tooltip.bottom="'Tambah siswa'" /> -->
                                     <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
                                         :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2"
                                         class="mr-2" v-tooltip.bottom="'Edit siswa'" />
@@ -168,7 +168,7 @@
 
         <!-- import data -->
         <!-- DIALOG IMPORT -->
-        <DialogImport v-model:visible="dialogImport" :semester="semester" @save="saveImport" @cancel="cancelImport"
+        <DialogImport v-model:visible="dialogImport" @save="saveImport" @cancel="cancelImport"
             template-type="siswa" :schema-name="schemaname" />
 
         <!-- end of import data -->

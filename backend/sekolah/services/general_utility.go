@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"sekolah/models"
 	"sekolah/repositories"
-	"time"
 
 	"github.com/xuri/excelize/v2"
 	"gorm.io/gorm"
@@ -258,24 +257,24 @@ func GenerateTemplate(param ParamTemplate, db *gorm.DB) error {
 	}
 
 	// Jika templatetype adalah siswa
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	switch param.templateType {
+	// ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	// defer cancel()
+	// switch param.templateType {
 
-	case "nilai_akhir":
-		err := templateNilaiAkhir(ctx, db, f, param, sheetName)
-		if err != nil {
-			return err
-		}
-		// Tambahkan mata pelajaran
-	case "ijazah":
-		err := templateIjazah(ctx, db, f, param, sheetName)
-		if err != nil {
-			return err
-		}
-		// default:
-		// 	return fmt.Errorf("template type %s tidak ditemukan", param.templateType)
-	}
+	// case "nilai_akhir":
+	// 	// err := templateNilaiAkhir(ctx, db, f, param, sheetName)
+	// 	// if err != nil {
+	// 	// 	return err
+	// 	// }
+	// 	// Tambahkan mata pelajaran
+	// case "ijazah":
+	// 	// err := templateIjazah(ctx, db, f, param, sheetName)
+	// 	// if err != nil {
+	// 	// 	return err
+	// 	// }
+	// 	// default:
+	// 	// 	return fmt.Errorf("template type %s tidak ditemukan", param.templateType)
+	// }
 
 	// Simpan ke file
 	err = f.SaveAs(param.filePath)

@@ -435,7 +435,7 @@ func (s *UploadServiceServer) processUploadGuru(
 		}
 
 		err := s.repoGuru.Save(ctx, &models.TabelPTK{
-			PtkID:        ptkId.String(),
+			PtkID:        ptkId,
 			Nama:         data[i][1],
 			NUPTK:        &data[i][2],
 			JenisKelamin: data[i][3],

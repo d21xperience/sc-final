@@ -16,13 +16,16 @@ import (
 
 type RombelAnggotaService struct {
 	pb.UnimplementedAnggotaKelasServiceServer
-	repo repositories.GenericRepository[models.RombelAnggota]
+	repo      repositories.GenericRepository[models.RombelAnggota]
+	repoSiswa repositories.GenericRepository[models.PesertaDidik]
 }
 
 func NewRombelAnggotaService() *RombelAnggotaService {
 	repoRombelAnggota := repositories.NewRombelAnggotaRepository(config.DB)
+	repoRombelSiswa := repositories.NewSiswaRepository(config.DB)
 	return &RombelAnggotaService{
-		repo: *repoRombelAnggota,
+		repo:      *repoRombelAnggota,
+		repoSiswa: *repoRombelSiswa,
 	}
 }
 
@@ -85,11 +88,34 @@ func (s *RombelAnggotaService) CreateBanyakAnggotaKelas(ctx context.Context, req
 	anggotaKelas := req.AnggotaKelas
 
 	anggotaRombel := ConvertPBToModels(anggotaKelas, func(anggota *pb.AnggotaKelas) *models.RombelAnggota {
+		tglLahir, err := utils.StringToTime(anggota.PesertaDidik.TanggalLahir, "2006-01-02")
+		if err != nil {
+			return nil
+		}
 		return &models.RombelAnggota{
 			RombonganBelajarId: utils.StringToUUID(anggota.RombonganBelajarId),
 			AnggotaRombelId:    utils.StringToUUID(anggota.AnggotaRombelId),
 			PesertaDidikId:     utils.StringToUUID(anggota.PesertaDidikId),
 			SemesterId:         anggota.SemesterId,
+			PesertaDidik: models.PesertaDidik{
+				PesertaDidikId: anggota.PesertaDidik.PesertaDidikId,
+				Nis:            anggota.PesertaDidik.Nis,
+				Nisn:           anggota.PesertaDidik.Nisn,
+				NmSiswa:        anggota.PesertaDidik.NmSiswa,
+				TempatLahir:    anggota.PesertaDidik.TempatLahir,
+				TanggalLahir:   &tglLahir,
+				JenisKelamin:   anggota.PesertaDidik.JenisKelamin,
+				Agama:          anggota.PesertaDidik.Agama,
+				AlamatSiswa:    &anggota.PesertaDidik.AlamatSiswa,
+				TeleponSiswa:   anggota.PesertaDidik.TeleponSiswa,
+				// DiterimaTanggal: &tglDiterima,
+				NmAyah:        anggota.PesertaDidik.NmAyah,
+				NmIbu:         anggota.PesertaDidik.NmIbu,
+				PekerjaanAyah: anggota.PesertaDidik.PekerjaanAyah,
+				PekerjaanIbu:  anggota.PesertaDidik.PekerjaanIbu,
+				NmWali:        &anggota.PesertaDidik.NmWali,
+				PekerjaanWali: &anggota.PesertaDidik.PekerjaanWali,
+			},
 		}
 	})
 	err = s.repo.SaveMany(ctx, schemaName, anggotaRombel, 100)
@@ -97,6 +123,25 @@ func (s *RombelAnggotaService) CreateBanyakAnggotaKelas(ctx context.Context, req
 		log.Printf("Gagal menyimpan Kelas: %v", err)
 		return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
 	}
+
+	var pesertaDidikList []models.PesertaDidik
+
+	for _, anggota := range anggotaRombel {
+		if anggota != nil {
+			pesertaDidikList = append(pesertaDidikList, anggota.PesertaDidik)
+		}
+	}
+	err = s.repoSiswa.SaveMany(ctx, schemaName, utils.SliceToPointer(pesertaDidikList), 100)
+	if err != nil {
+		log.Printf("Gagal menyimpan Kelas: %v", err)
+		return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
+	}
+
+	// err = s.repoSiswa.SaveMany(ctx, schemaName,)
+	// if err != nil {
+	// 	log.Printf("Gagal menyimpan Kelas: %v", err)
+	// 	return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
+	// }
 
 	return &pb.CreateBanyakAnggotaKelasResponse{
 		Message: "Kelas berhasil ditambahkan",

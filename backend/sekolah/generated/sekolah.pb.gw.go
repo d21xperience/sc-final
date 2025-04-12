@@ -1639,18 +1639,9 @@ func request_PTKService_UpdatePTK_0(ctx context.Context, marshaler runtime.Marsh
 	var (
 		protoReq UpdatePTKRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["PTK_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "PTK_id")
-	}
-	protoReq.PTKId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "PTK_id", err)
 	}
 	msg, err := client.UpdatePTK(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -1660,18 +1651,9 @@ func local_request_PTKService_UpdatePTK_0(ctx context.Context, marshaler runtime
 	var (
 		protoReq UpdatePTKRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	val, ok := pathParams["PTK_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "PTK_id")
-	}
-	protoReq.PTKId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "PTK_id", err)
 	}
 	msg, err := server.UpdatePTK(ctx, &protoReq)
 	return msg, metadata, err
@@ -3649,7 +3631,7 @@ func RegisterPTKServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKService/UpdatePTK", runtime.WithHTTPPathPattern("/api/v1/ss/ptk/update/{PTK_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKService/UpdatePTK", runtime.WithHTTPPathPattern("/api/v1/ss/ptk/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3699,7 +3681,7 @@ func RegisterPTKTerdaftarServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/CreatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/PTKTerdaftar/create"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/CreatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5644,7 +5626,7 @@ func RegisterPTKServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKService/UpdatePTK", runtime.WithHTTPPathPattern("/api/v1/ss/ptk/update/{PTK_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKService/UpdatePTK", runtime.WithHTTPPathPattern("/api/v1/ss/ptk/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5680,7 +5662,7 @@ func RegisterPTKServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 var (
 	pattern_PTKService_CreatePTK_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "ptk", "create"}, ""))
 	pattern_PTKService_GetPTK_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "ptk"}, ""))
-	pattern_PTKService_UpdatePTK_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "ss", "ptk", "update", "PTK_id"}, ""))
+	pattern_PTKService_UpdatePTK_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "ptk", "update"}, ""))
 	pattern_PTKService_DeletePTK_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "ss", "ptk", "delete", "PTK_id"}, ""))
 )
 
@@ -5731,7 +5713,7 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/CreatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/PTKTerdaftar/create"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.PTKTerdaftarService/CreatePTKTerdaftar", runtime.WithHTTPPathPattern("/api/v1/ss/{schema_name}/ptk-terdaftar/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -5816,7 +5798,7 @@ func RegisterPTKTerdaftarServiceHandlerClient(ctx context.Context, mux *runtime.
 }
 
 var (
-	pattern_PTKTerdaftarService_CreatePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "PTKTerdaftar", "create"}, ""))
+	pattern_PTKTerdaftarService_CreatePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar", "create"}, ""))
 	pattern_PTKTerdaftarService_CreateBanyakPTKTerdaftar_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "ss", "schema_name", "ptk-terdaftar", "create-banyak"}, ""))
 	pattern_PTKTerdaftarService_GetPTKTerdaftar_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "ptk-terdaftar"}, ""))
 	pattern_PTKTerdaftarService_UpdatePTKTerdaftar_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "ptk-terdaftar", "update"}, ""))

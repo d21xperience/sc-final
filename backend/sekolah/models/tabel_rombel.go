@@ -33,7 +33,7 @@ type RombelAnggota struct {
 	RombonganBelajarId uuid.UUID `gorm:"column:rombongan_belajar_id"`
 	SemesterId         string    `gorm:"column:semester_id"`
 
-	PesertaDidik     PesertaDidik     `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
+	PesertaDidik     PesertaDidik  `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
 	RombonganBelajar RombonganBelajar `gorm:"foreignKey:RombonganBelajarId;references:RombonganBelajarId"`
 }
 

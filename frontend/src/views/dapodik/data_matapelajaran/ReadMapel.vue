@@ -1,197 +1,3 @@
-<template>
-
-    <div class="">
-        <div class="card">
-            <div v-if="dataConnected">
-                <div class="w-full my-2 container">
-                    <div class=" ">
-
-
-                        <Toolbar>
-                            <template #start>
-                                <div class="flex flex-wrap gap-2 items-center justify-between">
-                                    <div class="flex">
-                                        <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
-                                            option-label="label" option-value="value" placeholder="Pilih Tingkat" />
-
-                                        <Select v-model="selectedJurusan" :options="jurusanOptions" option-label="label"
-                                            option-value="value" placeholder="Pilih Jurusan" />
-
-                                        <!-- <Select v-model="selectedJurusan" :options="tingkatPendidikanOptions" optionLabel="nama"
-                                            placeholder="Rombel" class="w-full md:w-56 mr-2" />
-                                        <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                            placeholder="Tingkat" class="mr-2" /> -->
-                                    </div>
-                                </div>
-                            </template>
-                            <template #end>
-                                <IconField>
-                                    <InputIcon>
-                                        <i class="pi pi-search" />
-                                    </InputIcon>
-                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                </IconField>
-                            </template>
-                        </Toolbar>
-                    </div>
-
-                    <!-- {{ tingkatPendidikanOptions.value }} -->
-                    <DataTable ref="dt" v-model:expandedRows="expandedRows" stripedRows size="small" :value="dataRombel"
-                        @rowExpand="onRowExpand" @rowCollapse="onRowCollapse" dataKey="rombonganBelajarId"
-                        :paginator="true" :rows="10" :filters="filters"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        :rowsPerPageOptions="[10, 20, 50]"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
-                        <template #header>
-                            <div class="flex flex-wrap justify-end gap-2">
-                                <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />
-                                <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" />
-                            </div>
-                        </template>
-                        <Column expander style="width: 5rem" />
-                        <Column field="nmKelas" header="Name"></Column>
-                        <Column field="tingkatPendidikanId" header="Tingkat"></Column>
-                        <Column field="jurusan.namaJurusan" header="Jurusan"></Column>
-                        <Column field="ptk.nama" header="Wali Kelas"></Column>
-                        <Column field="ptk.nama" header="Jml.Mapel"></Column>
-                        <Column field="" header="Edit">
-                            <template #body="{ data }">
-                                <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editMapel(data)" />
-                                <!-- <Button icon="pi pi-trash" outlined rounded severity="danger"
-                                    @click="confirmdeleteMapel(data)" /> -->
-                            </template>
-                        </Column>
-                        <template #expansion="slotProps">
-                            <div class="p-4">
-                                <DataTable>
-                                    <Column field="id" header="Mata pelajaran" sortable></Column>
-                                    <Column field="customer" header="Guru Mapel" sortable></Column>
-                                    <!-- <Column field="date" header="Date" sortable></Column> -->
-                                </DataTable>
-                            </div>
-                        </template>
-                    </DataTable>
-
-                </div>
-            </div>
-            <div v-else>
-                <EmptyData @profileFetched="handleProfileFetched" @fetchError="handleFetchError" />
-            </div>
-        </div>
-
-
-        <!-- DIALOGBOX FOR EDIT DATA -->
-
-        <Dialog v-model:visible="mapelDialog" :style="{ width: '50%' }" header="Edit Data" :modal="true" position="top">
-            <div class="">
-                <div class="my-2">
-                    <label for="name" class="block font-bold">Nama Kelas</label>
-                    <InputText id="name" v-model.trim="kelas.nmKelas" required="true" autofocus disabled
-                        :invalid="submitted && !kelas.nmKelas" fluid class="w-full" />
-                    <small v-if="submitted && !kelas.nmKelas" class="text-red-500">NISN is required.</small>
-                </div>
-
-                <div>
-                    <div class="mb-2">
-                        <Toolbar>
-                            <template #start>
-                                <Button icon="pi pi-plus" severity="success" class="mr-2" @click="openNewMapel"
-                                    v-tooltip.bottom="'Tambah data'" />
-                                <!-- <Button icon="pi pi-pencil" severity="warn" @click="editKelas(selectedKelas)"
-                                    :disabled="!selectedKelas || !selectedKelas.length || selectedKelas.length > 1"
-                                    class="mr-2" v-tooltip.bottom="'Edit data'" />
-                                <Button icon="pi pi-trash" severity="danger" class="mr-2" @click="confirmDeleteSelected"
-                                    :disabled="!selectedKelas || !selectedKelas.length"
-                                    v-tooltip.bottom="'Hapus data'" /> -->
-                            </template>
-                            <template #end>
-                                <Button label="Import" icon="pi pi-download" severity="warn"
-                                    @click="dialogImport = true" class="mr-2 text-sm"
-                                    v-tooltip.bottom="'Import siswa'" />
-                                <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
-                                    class="mr-2 text-sm" />
-
-                            </template>
-
-                        </Toolbar>
-                    </div>
-                    <DataTable ref="dt" :value="pembelajaranList" dataKey="pembelajaran_id">
-                        <Column field="nama_mata_pelajaran" header="Mata pelajaran"></Column>
-                        <Column field="nama" header="Guru Mapel"></Column>
-                    </DataTable>
-                </div>
-            </div>
-
-            <template #footer>
-                <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-                <Button label="Save" icon="pi pi-check" @click="simpanKeDatabase" />
-            </template>
-        </Dialog>
-
-        <Dialog v-model:visible="deletemapelDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
-            <div class="flex items-center gap-4">
-                <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="product">Are you sure you want to delete <b>{{ product.name }}</b>?</span>
-            </div>
-            <template #footer>
-                <Button label="No" icon="pi pi-times" text @click="deletemapelDialog = false" />
-                <Button label="Yes" icon="pi pi-check" @click="deleteMapel" />
-            </template>
-        </Dialog>
-
-        <Dialog v-model:visible="deleteMapelsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
-            <div class="flex items-center gap-4">
-                <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="product">Apakah data lulusan akan dihapus?</span>
-            </div>
-            <template #footer>
-                <Button label="Tidak" icon="pi pi-times" text @click="deleteMapelsDialog = false" />
-                <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
-            </template>
-        </Dialog>
-
-        <!-- Dialog Tambah mapel -->
-        <Dialog v-model:visible="addMapelDialog" :style="{ width: '450px' }" header="Tambah mapel" :modal="true"
-            position="top">
-            <div class="">
-                <div class="flex space-x-1">
-                    <div class="">
-                        <label for="mata-pelajaran">Mata pelajaran</label>
-                        <AutoComplete v-model="selectedMapel" :suggestions="filteredMapel" optionLabel="nama"
-                            @complete="searchMapel" @keydown.space.prevent="handleKeydown" placeholder="Cari Mapel..."
-                            class="w-full" fluid :invalid="submitted && !selectedMapel" />
-                        <small v-if="submitted && !selectedMapel" class="text-red-500">Subject is
-                            required.</small>
-                    </div>
-                    <div class="">
-                        <label for="mata-pelajaran">Guru Mapel</label>
-                        <AutoComplete v-model="selectedGuru" :suggestions="filteredGuru" optionLabel="ptk.nama"
-                            @complete="searchGuru" @keydown.space.prevent="handleKeydown" placeholder="Cari Guru..."
-                            class="w-full" fluid dropdown :invalid="submitted && !selectedGuru" />
-                        <small v-if="submitted && !selectedGuru" class="text-red-500">Teacher is
-                            required.</small>
-
-                    </div>
-                </div>
-            </div>
-            <template #footer>
-                <Button label="Tidak" icon="pi pi-times" text @click="cancelAddMapel" />
-                <Button label="Tambah" icon="pi pi-check" text @click="tambahPembelajaran" />
-            </template>
-        </Dialog>
-
-
-        <!-- import data -->
-        <!-- DIALOG IMPORT -->
-        <DialogImport v-model:visible="dialogImport" :semester="semester" @save="saveImport" @cancel="cancelImport"
-            template-type="siswa" :schema-name="schemaName" />
-
-        <!-- end of import data -->
-        <DialogLoading v-model="isLoading"> Memuat data, harap tunggu... </DialogLoading>
-
-    </div>
-</template>
-
 <script setup>
 import { ref, onMounted, watch, computed, onBeforeMount } from 'vue';
 import { useStore } from "vuex";
@@ -320,7 +126,7 @@ const hideDialog = () => {
     submitted.value = false;
 };
 const tambahPembelajaran = () => {
-    console.log("submitted",submitted.value)
+    console.log("submitted", submitted.value)
     // console.log("selecteGuru",!selectedGuru.value)
     // console.log(submitted.value && !selectedGuru.value)
     submitted.value = true;
@@ -344,7 +150,7 @@ const tambahPembelajaran = () => {
         }
 
         // console.log(pembelajaran.value)
-     
+
         selectedGuru.value = {}
         selectedMapel.value = {}
         // pembelajaran.value = {};
@@ -577,17 +383,210 @@ const saveToDB = (req_Object, endpoint_String) => {
 }
 
 const simpanKeDatabase = () => {
-// mapelDialog.value = false;
-// simpan di localstorage
-const aData = []
-aData.push(pembelajaran.value)
-const req_Object = {
-    schemaname: schemaName.value,
-    data: aData
-}
-// console.log(req_Object)
-const endpoint = "sekolahService/createPembelajaran"
-saveToDB(req_Object, endpoint)
-// localStorage.setItem("unsavedPembelajaran", JSON.stringify(pembelajaran.value));
+    // mapelDialog.value = false;
+    // simpan di localstorage
+    const aData = []
+    aData.push(pembelajaran.value)
+    const req_Object = {
+        schemaname: schemaName.value,
+        data: aData
+    }
+    // console.log(req_Object)
+    const endpoint = "sekolahService/createPembelajaran"
+    saveToDB(req_Object, endpoint)
+    // localStorage.setItem("unsavedPembelajaran", JSON.stringify(pembelajaran.value));
 }
 </script>
+<template>
+
+    <div class="">
+        <div class="card">
+            <div v-if="dataConnected">
+                <div class="w-full my-2 container">
+                    <div class=" ">
+
+
+                        <Toolbar>
+                            <template #start>
+                                <div class="flex flex-wrap gap-2 items-center justify-between">
+                                    <div class="flex">
+                                        <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
+                                            option-label="label" option-value="value" placeholder="Pilih Tingkat" />
+
+                                        <Select v-model="selectedJurusan" :options="jurusanOptions" option-label="label"
+                                            option-value="value" placeholder="Pilih Jurusan" />
+
+                                        <!-- <Select v-model="selectedJurusan" :options="tingkatPendidikanOptions" optionLabel="nama"
+                                            placeholder="Rombel" class="w-full md:w-56 mr-2" />
+                                        <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                            placeholder="Tingkat" class="mr-2" /> -->
+                                    </div>
+                                </div>
+                            </template>
+                            <template #end>
+                                <IconField>
+                                    <InputIcon>
+                                        <i class="pi pi-search" />
+                                    </InputIcon>
+                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
+                                </IconField>
+                            </template>
+                        </Toolbar>
+                    </div>
+
+                    <!-- {{ tingkatPendidikanOptions.value }} -->
+                    <DataTable ref="dt" v-model:expandedRows="expandedRows" stripedRows size="small" :value="dataRombel"
+                        @rowExpand="onRowExpand" @rowCollapse="onRowCollapse" dataKey="rombonganBelajarId"
+                        :paginator="true" :rows="10" :filters="filters"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        :rowsPerPageOptions="[10, 20, 50]"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
+                        <template #header>
+                            <div class="flex flex-wrap justify-end gap-2">
+                                <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />
+                                <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" />
+                            </div>
+                        </template>
+                        <Column expander style="width: 5rem" />
+                        <Column field="nmKelas" header="Name"></Column>
+                        <Column field="tingkatPendidikanId" header="Tingkat"></Column>
+                        <Column field="jurusan.namaJurusan" header="Jurusan"></Column>
+                        <Column field="ptk.nama" header="Wali Kelas"></Column>
+                        <Column field="ptk.nama" header="Jml.Mapel"></Column>
+                        <Column field="" header="Edit">
+                            <template #body="{ data }">
+                                <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editMapel(data)" />
+                                <!-- <Button icon="pi pi-trash" outlined rounded severity="danger"
+                                    @click="confirmdeleteMapel(data)" /> -->
+                            </template>
+                        </Column>
+                        <template #expansion="slotProps">
+                            <div class="p-4">
+                                <DataTable>
+                                    <Column field="id" header="Mata pelajaran" sortable></Column>
+                                    <Column field="customer" header="Guru Mapel" sortable></Column>
+                                    <!-- <Column field="date" header="Date" sortable></Column> -->
+                                </DataTable>
+                            </div>
+                        </template>
+                    </DataTable>
+
+                </div>
+            </div>
+            <div v-else>
+                <EmptyData @profileFetched="handleProfileFetched" @fetchError="handleFetchError" />
+            </div>
+        </div>
+
+
+        <!-- DIALOGBOX FOR EDIT DATA -->
+
+        <Dialog v-model:visible="mapelDialog" :style="{ width: '50%' }" header="Edit Data" :modal="true" position="top">
+            <div class="">
+                <div class="my-2">
+                    <label for="name" class="block font-bold">Nama Kelas</label>
+                    <InputText id="name" v-model.trim="kelas.nmKelas" required="true" autofocus disabled
+                        :invalid="submitted && !kelas.nmKelas" fluid class="w-full" />
+                    <small v-if="submitted && !kelas.nmKelas" class="text-red-500">NISN is required.</small>
+                </div>
+
+                <div>
+                    <div class="mb-2">
+                        <Toolbar>
+                            <template #start>
+                                <Button icon="pi pi-plus" severity="success" class="mr-2" @click="openNewMapel"
+                                    v-tooltip.bottom="'Tambah data'" />
+                                <!-- <Button icon="pi pi-pencil" severity="warn" @click="editKelas(selectedKelas)"
+                                    :disabled="!selectedKelas || !selectedKelas.length || selectedKelas.length > 1"
+                                    class="mr-2" v-tooltip.bottom="'Edit data'" />
+                                <Button icon="pi pi-trash" severity="danger" class="mr-2" @click="confirmDeleteSelected"
+                                    :disabled="!selectedKelas || !selectedKelas.length"
+                                    v-tooltip.bottom="'Hapus data'" /> -->
+                            </template>
+                            <template #end>
+                                <Button label="Import" icon="pi pi-download" severity="warn"
+                                    @click="dialogImport = true" class="mr-2 text-sm"
+                                    v-tooltip.bottom="'Import siswa'" />
+                                <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
+                                    class="mr-2 text-sm" />
+
+                            </template>
+
+                        </Toolbar>
+                    </div>
+                    <DataTable ref="dt" :value="pembelajaranList" dataKey="pembelajaran_id">
+                        <Column field="nama_mata_pelajaran" header="Mata pelajaran"></Column>
+                        <Column field="nama" header="Guru Mapel"></Column>
+                    </DataTable>
+                </div>
+            </div>
+
+            <template #footer>
+                <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
+                <Button label="Save" icon="pi pi-check" @click="simpanKeDatabase" />
+            </template>
+        </Dialog>
+
+        <Dialog v-model:visible="deletemapelDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+            <div class="flex items-center gap-4">
+                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <span v-if="product">Are you sure you want to delete <b>{{ product.name }}</b>?</span>
+            </div>
+            <template #footer>
+                <Button label="No" icon="pi pi-times" text @click="deletemapelDialog = false" />
+                <Button label="Yes" icon="pi pi-check" @click="deleteMapel" />
+            </template>
+        </Dialog>
+
+        <Dialog v-model:visible="deleteMapelsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+            <div class="flex items-center gap-4">
+                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <span v-if="product">Apakah data lulusan akan dihapus?</span>
+            </div>
+            <template #footer>
+                <Button label="Tidak" icon="pi pi-times" text @click="deleteMapelsDialog = false" />
+                <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
+            </template>
+        </Dialog>
+
+        <!-- Dialog Tambah mapel -->
+        <Dialog v-model:visible="addMapelDialog" :style="{ width: '450px' }" header="Tambah mapel" :modal="true"
+            position="top">
+            <div class="">
+                <div class="flex space-x-1">
+                    <div class="">
+                        <label for="mata-pelajaran">Mata pelajaran</label>
+                        <AutoComplete v-model="selectedMapel" :suggestions="filteredMapel" optionLabel="nama"
+                            @complete="searchMapel" @keydown.space.prevent="handleKeydown" placeholder="Cari Mapel..."
+                            class="w-full" fluid :invalid="submitted && !selectedMapel" />
+                        <small v-if="submitted && !selectedMapel" class="text-red-500">Subject is
+                            required.</small>
+                    </div>
+                    <div class="">
+                        <label for="mata-pelajaran">Guru Mapel</label>
+                        <AutoComplete v-model="selectedGuru" :suggestions="filteredGuru" optionLabel="ptk.nama"
+                            @complete="searchGuru" @keydown.space.prevent="handleKeydown" placeholder="Cari Guru..."
+                            class="w-full" fluid dropdown :invalid="submitted && !selectedGuru" />
+                        <small v-if="submitted && !selectedGuru" class="text-red-500">Teacher is
+                            required.</small>
+
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <Button label="Tidak" icon="pi pi-times" text @click="cancelAddMapel" />
+                <Button label="Tambah" icon="pi pi-check" text @click="tambahPembelajaran" />
+            </template>
+        </Dialog>
+
+
+        <!-- import data -->
+        <!-- DIALOG IMPORT -->
+        <DialogImport v-model:visible="dialogImport" @save="saveImport" @cancel="cancelImport" template-type="siswa"
+            :schema-name="schemaName" />
+
+        <!-- end of import data -->
+        <DialogLoading v-model="isLoading"> Memuat data, harap tunggu... </DialogLoading>
+
+    </div>
+</template>

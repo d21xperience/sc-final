@@ -43,51 +43,28 @@ func (s *RombelServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKel
 		return nil, err
 	}
 	schemaName := req.GetSchemaName()
-	Kelas := req.Kelas
-	rombelId := uuid.New()
-	sekolahId, err := uuid.Parse(Kelas.SekolahId)
-	if err != nil {
-		fmt.Println("Error parsing UUID:", err)
-	}
-	ptkId, err := uuid.Parse(Kelas.PtkId)
-	if err != nil {
-		fmt.Println("Error parsing UUID:", err)
-	}
-	KelasModel := &models.RombonganBelajar{
-		RombonganBelajarId:  rombelId,
-		NmKelas:             Kelas.NmKelas,
-		SekolahId:           sekolahId,
-		SemesterId:          Kelas.SemesterId,
-		JurusanId:           Kelas.JurusanId,
-		TingkatPendidikanId: Kelas.TingkatPendidikanId,
-		PtkID:               ptkId,
-		JenisRombel:         1,
-		NamaJurusanSp:       Kelas.NamaJurusanSp,
-		JurusanSpId:         &uuid.Nil,
-		KurikulumId:         Kelas.KurikulumId,
-	}
-	// cek apakah kelas dibuat pada semester pertama
-	// ambil nilai semester
-	smt, err := s.repoSemester.FindByID(ctx, Kelas.SemesterId, schemaName, "semester_id")
-	if err != nil {
+	kelas := req.Kelas
+	// rombelId := uuid.New()
+	kelasModel := utils.ConvertPBToModels(kelas, func(item *pb.Kelas) *models.RombonganBelajar {
+		return &models.RombonganBelajar{
+			RombonganBelajarId:  utils.StringToUUID(item.RombonganBelajarId),
+			SekolahId:           utils.StringToUUID(item.SekolahId),
+			SemesterId:          item.SemesterId,
+			JurusanId:           item.JurusanId,
+			PtkID:               utils.StringToUUID(item.PtkId),
+			NmKelas:             item.NmKelas,
+			TingkatPendidikanId: item.TingkatPendidikanId,
+			JenisRombel:         item.JenisRombel,
+			NamaJurusanSp:       item.NamaJurusanSp,
+			KurikulumId:         item.KurikulumId,
+		}
+	})
+	// simpan kelas ke database
+	res := s.repo.SaveMany(ctx, schemaName, kelasModel,100)
+	if res != nil {
 		return nil, err
 	}
-	var iterasi int
-	iterasi = 1
-	if smt.Semester == 1 {
-		iterasi = 2
-	}
-	for i := 1; i < iterasi; i++ {
-		if i == 2 {
-			KelasModel.SemesterId = fmt.Sprintf("%s2", utils.UintToString(smt.TahunAjaranID))
-		}
-		err = s.repo.Save(ctx, KelasModel, schemaName)
-	}
-	if err != nil {
-		log.Printf("Gagal menyimpan Kelas: %v", err)
-		return nil, fmt.Errorf("gagal menyimpan Kelas: %w", err)
-	}
-
+	
 	return &pb.CreateKelasResponse{
 		Message: "Kelas berhasil ditambahkan",
 		Status:  true,
@@ -208,7 +185,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 			// JurusanSpId:         jurusanSPId.(*string),
 			KurikulumId: kelas.KurikulumId,
 			Ptk: &pb.PTK{
-				PtkId:             kelas.PTK.PtkID,
+				PtkId:             kelas.PTK.PtkID.String(),
 				Nama:              kelas.PTK.Nama,
 				JenisKelamin:      kelas.PTK.JenisKelamin,
 				JenisPtkId:        kelas.PTK.JenisPtkID,

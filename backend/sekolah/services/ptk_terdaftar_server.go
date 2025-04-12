@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"log"
 	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
@@ -12,54 +13,83 @@ import (
 
 type PTKTerdaftarServiceServer struct {
 	pb.UnimplementedPTKTerdaftarServiceServer
-	repo repositories.GenericRepository[models.PTKTerdaftar]
+	repo    repositories.GenericRepository[models.PTKTerdaftar]
+	repoPTK repositories.GenericRepository[models.TabelPTK]
 }
 
 func NewPTKTerdaftarServiceServer() *PTKTerdaftarServiceServer {
 	repoPTKTerdaftar := repositories.NewPTKTerdaftarRepository(config.DB)
+	repoPTK := repositories.NewPTKRepository(config.DB)
 	return &PTKTerdaftarServiceServer{
-		repo: *repoPTKTerdaftar,
+		repo:    *repoPTKTerdaftar,
+		repoPTK: *repoPTK,
 	}
 }
 
 // **CreatePTKTerdaftar**
-// func (s *PTKTerdaftarServiceServer) CreatePTKTerdaftar(ctx context.Context, req *pb.CreatePTKTerdaftarRequest) (*pb.CreatePTKTerdaftarResponse, error) {
-// 	// Debugging: Cek nilai request yang diterima
-// 	log.Printf("Received Sekolah data request: %+v\n", req)
-// 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "PTKTerdaftar"}
-// 	// Validasi request
-// 	err := utils.ValidateFields(req, requiredFields)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	schemaName := req.GetSchemaName()
-// 	PTKTerdaftar := req.PTKTerdaftar
+func (s *PTKTerdaftarServiceServer) CreatePTKTerdaftar(ctx context.Context, req *pb.CreatePTKTerdaftarRequest) (*pb.CreatePTKTerdaftarResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"SchemaName", "PTKTerdaftar"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaName()
+	PTKTerdaftar := req.GetPtkTerdaftar()
 
-// 	PTKTerdaftarModel := &models.RombonganBelajar{
-// 		NmPTKTerdaftar:             PTKTerdaftar.NmPTKTerdaftar,
-// 		SekolahId:           PTKTerdaftar.SekolahId,
-// 		SemesterId:          PTKTerdaftar.SemesterId,
-// 		JurusanId:           PTKTerdaftar.JurusanId,
-// 		TingkatPendidikanId: PTKTerdaftar.TingkatPendidikanId,
-// 		PtkId:               PTKTerdaftar.PtkId,
-// 		JenisPTKTerdaftar:         PTKTerdaftar.JenisPTKTerdaftar,
-// 		NamaJurusanSp:       PTKTerdaftar.NamaJurusanSp,
-// 		JurusanSpId:         PTKTerdaftar.JurusanSpId,
-// 		KurikulumId:         PTKTerdaftar.KurikulumId,
-// 	}
+	PTKTerdaftarModel := utils.ConvertPBToModels(PTKTerdaftar, func(item *pb.PTKTerdaftar) *models.PTKTerdaftar {
+		return &models.PTKTerdaftar{
+			PtkTerdaftarId: utils.StringToUUID(item.PtkTerdaftarId),
+			TahunAjaranId:  item.TahunAjaranId,
+			PtkID:          utils.StringToUUID(item.PtkId),
+			JenisKeluarId:  &item.JenisKeluarId,
+			PTK: models.TabelPTK{
+				PtkID:             utils.StringToUUID(item.PtkId),
+				Nama:              item.Ptk.Nama,
+				NIP:               &item.Ptk.Nip,
+				JenisPtkID:        item.Ptk.JenisPtkId,
+				JenisKelamin:      item.Ptk.JenisKelamin,
+				TempatLahir:       item.Ptk.TempatLahir,
+				TanggalLahir:      utils.TimeToPointer(item.Ptk.TanggalLahir),
+				NUPTK:             &item.Ptk.Nuptk,
+				AlamatJalan:       item.Ptk.AlamatJalan,
+				StatusKeaktifanID: item.Ptk.StatusKeaktifanId,
+			},
+		}
+	})
 
-// 	err = s.repo.Save(ctx, PTKTerdaftarModel, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal menyimpan PTKTerdaftar: %s", err)
-// 		return nil, fmt.Errorf("gagal menyimpan PTKTerdaftar: %w", err)
-// 	}
+	var daftarPTK []models.TabelPTK
+	for _, v := range PTKTerdaftarModel {
+		daftarPTK = append(daftarPTK, v.PTK)
+	}
+	err = s.repoPTK.SaveMany(ctx, schemaName, utils.SliceToPointer(daftarPTK), 100)
+	if err != nil {
+		log.Printf("Gagal menyimpan PTK: %s", err)
+		return nil, fmt.Errorf("gagal menyimpan PTK: %w", err)
+	}
+	// simpan ke tabel_ptk_terdaftar
+	err = s.repo.SaveMany(ctx, schemaName, PTKTerdaftarModel, 100)
+	if err != nil {
+		log.Printf("Gagal menyimpan PTKTerdaftar: %s", err)
+		return nil, fmt.Errorf("gagal menyimpan PTKTerdaftar: %w", err)
+	}
+	// simpan ke tabel_ptk
+	// ptkModel := PTKTerdaftar[ptk]
+	// err = s.repoPTK.SaveMany(ctx, schemaName, ptkModel, 100)
+	// if err != nil {
+	// 	log.Printf("Gagal menyimpan PTKTerdaftar: %s", err)
+	// 	return nil, fmt.Errorf("gagal menyimpan PTKTerdaftar: %w", err)
+	// }
 
-// 	return &pb.CreatePTKTerdaftarResponse{
-// 		Message: "PTKTerdaftar berhasil ditambahkan",
-// 		Status:  true,
-// 	}, nil
-// }
+	return &pb.CreatePTKTerdaftarResponse{
+		Message: "PTKTerdaftar berhasil ditambahkan",
+		Status:  true,
+	}, nil
+}
+
 // func (s *PTKTerdaftarServiceServer) CreateBanyakPTKTerdaftar(ctx context.Context, req *pb.CreateBanyakPTKTerdaftarRequest) (*pb.CreateBanyakPTKTerdaftarResponse, error) {
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received Sekolah data request: %+v\n", req)
@@ -80,9 +110,9 @@ func NewPTKTerdaftarServiceServer() *PTKTerdaftarServiceServer {
 // 			SemesterId:          rom.SemesterId,
 // 			JurusanId:           rom.JurusanId,
 // 			PtkId:               rom.PtkId,
-// 			NmPTKTerdaftar:             rom.NmPTKTerdaftar,
+// 			NmPTKTerdaftar:      rom.NmPTKTerdaftar,
 // 			TingkatPendidikanId: rom.TingkatPendidikanId,
-// 			JenisPTKTerdaftar:         rom.JenisPTKTerdaftar,
+// 			JenisPTKTerdaftar:   rom.JenisPTKTerdaftar,
 // 			NamaJurusanSp:       rom.NamaJurusanSp,
 // 			JurusanSpId:         rom.JurusanSpId,
 // 			KurikulumId:         rom.KurikulumId,
@@ -143,7 +173,7 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 			PtkTerdaftarId: ptkTerdaftarId.(string),
 			TahunAjaranId:  ptk.TahunAjaranId,
 			Ptk: &pb.PTK{
-				PtkId:             ptk.PTK.PtkID,
+				PtkId:             ptk.PTK.PtkID.String(),
 				Nama:              ptk.PTK.Nama,
 				JenisKelamin:      ptk.PTK.JenisKelamin,
 				JenisPtkId:        ptk.PTK.JenisPtkID,
