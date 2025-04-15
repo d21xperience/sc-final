@@ -309,7 +309,7 @@ const cariSemuaSiswa = async (val) => {
 
 const addSemuaSiswa = async () => {
     let payloadBase = {
-        schema_name: schemaname,
+        schemaname: schemaname,
         semester_id: selectedSemester.value?.semesterId,
     };
     for (const e of pesertaDidikSelected.value) {
@@ -474,7 +474,7 @@ const deleteselectedSiswa = () => {
     deleteSiswasDialog.value = false;
     // localStorage.setItem("unsavedPesertaDidik", JSON.stringify(anggotaKelasList.value));
     const payload = {
-        schema_name: schemaname,
+        schemaname: schemaname,
     }
     selectedSiswa.value.forEach(async (item) => {
         payload.anggota_rombel_id = item?.anggotaRombelId
@@ -501,8 +501,7 @@ const props = defineProps({
 // ambil data anggota kelas
 const fetchAnggotaKelas = async () => {
     const payload = {
-        schema_name: await store.getters["sekolahService/getTabeltenant"]?.schemaName,
-        // semester_id: await store.getters["sekolahService/getSelectedSemester"]?.semesterId,
+        schemaname: await store.getters["sekolahService/getTabeltenant"]?.schemaname,
         semester_id: selectedSemester.value?.semesterId,
         rombongan_belajar_id: props.rombonganBelajarId,
     }
@@ -525,7 +524,7 @@ onMounted(() => {
         // console.log(savedData)
         savedData.forEach(item => anggotaKelasList.value.push(item));
     }
-    schemaname = store.getters["sekolahService/getTabeltenant"]?.schemaName
+    schemaname = store.getters["sekolahService/getTabeltenant"]?.schemaname
 });
 const selectedAgamaOptions = ref()
 const agamaOptions = ref([

@@ -33,13 +33,13 @@ func (s *SiswaServiceServer) CreateSiswa(ctx context.Context, req *pb.CreateSisw
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "Siswa"}
+	requiredFields := []string{"Schemaname", "Siswa"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	siswa := req.Siswa
 
 	siswaModel := &models.PesertaDidik{
@@ -77,13 +77,13 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "Siswa"}
+	requiredFields := []string{"Schemaname", "Siswa"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	siswa := req.Siswa
 
 	siswaModels := ConvertPBToModels(siswa, func(sis *pb.Siswa) *models.PesertaDidik {
@@ -135,13 +135,13 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaRequest) (*pb.GetSiswaResponse, error) {
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "Page", "Perpage"}
+	requiredFields := []string{"Schemaname", "Page", "Perpage"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	if schemaName == "" {
 		return nil, fmt.Errorf("schema name is required")
 	}
@@ -208,13 +208,13 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 func (s *SiswaServiceServer) SearchSiswa(ctx context.Context, req *pb.SearchSiswaRequest) (*pb.SearchSiswaResponse, error) {
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "NmSiswa"}
+	requiredFields := []string{"Schemaname", "NmSiswa"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	switch schemaName {
 	case "":
 		return nil, fmt.Errorf("schema name is required")
@@ -281,7 +281,7 @@ func (s *SiswaServiceServer) SearchSiswa(ctx context.Context, req *pb.SearchSisw
 // func (s *SiswaServiceServer) UpdateSiswa(ctx context.Context, req *pb.UpdateSiswaRequest) (*pb.UpdateSiswaResponse, error) {
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received UpdateUserProfile request: %+v\n", req)
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	siswaReq := req.GetSiswa()
 // 	siswaPelenReq := req.GetSiswaPelengkap()
 // 	siswa := &models.PesertaDidik{
@@ -330,7 +330,7 @@ func (s *SiswaServiceServer) SearchSiswa(ctx context.Context, req *pb.SearchSisw
 
 // // // **DeleteSiswa**
 // func (s *SiswaServiceServer) DeleteSiswa(ctx context.Context, req *pb.DeleteSiswaRequest) (*pb.DeleteSiswaResponse, error) {
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	siswaID := req.GetSiswaId()
 
 // 	err := s.repo.Delete(ctx, siswaID, schemaName)
@@ -347,7 +347,7 @@ func (s *SiswaServiceServer) SearchSiswa(ctx context.Context, req *pb.SearchSisw
 
 // // UploadSiswa mengunggah data siswa dari file Excel
 // func (s *SiswaServiceServer) UploadSiswa(ctx context.Context, req *pb.UploadSiswaRequest) (*pb.UploadSiswaResponse, error) {
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	fileData := req.GetFile() // File dalam bentuk byte array
 
 // 	// Simpan file ke sementara

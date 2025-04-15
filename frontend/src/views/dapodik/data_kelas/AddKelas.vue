@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, watch, nextTick, toRaw } from 'vue';
 import { useRoute } from "vue-router";
 const route = useRoute();
 
@@ -18,13 +18,9 @@ const store = useStore();
 import AnggotaKelas from '@/components/AnggotaKelas.vue';
 import { result } from 'lodash';
 
-const schemaName = ref('')
-const selectedSemester = computed(() => {
-    return store.getters["sekolahService/getSelectedSemester"]
-})
-let isEdit = false
 
-// Opsi Dropdown
+const isEdit = ref(false)
+
 const sekolah = computed(() => store.getters["sekolahService/getSekolah"])
 const selectedTingkat = ref(null)
 const tingkatPendidikanOptions = ref([])
@@ -45,22 +41,22 @@ const rombel = ref({
     tingkatPendidikan: null,
     kurikulum: null,
     jurusan: null,
-    anggotaKelas: {
-        anggotaRombelId: '',
-        pesertaDidikId: '',
-        rombonganBelajarId: '',
-        semesterId: ''
-    }
+    // anggotaKelas: {
+    //     anggotaRombelId: '',
+    //     pesertaDidikId: '',
+    //     rombonganBelajarId: '',
+    //     semesterId: ''
+    // }
 });
 
-const anggotaKelas = ref({
-    anggotaRombelId: '',
-    pesertaDidikId: '',
-    rombonganBelajarId: '',
-    semesterId: '',
-    pesertaDidik: [],
-    rombonganBelajar: {}
-})
+// const anggotaKelas = ref({
+//     anggotaRombelId: '',
+//     pesertaDidikId: '',
+//     rombonganBelajarId: '',
+//     semesterId: '',
+//     pesertaDidik: [],
+//     rombonganBelajar: {}
+// })
 const fetchTingkat = async () => {
     const payload = {
         jenjang_pendidikan_id: sekolah.value?.jenjangPendidikanId
@@ -86,6 +82,15 @@ const fetchKurikulum = async () => {
     }
 }
 // ===================================
+// ================================
+// composable
+// ================================
+import { useSekolahService } from '@/composables/useSekolahService'
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
+
+const { fetchKelas, kelasList, fetchGuruTerdaftar, guruTerdaftarList } = useSekolahService(schemaname, selectedSemester)
+// ================================
 
 // ===================================
 // JURUSAN
@@ -127,175 +132,109 @@ const handleKeydown = (event) => {
     }
 };
 
-watch(selectedJurusan, (newVal) => {
-
+watch(selectedJurusan, async (newVal) => {
+    // console.log("tes Jursauan")
     if (typeof (newVal) === "object") {
-        if (!newVal) {
-            // console.log(newVal)
-        } else {
-            fetchKurikulum()
-
+        if (newVal) {
+            await fetchKurikulum()
+            const kur = (kurikulumList._rawValue)
+            selectedKurikulum.value = kur.find(item => item.jurusanId === newVal.jurusanId)
         }
     }
 })
 // ===================================
 
 
-const selectedGuru = ref(null)
-const guruList = ref([])
-// const filteredGuru = ref([])
-const fetchGuru = async () => {
-    try {
-        const cek = await store.getters["sekolahService/getPTKTerdaftar"]
-        // console.log(cek)
-        if (cek == null) {
-            let payload = {
-                tahunAjaranId: selectedSemester.value?.tahunAjaranId,
-                schemaname: schemaName.value
-            }
-            const response = await store.dispatch("sekolahService/fetchPTKTerdaftar", payload)
-            // console.log(response)
-            guruList.value = response
-        } else {
-            guruList.value = cek
-        }
+const selectedGuruTerdaftar = ref(null)
 
-    } catch (error) {
-        console.error(error)
-    }
-
-}
-
-
-
-
-// ===============================
-// const emit = defineEmits(["add"]);
-
-const fetchKelas = async () => {
-    try {
-        const payload = {
-            schema_name: schemaName.value,
-            semester_id: selectedSemester.value?.semesterId,
-            kelas_id: kelasId
-        }
-        const response = await store.dispatch("sekolahService/fetchRombel", payload);
-        rombel.value = { ...response[0] };
-        selectedGuru.value = guruList.value.find((item) => item.ptk.ptkId === rombel.value.ptkId)
-        // selectedJurusan.value = jurusanList.value.find((item) => item.jurusanId === rombel.value.jurusanId)
-        selectedJurusan.value = rombel.value.jurusan
-        selectedTingkat.value = rombel.value.tingkatPendidikan
-        selectedKurikulum.value = rombel.value.kurikulum
-    } catch (error) {
-        console.error("Gagal mengambil data kelas:", error);
-    }
-};
-// const rombelAnggota = ref()
 const generateUUID = () => crypto.randomUUID();
 // Handle Submit Form
-const submitForm = async () => {
-    submitted.value = true
-    if (!isEdit) {
-        if (rombel.value.nmKelas) {
-            addKelas()
-        }
+// const submitForm = async () => {
+//     submitted.value = true
+//     if (!isEdit.value) {
+//         if (rombel.value.nmKelas) {
+//             tambahKelasBaru()
+//         }
 
-    } else {
-        addAnggotaKelas()
-    }
+//     } else {
+//         console.log("in here!!")
+//         addAnggotaKelas()
+//     }
 
-};
-const addKelas = async () => {
-    // console.log("addKelas execute!")
-    rombel.value.rombonganBelajarId = generateUUID()
-    rombel.value.sekolahId = sekolah.value?.sekolah_id
-    rombel.value.semesterId = await store.getters["sekolahService/getSelectedSemester"]?.semesterId
-    rombel.value.jurusanId = selectedJurusan.value?.jurusanId
-    rombel.value.ptkId = selectedGuru.value.ptk?.ptkId
-    rombel.value.tingkatPendidikanId = selectedTingkat.value?.tingkatPendidikanId
-    rombel.value.jenisRombel = Number(rombel.value.jenisRombel) || 1;
-    rombel.value.namaJurusanSp = selectedJurusan.value?.namaJurusan
-    rombel.value.kurikulumId = selectedKurikulum.value?.kurikulumId
-    // rombel.value.sekolahId = await store.getters["sekolahService/getSekolah"]?.sekolahId
-    rombel.value.ptk = {}
-    const payload = {
-        schema_name: schemaName.value,
-        kelas: [rombel.value],
-    }
+// };
+// const addAnggotaKelas = async () => {
+//     const savedData = JSON.parse(localStorage.getItem("unsavedPesertaDidikBaru"));
+//     console.log(savedData)
+//     anggotaKelas.value.anggotaRombelId = generateUUID()
+//     anggotaKelas.value.pesertaDidik = savedData
+
+//     // return
+//     if (savedData) {
+//         try {
+//             const payload = {
+//                 schemaname: schemaname.value,
+//                 siswa: savedData
+//             }
+//             const results = await store.dispatch("sekolahService/createBanyakSiswa", payload)
+//             //console.log(results)
+//             // localStorage.removeItem("unsavedPesertaDidikBaru");
+//             return results
+//         } catch (error) {
+//             console.log(error)
+//             return []
+//         }
+//     } else {
+//         return false
+//     }
+
+// }
+const angotaKelas = computed(() => JSON.parse(localStorage.getItem("unsavedPesertaDidik")) || null)
+const simpanKelas = async () => {
     try {
-        const results = await store.dispatch("sekolahService/createKelas", payload)
-        // console.log(results)
-        toast.add({ severity: 'success', summary: 'Sukses', detail: 'Data berhasil disimpan', life: 3000 });
-
-        submitted.value = false
-        Object.keys(rombel.value).forEach(key => {
-            rombel.value[key] = '';
-        });
-        selectedJurusan.value = null
-        selectedKurikulum.value = null
-        selectedGuru.value = {}
-        selectedTingkat.value = ""
-    } catch (error) {
-        console.log(error)
-    }
-}
-const addAnggotaKelas = async () => {
-    const savedData = JSON.parse(localStorage.getItem("unsavedPesertaDidikBaru"));
-    console.log(savedData)
-    anggotaKelas.value.anggotaRombelId = generateUUID()
-    anggotaKelas.value.pesertaDidik = savedData
-
-    // return
-    if (savedData) {
-        try {
-            const payload = {
-                schemaname: schemaName.value,
-                siswa: savedData
+        rombel.value.tingkatPendidikanId = selectedTingkat.value?.tingkatPendidikanId
+        rombel.value.semesterId = await store.getters["sekolahService/getSelectedSemester"]?.semesterId
+        rombel.value.jurusanId = selectedJurusan.value?.jurusanId
+        rombel.value.ptkId = selectedGuruTerdaftar.value.ptk?.ptkId
+        rombel.value.jenisRombel = Number(rombel.value.jenisRombel) || 1;
+        rombel.value.namaJurusanSp = selectedJurusan.value?.namaJurusan
+        rombel.value.kurikulumId = selectedKurikulum.value?.kurikulumId
+        rombel.value.sekolahId = sekolah.value?.sekolah_id
+        let result = null
+        const payload = {
+            schemaname: schemaname.value,
+            kelas: rombel.value,
+            // anggota_kelas: [anggotaKelas.value]
+        }
+        if (isEdit.value) {
+            // Cek apakah anggota kelas diisi
+            if (angotaKelas.value) {
+                payload.anggota_kelas = angotaKelas.value
             }
-            const results = await store.dispatch("sekolahService/createBanyakSiswa", payload)
-            //console.log(results)
-            // localStorage.removeItem("unsavedPesertaDidikBaru");
-            return results
-        } catch (error) {
-            console.log(error)
-            return []
-        }
-    } else {
-        return false
-    }
-}
+            // anggotaKelas.value.anggotaRombelId = generateUUID()
+            // anggotaKelas.value.pesertaDidik = savedData
+            // console.log(payload)
+            result = await store.dispatch("sekolahService/editKelas", payload)
+            if (result) {
+                toast.add({ severity: 'success', summary: 'Sukses', detail: 'Data berhasil diperbaharui', life: 3000 });
+            }
 
-const simpanKelas = async (kelas, anggotaKelas) => {
-    try {
-        // const payload = {
-        //     schema_name: schemaName.value,
-        //     kelas: kelas,
-        //     anggota_kelas: anggotaKelas
-        // }
-
-        let results = null
-        if (isEdit) {
-            payload.kelas_id = kelasId
-            results = await store.dispatch("sekolahService/editKelas", payload)
         } else {
-            // results = await store.dispatch("sekolahService/createKelas", payload)
-            // Object.keys(rombel.value).forEach(key => {
-            //     rombel.value[key] = '';
-            // });
-            // selectedJurusan.value = {}
-            // selectedKurikulum.value = {}
-            // selectedGuru.value = {}
-            // selectedTingkat.value = ""
-        }
-        if (results != null) {
-            toast.add({ severity: 'success', summary: 'Sukses', detail: 'Data berhasil disimpan', life: 3000 });
-            localStorage.removeItem("unsavedPesertaDidik");
-
-            // router.push({ name: 'readKelas' })
-        } else {
-            toast.add({ severity: 'error', summary: 'Gagal', detail: 'Data gagal disimpan', life: 3000 });
+            result = await store.dispatch("sekolahService/createKelas", payload)
+            if (result) {
+                toast.add({ severity: 'success', summary: 'Sukses', detail: 'Data berhasil disimpan', life: 3000 });
+                submitted.value = false
+                Object.keys(rombel.value).forEach(key => {
+                    rombel.value[key] = '';
+                });
+                selectedJurusan.value = null
+                selectedKurikulum.value = null
+                selectedGuruTerdaftar.value = {}
+                selectedTingkat.value = ""
+            }
         }
     } catch (error) {
+        toast.add({ severity: 'error', summary: 'Gagal', detail: 'Data gagal disimpan', life: 3000 });
+
         console.error(error)
     }
 }
@@ -306,15 +245,35 @@ const batal = async () => {
     router.push({ name: 'readKelas' })
 }
 
-onMounted(() => {
-    schemaName.value = store.getters["sekolahService/getTabeltenant"]?.schemaName
-    fetchTingkat()
-    fetchJurusan()
-    fetchGuru()
+onMounted(async () => {
+    await fetchTingkat()
+    await fetchJurusan()
+    await fetchGuruTerdaftar()
     if (kelasId) {
-        // console.log("onMounted")
-        isEdit = true
-        fetchKelas();
+        isEdit.value = true
+        await fetchKelas(kelasId);
+        if (kelasList.value && kelasList.value.length > 0) {
+            const kelas = kelasList.value[0]
+            rombel.value = {
+                rombonganBelajarId: kelas.rombonganBelajarId || '',
+                sekolahId: kelas.sekolahId || '',
+                semesterId: kelas.semesterId || '',
+                jurusanId: kelas.jurusanId || '',
+                ptkId: kelas.ptkId || '',
+                nmKelas: kelas.nmKelas || '',
+                tingkatPendidikanId: kelas.tingkatPendidikanId || '',
+                jenisRombel: kelas.jenisRombel || '',
+                namaJurusanSp: kelas.namaJurusan || '',
+                jurusan_sp_id: kelas.namaJurusanSpId || '',
+                kurikulumId: kelas.kurikulumId || '',
+                // tingkatPendidikan: null,
+                // kurikulum: null,
+                // jurusan: null,
+            }
+            selectedTingkat.value = tingkatPendidikanOptions.value.find(item => item.tingkatPendidikanId === kelas.tingkatPendidikanId)
+            selectedJurusan.value = jurusanList.value.find(item => item.jurusanId === kelas.jurusanId)
+            selectedGuruTerdaftar.value = guruTerdaftarList.value.find(item => item.ptk.ptkId === kelas.ptk.ptkId)
+        }
     }
 
 })
@@ -348,9 +307,10 @@ onMounted(() => {
                 <div class="">
                     <label class="block text-gray-700">Wali kelas</label>
                     <div class="relative">
-                        <Select v-model="selectedGuru" :options="guruList" placeholder="Pilih Wali kelas"
-                            optionLabel="ptk.nama" class="w-full" :invalid="submitted && !selectedGuru" />
-                        <small v-if="submitted && !selectedGuru" class="text-red-500">Wali kelas harus
+                        <Select v-model="selectedGuruTerdaftar" :options="guruTerdaftarList"
+                            placeholder="Pilih Wali kelas" optionLabel="ptk.nama" class="w-full"
+                            :invalid="submitted && !selectedGuruTerdaftar" />
+                        <small v-if="submitted && !selectedGuruTerdaftar" class="text-red-500">Wali kelas harus
                             diisi.</small>
                     </div>
                 </div>
@@ -392,7 +352,7 @@ onMounted(() => {
 
         <div class="flex justify-end space-x-4">
             <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                @click="submitForm">Simpan</button>
+                @click="simpanKelas">Simpan</button>
             <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400" @click="batal">Batal</button>
         </div>
     </div>

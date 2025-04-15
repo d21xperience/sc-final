@@ -28,13 +28,13 @@ func (s *PembelajaranServiceServer) CreatePembelajaran(ctx context.Context, req 
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "Pembelajaran"}
+	requiredFields := []string{"Schemaname", "Pembelajaran"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	pembelajaran := req.GetPembelajaran()
 
 	pembelajaranModel := utils.ConvertPBToModels(pembelajaran, func(item *pb.Pembelajaran) *models.Pembelajaran {
@@ -65,13 +65,13 @@ func (s *PembelajaranServiceServer) CreatePembelajaran(ctx context.Context, req 
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received Sekolah data request: %+v\n", req)
 // 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "Pembelajaran"}
+// 	requiredFields := []string{"Schemaname", "Pembelajaran"}
 // 	// Validasi request
 // 	err := utils.ValidateFields(req, requiredFields)
 // 	if err != nil {
 // 		return nil, err
 // 	}
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	Pembelajaran := req.Pembelajaran
 
 // 	anggotaRombel := ConvertPBToModels(Pembelajaran, func(anggota *pb.Pembelajaran) *models.Pembelajaran {
@@ -99,13 +99,13 @@ func (s *PembelajaranServiceServer) GetPembelajaran(ctx context.Context, req *pb
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "SemesterId"}
+	requiredFields := []string{"Schemaname", "SemesterId"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	semesterId := req.GetSemesterId()
 	var pembelajaranId string
 	if req.GetPembelajaranId() != "" {
@@ -166,13 +166,13 @@ func (s *PembelajaranServiceServer) GetPembelajaran(ctx context.Context, req *pb
 // func (s *PembelajaranServiceServer) SearchPembelajaran(ctx context.Context, req *pb.SearchPembelajaranRequest) (*pb.SearchPembelajaranResponse, error) {
 // 	log.Printf("Received Sekolah data request: %+v\n", req)
 // 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "SemesterId"}
+// 	requiredFields := []string{"Schemaname", "SemesterId"}
 // 	// Validasi request
 // 	err := utils.ValidateFields(req, requiredFields)
 // 	if err != nil {
 // 		return nil, err
 // 	}
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	switch schemaName {
 // 	case "":
 // 		return nil, fmt.Errorf("schema name is required")
@@ -239,7 +239,7 @@ func (s *PembelajaranServiceServer) GetPembelajaran(ctx context.Context, req *pb
 // func (s *PembelajaranServiceServerServer) UpdateKelas(ctx context.Context, req *pb.UpdateKelasRequest) (*pb.UpdateKelasResponse, error) {
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received UpdateUserProfile request: %+v\n", req)
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	KelasReq := req.GetKelas()
 // 	KelasPelenReq := req.GetKelasPelengkap()
 // 	Kelas := &models.PesertaDidik{
@@ -291,13 +291,13 @@ func (s *PembelajaranServiceServer) DeletePembelajaran(ctx context.Context, req 
 	var err error
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "PembelajaranId"}
+	requiredFields := []string{"Schemaname", "PembelajaranId"}
 	// Validasi request
 	err = utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	switch schemaName {
 	case "":
 		return nil, fmt.Errorf("schema name is required")
@@ -320,7 +320,7 @@ func (s *PembelajaranServiceServer) DeletePembelajaran(ctx context.Context, req 
 
 // // UploadKelas mengunggah data Kelas dari file Excel
 // func (s *PembelajaranServiceServerServer) UploadKelas(ctx context.Context, req *pb.UploadKelasRequest) (*pb.UploadKelasResponse, error) {
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	fileData := req.GetFile() // File dalam bentuk byte array
 
 // 	// Simpan file ke sementara

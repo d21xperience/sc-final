@@ -7,24 +7,19 @@ import (
 )
 
 type TabelPTK struct {
-	PtkID             uuid.UUID    `gorm:"column:ptk_id;primaryKey"`          // UUID
-	Nama              string       `gorm:"column:nama"`                       // String
-	NIP               *string      `gorm:"column:nip"`                        // Nullable string
-	JenisPtkID        int32        `gorm:"column:jenis_ptk_id"`               // String
-	JenisKelamin      string       `gorm:"column:jenis_kelamin"`              // String
-	TempatLahir       string       `gorm:"column:tempat_lahir"`               // String
-	TanggalLahir      *time.Time   `gorm:"column:tanggal_lahir"`              // String (format tanggal, bisa diubah ke time.Time jika perlu)
-	NUPTK             *string      `gorm:"column:nuptk"`                      // Nullable string
-	AlamatJalan       string       `gorm:"column:alamat_jalan"`               // String
-	StatusKeaktifanID int32        `gorm:"column:status_keaktifan_id"`        // String
-	PTKPelengkap      PTKPelengkap `gorm:"foreignKey:PTKID;references:PtkID"` // Menyertakan PTKPelengkap
-}
-
-type PTKPelengkap struct {
-	PTKPelengkapID uuid.UUID `json:"ptk_pelengkap_id"` // UUID
-	PTKID          uuid.UUID `json:"ptk_id"`           // UUID
-	GelarDepan     *string   `json:"gelar_depan"`      // Nullable string
-	GelarBelakang  *string   `json:"gelar_belakang"`   // Nullable string
+	PtkID             uuid.UUID  `gorm:"column:ptk_id;primaryKey"`   // UUID
+	Nama              string     `gorm:"column:nama"`                // String
+	NIP               *string    `gorm:"column:nip"`                 // Nullable string
+	JenisPtkID        int32      `gorm:"column:jenis_ptk_id"`        // String
+	JenisKelamin      string     `gorm:"column:jenis_kelamin"`       // String
+	TempatLahir       string     `gorm:"column:tempat_lahir"`        // String
+	TanggalLahir      *time.Time `gorm:"column:tanggal_lahir"`       // String (format tanggal, bisa diubah ke time.Time jika perlu)
+	NUPTK             *string    `gorm:"column:nuptk"`               // Nullable string
+	AlamatJalan       string     `gorm:"column:alamat_jalan"`        // String
+	StatusKeaktifanID int32      `gorm:"column:status_keaktifan_id"` // String
+	GelarDepan        *string    `gorm:"column:gelar_depan"`         // Nullable string
+	GelarBelakang     *string    `gorm:"column:gelar_belakang"`      // Nullable string
+	NIP_NIY           *string    `gorm:"column:nip_niy"`
 }
 
 type PTKTerdaftar struct {

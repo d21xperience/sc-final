@@ -36,11 +36,11 @@
                                 <template #start>
                                     <div class="flex flex-wrap gap-2 items-center justify-between">
                                         <div class="flex">
-                                            <MultiSelect v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                            <!-- <MultiSelect v-model="selectedJurusan" :options="jurusan" optionLabel="name"
                                                 filter placeholder="Jurusan" :maxSelectedLabels="1"
-                                                class="w-full md:w-80 mr-2" showClear />
-                                            <Select v-model="selectedTingkat" showClear :options="tingkat"
-                                                optionLabel="name" placeholder="Tingkat" class="mr-2" />
+                                                class="w-full md:w-80 mr-2" showClear /> -->
+                                            <!-- <Select v-model="selectedTingkat" showClear :options="tingkat"
+                                                optionLabel="name" placeholder="Tingkat" class="mr-2" /> -->
                                         </div>
                                     </div>
                                 </template>
@@ -58,7 +58,7 @@
                 </div>
 
 
-                <DataTable ref="dt" v-model:selection="selectedKelas" stripedRows size="small" :value="rombel"
+                <DataTable ref="dt" v-model:selection="selectedKelas" stripedRows size="small" :value="kelasList"
                     scrollable scrollHeight="400px" dataKey="rombonganBelajarId" :paginator="true" :rows="10"
                     :filters="filters" tableStyle="min-width: 50rem"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -153,17 +153,27 @@ defineProps({
     kelasData: String
 });
 
+// ================================
+// composable
+// ================================
+import { useSekolahService } from '@/composables/useSekolahService'
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
+
+const { fetchKelas, kelasList } = useSekolahService(schemaname, selectedSemester)
+// ================================
+
+
+watch(selectedSemester, (e, b) => {
+    fetchKelas()
+})
 onMounted(() => {
-    // fetchSemester()
-    fetchRombel()
-    getParamDialogImport()
-    // RuangKelasService.getProducts().then((data) => (products.value = data));
+    fetchKelas()
+    // getParamDialogImport()
 });
 
-// const semester = ref()
-const schemaname = ref("")
 const getParamDialogImport = () => {
-    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaName
+    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
     // semester.value = store.getters["sekolahService/getSemester"]
 
 }
@@ -184,18 +194,6 @@ const filters = ref({
     'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 const submitted = ref(false);
-// const statuses = ref([
-//     { label: 'INSTOCK', value: 'instock' },
-//     { label: 'LOWSTOCK', value: 'lowstock' },
-//     { label: 'OUTOFSTOCK', value: 'outofstock' }
-// ]);
-
-// const formatCurrency = (value) => {
-//     if (value)
-//         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-//     return;
-// };
-
 const openNew = async () => {
     await nextTick();
     router.push({ name: "addKelas" })
@@ -225,42 +223,6 @@ const deletedKelas = () => {
 
 
 // ==================================
-// =======SEMESTER=============
-const selectedSemester = computed(() => {
-    return store.getters["sekolahService/getSelectedSemester"]
-})
-
-watch(selectedSemester, (e, b) => {
-    fetchRombel()
-})
-// ==================================
-
-const fetchRombel = async () => {
-    try {
-        let payload = {
-            schema_name: store.getters["sekolahService/getTabeltenant"]?.schemaName,
-            semester_id: selectedSemester.value?.semesterId
-        }
-        const results = await store.dispatch("sekolahService/fetchRombel", payload)
-        rombel.value = results
-    } catch (error) {
-
-    }
-}
-const selectedJurusan = ref();
-const jurusan = ref([
-    { name: 'Teknik Kendaraan Ringan', code: 'TKR' },
-    { name: 'Teknik Mesin Sepeda Motor', code: 'TSM' },
-    { name: 'Teknik Komputer dan Jaringan', code: 'TKJ' },
-    { name: 'Otomatisasi Perkantoran', code: 'OTKP' },
-    { name: 'AKuntansi Lembaga', code: 'AKL' }
-]);
-const selectedTingkat = ref();
-const tingkat = ref([
-    { name: '10' },
-    { name: '11' },
-    { name: '12' },
-]);
 
 // Fungsi yang menangkap event emit dari child
 const handleProfileFetched = (data) => {
@@ -274,18 +236,11 @@ const handleFetchError = (error) => {
 };
 
 // status siswa naik atau lulus
-const dialogStatus = ref(false)
+// const dialogStatus = ref(false)
 const dialogImport = ref(false)
 
 const dialogAnggotaRombel = (d) => {
     console.log(d)
 }
 const bentukPendidikan = ref("smk")
-const saveImport = (e) => {
-    dialogImport.value = false;
-};
-const cancelImport = () => {
-    console.log("Import dibatalkan");
-    dialogImport.value = false;
-};
 </script>

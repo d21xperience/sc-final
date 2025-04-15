@@ -34,13 +34,13 @@ func NewRombelAnggotaService() *RombelAnggotaService {
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received Sekolah data request: %+v\n", req)
 // 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "Kelas"}
+// 	requiredFields := []string{"Schemaname", "Kelas"}
 // 	// Validasi request
 // 	err := utils.ValidateFields(req, requiredFields)
 // 	if err != nil {
 // 		return nil, err
 // 	}
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	Kelas := req.Kelas
 
 // 	KelasModel := &models.PesertaDidik{
@@ -78,13 +78,13 @@ func (s *RombelAnggotaService) CreateBanyakAnggotaKelas(ctx context.Context, req
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "AnggotaKelas"}
+	requiredFields := []string{"Schemaname", "AnggotaKelas"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	anggotaKelas := req.AnggotaKelas
 
 	anggotaRombel := ConvertPBToModels(anggotaKelas, func(anggota *pb.AnggotaKelas) *models.RombelAnggota {
@@ -154,13 +154,13 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "SemesterId"}
+	requiredFields := []string{"Schemaname", "SemesterId"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	semesterId := req.GetSemesterId()
 	rombelId := req.GetRombonganBelajarId()
 	var conditions = map[string]any{
@@ -236,13 +236,13 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 func (s *RombelAnggotaService) SearchAnggotaKelas(ctx context.Context, req *pb.SearchAnggotaKelasRequest) (*pb.SearchAnggotaKelasResponse, error) {
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "SemesterId"}
+	requiredFields := []string{"Schemaname", "SemesterId"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	switch schemaName {
 	case "":
 		return nil, fmt.Errorf("schema name is required")
@@ -309,7 +309,7 @@ func (s *RombelAnggotaService) SearchAnggotaKelas(ctx context.Context, req *pb.S
 // func (s *RombelAnggotaServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKelasRequest) (*pb.UpdateKelasResponse, error) {
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received UpdateUserProfile request: %+v\n", req)
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	KelasReq := req.GetKelas()
 // 	KelasPelenReq := req.GetKelasPelengkap()
 // 	Kelas := &models.PesertaDidik{
@@ -361,13 +361,13 @@ func (s *RombelAnggotaService) DeleteAnggotaKelas(ctx context.Context, req *pb.D
 	var err error
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "AnggotaRombelId"}
+	requiredFields := []string{"Schemaname", "AnggotaRombelId"}
 	// Validasi request
 	err = utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	switch schemaName {
 	case "":
 		return nil, fmt.Errorf("schema name is required")
@@ -390,7 +390,7 @@ func (s *RombelAnggotaService) DeleteAnggotaKelas(ctx context.Context, req *pb.D
 
 // // UploadKelas mengunggah data Kelas dari file Excel
 // func (s *RombelAnggotaServiceServer) UploadKelas(ctx context.Context, req *pb.UploadKelasRequest) (*pb.UploadKelasResponse, error) {
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	fileData := req.GetFile() // File dalam bentuk byte array
 
 // 	// Simpan file ke sementara

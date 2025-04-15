@@ -3,12 +3,14 @@ package services
 import (
 	"context"
 	"fmt"
-	"log"
 	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
 	"sekolah/repositories"
 	"sekolah/utils"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type PTKTerdaftarServiceServer struct {
@@ -29,15 +31,15 @@ func NewPTKTerdaftarServiceServer() *PTKTerdaftarServiceServer {
 // **CreatePTKTerdaftar**
 func (s *PTKTerdaftarServiceServer) CreatePTKTerdaftar(ctx context.Context, req *pb.CreatePTKTerdaftarRequest) (*pb.CreatePTKTerdaftarResponse, error) {
 	// Debugging: Cek nilai request yang diterima
-	log.Printf("Received Sekolah data request: %+v\n", req)
+	// log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "PTKTerdaftar"}
+	requiredFields := []string{"Schemaname", "PTKTerdaftar"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	PTKTerdaftar := req.GetPtkTerdaftar()
 
 	PTKTerdaftarModel := utils.ConvertPBToModels(PTKTerdaftar, func(item *pb.PTKTerdaftar) *models.PTKTerdaftar {
@@ -61,32 +63,34 @@ func (s *PTKTerdaftarServiceServer) CreatePTKTerdaftar(ctx context.Context, req 
 		}
 	})
 
-	var daftarPTK []models.TabelPTK
-	for _, v := range PTKTerdaftarModel {
-		daftarPTK = append(daftarPTK, v.PTK)
-	}
-	err = s.repoPTK.SaveMany(ctx, schemaName, utils.SliceToPointer(daftarPTK), 100)
-	if err != nil {
-		log.Printf("Gagal menyimpan PTK: %s", err)
-		return nil, fmt.Errorf("gagal menyimpan PTK: %w", err)
-	}
-	// simpan ke tabel_ptk_terdaftar
-	err = s.repo.SaveMany(ctx, schemaName, PTKTerdaftarModel, 100)
-	if err != nil {
-		log.Printf("Gagal menyimpan PTKTerdaftar: %s", err)
-		return nil, fmt.Errorf("gagal menyimpan PTKTerdaftar: %w", err)
-	}
-	// simpan ke tabel_ptk
-	// ptkModel := PTKTerdaftar[ptk]
-	// err = s.repoPTK.SaveMany(ctx, schemaName, ptkModel, 100)
+	// var daftarPTK []models.TabelPTK
+	// for _, v := range PTKTerdaftarModel {
+	// 	daftarPTK = append(daftarPTK, v.PTK)
+	// }
+	// conflicts, err := s.repoPTK.SaveManyWithConflictCheck(ctx, schemaName, utils.SliceToPointer(daftarPTK), "PtkID", "ptk_id", 100)
 	// if err != nil {
-	// 	log.Printf("Gagal menyimpan PTKTerdaftar: %s", err)
-	// 	return nil, fmt.Errorf("gagal menyimpan PTKTerdaftar: %w", err)
+	// 	return nil, status.Errorf(codes.Internal, "insert failed: %v", err)
 	// }
 
+	// conflictProto := repositories.ConvertConflictsToProto(conflicts, "PtkID", "Nama")
+
+	// simpan ke tabel_ptk_terdaftar
+	conflicts1, err := s.repo.SaveManyWithConflictCheck(ctx, schemaName, PTKTerdaftarModel, "PtkTerdaftarId", "ptk_terdaftar_id", 5)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "insert failed: %v", err)
+	}
+
+	conflictProto2 := repositories.ConvertConflictsToProto(conflicts1, "PtkTerdaftarId", "PtkID")
+	// conflictProto2 = append(conflictProto2, conflictProto...)
+	fmt.Print(conflictProto2)
 	return &pb.CreatePTKTerdaftarResponse{
 		Message: "PTKTerdaftar berhasil ditambahkan",
 		Status:  true,
+		Conflicts: &pb.ConflictResponse{
+			Message:       "Sebagian data berhasil disimpan",
+			Conflicts:     conflictProto2,
+			TotalConflict: int32(len(conflictProto2)),
+		},
 	}, nil
 }
 
@@ -94,13 +98,13 @@ func (s *PTKTerdaftarServiceServer) CreatePTKTerdaftar(ctx context.Context, req 
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received Sekolah data request: %+v\n", req)
 // 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "PTKTerdaftar"}
+// 	requiredFields := []string{"Schemaname", "PTKTerdaftar"}
 // 	// Validasi request
 // 	err := utils.ValidateFields(req, requiredFields)
 // 	if err != nil {
 // 		return nil, err
 // 	}
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	PTKTerdaftar := req.PTKTerdaftar
 
 // 	PTKTerdaftarModels := ConvertPBToModels(PTKTerdaftar, func(rom *pb.PTKTerdaftar) *models.RombonganBelajar {
@@ -133,13 +137,13 @@ func (s *PTKTerdaftarServiceServer) CreatePTKTerdaftar(ctx context.Context, req 
 // **GetPTKTerdaftar**
 func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb.GetPTKTerdaftarRequest) (*pb.GetPTKTerdaftarResponse, error) {
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "TahunAjaranId"}
+	requiredFields := []string{"Schemaname", "TahunAjaranId"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	if schemaName == "\"\"" {
 		return nil, fmt.Errorf("schema name is required")
 	}
@@ -203,13 +207,13 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received Sekolah data request: %+v\n", req)
 // 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "PTKTerdaftar"}
+// 	requiredFields := []string{"Schemaname", "PTKTerdaftar"}
 // 	// Validasi request
 // 	err := utils.ValidateFields(req, requiredFields)
 // 	if err != nil {
 // 		return nil, err
 // 	}
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	PTKTerdaftar := req.PTKTerdaftar
 
 // 	PTKTerdaftarModel := &models.RombonganBelajar{
@@ -245,7 +249,7 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 // 	if err != nil {
 // 		return nil, err
 // 	}
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	PTKTerdaftarID := req.GetPTKTerdaftarId()
 
 // 	err = s.repo.Delete(ctx, PTKTerdaftarID, schemaName, "rombongan_belajar_id")

@@ -205,7 +205,7 @@ import Image from 'primevue/image';
 // ==============================
 onMounted(async () => {
     semester.value = store.getters["sekolahService/getSemester"]
-    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaName
+    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
     fetchSiswa()
 });
 // watch(selectedSemester, (newVal, oldVal) => {
@@ -390,7 +390,7 @@ const fetchSiswa = async () => {
     const payload = {
         // page: 1,
         semesterId: selectedSemester.value.semesterId,
-        schemaName: schemaname.value,
+        schemaname: schemaname.value,
     }
     console.log(payload)
     const results = await store.dispatch("sekolahService/fetchSiswaAktif", payload)
@@ -407,7 +407,7 @@ const fetchSiswa = async () => {
     try {
         let payload = {
             semesterId: selectedSemester.value?.semesterId,
-            schemaName: schemaname.value
+            schemaname: schemaname.value
         }
         const results = await store.dispatch("sekolahService/fetchSiswa", payload)
         // console.log(results)

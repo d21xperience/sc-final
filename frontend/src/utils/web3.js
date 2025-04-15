@@ -33,7 +33,7 @@
 //   return accounts;
 // };
 import Web3 from "web3";
-
+import { ethers } from 'ethers';
 let web3;
 let selectedAccount = null;
 
@@ -117,3 +117,19 @@ export const listenForAccountChange = (callback) => {
     });
   }
 };
+
+export async function issueDegree(degreeHash, sekolah, issueDate) {
+  if (!window.ethereum) throw new Error("MetaMask tidak terdeteksi!");
+  
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(
+    IjazahContract.address,
+    IjazahContract.abi,
+    signer
+  );
+
+  const tx = await contract.issueDegree(degreeHash, sekolah, issueDate);
+  await tx.wait();
+  return tx.hash;
+}

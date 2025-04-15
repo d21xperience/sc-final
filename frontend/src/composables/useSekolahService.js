@@ -1,20 +1,49 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 
-export function useSekolahService(schemaName, selectedSemester) {
+export function useSekolahService(schemaname, selectedSemester) {
   const store = useStore();
   const guruList = ref([]);
-  // console.log("schemaName di composable:", schemaName.value);
+  const guruTerdaftarList = ref([]);
+  const siswaList = ref([]);
+  const kelasList = ref([]);
+  
+  // console.log("schemaname di composable:", schemaname.value);
   // console.log("selectedSemester di composable:", selectedSemester.value);
-  const fetchGuru = async () => {
+  const fetchTabeltenant = async ()=>{
+
+  }
+  const fetchGuruTerdaftar = async (ptkId = null) => {
     try {
       const payload = {
         tahunAjaranId: selectedSemester.value?.tahunAjaranId,
-        schemaname: schemaName.value,
+        schemaname: schemaname.value,
       };
 
+      if (ptkId) {
+        payload.ptk_id = ptkId;
+      }
+      // console.log(payload)
       const response = await store.dispatch(
         "sekolahService/fetchPTKTerdaftar",
+        payload
+      );
+      guruTerdaftarList.value = response;
+    } catch (error) {
+      console.error("Gagal mengambil data guru:", error);
+    }
+  };
+  const fetchGuru = async (ptkId = null) => {
+    try {
+      const payload = {
+        schemaname: schemaname.value,
+      };
+
+      if (ptkId) {
+        payload.ptk_id = ptkId;
+      }
+      const response = await store.dispatch(
+        "sekolahService/fetchGuru",
         payload
       );
       guruList.value = response;
@@ -26,27 +55,29 @@ export function useSekolahService(schemaName, selectedSemester) {
   const fetchKelas = async (kelasId = null) => {
     try {
       const payload = {
-        schema_name: schemaName.value,
+        schemaname: schemaname.value,
         semester_id: selectedSemester.value?.semesterId,
       };
 
       if (kelasId) {
         payload.kelas_id = kelasId;
       }
-
       const response = await store.dispatch(
         "sekolahService/fetchRombel",
         payload
       );
-      return response;
+      kelasList.value = response;
     } catch (error) {
       console.error("Gagal mengambil data kelas:", error);
     }
   };
 
   return {
-    guruList,
     fetchGuru,
+    guruList,
+    fetchGuruTerdaftar,
+    guruTerdaftarList,
     fetchKelas,
+    kelasList,
   };
 }

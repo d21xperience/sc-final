@@ -25,14 +25,14 @@ const pembelajaran = ref({})
 const pembelajaranList = ref([])
 const guruList = ref()
 const rombel = ref()
-const schemaName = ref("")
+const schemaname = ref("")
 const fetchGuru = async () => {
     try {
         const cekGuru = await store.getters["sekolahService/getPTKTerdaftar"]
         if (cekGuru == null) {
             let payload = {
                 tahunAjaranId: selectedSemester.value?.tahunAjaranId,
-                schema_name: schemaName.value
+                schemaname: schemaname.value
             }
             const response = await store.dispatch("sekolahService/fetchPTKTerdaftar", payload)
             // console.log(response)
@@ -67,7 +67,7 @@ const fetchMapel = async () => {
 const fetchKelas = async () => {
     try {
         const payload = {
-            schema_name: schemaName.value,
+            schemaname: schemaname.value,
             semester_id: selectedSemester.value?.semesterId,
             // kelas_id: kelasId
         }
@@ -82,7 +82,7 @@ const fetchKelas = async () => {
 const dataRombel = ref([])
 onMounted(async () => {
     semester.value = await store.getters["sekolahService/getSemester"]
-    schemaName.value = await store.getters["sekolahService/getTabeltenant"].schemaName
+    schemaname.value = await store.getters["sekolahService/getTabeltenant"].schemaname
     // fetchGuru()
     dataRombel.value = await fetchKelas()
     // fetchSiswa()
@@ -234,7 +234,7 @@ const fetchSiswa = async () => {
     try {
         let payload = {
             semesterId: selectedSemester.value?.semesterId,
-            schemaName: schemaName.value
+            schemaname: schemaname.value
         }
         const results = await store.dispatch("sekolahService/fetchSiswa", payload)
         // console.log(results)
@@ -368,7 +368,7 @@ const saveToDB = (req_Object, endpoint_String) => {
     console.log(endpoint_String)
     try {
         const payload = {
-            schema_name: req_Object?.schemaname,
+            schemaname: req_Object?.schemaname,
             pembelajaran: req_Object?.data
         }
         const results = store.dispatch(endpoint_String, payload)
@@ -388,7 +388,7 @@ const simpanKeDatabase = () => {
     const aData = []
     aData.push(pembelajaran.value)
     const req_Object = {
-        schemaname: schemaName.value,
+        schemaname: schemaname.value,
         data: aData
     }
     // console.log(req_Object)
@@ -583,7 +583,7 @@ const simpanKeDatabase = () => {
         <!-- import data -->
         <!-- DIALOG IMPORT -->
         <DialogImport v-model:visible="dialogImport" @save="saveImport" @cancel="cancelImport" template-type="siswa"
-            :schema-name="schemaName" />
+            :schema-name="schemaname" />
 
         <!-- end of import data -->
         <DialogLoading v-model="isLoading"> Memuat data, harap tunggu... </DialogLoading>

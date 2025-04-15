@@ -7,7 +7,7 @@ const api = axios.create({
     "Content-Type": "application/json",
     "Content-Type": "Authorization",
   },
-  timeout: 10000, // 10 detik
+  // timeout: 10000, // 10 detik
 });
 
 const state = {
@@ -122,7 +122,7 @@ const actions = {
     // console.log(payload);
 
     try {
-      const response = await api.get(`/ss/${payload.schema_name}/kelas`, {
+      const response = await api.get(`/ss/${payload.schemaname}/kelas`, {
         params: {
           semester_id: payload.semester_id,
           kelas_id: payload.kelas_id,
@@ -147,15 +147,16 @@ const actions = {
     try {
       const response = await api.get("/ss/ptk", {
         params: {
-          schema_name: payload.schema_name,
+          schemaname: payload.schemaname,
+          ptk_id: payload.ptk_id,
         },
       });
-      console.log(response.data);
-      commit("SET_TABELGURU", response.data.PTK);
+      // console.log(response.data);
+      // commit("SET_TABELGURU", response.data.PTK);
       return response.data.PTK; // Mengembalikan data sekolah
     } catch (error) {
       // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
-      // console.error("Gagal membuat semester:", error);
+      console.error("Gagal membuat guru:", error);
       return null;
     } finally {
       // commit("SET_LOADING", false);
@@ -166,7 +167,7 @@ const actions = {
     try {
       const response = await api.get("/ss/ptk-terdaftar", {
         params: {
-          schema_name: payload.schemaname,
+          schemaname: payload.schemaname,
           tahun_ajaran_id: payload.tahunAjaranId,
         },
       });
@@ -201,7 +202,7 @@ const actions = {
   async savePTKTerdaftar({ commit }, payload) {
     try {
       const response = await api.post(
-        `/ss/${payload.schema_name}/ptk-terdaftar/create`,
+        `/ss/${payload.schemaname}/ptk-terdaftar/create`,
         payload
       );
       // console.log(response);
@@ -235,7 +236,7 @@ const actions = {
   },
   async fetchSekolah({ commit }, payload) {
     try {
-      const response = await api.get(`/ss/${payload.schemaName}/sekolah`);
+      const response = await api.get(`/ss/${payload.schemaname}/sekolah`);
       commit("SET_TABELSEKOLAH", response.data.sekolah);
       return response.data.sekolah; // Mengembalikan data sekolah
     } catch (error) {
@@ -250,7 +251,7 @@ const actions = {
     try {
       // console.log(payload);
       const response = await api.post(
-        `/ss/${payload.schema_name}/update`,
+        `/ss/${payload.schemaname}/update`,
         payload
       );
       // console.log(response.data);
@@ -306,17 +307,17 @@ const actions = {
   async fetchSiswaAktif({ commit }, payload) {
     try {
       const response = await api.get(
-        `/ss/${payload.schemaName}/anggota-kelas`,
+        `/ss/${payload.schemaname}/anggota-kelas`,
         {
           params: {
             semester_id: payload.semesterId,
-            schemaname: payload.schemaName,
+            schemaname: payload.schemaname,
           },
         }
       );
       // console.log(response.data.anggotaKelas);
       // commit("SET_TABELSISWAAKTIF", response.data.anggotaKelas);
-      return response.data.anggotaKelas; 
+      return response.data.anggotaKelas;
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal membuat semester:", error);
@@ -369,7 +370,7 @@ const actions = {
     try {
       // console.log(payload);
       const response = await api.get(
-        `/ss/${payload.schema_name}/anggota-kelas/search`,
+        `/ss/${payload.schemaname}/anggota-kelas/search`,
         {
           params: {
             semester_id: payload.semester_id,
@@ -536,7 +537,7 @@ const actions = {
   async createKelas({ commit }, payload) {
     try {
       const response = await api.post(
-        `/ss/${payload.schema_name}/tambah-kelas`,
+        `/ss/${payload.schemaname}/tambah-kelas`,
         payload
       );
       return response.data; // Mengembalikan data sekolah
@@ -548,9 +549,9 @@ const actions = {
   },
   async editKelas({ commit }, payload) {
     try {
-      // console.log("Payload:", payload);
+      console.log("Payload di edit kelas:", payload);
       const response = await api.put(
-        `/ss/${payload.schema_name}/kelas`,
+        `/ss/${payload.schemaname}/kelas`,
         payload
       );
       // console.log(response.data);
@@ -564,9 +565,9 @@ const actions = {
   },
   async deleteKelas({ commit }, payload) {
     try {
-      // console.log("Payload:", payload);
+      console.log("Payload:", payload);
       const response = await api.delete(
-        `/ss/${payload.schema_name}/kelas`,
+        `/ss/${payload.schemaname}/kelas`,
         payload
       );
       console.log(response.data);
@@ -589,7 +590,7 @@ const actions = {
   async fetchAnggotaKelas({ commit }, payload) {
     try {
       const response = await api.get(
-        `/ss/${payload.schema_name}/anggota-kelas`,
+        `/ss/${payload.schemaname}/anggota-kelas`,
         {
           params: {
             semester_id: payload.semester_id,
@@ -607,7 +608,7 @@ const actions = {
   async deleteAnggotaKelas({ commit }, payload) {
     try {
       const response = await api.delete(
-        `/ss/${payload.schema_name}/anggota-kelas/delete`,
+        `/ss/${payload.schemaname}/anggota-kelas/delete`,
         {
           params: {
             anggota_rombel_id: payload.anggota_rombel_id,

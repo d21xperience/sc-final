@@ -47,8 +47,8 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 	}
 
 	sekolah := req.GetSekolah()
-	schemaName := fmt.Sprintf("tabel_%s", sekolah.SekolahIdEnkrip)
-	existingSchema, err := s.schemaService.GetSchemaBySchemaname(schemaName)
+	Schemaname := fmt.Sprintf("tabel_%s", sekolah.SekolahIdEnkrip)
+	existingSchema, err := s.schemaService.GetSchemaBySchemaname(Schemaname)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Printf("Lanjutkan pendaftaran: %v", err)
 	}
@@ -60,7 +60,7 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 		}, nil
 	}
 
-	cek := s.schemaService.RegistrasiSekolah(ctx, schemaName)
+	cek := s.schemaService.RegistrasiSekolah(ctx, Schemaname)
 	if cek != nil {
 		// Tangani error spesifik jika error adalah gorm.ErrInvalidData
 		if errors.Is(cek, gorm.ErrInvalidData) {
@@ -72,7 +72,7 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 	// 2 Simpan informasi schema sekolah
 	err = s.schemaService.SimpanSchemaSekolah(&models.SekolahTabelTenant{
 		SekolahID:   int(sekolah.SekolahId),
-		SchemaName:  schemaName,
+		SchemaName:  Schemaname,
 		NamaSekolah: sekolah.NamaSekolah,
 	})
 	if err != nil {
@@ -104,7 +104,7 @@ func (s *SekolahService) GetSekolahTabelTenant(ctx context.Context, req *pb.Seko
 	return &pb.SekolahTabelTenantResponse{
 		SekolahId:   int32(sekolahTerdaftar.SekolahID),
 		NamaSekolah: sekolahTerdaftar.NamaSekolah,
-		SchemaName:  sekolahTerdaftar.SchemaName, // nama schema
+		Schemaname:  sekolahTerdaftar.SchemaName, // nama schema
 	}, err
 
 }
@@ -114,13 +114,13 @@ func (s *SekolahService) GetSekolahTabelTenant(ctx context.Context, req *pb.Seko
 func (s *SekolahService) CreateSekolah(ctx context.Context, req *pb.CreateSekolahRequest) (*pb.CreateSekolahResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
-	requiredFields := []string{"SchemaName", "Sekolah"}
+	requiredFields := []string{"Schemaname", "Sekolah"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	Schemaname := req.GetSchemaname()
 	sekolah := req.GetSekolah()
 	// sekolahID, _ := uuid.Parse(sekolah.SekolahId)
 	// Contoh: Konversi UUID ke string
@@ -163,7 +163,7 @@ func (s *SekolahService) CreateSekolah(ctx context.Context, req *pb.CreateSekola
 		BentukPendidikanId:  sekolah.BentukPendidikanId,
 	}
 
-	sekolahTerdaftar := s.sekolahService.Save(ctx, sekolahModel, schemaName)
+	sekolahTerdaftar := s.sekolahService.Save(ctx, sekolahModel, Schemaname)
 	if sekolahTerdaftar != nil {
 		log.Printf("Gagal menyimpan sekolah: %v", sekolahTerdaftar.Error())
 		return nil, errors.New("gagal menyimpan informasi sekolah")
@@ -178,11 +178,11 @@ func (s *SekolahService) CreateSekolah(ctx context.Context, req *pb.CreateSekola
 
 func (s *SekolahService) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
 	//  Ambil schema dari request
-	schemaName := req.GetSchemaName()
+	Schemaname := req.GetSchemaname()
 	// sekolahID := req.GetSekolahId()
 
 	//  Cari sekolah berdasarkan ID dan schema
-	sekolah, err := s.sekolahService.Find(ctx, schemaName)
+	sekolah, err := s.sekolahService.Find(ctx, Schemaname)
 	if err != nil {
 		log.Printf("Gagal menemukan sekolah: %v", err)
 		return nil, fmt.Errorf("gagal menemukan sekolah: %w", err)
@@ -220,29 +220,32 @@ func (s *SekolahService) GetSekolah(ctx context.Context, req *pb.GetSekolahReque
 func (s *SekolahService) UpdateSekolah(ctx context.Context, req *pb.UpdateSekolahRequest) (*pb.UpdateSekolahResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
-	requiredFields := []string{"SchemaName", "Sekolah"}
+	requiredFields := []string{"Schemaname", "Sekolah"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	Schemaname := req.GetSchemaname()
 	sekolah := req.GetSekolah()
 
-	modSekolah, err := s.sekolahService.FindByID(ctx, sekolah.SekolahId, schemaName)
+	modSekolah, err := s.sekolahService.FindByID(ctx, sekolah.SekolahId, Schemaname)
 	if err != nil {
 		return nil, err
 	}
-	d := models.Sekolah{
-		SekolahID:           modSekolah.SekolahID,
-		Website:             sekolah.Website,
-		Email:               sekolah.Email,
-		Nss:                 sekolah.Nss,
-		NmKepsek:            sekolah.NmKepsek,
-		BentukPendidikanId:  sekolah.BentukPendidikanId,
-		JenjangPendidikanId: sekolah.JenjangPendidikanId,
+	if modSekolah == nil {
+		return nil, fmt.Errorf("sekolah dengan ID %s tidak ditemukan", sekolah.SekolahId)
 	}
-	err = s.sekolahService.Update(ctx, &d, schemaName)
+	// Update fields
+	modSekolah.Nss = sekolah.Nss
+	modSekolah.Website = sekolah.Website
+	modSekolah.Email = sekolah.Email
+	modSekolah.Fax = sekolah.Fax
+	modSekolah.Telepon = sekolah.Telepon
+	modSekolah.BentukPendidikanId = sekolah.BentukPendidikanId
+	modSekolah.KdPos = sekolah.KdPos
+
+	err = s.sekolahService.Update(ctx, modSekolah, Schemaname)
 	if err != nil {
 		return nil, err
 	}

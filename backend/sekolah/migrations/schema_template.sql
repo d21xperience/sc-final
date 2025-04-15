@@ -77,6 +77,9 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_ptk (
 	alamat_jalan VARCHAR(200) NOT NULL,
 	status_keaktifan_id NUMERIC(2,0) NOT NULL DEFAULT 1,  -- Contoh nilai default
     soft_delete NUMERIC(1,0) NOT NULL DEFAULT 0,  -- 0 = aktif, 1 = terhapus
+	gelar_depan VARCHAR(20) NULL DEFAULT NULL,
+	gelar_belakang VARCHAR(20) NULL DEFAULT NULL,
+	nip_niy VARCHAR(18) NULL DEFAULT NULL,
 	PRIMARY KEY (ptk_id)
 );
 

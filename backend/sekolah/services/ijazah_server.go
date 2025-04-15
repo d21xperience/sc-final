@@ -41,7 +41,7 @@ func (s *IjazahServiceServer) GetIjazah(ctx context.Context, req *pb.GetIjazahRe
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	if schemaName == "\"\"" {
 		return nil, fmt.Errorf("schema name is required")
 	}
@@ -101,7 +101,7 @@ func (s *IjazahServiceServer) GetIjazah(ctx context.Context, req *pb.GetIjazahRe
 func (s *IjazahServiceServer) UpdateIjazah(ctx context.Context, req *pb.UpdateIjazahRequest) (*pb.UpdateIjazahResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received UpdateUserProfile request: %+v\n", req)
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	ijazahReq := req.GetIjazah()
 	ijazahModel := &models.Ijazah{
 		Nama:                        ijazahReq.Nama,
@@ -136,7 +136,7 @@ func (s *IjazahServiceServer) UpdateIjazah(ctx context.Context, req *pb.UpdateIj
 
 // **DeleteIjazah**
 func (s *IjazahServiceServer) DeleteIjazah(ctx context.Context, req *pb.DeleteIjazahRequest) (*pb.DeleteIjazahResponse, error) {
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	IjazahID := req.GetIjazahId()
 
 	err := s.repo.Delete(ctx, IjazahID, schemaName, "id")

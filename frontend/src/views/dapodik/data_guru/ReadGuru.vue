@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed, nextTick } from 'vue';
 import { useSekolahService } from '@/composables/useSekolahService'
 import { useStore } from "vuex";
 const store = useStore();
@@ -19,18 +19,6 @@ import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-// import DataLulusanService from '@/service/ProductService.js';
-// =============UJI FITUR FOTO========================
-// import Image from 'primevue/image';
-// =====================================
-
-
-// ==============================
-
-// watch(selectedSemester, (newVal, oldVal) => {
-//     console.log(newVal)
-//     // fetchRombel()
-// })
 import DialogLoading from "@/components/DialogLoading.vue";
 
 const isLoading = ref(false);
@@ -38,12 +26,11 @@ const isLoading = ref(false);
 const dataConnected = ref(true)
 const toast = useToast();
 const dt = ref();
-const products = ref();
-const productDialog = ref(false);
+// const products = ref();
+// const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
 const product = ref({});
-const dataLulusan = ref();
 const filters = ref({
     'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
@@ -54,68 +41,18 @@ const submitted = ref(false);
 //         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 //     return;
 // };
-const openNew = () => {
+const openNew = async () => {
+    await nextTick()
     router.push({ name: "inputGuru" })
 };
-// const hideDialog = () => {
-//     productDialog.value = false;
-//     submitted.value = false;
-// };
-// const saveProduct = () => {
-//     submitted.value = true;
 
-//     if (product?.value.name?.trim()) {
-//         if (product.value.id) {
-//             product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
-//             products.value[findIndexById(product.value.id)] = product.value;
-//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-//         }
-//         else {
-//             product.value.id = createId();
-//             product.value.code = createId();
-//             product.value.image = 'product-placeholder.svg';
-//             product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
-//             products.value.push(product.value);
-//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-//         }
-
-//         productDialog.value = false;
-//         product.value = {};
-//     }
-// };
-// const editProduct = (prod) => {
-//     product.value = { ...prod };
-//     productDialog.value = true;
-// };
-// const confirmDeleteProduct = (prod) => {
-//     product.value = prod;
-//     deleteProductDialog.value = true;
-// };
 const deleteProduct = () => {
     products.value = products.value.filter(val => val.id !== product.value.id);
     deleteProductDialog.value = false;
     product.value = {};
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
 };
-const findIndexById = (id) => {
-    let index = -1;
-    for (let i = 0; i < products.value.length; i++) {
-        if (products.value[i].id === id) {
-            index = i;
-            break;
-        }
-    }
 
-    return index;
-};
-// const createId = () => {
-//     let id = '';
-//     var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//     for (var i = 0; i < 5; i++) {
-//         id += chars.charAt(Math.floor(Math.random() * chars.length));
-//     }
-//     return id;
-// }
 const exportCSV = () => {
     isLoading.value = true
     // alert("hello")
@@ -124,28 +61,12 @@ const exportCSV = () => {
 const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
-// const deletedataLulusan = () => {
-//     products.value = products.value.filter(val => !dataLulusan.value.includes(val));
-//     deleteProductsDialog.value = false;
-//     dataLulusan.value = null;
-//     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-// };
-
-
-
 
 import Select from 'primevue/select';
 import EmptyData from '@/components/EmptyData.vue';
-
-// const selectedJurusan = ref();
-// const jurusan = ref([
-//     { name: 'Teknik Kendaraan Ringan', code: 'TKR' },
-//     { name: 'Teknik Mesin Sepeda Motor', code: 'TSM' },
-//     { name: 'Teknik Komputer dan Jaringan', code: 'TKJ' },
-//     { name: 'Otomatisasi Perkantoran', code: 'OTKP' },
-//     { name: 'AKuntansi Lembaga', code: 'AKL' }
-// ]);
-
+onMounted(async () => {
+    await fetchGuruTerdaftar()
+});
 // Fungsi yang menangkap event emit dari child
 const handleProfileFetched = (data) => {
     dataConnected.value = data;
@@ -157,24 +78,17 @@ const handleFetchError = (error) => {
     console.error("Error diterima di parent:", error);
 };
 
-// status Guru naik atau lulus
-const dialogStatus = ref(false)
-
-
 // ==================================
-// =======SEMESTER=============
-
-const selectedSemester = computed(() => {
-    return store.getters["sekolahService/getSelectedSemester"]
-})
-
-
-const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"].schemaName)
-// ==================================
-// ==================================
-// =======Guru=============
+// =======composable=============
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"].schemaname)
 const selectedGuru = ref();
+const { guruTerdaftarList, fetchGuruTerdaftar } = useSekolahService(schemaname, selectedSemester)
 // ==================================
+
+watch(selectedSemester, async (e, b) => {
+    await fetchGuruTerdaftar()
+})
 
 // ========IMPORT DATA========
 import DialogImport from '@/components/DialogImport1.vue'
@@ -190,16 +104,18 @@ const cancelImport = () => {
     dialogImport.value = false;
 };
 
-const { guruList, fetchGuru } = useSekolahService(schemaname, selectedSemester)
-// ===========================================
-watch(selectedSemester, async (e, b) => {
-    await fetchGuru()
-})
 
-onMounted(async () => {
-    await fetchGuru()
-});
 
+
+
+const editGuru = async () => {
+    await nextTick();
+
+    router.push({
+        name: "editGuru",
+        query: { ptkId: selectedGuru.value[0]?.ptk.ptkId.toString() }
+    })
+};
 </script>
 
 <template>
@@ -210,11 +126,12 @@ onMounted(async () => {
                 <div class="w-full my-2 container">
                     <div class=" ">
                         <div class="mb-2">
+                            <h2 class="text-xl mb-2">Data Guru</h2>
                             <Toolbar>
                                 <template #start>
                                     <Button icon="pi pi-plus" severity="success" class="mr-2 text-lg" @click="openNew"
-                                        v-tooltip.bottom="'Tambah Guru'" />
-                                    <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
+                                        v-tooltip.bottom="'Tambah Guru Baru'" />
+                                    <Button icon="pi pi-pencil" severity="warn" @click="editGuru"
                                         :disabled="!selectedGuru || !selectedGuru.length || selectedGuru.length > 1"
                                         class="mr-2" v-tooltip.bottom="'Edit Guru'" />
                                     <Button icon="pi pi-trash" severity="danger" class="mr-2 text-lg"
@@ -257,7 +174,7 @@ onMounted(async () => {
                     </div>
 
 
-                    <DataTable ref="dt" v-model:selection="selectedGuru" stripedRows size="small" :value="guruList"
+                    <DataTable ref="dt" v-model:selection="selectedGuru" stripedRows size="small" :value="guruTerdaftarList"
                         dataKey="ptkTerdaftarId" :paginator="true" :rows="10" :filters="filters"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         :rowsPerPageOptions="[10, 20, 50]"
@@ -272,9 +189,11 @@ onMounted(async () => {
                         </Column> -->
                         <Column field="ptk.nama" header="Nama" sortable>
                         </Column>
-                        <Column field="ptk.nama" header="Gelar belakang" sortable>
+                        <Column field="ptk.gelarBelakang" header="Gelar belakang">
                         </Column>
                         <Column field="ptk.jenisKelamin" header="JK">
+                        </Column>
+                        <Column field="ptk.nip" header="NIP">
                         </Column>
                         <Column field="ptk.nuptk" header="NUPTK">
                         </Column>

@@ -244,7 +244,7 @@ onMounted(() => {
 const semester = ref()
 const schemaname = ref("")
 const getParamDialogImport = () => {
-    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaName
+    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
     semester.value = store.getters["sekolahService/getSemester"]
 
 }
@@ -435,7 +435,7 @@ const fetchSiswa = async () => {
         console.log("fethcSiswa")
         let payload = {
             semesterId: semester.value,
-            schemaName: schemaname.value
+            schemaname: schemaname.value
         }
         console.log(payload)
         const results = await store.dispatch("sekolahService/fetchSiswa", payload)

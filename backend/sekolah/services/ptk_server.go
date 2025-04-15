@@ -9,11 +9,21 @@ import (
 	"sekolah/models"
 	"sekolah/repositories"
 	"sekolah/utils"
+
+	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type PTKServiceServer struct {
 	pb.UnimplementedPTKServiceServer
 	repo repositories.GenericRepository[models.TabelPTK]
+}
+type PTKConflictResponse struct {
+	Index  int       `json:"index"`
+	PtkID  uuid.UUID `json:"ptk_id"`
+	Nama   string    `json:"nama"`
+	Reason string    `json:"reason"`
 }
 
 func NewPTKServiceServer() *PTKServiceServer {
@@ -28,13 +38,13 @@ func (s *PTKServiceServer) CreatePTK(ctx context.Context, req *pb.CreatePTKReque
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName"}
+	requiredFields := []string{"Schemaname"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	PTKReq := req.GetPTK()
 	PTKModel := utils.ConvertPBToModels(PTKReq, func(item *pb.PTK) *models.TabelPTK {
 		return &models.TabelPTK{
@@ -48,17 +58,27 @@ func (s *PTKServiceServer) CreatePTK(ctx context.Context, req *pb.CreatePTKReque
 			NUPTK:             &item.Nuptk,
 			AlamatJalan:       item.AlamatJalan,
 			StatusKeaktifanID: item.StatusKeaktifanId,
+			GelarDepan:        &item.GelarBelakang,
+			GelarBelakang:     &item.GelarBelakang,
+			NIP_NIY:           &item.NipNiy,
 		}
 	})
-	err = s.repo.SaveMany(ctx, schemaName, PTKModel, 1000)
+	conflicts, err := s.repo.SaveManyWithConflictCheck(ctx, schemaName, PTKModel, "PtkID", "ptk_id", 100)
+	// convert conflict rows ke response JSON
 	if err != nil {
-		log.Printf("Gagal menyimpan PTK: %v", err)
-		return nil, fmt.Errorf("gagal menyimpan PTK: %w", err)
+		return nil, status.Errorf(codes.Internal, "insert failed: %v", err)
 	}
+
+	conflictProto := repositories.ConvertConflictsToProto(conflicts, "PtkID", "Nama")
 
 	return &pb.CreatePTKResponse{
 		Message: "PTK berhasil ditambahkan",
 		Status:  true,
+		Conflicts: &pb.ConflictResponse{
+			Message:       "Sebagian data berhasil disimpan",
+			Conflicts:     conflictProto,
+			TotalConflict: int32(len(conflictProto)),
+		},
 	}, nil
 }
 
@@ -66,29 +86,22 @@ func (s *PTKServiceServer) CreatePTK(ctx context.Context, req *pb.CreatePTKReque
 func (s *PTKServiceServer) GetPTK(ctx context.Context, req *pb.GetPTKRequest) (*pb.GetPTKResponse, error) {
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName"}
+	requiredFields := []string{"Schemaname"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
-	ptkId := req.GetPTKId()
+	schemaName := req.GetSchemaname()
+	ptkId := req.GetPtkId()
 	var conditions = map[string]any{
 		"soft_delete": 0,
 	}
 	if ptkId != "" {
-		conditions["tabel_ptk.ptk_id"] = ptkId
+		conditions["ptk_id"] = ptkId
 	}
-	joins := []string{
-		// "JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
-		// "JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = tabel_anggotakelas.rombongan_belajar_id",
-		// "JOIN tabel_ptk ON tabel_ptk.ptk_id = tabel_kelas.ptk_id",
-	}
-	preloads := []string{}
-
-	orderBy := []string{"tabel_ptk.nama ASC"} // Hindari duplikasi
-	anggotaPTKModel, err := s.repo.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
+	log.Print(conditions)
+	anggotaPTKModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, nil, nil, conditions, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +118,9 @@ func (s *PTKServiceServer) GetPTK(ctx context.Context, req *pb.GetPTKRequest) (*
 			JenisPtkId:        item.JenisPtkID,
 			TanggalLahir:      item.TanggalLahir.Format("2006-01-02"),
 			StatusKeaktifanId: item.StatusKeaktifanID,
-			// SoftDelete: item,
+			GelarDepan:        utils.SafeString(item.GelarBelakang),
+			GelarBelakang:     utils.SafeString(item.GelarBelakang),
+			NipNiy:            utils.SafeString(item.NIP_NIY),
 		}
 	})
 
@@ -119,13 +134,13 @@ func (s *PTKServiceServer) UpdatePTK(ctx context.Context, req *pb.UpdatePTKReque
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName"}
+	requiredFields := []string{"Schemaname"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	PTKReq := req.GetPTK()
 	PTKModels := utils.ConvertPBToModels(PTKReq, func(item *pb.PTK) *models.TabelPTK {
 		return &models.TabelPTK{
@@ -139,7 +154,9 @@ func (s *PTKServiceServer) UpdatePTK(ctx context.Context, req *pb.UpdatePTKReque
 			NUPTK:             &item.Nuptk,
 			AlamatJalan:       item.AlamatJalan,
 			StatusKeaktifanID: item.StatusKeaktifanId,
-			// : ,
+			GelarDepan:        &item.GelarBelakang,
+			GelarBelakang:     &item.GelarBelakang,
+			NIP_NIY:           &item.NipNiy,
 		}
 	})
 	for _, v := range PTKModels {
@@ -156,120 +173,41 @@ func (s *PTKServiceServer) UpdatePTK(ctx context.Context, req *pb.UpdatePTKReque
 	}, nil
 }
 
-// // // **DeletePTK**
-// func (s *PTKServiceServer) DeletePTK(ctx context.Context, req *pb.DeletePTKRequest) (*pb.DeletePTKResponse, error) {
-// 	schemaName := req.GetSchemaname()
-// 	PTKID := req.GetPTKId()
+// // **DeletePTK**
+func (s *PTKServiceServer) DeletePTK(ctx context.Context, req *pb.DeletePTKRequest) (*pb.DeletePTKResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaname()
+	PTKID := req.GetPtkId()
 
-// 	err := s.PTKService.Delete(ctx, PTKID, schemaName)
-// 	if err != nil {
-// 		log.Printf("Gagal menghapus PTK: %v", err)
-// 		return nil, fmt.Errorf("gagal menghapus PTK: %w", err)
+	err = s.repo.Delete(ctx, PTKID, schemaName, "ptk_id")
+	if err != nil {
+		log.Printf("Gagal menghapus PTK: %v", err)
+		return nil, fmt.Errorf("gagal menghapus PTK: %w", err)
+	}
+
+	return &pb.DeletePTKResponse{
+		Message: "PTK berhasil dihapus",
+		Status:  true,
+	}, nil
+}
+
+// func ToPTKConflictResponse(conflicts []repositories.ConflictRow[models.TabelPTK]) []PTKConflictResponse {
+// 	res := make([]PTKConflictResponse, 0, len(conflicts))
+// 	for _, c := range conflicts {
+// 		res = append(res, PTKConflictResponse{
+// 			Index:  c.Index,
+// 			PtkID:  c.Entity.PtkID,
+// 			Nama:   c.Entity.Nama,
+// 			Reason: c.Reason,
+// 		})
 // 	}
-
-// 	return &pb.DeletePTKResponse{
-// 		Message: "PTK berhasil dihapus",
-// 		Status:  true,
-// 	}, nil
-// }
-
-// UploadPTK mengunggah data PTK dari file Excel
-// func (s *PTKServiceServer) UploadPTK(ctx context.Context, req *pb.UploadPTKRequest) (*pb.UploadPTKResponse, error) {
-// 	schemaName := req.GetSchemaname()
-// 	fileData := req.GetFile() // File dalam bentuk byte array
-
-// 	// Simpan file ke sementara
-// 	tempFile := "/tmp/uploaded_PTK.xlsx"
-// 	err := saveFile(tempFile, fileData)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal menyimpan file sementara: %w", err)
-// 	}
-
-// 	// Baca file Excel
-// 	f, err := excelize.OpenFile(tempFile)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal membaca file Excel: %w", err)
-// 	}
-// 	defer f.Close()
-
-// 	// Ambil semua data dari sheet pertama
-// 	rows, err := f.GetRows(f.GetSheetName(0))
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal mengambil data dari sheet: %w", err)
-// 	}
-
-// 	// Pastikan ada data
-// 	if len(rows) < 2 {
-// 		return nil, fmt.Errorf("file Excel kosong atau tidak memiliki data yang valid")
-// 	}
-
-// 	// Validasi header
-// 	expectedHeaders := []string{"NIS", "NISN", "NamaPTK", "TempatLahir", "TanggalLahir", "JenisKelamin", "Agama"}
-// 	for i, expected := range expectedHeaders {
-// 		if rows[0][i] != expected {
-// 			return nil, fmt.Errorf("format kolom tidak sesuai, kolom '%s' seharusnya ada di posisi %d", expected, i+1)
-// 		}
-// 	}
-
-// 	var PTKList []*models.PTK
-
-// 	// Mulai dari baris kedua karena baris pertama adalah header
-// 	for _, row := range rows[1:] {
-// 		if len(row) < len(expectedHeaders) {
-// 			log.Println("Skipping row due to insufficient data:", row)
-// 			continue
-// 		}
-
-// 		// Konversi data sesuai dengan model
-// 		namaPTK := row[2]
-// 		nis := row[0]
-// 		nisn := row[1]
-// 		tempatLahir := row[3]
-// 		tanggalLahir := row[4]
-// 		jenisKelamin := row[5]
-// 		agama := row[6]
-
-// 		// Validasi data
-// 		if nis == "" || namaPTK == "" || nisn == "" {
-// 			log.Println("Skipping row due to missing required fields:", row)
-// 			continue
-// 		}
-
-// 		// Konversi angka
-// 		nisInt, err := strconv.Atoi(nis)
-// 		if err != nil {
-// 			log.Printf("Format NIS tidak valid: %s", nis)
-// 			continue
-// 		}
-
-// 		nisnInt, err := strconv.Atoi(nisn)
-// 		if err != nil {
-// 			log.Printf("Format NISN tidak valid: %s", nisn)
-// 			continue
-// 		}
-
-// 		// Masukkan ke dalam list
-// 		PTK := &models.PTK{
-// 			NIS:          strconv.Itoa(nisInt),
-// 			NISN:         strconv.Itoa(nisnInt),
-// 			NamaPTK:    namaPTK,
-// 			TempatLahir:  tempatLahir,
-// 			TanggalLahir: tanggalLahir,
-// 			JenisKelamin: jenisKelamin,
-// 			Agama:        agama,
-// 		}
-// 		PTKList = append(PTKList, PTK)
-// 	}
-
-// 	// Simpan ke database
-// 	err = s.PTKService.BatchSave(ctx, PTKList, schemaName)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal menyimpan data PTK ke database: %w", err)
-// 	}
-
-// 	return &pb.UploadPTKResponse{
-// 		Message: "PTK berhasil diunggah",
-// 		Total:   int32(len(PTKList)),
-// 		Status:  true,
-// 	}, nil
+// 	return res
 // }

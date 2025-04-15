@@ -26,13 +26,13 @@ func NewTahunAjararanService() *TahunAjaranService {
 // **CreateTahunAjaran**
 func (s *TahunAjaranService) CreateTahunAjaran(ctx context.Context, req *pb.CreateTahunAjaranRequest) (*pb.CreateTahunAjaranResponse, error) {
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "TahunAjaran"}
+	requiredFields := []string{"Schemaname", "TahunAjaran"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := "ref" //req.GetSchemaName()
+	schemaName := "ref" //req.GetSchemaname()
 	tahunAjaran := req.GetTahunAjaran()
 	tahunAjaranModel := &models.TahunAjaran{
 		TahunAjaranID:  tahunAjaran.TahunAjaranId,
@@ -57,7 +57,7 @@ func (s *TahunAjaranService) CreateTahunAjaran(ctx context.Context, req *pb.Crea
 // **GetTahunAjaran**
 func (s *TahunAjaranService) GetTahunAjaran(ctx context.Context, req *pb.GetTahunAjaranRequest) (*pb.GetTahunAjaranResponse, error) {
 	// Validasi SchemaName
-	schemaName := "ref" //req.GetSchemaName()
+	schemaName := "ref" //req.GetSchemaname()
 	if schemaName == "" {
 		return nil, fmt.Errorf("schema name is required")
 	}
@@ -101,13 +101,13 @@ func (s *TahunAjaranService) GetTahunAjaran(ctx context.Context, req *pb.GetTahu
 // **UpdateTahunAjaran**
 func (s *TahunAjaranService) UpdateTahunAjaran(ctx context.Context, req *pb.UpdateTahunAjaranRequest) (*pb.UpdateTahunAjaranResponse, error) {
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"schemaname", "tahun_ajaran"}
+	requiredFields := []string{"Schemaname", "tahun_ajaran"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	tahunAjaranReq := req.GetTahunAjaran()
 	tahunAjaranModel := &models.TahunAjaran{
 		Nama:           tahunAjaranReq.Nama,
@@ -128,7 +128,7 @@ func (s *TahunAjaranService) UpdateTahunAjaran(ctx context.Context, req *pb.Upda
 
 // // **DeleteTahunAjaran**
 func (s *TahunAjaranService) DeleteTahunAjaran(ctx context.Context, req *pb.DeleteTahunAjaranRequest) (*pb.DeleteTahunAjaranResponse, error) {
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	tahunAjaranID := req.GetTahunAjaranId()
 
 	err := s.repo.Delete(ctx, tahunAjaranID, schemaName)

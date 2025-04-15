@@ -29,13 +29,13 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "NilaiAkhir"}
+	requiredFields := []string{"Schemaname", "NilaiAkhir"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	nilaiAkhirReq := req.GetNilaiAkhir()
 
 	nilaiAkhir := ConvertPBToModels(nilaiAkhirReq, func(nilai *pb.NilaiAkhir) *models.NilaiAkhir {
@@ -81,13 +81,13 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "SemesterId"}
+	requiredFields := []string{"Schemaname", "SemesterId"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	semesterId := req.GetSemesterId()
 	joins := []string{
 		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_nilaiakhir.peserta_didik_id",
@@ -128,7 +128,7 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 // func (s *NilaiAkhirServiceServer) UpdateNilai akhir(ctx context.Context, req *pb.UpdateNilai akhirRequest) (*pb.UpdateNilai akhirResponse, error) {
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received UpdateUserProfile request: %+v\n", req)
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	Nilai akhirReq := req.GetNilai akhir()
 // 	Nilai akhirPelenReq := req.GetNilai akhirPelengkap()
 // 	Nilai akhir := &models.PesertaDidik{
@@ -177,7 +177,7 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 
 // // // **DeleteNilai akhir**
 // func (s *NilaiAkhirServiceServer) DeleteNilai akhir(ctx context.Context, req *pb.DeleteNilai akhirRequest) (*pb.DeleteNilai akhirResponse, error) {
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	Nilai akhirID := req.GetNilai akhirId()
 
 // 	err := s.pesertaDidikService.Delete(ctx, Nilai akhirID, schemaName)
@@ -194,7 +194,7 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 
 // // UploadNilai akhir mengunggah data Nilai akhir dari file Excel
 // func (s *NilaiAkhirServiceServer) UploadNilai akhir(ctx context.Context, req *pb.UploadNilai akhirRequest) (*pb.UploadNilai akhirResponse, error) {
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	fileData := req.GetFile() // File dalam bentuk byte array
 
 // 	// Simpan file ke sementara

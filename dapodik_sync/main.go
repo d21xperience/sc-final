@@ -136,94 +136,172 @@
 //			}
 //		}
 //	}
+// package main
+
+// import (
+// 	"log"
+// 	"os"
+
+// 	"gioui.org/app"
+// 	"gioui.org/layout"
+// 	"gioui.org/op"
+// 	"gioui.org/unit"
+// 	"gioui.org/widget"
+// 	"gioui.org/widget/material"
+// )
+
+// func main() {
+// 	go func() {
+// 		w := new(app.Window) // Membuat window baru
+// 		w.Option(app.Title("Dapodik_sync"))
+// 		w.Option(app.MaxSize(unit.Dp(400), unit.Dp(600)))
+// 		w.Option(app.MinSize(unit.Dp(400), unit.Dp(600)))
+
+// 		if err := loop(w); err != nil {
+// 			log.Fatal(err)
+// 		}
+// 		os.Exit(0)
+// 	}()
+// 	app.Main()
+// }
+
+// func loop(w *app.Window) error {
+// 	var ops op.Ops
+// 	th := material.NewTheme()
+// 	// Widgets
+// 	signInBtn := new(widget.Clickable)
+// 	registerLink := new(widget.Clickable)
+// 	forgotPasswordCheckbox := new(widget.Bool)
+// 	usernameField := new(widget.Editor)
+// 	passwordField := new(widget.Editor)
+
+// 	for {
+// 		switch e := w.Event().(type) {
+// 		case app.DestroyEvent:
+// 			return e.Err
+// 		case app.FrameEvent:
+// 			gtx := app.NewContext(&ops, e)
+// 			layout.Flex{
+// 				Axis:    layout.Vertical,
+// 				Spacing: layout.SpaceEvenly,
+// 			}.Layout(gtx,
+// 				// Judul "Sign In"
+// 				layout.Rigid(material.H1(th, "Sign In").Layout),
+
+// 				// Tautan "Don't have an account? Register"
+// 				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+// 					return layout.Flex{
+// 						Axis: layout.Horizontal,
+// 					}.Layout(gtx, layout.Rigid(material.Body1(th, "Don't have an account?").Layout),
+// 						layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+// 							return material.Clickable(gtx, registerLink, func(gtx layout.Context) layout.Dimensions {
+// 								return material.Body1(th, "Register").Layout(gtx)
+// 							})
+// 						}),
+// 					)
+// 				}),
+
+// 				// Field "Username or Email"
+// 				layout.Rigid(material.Editor(th, usernameField, "Username or Email").Layout),
+
+// 				// Field "Password"
+// 				layout.Rigid(material.Editor(th, passwordField, "Password").Layout),
+
+// 				// Checkbox "Forgot Password?"
+// 				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+// 					return layout.Flex{
+// 						Axis: layout.Horizontal,
+// 					}.Layout(gtx,
+// 						layout.Rigid(material.CheckBox(th, forgotPasswordCheckbox, "Forgot Password?").Layout),
+// 					)
+// 				}),
+
+// 				// Tombol "ACCESS MY ACCOUNT"
+// 				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+// 					return material.Button(th, signInBtn, "ACCESS MY ACCOUNT").Layout(gtx)
+// 				}),
+// 			)
+
+//				e.Frame(gtx.Ops)
+//			}
+//		}
+//	}
 package main
 
 import (
 	"log"
-	"os"
 
-	"gioui.org/app"
-	"gioui.org/layout"
-	"gioui.org/op"
-	"gioui.org/unit"
-	"gioui.org/widget"
-	"gioui.org/widget/material"
+	"github.com/consensys/gnark-crypto/field/goff/cmd"
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 )
 
+// func main() {
+
+// 	// // Ambil input username
+// 	// reader := bufio.NewReader(os.Stdin)
+// 	// fmt.Print("Username: ")
+// 	// username, _ := reader.ReadString('\n')
+// 	// username = sanitizeInput(username)
+
+// 	// // Ambil input password secara tersembunyi
+// 	// fmt.Print("Password: ")
+// 	// bytePassword, _ := term.ReadPassword(int(os.Stdin.Fd()))
+// 	// password := string(bytePassword)
+// 	// fmt.Println() // newline setelah password
+
+// 	reader := bufio.NewReader(os.Stdin)
+
+// 	fmt.Print("Username: ")
+// 	username, _ := reader.ReadString('\n')
+// 	username = strings.TrimSpace(username)
+
+// 	fmt.Print("Password: ")
+// 	passwordBytes, _ := term.ReadPassword(int(os.Stdin.Fd()))
+// 	fmt.Println() // biar turun baris setelah input password
+// 	password := strings.TrimSpace(string(passwordBytes))
+
+// 	// fmt.Print("Password: ")
+// 	// password, _ := reader.ReadString('\n')
+// 	// password = strings.TrimSpace(password)
+
+// 	// fmt.Printf("Input Username: %q\n", username)
+// 	// fmt.Printf("Input Password: %q\n", password)
+
+// 	// username := "administrator"
+// 	// password := "123"
+// 	// Setup client gRPC
+// 	cfg := grpcclient.Config{
+// 		Address:     "localhost:50052",
+// 		DialTimeout: 5 * time.Second,
+// 	}
+
+// 	clientWrapper, err := grpcclient.NewGRPCClient(cfg)
+// 	if err != nil {
+// 		log.Fatalf("Gagal konek: %v", err)
+// 	}
+// 	defer clientWrapper.Close()
+
+// 	// Panggil login
+// 	authService := services.NewAuthService(clientWrapper.Conn)
+// 	token, err := authService.Login(username, password)
+// 	if err != nil {
+// 		log.Fatalf("Login gagal: %v", err)
+// 	}
+
+// 	fmt.Println("Login berhasil! Token:", token)
+// }
+
+//	func sanitizeInput(s string) string {
+//		return string([]byte(s)[:len(s)-1]) // hapus newline (jika pakai Scanln tidak perlu ini)
+//	}
 func main() {
-	go func() {
-		w := new(app.Window) // Membuat window baru
-		w.Option(app.Title("Dapodik_sync"))
-		w.Option(app.MaxSize(unit.Dp(400), unit.Dp(600)))
-		w.Option(app.MinSize(unit.Dp(400), unit.Dp(600)))
-		
-
-		if err := loop(w); err != nil {
-			log.Fatal(err)
-		}
-		os.Exit(0)
-	}()
-	app.Main()
-}
-
-func loop(w *app.Window) error {
-	var ops op.Ops
-	th := material.NewTheme()
-	// Widgets
-	signInBtn := new(widget.Clickable)
-	registerLink := new(widget.Clickable)
-	forgotPasswordCheckbox := new(widget.Bool)
-	usernameField := new(widget.Editor)
-	passwordField := new(widget.Editor)
-
-	for {
-		switch e := w.Event().(type) { 
-		case app.DestroyEvent:
-			return e.Err
-		case app.FrameEvent:
-			gtx := app.NewContext(&ops, e)
-			layout.Flex{
-				Axis:    layout.Vertical,
-				Spacing: layout.SpaceEvenly,
-			}.Layout(gtx,
-				// Judul "Sign In"
-				layout.Rigid(material.H1(th, "Sign In").Layout),
-
-				// Tautan "Don't have an account? Register"
-				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-					return layout.Flex{
-						Axis: layout.Horizontal,
-					}.Layout(gtx, layout.Rigid(material.Body1(th, "Don't have an account?").Layout),
-						layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-							return material.Clickable(gtx, registerLink, func(gtx layout.Context) layout.Dimensions {
-								return material.Body1(th, "Register").Layout(gtx)
-							})
-						}),
-					)
-				}),
-
-				// Field "Username or Email"
-				layout.Rigid(material.Editor(th, usernameField, "Username or Email").Layout),
-
-				// Field "Password"
-				layout.Rigid(material.Editor(th, passwordField, "Password").Layout),
-
-				// Checkbox "Forgot Password?"
-				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-					return layout.Flex{
-						Axis: layout.Horizontal,
-					}.Layout(gtx,
-						layout.Rigid(material.CheckBox(th, forgotPasswordCheckbox, "Forgot Password?").Layout),
-					)
-				}),
-
-				// Tombol "ACCESS MY ACCOUNT"
-				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-					return material.Button(th, signInBtn, "ACCESS MY ACCOUNT").Layout(gtx)
-				}),
-			)
-
-			e.Frame(gtx.Ops)
-		}
+	err := godotenv.Load()
+	if err != nil {
+		log.Println(".env tidak ditemukan, lanjut pakai environment variable")
 	}
+
+	viper.AutomaticEnv() // ambil dari env (termasuk dari .env)
+
+	cmd.Execute()
 }

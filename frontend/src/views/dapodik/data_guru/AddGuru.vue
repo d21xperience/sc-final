@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, toRaw } from 'vue';
 
 import InputText from 'primevue/inputtext';
 import Select from 'primevue/select';
@@ -12,8 +12,16 @@ import Button from 'primevue/button';
 import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
 const toast = useToast();
+// ================================
+// composable
+// ================================
+import { useSekolahService } from '@/composables/useSekolahService'
 
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
+const schemaName = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
 
+const { guruList, fetchGuru } = useSekolahService(schemaName, selectedSemester)
+// ================================
 
 import Textarea from 'primevue/textarea';
 
@@ -32,9 +40,7 @@ const {
 import DialogLoading from '@/components/DialogLoading.vue';
 import store from '@/store';
 
-const selectedSemester = computed(() => {
-    return store.getters["sekolahService/getSelectedSemester"]
-})
+
 const alamatLengkap = ref({
     alamatJalan: '',
     rt: '',
@@ -65,12 +71,42 @@ const tabel_ptk_terdaftar = ref({
         status_keaktifan_id: 1,
     }
 });
+import { useRoute } from "vue-router";
+const route = useRoute();
+const ptkId = route.query.ptkId;
+const isEdit = ref(false)
+onMounted(async () => {
+    if (ptkId) {
+        isEdit.value = true
+        await fetchGuru(ptkId);
+        if (guruList.value && guruList.value.length > 0) {
+            const guru = guruList.value[0];
+            if (guru.jenisKelamin === "L") {
+                selectedJenisKelamin.value = jenisKelaminOptions.value[0]
+            } else if (guru.jenisKelamin === "P") {
+                selectedJenisKelamin.value = jenisKelaminOptions.value[1]
+            }
+            tabel_ptk_terdaftar.value.ptk = {
+                ptk_id: guru.ptkId || "",
+                nama: guru.nama || "",
+                nip: guru.nip || "",
+                jenis_ptk_id: guru.jenisPtkId || "",
+                tempat_lahir: guru.tempatLahir || "",
+                tanggal_lahir: guru.tanggalLahir || "",
+                nuptk: guru.nuptk || "",
+                alamat_jalan: guru.alamatJalan || "",
+                status_keaktifan_id: guru.statusKeaktifanId || ""
+            };
 
+            tabel_ptk_terdaftar.ptk_id = guru.ptkId; // jangan lupa juga isi yang di luar
+        }
+
+    }
+})
 // Opsi Dropdown
 watch(selectedJenisKelamin, () => tabel_ptk_terdaftar.value.ptk.jenis_kelamin = selectedJenisKelamin.value.value)
 // Handle Submit Form
 // onMounted(async () => await store.dispatch("sekolahService/fetchTabeltenant"))
-const schemaName = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaName)
 const isLoading = ref(false)
 const submitForm = () => {
     submitted.value = true
@@ -126,7 +162,7 @@ const tes = (e) => {
 <template>
     <div class="container bg-white p-8 rounded-lg shadow-md">
         <DialogLoading :modelValue=isLoading @update:modelValue="tes" />
-        <h1 class="text-2xl font-bold mb-6">Form Registrasi Guru</h1>
+        <h1 class="text-2xl font-bold mb-6">{{ isEdit ? 'Form Edit Guru' : 'Form Tambah Guru' }}</h1>
         <section class="mb-8">
             <h2 class="text-xl font-semibold mb-4">Informasi Guru</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -179,206 +215,8 @@ const tes = (e) => {
                     <small v-if="submitted && !tabel_ptk_terdaftar.ptk.alamat_jalan" class="text-red-500">Alamat harus
                         diisi.</small>
                 </div>
-                <!-- <div>
-                    <label class="block text-gray-700">Agama</label>
-                    <Select v-model="selectedAgamaOptions" :options="agamaOptions" placeholder="Pilih Agama"
-                        optionLabel="label" fluid class="w-full" />
-                </div>
-                <div>
-                    <label class="block text-gray-700" for="nis">Kewarganegaraan</label>
-                    <InputText v-model="tabel_ptk_terdaftar.ptk.nis" fluid name="nis" id="nis" placeholder="Masukan NIS" />
-                </div>
-                <div>
-                    <label class="block text-gray-700" for="nisn">Status Perkawinan</label>
-                    <InputText v-model="tabel_ptk_terdaftar.ptk.nisn" fluid name="nisn" id="nisn" placeholder="Masukan NISN" />
-                </div> -->
-            </div>
-
-            <!--<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
-                 <div class="flex space-x-1">
-                    <div class="w-1/2">
-                        <label class="block text-gray-700" for="rt">RT</label>
-                        <InputText v-model="alamatLengkap.rt" fluid name="rt" id="rt" placeholder="Masukan RT" />
-                    </div>
-                    <div class="w-1/2">
-                        <label class="block text-gray-700" for="rw">RW</label>
-                        <InputText v-model="alamatLengkap.rw" fluid name="rw" id="rw" placeholder="Masukan RW" />
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-gray-700" for="prov">Prov.</label>
-                    <InputText v-model="alamatLengkap.prov" fluid name="prov" id="prov" placeholder="Masukan nama" />
-                </div>
-                <div>
-                    <label class="block text-gray-700" for="kab">Kab</label>
-                    <InputText v-model="alamatLengkap.kab" fluid name="kab" id="kab" placeholder="Masukan nama" />
-                </div>
-                <div>
-                    <label class="block text-gray-700" for="kec">Kecamatan</label>
-                    <InputText v-model="alamatLengkap.kec" fluid name="kec" id="kec"
-                        placeholder="Masukan nama kecamatan" />
-                </div>
-                <div>
-                    <label class="block text-gray-700" for="desa">Desa</label>
-                    <InputText v-model="alamatLengkap.desa" fluid name="desa" id="desa"
-                        placeholder="Masukan nama desa" />
-                    </div>
-                </div> -->
-            <!-- <div class="mb-4">
-                <label class="block text-gray-700">Phone Number</label>
-                <div class="relative">
-                    <input type="text" placeholder="Enter student's phone number"
-                        class="w-full p-2 border border-gray-300 rounded">
-                    <i class="fas fa-phone-alt absolute right-3 top-3 text-gray-400"></i>
-                </div>
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700">Email</label>
-                <div class="relative">
-                    <input type="text" placeholder="Enter student's phone number"
-                        class="w-full p-2 border border-gray-300 rounded">
-                    <i class="fas fa-phone-alt absolute right-3 top-3 text-gray-400"></i>
-                </div>
-            </div>
-            <div>
-                <label class="block text-gray-700">Admission Date</label>
-                <input type="date" placeholder="YYYY-MM-DD" class="w-full p-2 border border-gray-300 rounded">
-            </div> -->
-        </section>
-
-        <!-- <section class="mb-8">
-            <h2 class="text-xl font-semibold mb-4">Informasi Orang tua</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-gray-700" for="nmAyah">Nama Ayah Kandung</label>
-                    <InputText v-model="tabel_ptk_terdaftar.ptk.nmAyah" fluid name="nmAyah" id="nmAyah"
-                        placeholder="Masukan nama" />
-                </div>
-                <div>
-                    <label class="block text-gray-700">Pekerjaan Ayah</label>
-                    <input type="text" placeholder="Enter father's occupation"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-                <div>
-                    <label class="block text-gray-700">Nama Ibu Kandung</label>
-                    <input type="text" placeholder="Enter mother's name"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-                <div>
-                    <label class="block text-gray-700">Pekerjaan Ibu</label>
-                    <input type="text" placeholder="Enter mother's occupation"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700">Alamat Orang tua</label>
-                <textarea placeholder="Enter parents' address (if different from student)"
-                    class="w-full p-2 border border-gray-300 rounded"></textarea>
-            </div>
-            <div>
-                <label class="block text-gray-700">No.Tlp Ortu</label>
-                <div class="relative">
-                    <input type="text" placeholder="Enter parents' phone number"
-                        class="w-full p-2 border border-gray-300 rounded">
-                    <i class="fas fa-phone-alt absolute right-3 top-3 text-gray-400"></i>
-                </div>
             </div>
         </section>
-
-        <section class="mb-8">
-            <h2 class="text-xl font-semibold mb-4">Informasi Wali (Optional)</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-gray-700">Nama Wali</label>
-                    <input type="text" placeholder="Enter guardian's name (if applicable)"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-                <div>
-                    <label class="block text-gray-700">Pekerjaan wali</label>
-                    <input type="text" placeholder="Enter guardian's occupation"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700">Alamat Wali</label>
-                <textarea placeholder="Enter guardian's address"
-                    class="w-full p-2 border border-gray-300 rounded"></textarea>
-            </div>
-            <div>
-                <label class="block text-gray-700">No.Tlp. Wali</label>
-                <div class="relative">
-                    <input type="text" placeholder="Enter guardian's phone number"
-                        class="w-full p-2 border border-gray-300 rounded">
-                    <i class="fas fa-phone-alt absolute right-3 top-3 text-gray-400"></i>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <h2 class="text-xl font-semibold mb-4">Riwayat Pendidikan</h2>
-            <h3 class="text-xl font-semibold mb-4">Pendidikan formal di dalam dan luar negeri</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-gray-700">Jenis Pendidikan</label>
-                    <input type="text" placeholder="Enter guardian's name (if applicable)"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-                <div>
-                    <label class="block text-gray-700">Jurusan</label>
-                    <input type="text" placeholder="Enter guardian's occupation"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700">Tahun masuk</label>
-                <textarea placeholder="Enter guardian's address"
-                    class="w-full p-2 border border-gray-300 rounded"></textarea>
-            </div>
-            <div>
-                <label class="block text-gray-700">Tahun Keluar</label>
-                <div class="relative">
-                    <input type="text" placeholder="Enter guardian's phone number"
-                        class="w-full p-2 border border-gray-300 rounded">
-                    <i class="fas fa-phone-alt absolute right-3 top-3 text-gray-400"></i>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <h2 class="text-xl font-semibold mb-4">Informasi Tambahan</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-gray-700">Status dalam Keluarga</label>
-                    <select class="w-full p-2 border border-gray-300 rounded">
-                        <option>Select status</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-gray-700">Anak Ke-</label>
-                    <input type="text" placeholder="Enter child number (e.g., 1, 2)"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-                <div>
-                    <label class="block text-gray-700">Asal Sekolah</label>
-                    <input type="text" placeholder="Enter previous school name"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-                <div>
-                    <label class="block text-gray-700">Diterima di kelas</label>
-                    <input type="text" placeholder="Enter class level"
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-            </div>
-            <div>
-                <label class="block text-gray-700">Student Photo</label>
-                <div class="relative">
-                    <input type="file" class="w-full p-2 border border-gray-300 rounded">
-                    <i class="fas fa-upload absolute right-3 top-3 text-gray-400"></i>
-                </div>
-            </div>
-        </section> -->
-
         <div class="flex justify-end space-x-4">
             <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 @click="submitForm">Simpan</button>

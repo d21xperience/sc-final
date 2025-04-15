@@ -89,7 +89,7 @@ func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Requ
 	fileHeader := r.MultipartForm.File["file"]
 	param := ParamTemplate{
 		templateType: r.FormValue("upload_type"),
-		schemaname:   r.FormValue("schemaname"),
+		schemaname:   r.FormValue("Schemaname"),
 		// semesterId:   r.FormValue("semester_id"),
 	}
 	if len(fileHeader) == 0 {
@@ -230,7 +230,7 @@ func (h *UploadServiceServer) DownloadTemplateHTTP(w http.ResponseWriter, r *htt
 	}
 	// Lokasi direktori template
 	var param = ParamTemplate{
-		schemaname:   r.FormValue("schemaname"),
+		schemaname:   r.FormValue("Schemaname"),
 		semesterId:   r.FormValue("semesterId"),
 		templateType: templateType,
 	}

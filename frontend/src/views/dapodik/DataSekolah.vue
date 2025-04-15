@@ -149,7 +149,7 @@ const fetchSekolah = async () => {
     const sekolahID = await store.state.authService.user?.sekolahId;
     const tTenant = await store.dispatch("sekolahService/fetchTabeltenant", sekolahID)
     // console.log(tTenant)
-    dataSekolah.value = await store.dispatch("sekolahService/fetchSekolah", { schemaName: tTenant.schemaName, namaSekolah: tTenant.namaSekolah })
+    dataSekolah.value = await store.dispatch("sekolahService/fetchSekolah", { schemaname: tTenant.schemaname, namaSekolah: tTenant.namaSekolah })
     // console.log(dataSekolah)
     sekolah.value = dataSekolah
 }
@@ -212,7 +212,7 @@ const updateData = async () => {
         console.log("Mengirim data ke backend:", changedData.value);
         // Kirim `changedData.value` ke backend via API
         const payload = {
-            schema_name: store.getters["sekolahService/getTabeltenant"]?.schemaName,
+            schemaname: store.getters["sekolahService/getTabeltenant"]?.schemaName,
             sekolah: sekolah.value
         }
         const resp = await store.dispatch("sekolahService/updateSekolah", payload)

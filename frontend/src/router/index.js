@@ -245,9 +245,17 @@ const router = createRouter({
                 {
                   path: "input-guru",
                   name: "inputGuru",
-                  meta: { disableSelect: true },
+                  meta: { disableSelect: true, title: 'Tambah Guru' },
                   component: () =>
                     import("../views/dapodik/data_guru/AddGuru.vue"),
+                },
+                {
+                  path: "edit-guru",
+                  name: "editGuru",
+                  meta: { disableSelect: true , title: 'Edit Guru'},
+                  component: () =>
+                    import("../views/dapodik/data_guru/AddGuru.vue"),
+                  // props: true,
                 },
               ],
             },
@@ -296,6 +304,7 @@ const router = createRouter({
                 {
                   path: "edit-siswa/:id",
                   name: "editSiswa",
+                  meta: { disableSelect: true },
                   component: () =>
                     import("../views/dapodik/data_siswa/AddSiswa.vue"),
                 },
@@ -334,6 +343,7 @@ const router = createRouter({
                 {
                   path: "edit-kelas",
                   name: "editKelas",
+                  meta: { disableSelect: true,title: "Edit Kelas" },
                   component: () =>
                     import("../views/dapodik/data_kelas/AddKelas.vue"),
                   // props: true,

@@ -1,0 +1,33 @@
+{
+    "results": 1,
+    "id": "sekolah_id",
+    "start": 0,
+    "limit": 20,
+    "rows": {
+        "sekolah_id": "8a5bd957-66bc-4096-9ff1-fee096b87ba0",
+        "nama": "SMKS PASUNDAN JATINANGOR",
+        "nss": "402021015029",
+        "npsn": "20254180",
+        "bentuk_pendidikan_id": 15,
+        "bentuk_pendidikan_id_str": "SMK",
+        "status_sekolah": "2",
+        "status_sekolah_str": "Swasta",
+        "alamat_jalan": "Jalan Kolonel Ahmad Syam Jatinangor",
+        "rt": "2",
+        "rw": "6",
+        "kode_wilayah": "021001AI",
+        "kode_pos": "45363",
+        "nomor_telepon": "0227782242",
+        "nomor_fax": "0227782242",
+        "email": "smkspasundanjatinangor@gmail.com",
+        "website": "http:\/\/smkpasundanjatinangor.sch.id",
+        "is_sks": false,
+        "lintang": "-6.942500000000",
+        "bujur": "107.773100000000",
+        "dusun": "Cikeruh",
+        "desa_kelurahan": "Cikeruh",
+        "kecamatan": "Kec. Jatinangor",
+        "kabupaten_kota": "Kab. Sumedang",
+        "provinsi": "Prov. Jawa Barat"
+    }
+}

@@ -131,3 +131,15 @@ CREATE TABLE ref.tingkat_pendidikan (
 	PRIMARY KEY (tingkat_pendidikan_id),
 	CONSTRAINT "fk_tingkat__tingkat_j_jenjang_" FOREIGN KEY ("jenjang_pendidikan_id") REFERENCES ref.jenjang_pendidikan (jenjang_pendidikan_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
+
+CREATE TABLE ref.gelar_akademik (
+	gelar_akademik_id INTEGER NOT NULL,
+	kode VARCHAR(10) NOT NULL,
+	nama VARCHAR(40) NOT NULL,
+	posisi_gelar NUMERIC(1,0) NOT NULL,
+	create_date TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:55.639014',
+	last_update TIMESTAMP NOT NULL DEFAULT '2019-09-10 14:29:55.639014',
+	expired_date TIMESTAMP NULL DEFAULT NULL,
+	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
+	PRIMARY KEY (gelar_akademik_id)
+);

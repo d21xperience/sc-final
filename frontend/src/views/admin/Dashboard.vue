@@ -321,7 +321,7 @@ const setChartOptions = () => {
 
 
 // Tenant Table
-const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaName)
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
 const tahunAjaranId = computed(() => store.getters["sekolahService/getSelectedSemester"]?.tahunAjaranId)
 
 // Perikasa dan perbaiki kode sesuai dengan praktek terbaik.
@@ -357,21 +357,5 @@ const fetchCountGuru = async () => {
     totalGuru.value = await store.dispatch("sekolahService/fetchGuruCount", payload)
 }
 
-// watch(semesterId, async (newSemester) => {
-//     console.log("watch")
-//     if (!newSemester) return;
-
-//     const payload = {
-//         schemaname: schemaname.value,
-//         tahun_ajaran_id: newSemester,
-//     };
-
-//     try {
-//         totalGuru.value = await store.dispatch("sekolahService/fetchGuruCount", payload);
-//     } catch (error) {
-//         console.error("Gagal mengambil jumlah guru:", error);
-//         totalGuru.value = 0;
-//     }
-// });
 
 </script>

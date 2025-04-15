@@ -18,16 +18,19 @@ type RombelServiceServer struct {
 	repo              repositories.GenericRepository[models.RombonganBelajar]
 	repoRombelAnggota repositories.GenericRepository[models.RombelAnggota]
 	repoSemester      repositories.GenericRepository[models.Semester]
+	repoSiswa         repositories.GenericRepository[models.PesertaDidik]
 }
 
 func NewRombelServiceServer() *RombelServiceServer {
 	repoRombel := repositories.NewrombonganBelajarRepository(config.DB)
 	repoRombelAnggota := repositories.NewRombelAnggotaRepository(config.DB)
 	repoSemester := repositories.NewSemesterRepository(config.DB)
+	repoSiswa := repositories.NewSiswaRepository(config.DB)
 	return &RombelServiceServer{
 		repo:              *repoRombel,
 		repoRombelAnggota: *repoRombelAnggota,
 		repoSemester:      *repoSemester,
+		repoSiswa:         *repoSiswa,
 	}
 }
 
@@ -36,13 +39,13 @@ func (s *RombelServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKel
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "Kelas"}
+	requiredFields := []string{"Schemaname", "Kelas"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	kelas := req.Kelas
 	// rombelId := uuid.New()
 	kelasModel := utils.ConvertPBToModels(kelas, func(item *pb.Kelas) *models.RombonganBelajar {
@@ -60,11 +63,11 @@ func (s *RombelServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKel
 		}
 	})
 	// simpan kelas ke database
-	res := s.repo.SaveMany(ctx, schemaName, kelasModel,100)
+	res := s.repo.SaveMany(ctx, schemaName, kelasModel, 100)
 	if res != nil {
 		return nil, err
 	}
-	
+
 	return &pb.CreateKelasResponse{
 		Message: "Kelas berhasil ditambahkan",
 		Status:  true,
@@ -75,13 +78,13 @@ func (s *RombelServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKel
 // 	// Debugging: Cek nilai request yang diterima
 // 	log.Printf("Received Sekolah data request: %+v\n", req)
 // 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"SchemaName", "Kelas"}
+// 	requiredFields := []string{"Schemaname", "Kelas"}
 // 	// Validasi request
 // 	err := utils.ValidateFields(req, requiredFields)
 // 	if err != nil {
 // 		return nil, err
 // 	}
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	kelas := req.GetKelas()
 
 // 	rombelId := uuid.New()
@@ -130,7 +133,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	if schemaName == "\"\"" {
 		return nil, fmt.Errorf("schema name is required")
 	}
@@ -234,13 +237,13 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 func (s *RombelServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKelasRequest) (*pb.UpdateKelasResponse, error) {
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SchemaName", "Kelas"}
+	requiredFields := []string{"Schemaname", "Kelas"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	Kelas := req.Kelas
 	// rombelId := uuid.New()
 	sekolahId, err := uuid.Parse(Kelas.SekolahId)
@@ -280,32 +283,51 @@ func (s *RombelServiceServer) UpdateKelas(ctx context.Context, req *pb.UpdateKel
 	if len(anggotaKelas) > 0 {
 		// var modelAnggotaKelas []models.RombelAnggota // Inisialisasi slice kosong
 
-		for _, v := range anggotaKelas {
-			newUUID := uuid.New()
-			ced := models.RombelAnggota{ // Tidak perlu pakai pointer di sini
-				AnggotaRombelId:    utils.StringToUUID(newUUID.String()),
-				RombonganBelajarId: rombelId,
-				PesertaDidikId:     utils.StringToUUID(v.PesertaDidikId),
-				SemesterId:         KelasModel.SemesterId,
-			}
-			modelAnggota, err := s.repoRombelAnggota.FindByID(ctx, ced.PesertaDidikId.String(), schemaName, "peserta_didik_id")
-			if err != nil {
-				return nil, err
-			}
-			if modelAnggota == nil {
-				results := s.repoRombelAnggota.Save(ctx, &ced, schemaName)
-				if results != nil {
-					return nil, err
-				}
-			} else {
-				results := s.repoRombelAnggota.Update(ctx, &ced, schemaName, "peserta_didik_id", ced.PesertaDidikId.String())
-				if results != nil {
-					return nil, err
-				}
-			}
-			// modelAnggotaKelas = append(modelAnggotaKelas, ced) // Tambahkan ke slice
-			// modelAnggota, err := s.repoRombelAnggota.Update(ctx, ced,schemaName,"rombel_id",ced.AnggotaRombelId)
-		}
+		// for _, v := range anggotaKelas {
+		// newUUID := uuid.New()
+		// ced := models.RombelAnggota{ // Tidak perlu pakai pointer di sini
+		// 	AnggotaRombelId:    utils.StringToUUID(v.AnggotaRombelId),
+		// 	RombonganBelajarId: utils.StringToUUID(v.RombonganBelajarId),
+		// 	PesertaDidikId:     utils.StringToUUID(v.PesertaDidikId),
+		// 	SemesterId:         KelasModel.SemesterId,
+		// }
+		// modelAnggota, err := s.repoRombelAnggota.FindByID(ctx, ced.PesertaDidikId.String(), schemaName, "peserta_didik_id")
+		// if err != nil {
+		// 	return nil, err
+		// }
+
+		// if modelAnggota == nil {
+		// 	// cek di tabel_siswa
+		// 	// jika di tabel_siswa tidak ada buat di tabel_siswa
+		// 	pdModel, err := s.repoSiswa.FindOrCreateByID(ctx, v.PesertaDidikId, schemaName, "peserta_didik_id", func(s string) *models.PesertaDidik {
+		// 		return &models.PesertaDidik{
+		// 			PesertaDidikId: v.PesertaDidik.Nis,
+		// 			Nis:            v.PesertaDidik.Nis,
+		// 			Nisn:           v.PesertaDidik.Nisn,
+		// 		}
+		// 	})
+		// 	if err != nil {
+		// 		return nil, err
+		// 	}
+		// 	// daftarkan ke tabel_anggota
+		// 	if pdModel == nil {
+		// 		fmt.Printf("User ditemukan/ditambahkan: %+v\n", pdModel)
+		// 	}
+		// 	// jika di tabel_siswa ada
+		// 	// daftarkan ke tabel_anggota
+		// 	// results := s.repoRombelAnggota.Save(ctx, &ced, schemaName)
+		// 	// if results != nil {
+		// 	// 	return nil, err
+		// 	// }
+		// } else {
+		// 	results := s.repoRombelAnggota.Update(ctx, &ced, schemaName, "peserta_didik_id", ced.PesertaDidikId.String())
+		// 	if results != nil {
+		// 		return nil, err
+		// 	}
+		// }
+		// modelAnggotaKelas = append(modelAnggotaKelas, ced) // Tambahkan ke slice
+		// modelAnggota, err := s.repoRombelAnggota.Update(ctx, ced,schemaName,"rombel_id",ced.AnggotaRombelId)
+		// }
 	}
 	return &pb.UpdateKelasResponse{
 		Message: "Kelas berhasil diperbarui",
@@ -322,7 +344,7 @@ func (s *RombelServiceServer) DeleteKelas(ctx context.Context, req *pb.DeleteKel
 	if err != nil {
 		return nil, err
 	}
-	schemaName := req.GetSchemaName()
+	schemaName := req.GetSchemaname()
 	KelasID := req.GetKelasId()
 
 	err = s.repo.Delete(ctx, KelasID, schemaName, "rombongan_belajar_id")
@@ -339,7 +361,7 @@ func (s *RombelServiceServer) DeleteKelas(ctx context.Context, req *pb.DeleteKel
 
 // UploadKelas mengunggah data Kelas dari file Excel
 // func (s *RombelServiceServer) UploadKelas(ctx context.Context, req *pb.UploadKelasRequest) (*pb.UploadKelasResponse, error) {
-// 	schemaName := req.GetSchemaName()
+// 	schemaName := req.GetSchemaname()
 // 	fileData := req.GetFile() // File dalam bentuk byte array
 
 // 	// Simpan file ke sementara
