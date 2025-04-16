@@ -10,6 +10,20 @@ END $$ LANGUAGE plpgsql;
 
 
 
+CREATE TABLE IF NOT EXISTS ref.blockchain_platform (
+	"id" UUID NOT NULL,
+	"nm_blockchain" VARCHAR(50) NOT NULL,
+	"active" BOOLEAN NULL DEFAULT 'false',
+	"created_at" TIMESTAMP NULL DEFAULT 'now()',
+	"updated_at" TIMESTAMP NULL DEFAULT 'now()',
+	PRIMARY KEY ("id")
+);
+
+INSERT INTO ref.blockchain_platform ("id", "nm_blockchain", "active", "created_at", "updated_at") VALUES ('f45865b2-9dd9-4085-942c-89a8d1847674', 'Ethereum', 'false', '2025-04-09 16:09:11.383076', '2025-04-09 16:09:11.383076');
+INSERT INTO ref.blockchain_platform ("id", "nm_blockchain", "active", "created_at", "updated_at") VALUES ('dd0614c8-84ef-4a49-90c6-91540f1ed4aa', 'Quorum', 'false', '2025-04-09 16:09:11.383076', '2025-04-09 16:09:11.383076');
+INSERT INTO ref.blockchain_platform ("id", "nm_blockchain", "active", "created_at", "updated_at") VALUES ('1947d865-0a2a-4903-a3c7-42ce59cecb39', 'Hyperledger Fabric', 'false', '2025-04-09 16:09:11.383076', '2025-04-09 16:09:11.383076');
+
+
 CREATE TABLE IF NOT EXISTS ref.networks (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,  -- Nama jaringan (Ethereum, Polygon, BSC, dll.)

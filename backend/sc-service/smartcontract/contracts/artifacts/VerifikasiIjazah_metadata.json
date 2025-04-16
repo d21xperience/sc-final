@@ -203,6 +203,35 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_degreeHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_sekolah",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_issueDate",
+						"type": "uint256"
+					}
+				],
+				"name": "verifyDegree",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -233,11 +262,11 @@
 	},
 	"sources": {
 		"Desktop/Smart Contract/sc_ijazah/backend/sc-service/smartcontract/contracts/ijazah_v2.sol": {
-			"keccak256": "0x150dc9928ef708f54b177ce39e0dd235a99ef941269583445a89b738270900d6",
+			"keccak256": "0x077a0dc2ef92d56fffe1ba7430bd2cb7ff1b838ce8e74e08bc83e7439d9c6073",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c77c0d68acc130e4e60fdae9325069db2a03cc5bf70bdfe7b527241a599951f5",
-				"dweb:/ipfs/QmYmTKG9JiDEgPHfKfAMYfezPZMh9Bq3aETXyECiK67efm"
+				"bzz-raw://4b4216300983c8ec0f416d80a466a4ca8d6881b3ac23f969250893e38ef06e3e",
+				"dweb:/ipfs/QmPHg2PvS2MFdYPfWmSeNZMrNUT5qqsGZQomJnNcJk9iR9"
 			]
 		}
 	},

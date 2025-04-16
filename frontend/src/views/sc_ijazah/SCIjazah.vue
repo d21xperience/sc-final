@@ -24,6 +24,7 @@
                             v-tooltip.bottom="'Edit data'" />
                         <Button icon="pi pi-trash" severity="danger" class="mr-2" @click="confirmDeleteSelected"
                             :disabled="!dataLulusan || !dataLulusan.length" />
+
                         <!-- <Button label="Lulus" severity="warn" class="mr-2" @click="dialogStatus = true"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
                                         <Button label="Naik" severity="warn" class="mr-2" @click="openNew"
@@ -34,7 +35,10 @@
                             class="mr-2" />
                         <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
                             class="mr-2" />
-                        <Button label="Proses" icon="pi pi-send" severity="info" @click="exportCSV($event)" />
+                        <!-- <Button label="Proses" icon="pi pi-send" severity="info" @click="exportCSV($event)" /> -->
+                        <IssueDegreeButton :degreeData="degreeData" :sekolah="sekolah" :ipfsUrl="ipfsUrl"
+                            :transcript="transcript" :contract="contract"
+                            class="bg-blue-600 p-3 rounded-lg text-white" />
                     </template>
 
                 </Toolbar>
@@ -140,8 +144,8 @@
             </div>
 
         </DataTable>
-        <Dialog v-model:visible="visible" modal header="Tambah data ijazah" >
-            <AddIjazah />
+        <Dialog v-model:visible="visible" modal header="Tambah data ijazah">
+            <IssueDegreeForm />
 
         </Dialog>
 
@@ -153,8 +157,6 @@ import { ref, onMounted, watch } from 'vue';
 import { useStore } from "vuex";
 const store = useStore();
 import AddIjazah from './AddIjazah.vue';
-
-
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Image from 'primevue/image';
@@ -174,6 +176,9 @@ import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
+import IssueDegreeForm from './IssueDegreeForm.vue';
+import IssueDegreeButton from '@/components/IssueDegreeButton.vue';
+
 
 const visible = ref(false)
 
@@ -215,7 +220,40 @@ const confirmDeleteSelected = () => {
 
 const dataLulusan = ref();
 // const selectedJurusan = ref();
+import { ethers } from 'ethers';
+// Dummy data (bisa kamu ambil dari API atau input form)
+const degreeData = ref({
+    name: "Andi Wijaya",
+    nisn: "1234567890",
+    graduationYear: 2024,
+    major: "Rekayasa Perangkat Lunak"
+});
+const sekolah = ref("SMK PASUNDAN JATINANGOR");
 
+const ipfsUrl = ref("https://ipfs.io/ipfs/Qm...examplehash");
+const transcript = ref({
+    subjects: ["Matematika", "Pemrograman", "Basis Data"],
+    grades: [85, 90, 88]
+});
+const contract = ref(null);
 
+// onMounted(async () => {
+//     await initContract();
+// });
 
+// const initContract = async () => {
+//     try {
+//         if (window.ethereum) {
+//             await window.ethereum.request({ method: 'eth_requestAccounts' });
+//             const provider = new ethers.BrowserProvider(window.ethereum);
+//             const signer = await provider.getSigner();
+//             const contractAddress = '0xYourContractAddressHere'; // Ganti dengan alamat kontrakmu
+//             contract.value = new ethers.Contract(contractAddress, DegreeContractABI, signer);
+//         } else {
+//             alert('Metamask tidak ditemukan. Harap instal terlebih dahulu.');
+//         }
+//     } catch (error) {
+//         console.error('Gagal memuat kontrak:', error);
+//     }
+// };
 </script>

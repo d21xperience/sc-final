@@ -30,13 +30,13 @@ func NewBCPlatformServiceServer() *BCPlatformServiceServer {
 // SetConfig: Mengatur konfigurasi blockchain
 func (s *BCPlatformServiceServer) GetBCPlatform(ctx context.Context, req *pb.GetBCPlatformRequest) (*pb.GetBCPlatformResponse, error) {
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"Schemaname"}
-	// Validasi request
-	err := utils.ValidateFields(req, requiredFields)
-	if err != nil {
-		return nil, err
-	}
-	bcPlatformModels, err := s.repo.FindAll(ctx, req.GetSchemaname(), 5, 0)
+	// requiredFields := []string{"Schemaname"}
+	// // Validasi request
+	// err := utils.ValidateFields(req, requiredFields)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	bcPlatformModels, err := s.repo.FindAll(ctx, "ref", 5, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -52,14 +52,14 @@ func (s *BCPlatformServiceServer) GetBCPlatform(ctx context.Context, req *pb.Get
 	}, nil
 }
 func (s *BCPlatformServiceServer) SetBCPlatform(ctx context.Context, req *pb.SetBCPlatformRequest) (*pb.SetBCPlatformResponse, error) {
-	// Daftar field yang wajib diisi
-	requiredFields := []string{"BcPlatform", "Schemaname"}
-	// Validasi request
-	err := utils.ValidateFields(req, requiredFields)
-	if err != nil {
-		return nil, err
-	}
-	schemaname := req.GetSchemaname()
+	// // Daftar field yang wajib diisi
+	// requiredFields := []string{"BcPlatform", "Schemaname"}
+	// // Validasi request
+	// err := utils.ValidateFields(req, requiredFields)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// schemaname := req.GetSchemaname()
 	bcPlatform := req.GetBcPlatform()
 
 	bcPlatformModel := utils.ConvertModelToPB(bcPlatform, func(mod *pb.BCPlatform) *models.BCPlatform {
@@ -77,7 +77,7 @@ func (s *BCPlatformServiceServer) SetBCPlatform(ctx context.Context, req *pb.Set
 	if bcPlatformModel == nil {
 		return nil, fmt.Errorf("failed to convert model, got nil")
 	}
-	err = s.repo.Update(ctx, bcPlatformModel, schemaname, "id", bcPlatform.Id)
+	err := s.repo.Update(ctx, bcPlatformModel, "ref", "id", bcPlatform.Id)
 	if err != nil {
 		return nil, err
 	}

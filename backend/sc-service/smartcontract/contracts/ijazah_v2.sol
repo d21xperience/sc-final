@@ -133,4 +133,16 @@ contract VerifikasiIjazah {
             }
         }
     }
+    function verifyDegree(
+    bytes32 _degreeHash, 
+    string memory _sekolah,
+    uint256 _issueDate
+) public view returns (bool) {
+    Degree storage degree = degrees[_degreeHash];
+    return (
+        degree.degreeHash != bytes32(0) &&
+        keccak256(abi.encodePacked(degree.sekolah)) == keccak256(abi.encodePacked(_sekolah)) &&
+        degree.issueDate == _issueDate
+    );
+}
 }

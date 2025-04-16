@@ -62,57 +62,52 @@ CREATE INDEX idx_transactions_network_id ON {{schema_name}}.transactions (networ
 CREATE INDEX idx_transactions_contract_id ON {{schema_name}}.transactions (contract_id);
 
 
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE {{schema_name}}.blockchain_platform (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    nm_blockchain VARCHAR(50) NOT NULL UNIQUE,
-    active BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
+-- CREATE TABLE {{schema_name}}.blockchain_platform (
+--     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+--     nm_blockchain VARCHAR(50) NOT NULL UNIQUE,
+--     active BOOLEAN DEFAULT FALSE,
+--     created_at TIMESTAMP DEFAULT NOW(),
+--     updated_at TIMESTAMP DEFAULT NOW()
+-- );
 
-CREATE FUNCTION {{schema_name}}.update_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+-- CREATE FUNCTION {{schema_name}}.update_timestamp()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     NEW.updated_at = NOW();
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_update_timestamp
-BEFORE UPDATE ON {{schema_name}}.blockchain_platform
-FOR EACH ROW
-EXECUTE FUNCTION {{schema_name}}.update_timestamp();
+-- CREATE TRIGGER trg_update_timestamp
+-- BEFORE UPDATE ON {{schema_name}}.blockchain_platform
+-- FOR EACH ROW
+-- EXECUTE FUNCTION {{schema_name}}.update_timestamp();
 
-CREATE OR REPLACE FUNCTION {{schema_name}}.enforce_single_active_blockchain()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Set semua baris lain menjadi false sebelum menyimpan yang baru sebagai true
-    IF NEW.active AND (OLD.active IS DISTINCT FROM TRUE) THEN
-        -- Kunci tabel untuk menghindari race condition
-        LOCK TABLE {{schema_name}}.blockchain_platform IN EXCLUSIVE MODE;
-         -- Set semua baris lain menjadi false sebelum menyimpan yang baru sebagai true
-        UPDATE {{schema_name}}.blockchain_platform 
-        SET active = FALSE 
-        WHERE id <> NEW.id;
-    END IF;
+-- CREATE OR REPLACE FUNCTION {{schema_name}}.enforce_single_active_blockchain()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     -- Set semua baris lain menjadi false sebelum menyimpan yang baru sebagai true
+--     IF NEW.active AND (OLD.active IS DISTINCT FROM TRUE) THEN
+--         -- Kunci tabel untuk menghindari race condition
+--         LOCK TABLE {{schema_name}}.blockchain_platform IN EXCLUSIVE MODE;
+--          -- Set semua baris lain menjadi false sebelum menyimpan yang baru sebagai true
+--         UPDATE {{schema_name}}.blockchain_platform 
+--         SET active = FALSE 
+--         WHERE id <> NEW.id;
+--     END IF;
     
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_single_active_blockchain
-BEFORE INSERT OR UPDATE ON {{schema_name}}.blockchain_platform
-FOR EACH ROW
-EXECUTE FUNCTION {{schema_name}}.enforce_single_active_blockchain();
+-- CREATE TRIGGER trigger_single_active_blockchain
+-- BEFORE INSERT OR UPDATE ON {{schema_name}}.blockchain_platform
+-- FOR EACH ROW
+-- EXECUTE FUNCTION {{schema_name}}.enforce_single_active_blockchain();
 
-
-
-
-
-
-INSERT INTO {{schema_name}}.blockchain_platform (nm_blockchain, active) VALUES
-('Ethereum', FALSE),
-('Quorum', FALSE),
-('Hyperledger Fabric', FALSE);
+-- INSERT INTO {{schema_name}}.blockchain_platform (nm_blockchain, active) VALUES
+-- ('Ethereum', FALSE),
+-- ('Quorum', FALSE),
+-- ('Hyperledger Fabric', FALSE);

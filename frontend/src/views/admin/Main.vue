@@ -191,13 +191,13 @@ const menuItems = ref([
                     router.push({ name: 'setingBlockchain' })
                 }
             },
-            {
-                label: 'Daftar Jaringan',
-                icon: 'pi pi-cloud',
-                command: () => {
-                    router.push({ name: 'listBCNetwork' })
-                }
-            },
+            // {
+            //     label: 'Daftar Jaringan',
+            //     icon: 'pi pi-cloud',
+            //     command: () => {
+            //         router.push({ name: 'listBCNetwork' })
+            //     }
+            // },
 
             {
                 label: 'SC-Ijazah',

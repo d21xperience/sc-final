@@ -189,83 +189,83 @@ const copyText = async () => {
 
 import { ethers } from 'ethers';
 
-async function issueDegree(contractAddress, degreeHash, sekolah, issueDate) {
-    // 1. Dapatkan provider dari MetaMask
-    if (!window.ethereum) {
-        throw new Error("MetaMask tidak terdeteksi!");
-    }
+// async function issueDegree(contractAddress, degreeHash, sekolah, issueDate) {
+//     // 1. Dapatkan provider dari MetaMask
+//     if (!window.ethereum) {
+//         throw new Error("MetaMask tidak terdeteksi!");
+//     }
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
+//     const provider = new ethers.providers.Web3Provider(window.ethereum);
+//     const signer = provider.getSigner();
 
-    // 2. Load ABI contract (pastikan ABI sudah didefinisikan)
-    const abi = [...]; // Isi dengan ABI contract Anda
+//     // // 2. Load ABI contract (pastikan ABI sudah didefinisikan)
+//     // const abi = [...]; // Isi dengan ABI contract Anda
 
-    // 3. Buat instance contract
-    const contract = new ethers.Contract(contractAddress, abi, signer);
+//     // // 3. Buat instance contract
+//     // const contract = new ethers.Contract(contractAddress, abi, signer);
 
-    try {
-        // 4. Kirim transaksi
-        console.log("Mengirim transaksi...");
-        const tx = await contract.issueDegree(
-            ethers.utils.hexlify(degreeHash), // Convert [32]byte ke hex
-            sekolah,
-            issueDate
-        );
+//     try {
+//         // 4. Kirim transaksi
+//         console.log("Mengirim transaksi...");
+//         const tx = await contract.issueDegree(
+//             ethers.utils.hexlify(degreeHash), // Convert [32]byte ke hex
+//             sekolah,
+//             issueDate
+//         );
 
-        // 5. Tunggu konfirmasi transaksi
-        await tx.wait();
-        console.log("Transaksi berhasil:", tx.hash);
-        return tx.hash;
-    } catch (error) {
-        console.error("Error:", error);
-        throw new Error("Gagal mengirim transaksi: " + error.message);
-    }
-}
+//         // 5. Tunggu konfirmasi transaksi
+//         await tx.wait();
+//         console.log("Transaksi berhasil:", tx.hash);
+//         return tx.hash;
+//     } catch (error) {
+//         console.error("Error:", error);
+//         throw new Error("Gagal mengirim transaksi: " + error.message);
+//     }
+// }
 
 const txHash = ref(null);
 const error = ref(null);
 
-async function handleIssueDegree() {
-    try {
-        // Data contoh (sesuaikan dengan kebutuhan)
-        const degreeHash = "0x123..."; // Hash ijazah dalam format hex
-        const sekolah = "Universitas Contoh";
-        const issueDate = Math.floor(Date.now() / 1000); // Timestamp Unix
+// async function handleIssueDegree() {
+//     try {
+//         // Data contoh (sesuaikan dengan kebutuhan)
+//         const degreeHash = "0x123..."; // Hash ijazah dalam format hex
+//         const sekolah = "Universitas Contoh";
+//         const issueDate = Math.floor(Date.now() / 1000); // Timestamp Unix
 
-        txHash.value = await issueDegree(
-            "0xContractAddress", // Alamat contract
-            degreeHash,
-            sekolah,
-            issueDate
-        );
-    } catch (err) {
-        error.value = err.message;
-    }
-}
+//         txHash.value = await issueDegree(
+//             "0xContractAddress", // Alamat contract
+//             degreeHash,
+//             sekolah,
+//             issueDate
+//         );
+//     } catch (err) {
+//         error.value = err.message;
+//     }
+// }
 
-// Setelah transaksi berhasil
-contract.on("DegreeIssued", (degreeHash, sekolah, issueDate, event) => {
-    console.log("Event DegreeIssued:", degreeHash, sekolah, issueDate);
-    alert(`Ijazah berhasil diterbitkan! Hash: ${degreeHash}`);
-});
+// // Setelah transaksi berhasil
+// contract.on("DegreeIssued", (degreeHash, sekolah, issueDate, event) => {
+//     console.log("Event DegreeIssued:", degreeHash, sekolah, issueDate);
+//     alert(`Ijazah berhasil diterbitkan! Hash: ${degreeHash}`);
+// });
 
-// Setelah tx berhasil
-async function saveToBackend(txHash, degreeData) {
-    const response = await fetch('/api/save-degree', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ txHash, ...degreeData }),
-    });
-    return response.json();
-}
+// // Setelah tx berhasil
+// async function saveToBackend(txHash, degreeData) {
+//     const response = await fetch('/api/save-degree', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ txHash, ...degreeData }),
+//     });
+//     return response.json();
+// }
 
-// Contoh pemanggilan:
-await saveToBackend(tx.hash, {
-    degreeHash: "0x123...",
-    sekolah: "Universitas Contoh",
-    issueDate: 1234567890
-});
+// // Contoh pemanggilan:
+// await saveToBackend(tx.hash, {
+//     degreeHash: "0x123...",
+//     sekolah: "Universitas Contoh",
+//     issueDate: 1234567890
+// });
 </script>
 
 <template>

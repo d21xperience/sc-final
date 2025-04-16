@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_siswa (
 	pekerjaan_ibu VARCHAR(30) NULL DEFAULT NULL,
 	nm_wali VARCHAR(100) NULL DEFAULT NULL,
 	pekerjaan_wali VARCHAR(30) NULL DEFAULT NULL,
+	nik VARCHAR(30) NULL DEFAULT NULL,
 	PRIMARY KEY (peserta_didik_id)
 );
 

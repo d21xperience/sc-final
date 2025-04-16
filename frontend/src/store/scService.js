@@ -12,9 +12,10 @@ const api = axios.create({
 const state = {
   loading: false,
   error: null,
-  BCPlatformSelected: {},
-  BCAccountActivate: {},
-  
+  BCPlatformSelected:
+    JSON.parse(localStorage.getItem("BCPlatformSelected")) || null,
+  BCAccountActivate: null,
+
   // BCNETWORK: JSON.parse(localStorage.getItem("BCNETWORK")) || null,
   // BCACCOUNT: JSON.parse(localStorage.getItem("BCACCOUNT")) || null,
 };
@@ -45,6 +46,7 @@ const mutations = {
 const actions = {
   async fetchBCPlatform({ commit }, payload) {
     try {
+      console.log(payload);
       const response = await api.get(`/sc/platform`, {
         params: {
           schemaname: payload.schemaname,
