@@ -24,6 +24,7 @@ type PesertaDidik struct {
 	PekerjaanIbu    string     `gorm:"column:pekerjaan_ibu"`               // String
 	NmWali          *string    `gorm:"column:nm_wali"`                     // Nullable string
 	PekerjaanWali   *string    `gorm:"column:pekerjaan_wali"`              // Nullable string
+	Nik             *string    `gorm:"column:nik"`
 }
 
 type PesertaDidikPelengkap struct {

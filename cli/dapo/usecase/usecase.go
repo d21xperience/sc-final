@@ -150,8 +150,78 @@ func ProcessSiswa(cfg *config.AppConfig, semesterID string) error {
 			PekerjaanAyah:   item.PekerjaanAyahStr,
 			PekerjaanIbu:    item.PekerjaanIbuStr,
 			DiterimaTanggal: item.TanggalMasukSekolah,
+			Nik:             item.Nik,
 		}
 	})
 	_, err = grpcClient.SendStudentData(pbSiswa)
+	return err
+}
+func ProcessRombel(cfg *config.AppConfig, semesterID string) error {
+	client := services.NewAPIClient(cfg.BaseURL, cfg.Token)
+	data, err := services.GetOrFetch[models.RombelResponse](
+		client,
+		cfg.NPSN,
+		semesterID,
+		cfg.OutputDir,
+		"/WebService/getRombonganBelajar",
+		map[string]string{
+			"npsn":        cfg.NPSN,
+			"semester_id": semesterID,
+		},
+	)
+	if err != nil {
+		fmt.Printf("Error fetching sekolah data: %v\n", err)
+		return err
+	}
+
+	grpcClient, err := services.NewGRPCClient(cfg.GRPCHost, cfg.GRPCPort, cfg.GRPCTimeout)
+	if err != nil {
+		return err
+	}
+	if grpcClient == nil {
+		return fmt.Errorf("Error client berisi nil")
+	}
+	defer grpcClient.Close()
+
+	var modRombel []models.RombonganBelajar
+	modRombel = append(modRombel, data.Rows...)
+
+	pbRombel := utils.ConvertModelsToPB(utils.SliceToPointer(modRombel), func(item *models.RombonganBelajar) *pb.Kelas {
+		rombonganBelajarId := item.RombonganBelajarID
+		semesterId := item.SemesterID
+		return &pb.Kelas{
+			RombonganBelajarId:  item.RombonganBelajarID,
+			SekolahId:           "8a5bd957-66bc-4096-9ff1-fee096b87ba0",
+			SemesterId:          item.SemesterID,
+			JurusanId:           item.JurusanID,
+			PtkId:               item.PTKID,
+			NmKelas:             item.Nama,
+			TingkatPendidikanId: int32(utils.StringToInt(item.TingkatPendidikanID)),
+			NamaJurusanSp:       item.JurusanIDStr,
+			KurikulumId:         int32(item.KurikulumID),
+			// JenisRombel:         item.JenisRombel,
+			AnggotaKelas: utils.ConvertModelsToPB(utils.SliceToPointer(item.AnggotaRombel), func(item *models.AnggotaRombel) *pb.AnggotaKelas {
+				return &pb.AnggotaKelas{
+					AnggotaRombelId:    item.AnggotaRombelID,
+					PesertaDidikId:     item.PesertaDidikID,
+					RombonganBelajarId: rombonganBelajarId,
+					SemesterId:         semesterId,
+				}
+			}),
+			Pembelajaran: utils.ConvertModelsToPB(utils.SliceToPointer(item.Pembelajaran), func(item *models.Pembelajaran) *pb.Pembelajaran {
+				return &pb.Pembelajaran{
+					PembelajaranId:     item.PembelajaranID,
+					RombonganBelajarId: rombonganBelajarId,
+					MataPelajaranId:    int32(item.MataPelajaranID),
+					SemesterId:         semesterId,
+					PtkTerdaftarId:     item.PTKTerdaftarID,
+					StatusDiKurikulum:  int32(utils.StringToInt(item.StatusDiKurikulum)),
+					NamaMataPelajaran:  item.NamaMataPelajaran,
+					IndukPembelajaran:  utils.SafeString(item.IndukPembelajaranID),
+				}
+			}),
+		}
+	})
+	_, err = grpcClient.SendRombel(pbRombel)
 	return err
 }

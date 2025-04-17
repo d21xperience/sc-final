@@ -11,6 +11,8 @@ import (
 	"sekolah/utils"
 
 	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type RombelServiceServer struct {
@@ -19,6 +21,7 @@ type RombelServiceServer struct {
 	repoRombelAnggota repositories.GenericRepository[models.RombelAnggota]
 	repoSemester      repositories.GenericRepository[models.Semester]
 	repoSiswa         repositories.GenericRepository[models.PesertaDidik]
+	repoPembelajaran  repositories.GenericRepository[models.Pembelajaran]
 }
 
 func NewRombelServiceServer() *RombelServiceServer {
@@ -26,11 +29,13 @@ func NewRombelServiceServer() *RombelServiceServer {
 	repoRombelAnggota := repositories.NewRombelAnggotaRepository(config.DB)
 	repoSemester := repositories.NewSemesterRepository(config.DB)
 	repoSiswa := repositories.NewSiswaRepository(config.DB)
+	repoPembelajaran := repositories.NewPembelajaranRepository(config.DB)
 	return &RombelServiceServer{
 		repo:              *repoRombel,
 		repoRombelAnggota: *repoRombelAnggota,
 		repoSemester:      *repoSemester,
 		repoSiswa:         *repoSiswa,
+		repoPembelajaran:  *repoPembelajaran,
 	}
 }
 
@@ -359,103 +364,113 @@ func (s *RombelServiceServer) DeleteKelas(ctx context.Context, req *pb.DeleteKel
 	}, nil
 }
 
-// UploadKelas mengunggah data Kelas dari file Excel
-// func (s *RombelServiceServer) UploadKelas(ctx context.Context, req *pb.UploadKelasRequest) (*pb.UploadKelasResponse, error) {
-// 	schemaName := req.GetSchemaname()
-// 	fileData := req.GetFile() // File dalam bentuk byte array
+func (s *RombelServiceServer) ImportDapodikRombel(ctx context.Context, req *pb.ImportDapodikRombelRequest) (*pb.ImportDapodikRombelResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	// log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname", "Kelas"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaname()
+	kelas := req.Kelas
+	// rombelId := uuid.New()
+	// type rombelAnggota struct {
+	// 	AnggotaRombelId    uuid.UUID // UUID
+	// 	PesertaDidikId     uuid.UUID // UUID
+	// 	RombonganBelajarId uuid.UUID
+	// 	SemesterId         string
+	// }
+	simpanRombelAnggota := []models.RombelAnggota{}
+	simpanRombelPembelajaran := []models.Pembelajaran{}
+	kelasModel := utils.ConvertPBToModels(kelas, func(item *pb.Kelas) *models.RombonganBelajar {
+		for _, v := range item.AnggotaKelas {
+			simpanRombelAnggota = append(simpanRombelAnggota, models.RombelAnggota{
+				AnggotaRombelId:    utils.StringToUUID(v.AnggotaRombelId),
+				PesertaDidikId:     utils.StringToUUID(v.PesertaDidikId),
+				RombonganBelajarId: utils.StringToUUID(v.RombonganBelajarId),
+				SemesterId:         item.SemesterId,
+			})
+		}
+		for _, v := range item.Pembelajaran {
+			simpanRombelPembelajaran = append(simpanRombelPembelajaran, models.Pembelajaran{
+				PembelajaranId:     utils.StringToUUID(v.PembelajaranId),
+				RombonganBelajarId: utils.StringToUUID(v.RombonganBelajarId),
+				MataPelajaranId:    int(v.MataPelajaranId),
+				SemesterId:         v.SemesterId,
+				PtkTerdaftarId:     utils.PointerToUUID(v.PtkTerdaftarId),
+				NamaMataPelajaran:  &v.NamaMataPelajaran,
+			})
+		}
 
-// 	// Simpan file ke sementara
-// 	tempFile := "/tmp/uploaded_Kelas.xlsx"
-// 	err := saveFile(tempFile, fileData)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal menyimpan file sementara: %w", err)
-// 	}
+		return &models.RombonganBelajar{
+			RombonganBelajarId:  utils.StringToUUID(item.RombonganBelajarId),
+			SekolahId:           utils.StringToUUID(item.SekolahId),
+			SemesterId:          item.SemesterId,
+			JurusanId:           item.JurusanId,
+			PtkID:               utils.StringToUUID(item.PtkId),
+			NmKelas:             item.NmKelas,
+			TingkatPendidikanId: item.TingkatPendidikanId,
+			JenisRombel:         item.JenisRombel,
+			NamaJurusanSp:       item.NamaJurusanSp,
+			KurikulumId:         item.KurikulumId,
+		}
+	})
+	// simpan kelas ke database
+	conflicts, err := s.repo.SaveManyWithConflictCheck(ctx, schemaName, kelasModel, "RombonganBelajarId", "rombongan_belajar_id", 100, []string{})
+	if err != nil {
+		// Jika error karena *database failure* (misal connection, syntax error, dll), hentikan proses
+		st, ok := status.FromError(err)
+		if !ok || st.Code() != codes.AlreadyExists {
+			return nil, status.Errorf(codes.Internal, "insert failed: %v", err)
+		}
+		// Kalau errornya karena duplicate, lanjut aja
+		log.Printf("[WARNING] Terjadi duplikat data rombel, melanjutkan proses: %v", err)
+	}
+	conflictProto := repositories.ConvertConflictsToProto(conflicts, "PtkTerdaftarId", "NmKelas")
 
-// 	// Baca file Excel
-// 	f, err := excelize.OpenFile(tempFile)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal membaca file Excel: %w", err)
-// 	}
-// 	defer f.Close()
+	// simpan anggota rombel
+	conflicts2, err := s.repoRombelAnggota.SaveManyWithConflictCheck(ctx, schemaName, utils.SliceToPointer(simpanRombelAnggota), "AnggotaRombelId", "anggota_rombel_id", 100, []string{"peserta_didik_id", "rombongan_belajar_id"})
+	if err != nil {
+		// Jika error karena *database failure* (misal connection, syntax error, dll), hentikan proses
+		st, ok := status.FromError(err)
+		if !ok || st.Code() != codes.AlreadyExists {
+			return nil, status.Errorf(codes.Internal, "insert failed: %v", err)
+		}
+		// Kalau errornya karena duplicate, lanjut aja
+		log.Printf("[WARNING] Terjadi duplikat data rombel, melanjutkan proses: %v", err)
+	}
+	conflictProto2 := repositories.ConvertConflictsToProto(conflicts2, "AnggotaRombelId", "PesertaDidikId")
 
-// 	// Ambil semua data dari sheet pertama
-// 	rows, err := f.GetRows(f.GetSheetName(0))
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal mengambil data dari sheet: %w", err)
-// 	}
+	// Simpan pembelajaran
+	conflicts3, err := s.repoPembelajaran.SaveManyWithConflictCheck(ctx, schemaName, utils.SliceToPointer(simpanRombelPembelajaran), "PembelajaranId", "pembelajaran_id", 100, []string{"ptk_terdaftar_id", "rombongan_belajar_id"})
+	if err != nil {
+		// Jika error karena *database failure* (misal connection, syntax error, dll), hentikan proses
+		st, ok := status.FromError(err)
+		if !ok || st.Code() != codes.AlreadyExists {
+			return nil, status.Errorf(codes.Internal, "insert failed: %v", err)
+		}
+		// Kalau errornya karena duplicate, lanjut aja
+		log.Printf("[WARNING] Terjadi duplikat data rombel, melanjutkan proses: %v", err)
+	}
+	conflictProto3 := repositories.ConvertConflictsToProto(conflicts3, "PembelajaranId", "NamaMataPelajaran")
 
-// 	// Pastikan ada data
-// 	if len(rows) < 2 {
-// 		return nil, fmt.Errorf("file Excel kosong atau tidak memiliki data yang valid")
-// 	}
+	var resultsConflict []*pb.ConflictRow
+	resultsConflict = append(resultsConflict, conflictProto...)
+	resultsConflict = append(resultsConflict, conflictProto2...)
+	resultsConflict = append(resultsConflict, conflictProto3...)
 
-// 	// Validasi header
-// 	expectedHeaders := []string{"NIS", "NISN", "NamaKelas", "TempatLahir", "TanggalLahir", "JenisKelamin", "Agama"}
-// 	for i, expected := range expectedHeaders {
-// 		if rows[0][i] != expected {
-// 			return nil, fmt.Errorf("format kolom tidak sesuai, kolom '%s' seharusnya ada di posisi %d", expected, i+1)
-// 		}
-// 	}
+	fmt.Print(resultsConflict)
 
-// 	var KelasList []*models.RombonganBelajar
-
-// 	// Mulai dari baris kedua karena baris pertama adalah header
-// 	for _, row := range rows[1:] {
-// 		if len(row) < len(expectedHeaders) {
-// 			log.Println("Skipping row due to insufficient data:", row)
-// 			continue
-// 		}
-
-// 		// Konversi data sesuai dengan model
-// 		namaKelas := row[2]
-// 		nis := row[0]
-// 		nisn := row[1]
-// 		tempatLahir := row[3]
-// 		tanggalLahir := row[4]
-// 		jenisKelamin := row[5]
-// 		agama := row[6]
-
-// 		// Validasi data
-// 		if nis == "" || namaKelas == "" || nisn == "" {
-// 			log.Println("Skipping row due to missing required fields:", row)
-// 			continue
-// 		}
-
-// 		// Konversi angka
-// 		nisInt, err := strconv.Atoi(nis)
-// 		if err != nil {
-// 			log.Printf("Format NIS tidak valid: %s", nis)
-// 			continue
-// 		}
-
-// 		nisnInt, err := strconv.Atoi(nisn)
-// 		if err != nil {
-// 			log.Printf("Format NISN tidak valid: %s", nisn)
-// 			continue
-// 		}
-
-// 		// Masukkan ke dalam list
-// 		Kelas := &models.RombonganBelajar{
-// 			NIS:          strconv.Itoa(nisInt),
-// 			NISN:         strconv.Itoa(nisnInt),
-// 			NamaKelas:    namaKelas,
-// 			TempatLahir:  tempatLahir,
-// 			TanggalLahir: tanggalLahir,
-// 			JenisKelamin: jenisKelamin,
-// 			Agama:        agama,
-// 		}
-// 		KelasList = append(KelasList, Kelas)
-// 	}
-
-// 	// Simpan ke database
-// 	err = s.repo.BatchSave(ctx, KelasList, schemaName)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal menyimpan data Kelas ke database: %w", err)
-// 	}
-
-// 	return &pb.UploadKelasResponse{
-// 		Message: "Kelas berhasil diunggah",
-// 		Total:   int32(len(KelasList)),
-// 		Status:  true,
-// 	}, nil
-// }
+	return &pb.ImportDapodikRombelResponse{
+		Message: "Kelas berhasil ditambahkan",
+		Status:  true,
+		Conflicts: &pb.ConflictResponse{
+			Message:       "Sebagian data berhasil disimpan",
+			Conflicts:     resultsConflict,
+			TotalConflict: int32(len(resultsConflict)),
+		},
+	}, nil
+}

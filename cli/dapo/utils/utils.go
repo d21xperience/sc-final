@@ -52,9 +52,16 @@ func ConvertModelToPB[T any, U any](model *T, converter func(*T) *U) *U {
 // KONVERSI INT
 // =======================
 // Fungsi helper untuk mengubah string ke int
-func ParseInt(value string) int {
+func StringToInt(value string) int {
 	i, _ := strconv.Atoi(value)
 	return i
+}
+func StringToInt32(s string) (int32, error) {
+	val, err := strconv.ParseInt(s, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+	return int32(val), nil
 }
 
 // =======================

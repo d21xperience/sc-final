@@ -9,8 +9,6 @@ import (
 	"sekolah/models"
 	"sekolah/repositories"
 	"sekolah/utils"
-
-	"github.com/google/uuid"
 )
 
 type SiswaServiceServer struct {
@@ -86,8 +84,8 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 	schemaName := req.GetSchemaname()
 	siswa := req.Siswa
 
-	siswaModels := ConvertPBToModels(siswa, func(sis *pb.Siswa) *models.PesertaDidik {
-		tglLahir, err := utils.StringToTime(sis.TanggalLahir, "2006-01-02")
+	siswaModels := ConvertPBToModels(siswa, func(item *pb.Siswa) *models.PesertaDidik {
+		tglLahir, err := utils.StringToTime(item.TanggalLahir, "2006-01-02")
 		if err != nil {
 			return nil
 		}
@@ -100,23 +98,24 @@ func (s *SiswaServiceServer) CreateBanyakSiswa(ctx context.Context, req *pb.Crea
 		// 	}
 		// }
 		return &models.PesertaDidik{
-			PesertaDidikId: uuid.New().String(),
-			Nis:            sis.Nis,
-			Nisn:           sis.Nisn,
-			NmSiswa:        sis.NmSiswa,
-			TempatLahir:    sis.TempatLahir,
+			PesertaDidikId: item.PesertaDidikId,
+			Nis:            item.Nis,
+			Nisn:           item.Nisn,
+			NmSiswa:        item.NmSiswa,
+			TempatLahir:    item.TempatLahir,
 			TanggalLahir:   &tglLahir,
-			JenisKelamin:   sis.JenisKelamin,
-			Agama:          sis.Agama,
-			AlamatSiswa:    &sis.AlamatSiswa,
-			TeleponSiswa:   sis.TeleponSiswa,
+			JenisKelamin:   item.JenisKelamin,
+			Agama:          item.Agama,
+			AlamatSiswa:    &item.AlamatSiswa,
+			TeleponSiswa:   item.TeleponSiswa,
 			// DiterimaTanggal: &tglDiterima,
-			NmAyah:        sis.NmAyah,
-			NmIbu:         sis.NmIbu,
-			PekerjaanAyah: sis.PekerjaanAyah,
-			PekerjaanIbu:  sis.PekerjaanIbu,
-			NmWali:        &sis.NmWali,
-			PekerjaanWali: &sis.PekerjaanWali,
+			NmAyah:        item.NmAyah,
+			NmIbu:         item.NmIbu,
+			PekerjaanAyah: item.PekerjaanAyah,
+			PekerjaanIbu:  item.PekerjaanIbu,
+			NmWali:        &item.NmWali,
+			PekerjaanWali: &item.PekerjaanWali,
+			Nik:           &item.Nik,
 		}
 	})
 	err = s.repo.SaveMany(ctx, schemaName, siswaModels, 1000)

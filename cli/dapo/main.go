@@ -82,11 +82,25 @@ func main() {
 	// 	// Tambahkan delay antar semester (misalnya 2 detik)
 	// 	time.Sleep(2 * time.Second)
 	// }
-	for year := 2022; year <= 2022; year++ {
-		for semester := 1; semester <= 2; semester++ {
-			semesterID := fmt.Sprintf("%d", year)
+	// for year := 2020; year <= 2020; year++ {
+	// 	for semester := 1; semester <= 2; semester++ {
+	// 		semesterID := fmt.Sprintf("%d%d", year, semester)
 
-			err := usecase.ProcessSiswa(cfg, semesterID)
+	// 		err := usecase.ProcessSiswa(cfg, semesterID)
+	// 		if err != nil {
+	// 			fmt.Printf("Gagal memproses semester %s: %v\n", semesterID, err)
+	// 			continue
+	// 		}
+	// 		fmt.Printf("Berhasil memproses semester %s\n", semesterID)
+	// 	}
+	// 	// Tambahkan delay antar semester (misalnya 2 detik)
+	// 	time.Sleep(2 * time.Second)
+	// }
+	for year := 2022; year <= 2022; year++ {
+		for semester := 1; semester <= 1; semester++ {
+			semesterID := fmt.Sprintf("%d%d", year, semester)
+
+			err := usecase.ProcessRombel(cfg, semesterID)
 			if err != nil {
 				fmt.Printf("Gagal memproses semester %s: %v\n", semesterID, err)
 				continue

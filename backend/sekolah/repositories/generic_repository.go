@@ -760,6 +760,133 @@ func getFieldValue[T any](entity *T, fieldName string) interface{} {
 // }
 
 // versi 2
+// func (r *GenericRepository[T]) SaveManyWithConflictCheck(
+// 	ctx context.Context,
+// 	schemaName string,
+// 	entities []*T,
+// 	uniqueFieldName string,
+// 	uniqueColumnName string,
+// 	batchSize int,
+// ) ([]ConflictRow[T], error) {
+// 	fmt.Printf("Starting SaveManyWithConflictCheck for %d entities in schema %s\n", len(entities), schemaName)
+// 	conflictRows := []ConflictRow[T]{}
+
+// 	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+// 		// Set schema
+// 		schemaQuery := fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))
+// 		fmt.Printf("Executing schema query: %s\n", schemaQuery)
+// 		if err := tx.Exec(schemaQuery).Error; err != nil {
+// 			fmt.Printf("Error setting schema: %v\n", err)
+// 			return fmt.Errorf("failed to set schema: %w", err)
+// 		}
+
+// 		// Get unique values from entities
+// 		fmt.Printf("Processing %d entities for unique field '%s'\n", len(entities), uniqueFieldName)
+// 		uniqueValues := make([]interface{}, 0, len(entities))
+// 		valueToEntity := make(map[interface{}]*T)
+// 		for i, e := range entities {
+// 			val := getFieldValue(e, uniqueFieldName)
+// 			if val != nil {
+// 				uniqueValues = append(uniqueValues, val)
+// 				valueToEntity[val] = e
+// 			} else {
+// 				fmt.Printf("Warning: Entity at index %d has nil value for field '%s'\n", i, uniqueFieldName)
+// 			}
+// 		}
+// 		fmt.Printf("Found %d unique values to check\n", len(uniqueValues))
+
+// 		// Check existing records in DB
+// 		tableName := fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)
+// 		query := tx.Table(tableName).Select(uniqueColumnName).Where(fmt.Sprintf("%s IN ?", uniqueColumnName), uniqueValues)
+// 		fmt.Printf("Checking existing records with query: %v\n", query.Statement.SQL.String())
+
+// 		var existing []map[string]interface{}
+// 		err := query.Find(&existing).Error
+// 		if err != nil {
+// 			fmt.Printf("Error checking existing records: %v\n", err)
+// 			return fmt.Errorf("failed to check existing records: %w", err)
+// 		}
+// 		fmt.Printf("Found %d existing records that may cause conflicts\n", len(existing))
+
+// 		// Mark existing data
+// 		existingMap := make(map[interface{}]bool)
+// 		for _, row := range existing {
+// 			if val, ok := row[uniqueColumnName]; ok {
+// 				existingMap[val] = true
+// 			}
+// 		}
+
+// 		// Separate new and conflicting entities
+// 		newEntities := []*T{}
+// 		for idx, e := range entities {
+// 			val := getFieldValue(e, uniqueFieldName)
+// 			if val == nil {
+// 				fmt.Printf("Skipping entity at index %d - nil unique value\n", idx)
+// 				continue
+// 			}
+
+// 			if existingMap[val] {
+// 				conflictReason := fmt.Sprintf("Conflict on %s = %v", uniqueFieldName, val)
+// 				fmt.Printf("Conflict detected at index %d: %s\n", idx, conflictReason)
+// 				conflictRows = append(conflictRows, ConflictRow[T]{
+// 					Index:  idx,
+// 					Entity: e,
+// 					Reason: conflictReason,
+// 				})
+// 			} else {
+// 				newEntities = append(newEntities, e)
+// 			}
+// 		}
+// 		fmt.Printf("Identified %d new entities and %d conflicts\n", len(newEntities), len(conflictRows))
+
+// 		// Insert new entities
+// 		if len(newEntities) > 0 {
+// 			fmt.Printf("Inserting %d new entities in batches of %d\n", len(newEntities), batchSize)
+// 			if err := tx.Table(tableName).CreateInBatches(newEntities, batchSize).Error; err != nil {
+// 				if isForeignKeyViolation(err) {
+// 					// Handle foreign key violation specifically
+// 					fmt.Printf("Foreign key violation detected: %v\n", err)
+
+// 					// Get the IDs of the referenced table that don't exist
+// 					missingRefs := findMissingReferences(tx, newEntities)
+
+// 					// Add these to conflict rows
+// 					for idx, e := range newEntities {
+// 						refVal := getReferenceFieldValue(e, "ptk_id") // Adjust field name as needed
+// 						if _, exists := missingRefs[refVal]; exists {
+// 							conflictReason := fmt.Sprintf("Referenced PTK with ID %v does not exist", refVal)
+// 							fmt.Printf("Reference conflict at index %d: %s\n", idx, conflictReason)
+// 							conflictRows = append(conflictRows, ConflictRow[T]{
+// 								Index:  idx,
+// 								Entity: e,
+// 								Reason: conflictReason,
+// 							})
+// 						}
+// 					}
+
+// 					return nil // Return nil to commit the transaction with the conflict info
+// 				}
+// 				fmt.Printf("Error inserting new records: %v\n", err)
+// 				return fmt.Errorf("failed to insert new records: %w", err)
+// 			}
+// 			fmt.Printf("Successfully inserted %d new entities\n", len(newEntities))
+// 		} else {
+// 			fmt.Println("No new entities to insert")
+// 		}
+
+// 		return nil
+// 	})
+
+// 	if err != nil {
+// 		fmt.Printf("Transaction failed: %v\n", err)
+// 	} else {
+// 		fmt.Printf("Transaction completed successfully with %d conflicts\n", len(conflictRows))
+// 	}
+
+// 	return conflictRows, err
+// }
+
+// ============versi 3===============
 func (r *GenericRepository[T]) SaveManyWithConflictCheck(
 	ctx context.Context,
 	schemaName string,
@@ -767,6 +894,7 @@ func (r *GenericRepository[T]) SaveManyWithConflictCheck(
 	uniqueFieldName string,
 	uniqueColumnName string,
 	batchSize int,
+	foreignKeyFields []string, // Tambahan parameter FK fleksibel
 ) ([]ConflictRow[T], error) {
 	fmt.Printf("Starting SaveManyWithConflictCheck for %d entities in schema %s\n", len(entities), schemaName)
 	conflictRows := []ConflictRow[T]{}
@@ -780,7 +908,7 @@ func (r *GenericRepository[T]) SaveManyWithConflictCheck(
 			return fmt.Errorf("failed to set schema: %w", err)
 		}
 
-		// Get unique values from entities
+		// Ambil semua nilai unik untuk pengecekan duplikat
 		fmt.Printf("Processing %d entities for unique field '%s'\n", len(entities), uniqueFieldName)
 		uniqueValues := make([]interface{}, 0, len(entities))
 		valueToEntity := make(map[interface{}]*T)
@@ -795,7 +923,7 @@ func (r *GenericRepository[T]) SaveManyWithConflictCheck(
 		}
 		fmt.Printf("Found %d unique values to check\n", len(uniqueValues))
 
-		// Check existing records in DB
+		// Cek apakah sudah ada di DB
 		tableName := fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)
 		query := tx.Table(tableName).Select(uniqueColumnName).Where(fmt.Sprintf("%s IN ?", uniqueColumnName), uniqueValues)
 		fmt.Printf("Checking existing records with query: %v\n", query.Statement.SQL.String())
@@ -808,7 +936,7 @@ func (r *GenericRepository[T]) SaveManyWithConflictCheck(
 		}
 		fmt.Printf("Found %d existing records that may cause conflicts\n", len(existing))
 
-		// Mark existing data
+		// Tandai konflik
 		existingMap := make(map[interface{}]bool)
 		for _, row := range existing {
 			if val, ok := row[uniqueColumnName]; ok {
@@ -816,7 +944,6 @@ func (r *GenericRepository[T]) SaveManyWithConflictCheck(
 			}
 		}
 
-		// Separate new and conflicting entities
 		newEntities := []*T{}
 		for idx, e := range entities {
 			val := getFieldValue(e, uniqueFieldName)
@@ -824,7 +951,6 @@ func (r *GenericRepository[T]) SaveManyWithConflictCheck(
 				fmt.Printf("Skipping entity at index %d - nil unique value\n", idx)
 				continue
 			}
-
 			if existingMap[val] {
 				conflictReason := fmt.Sprintf("Conflict on %s = %v", uniqueFieldName, val)
 				fmt.Printf("Conflict detected at index %d: %s\n", idx, conflictReason)
@@ -839,36 +965,54 @@ func (r *GenericRepository[T]) SaveManyWithConflictCheck(
 		}
 		fmt.Printf("Identified %d new entities and %d conflicts\n", len(newEntities), len(conflictRows))
 
-		
+		// Insert ke DB
 		// Insert new entities
 		if len(newEntities) > 0 {
 			fmt.Printf("Inserting %d new entities in batches of %d\n", len(newEntities), batchSize)
-			if err := tx.Table(tableName).CreateInBatches(newEntities, batchSize).Error; err != nil {
-				if isForeignKeyViolation(err) {
-					// Handle foreign key violation specifically
-					fmt.Printf("Foreign key violation detected: %v\n", err)
+			insertErr := tx.Table(tableName).CreateInBatches(newEntities, batchSize).Error
+			if insertErr != nil {
+				insertErrMsg := insertErr.Error()
 
-					// Get the IDs of the referenced table that don't exist
-					missingRefs := findMissingReferences(tx, newEntities)
+				if strings.Contains(insertErrMsg, "duplicate key value violates unique constraint") {
+					// Tangani duplicate key
+					fmt.Printf("[DUPLICATE] Duplikat terdeteksi saat insert: %v\n", insertErrMsg)
 
-					// Add these to conflict rows
 					for idx, e := range newEntities {
-						refVal := getReferenceFieldValue(e, "ptk_id") // Adjust field name as needed
-						if _, exists := missingRefs[refVal]; exists {
-							conflictReason := fmt.Sprintf("Referenced PTK with ID %v does not exist", refVal)
-							fmt.Printf("Reference conflict at index %d: %s\n", idx, conflictReason)
-							conflictRows = append(conflictRows, ConflictRow[T]{
-								Index:  idx,
-								Entity: e,
-								Reason: conflictReason,
-							})
+						val := getFieldValue(e, uniqueFieldName)
+						conflictReason := fmt.Sprintf("Duplicate on %s = %v", uniqueFieldName, val)
+						conflictRows = append(conflictRows, ConflictRow[T]{
+							Index:  idx,
+							Entity: e,
+							Reason: conflictReason,
+						})
+					}
+					// Lanjutkan transaksi (return nil untuk melanjutkan)
+					return nil
+				}
+
+				// Tangani foreign key violation
+				if isForeignKeyViolation(insertErr) {
+					fmt.Printf("Foreign key violation detected: %v\n", insertErr)
+					missingRefs := findMissingReferences(tx, newEntities)
+					for idx, e := range newEntities {
+						for _, fkField := range foreignKeyFields {
+							refVal := getReferenceFieldValue(e, fkField)
+							if _, exists := missingRefs[refVal]; exists {
+								conflictReason := fmt.Sprintf("Missing reference for %s: %v", fkField, refVal)
+								conflictRows = append(conflictRows, ConflictRow[T]{
+									Index:  idx,
+									Entity: e,
+									Reason: conflictReason,
+								})
+							}
 						}
 					}
-
-					return nil // Return nil to commit the transaction with the conflict info
+					return nil
 				}
-				fmt.Printf("Error inserting new records: %v\n", err)
-				return fmt.Errorf("failed to insert new records: %w", err)
+
+				// Error lain, hentikan transaksi
+				fmt.Printf("Error inserting new records: %v\n", insertErr)
+				return fmt.Errorf("failed to insert new records: %w", insertErr)
 			}
 			fmt.Printf("Successfully inserted %d new entities\n", len(newEntities))
 		} else {

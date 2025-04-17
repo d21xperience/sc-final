@@ -1,11 +1,12 @@
 package services
 
 import (
-	pb "auth_service/generated/sc"
 	"auth_service/models"
 	"context"
 	"fmt"
 	"time"
+
+	pb "auth_service/generated/sc"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -69,25 +70,26 @@ func (s *SCServiceClient) RegistrasiSekolahTenant(sekolah *models.Sekolah, userI
 	return nil
 }
 
-func (s *SCServiceClient) CreateDefaultBlockchainAccount(admin AdminSekolah, bcNetowrk BCNetwork, schemaname string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	// Buat akun ethereum
-	_, err := s.clientBC.CreateBlockchainAccount(ctx, &pb.CreateBlockchainAccountRequest{
-		Admin:      &pb.AdminSekolah{
-			SekolahId: admin.SekolahId,
-			UserId: admin.UserId,
-			Password: admin.Password,
-			NamaSekolah: admin.NamaSekolah,
-			SekolahIdEnkrip: admin.SekolahIdEnkrip,
-		},
-		Network:    &pb.BCNetwork{
-			Name: bcNetowrk.Name,
-		},
-		Schemaname: "tes",
-	})
-	if err != nil {
-		return fmt.Errorf("gagal mendaftarkan SC di SC_service: %w", err)
-	}
-	return nil
-}
+// func (s *SCServiceClient) CreateDefaultBlockchainAccount(admin AdminSekolah, bcNetowrk BCNetwork, schemaname string) error {
+// 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+// 	defer cancel()
+// 	// Buat akun ethereum
+// 	_, err := s.clientBC.CreateBlockchainAccount(ctx, &pb.CreateBlockchainAccountRequest{
+
+// 		Admin:      &pb.AdminSekolah{
+// 			SekolahId: admin.SekolahId,
+// 			UserId: admin.UserId,
+// 			Password: admin.Password,
+// 			NamaSekolah: admin.NamaSekolah,
+// 			SekolahIdEnkrip: admin.SekolahIdEnkrip,
+// 		},
+// 		Network:    &pb.BCNetwork{
+// 			Name: bcNetowrk.Name,
+// 		},
+// 		Schemaname: "tes",
+// 	})
+// 	if err != nil {
+// 		return fmt.Errorf("gagal mendaftarkan SC di SC_service: %w", err)
+// 	}
+// 	return nil
+// }

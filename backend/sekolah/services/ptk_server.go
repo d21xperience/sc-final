@@ -63,7 +63,7 @@ func (s *PTKServiceServer) CreatePTK(ctx context.Context, req *pb.CreatePTKReque
 			NIP_NIY:           &item.NipNiy,
 		}
 	})
-	conflicts, err := s.repo.SaveManyWithConflictCheck(ctx, schemaName, PTKModel, "PtkID", "ptk_id", 100)
+	conflicts, err := s.repo.SaveManyWithConflictCheck(ctx, schemaName, PTKModel, "PtkID", "ptk_id", 100, nil)
 	// convert conflict rows ke response JSON
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "insert failed: %v", err)

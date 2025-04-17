@@ -57,7 +57,7 @@ func (s *SekolahServiceClient) CreateSekolah(sekolah *models.Sekolah) error {
 	defer cancel()
 
 	_, err := s.client.CreateSekolah(ctx, &pb.CreateSekolahRequest{
-		SchemaName: fmt.Sprintf("tabel_%s", sekolah.SekolahIDEnkrip),
+		Schemaname: fmt.Sprintf("tabel_%s", sekolah.SekolahIDEnkrip),
 		Sekolah: &pb.SekolahDapo{
 			SekolahId: sekolah.SekolahIDEnkrip,
 			Nama:      sekolah.NamaSekolah,

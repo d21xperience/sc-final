@@ -1335,3 +1335,159 @@ var TenantService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "sc.proto",
 }
+
+const (
+	BCPlatformService_GetBCPlatform_FullMethodName = "/sc_service.BCPlatformService/GetBCPlatform"
+	BCPlatformService_SetBCPlatform_FullMethodName = "/sc_service.BCPlatformService/SetBCPlatform"
+)
+
+// BCPlatformServiceClient is the client API for BCPlatformService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// service platform blockchain
+type BCPlatformServiceClient interface {
+	//	rpc CreateBCPlatform (CreateBCPlatformRequest) returns (CreateBCPlatformResponse) {
+	//	  option (google.api.http) = {
+	//	    post: "/api/v1/sc/platform/create"
+	//	    body: "*"
+	//	  };
+	//	}
+	GetBCPlatform(ctx context.Context, in *GetBCPlatformRequest, opts ...grpc.CallOption) (*GetBCPlatformResponse, error)
+	SetBCPlatform(ctx context.Context, in *SetBCPlatformRequest, opts ...grpc.CallOption) (*SetBCPlatformResponse, error)
+}
+
+type bCPlatformServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBCPlatformServiceClient(cc grpc.ClientConnInterface) BCPlatformServiceClient {
+	return &bCPlatformServiceClient{cc}
+}
+
+func (c *bCPlatformServiceClient) GetBCPlatform(ctx context.Context, in *GetBCPlatformRequest, opts ...grpc.CallOption) (*GetBCPlatformResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBCPlatformResponse)
+	err := c.cc.Invoke(ctx, BCPlatformService_GetBCPlatform_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bCPlatformServiceClient) SetBCPlatform(ctx context.Context, in *SetBCPlatformRequest, opts ...grpc.CallOption) (*SetBCPlatformResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetBCPlatformResponse)
+	err := c.cc.Invoke(ctx, BCPlatformService_SetBCPlatform_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BCPlatformServiceServer is the server API for BCPlatformService service.
+// All implementations must embed UnimplementedBCPlatformServiceServer
+// for forward compatibility.
+//
+// service platform blockchain
+type BCPlatformServiceServer interface {
+	//	rpc CreateBCPlatform (CreateBCPlatformRequest) returns (CreateBCPlatformResponse) {
+	//	  option (google.api.http) = {
+	//	    post: "/api/v1/sc/platform/create"
+	//	    body: "*"
+	//	  };
+	//	}
+	GetBCPlatform(context.Context, *GetBCPlatformRequest) (*GetBCPlatformResponse, error)
+	SetBCPlatform(context.Context, *SetBCPlatformRequest) (*SetBCPlatformResponse, error)
+	mustEmbedUnimplementedBCPlatformServiceServer()
+}
+
+// UnimplementedBCPlatformServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedBCPlatformServiceServer struct{}
+
+func (UnimplementedBCPlatformServiceServer) GetBCPlatform(context.Context, *GetBCPlatformRequest) (*GetBCPlatformResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBCPlatform not implemented")
+}
+func (UnimplementedBCPlatformServiceServer) SetBCPlatform(context.Context, *SetBCPlatformRequest) (*SetBCPlatformResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetBCPlatform not implemented")
+}
+func (UnimplementedBCPlatformServiceServer) mustEmbedUnimplementedBCPlatformServiceServer() {}
+func (UnimplementedBCPlatformServiceServer) testEmbeddedByValue()                           {}
+
+// UnsafeBCPlatformServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BCPlatformServiceServer will
+// result in compilation errors.
+type UnsafeBCPlatformServiceServer interface {
+	mustEmbedUnimplementedBCPlatformServiceServer()
+}
+
+func RegisterBCPlatformServiceServer(s grpc.ServiceRegistrar, srv BCPlatformServiceServer) {
+	// If the following call pancis, it indicates UnimplementedBCPlatformServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&BCPlatformService_ServiceDesc, srv)
+}
+
+func _BCPlatformService_GetBCPlatform_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBCPlatformRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BCPlatformServiceServer).GetBCPlatform(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BCPlatformService_GetBCPlatform_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BCPlatformServiceServer).GetBCPlatform(ctx, req.(*GetBCPlatformRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BCPlatformService_SetBCPlatform_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetBCPlatformRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BCPlatformServiceServer).SetBCPlatform(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BCPlatformService_SetBCPlatform_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BCPlatformServiceServer).SetBCPlatform(ctx, req.(*SetBCPlatformRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// BCPlatformService_ServiceDesc is the grpc.ServiceDesc for BCPlatformService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var BCPlatformService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sc_service.BCPlatformService",
+	HandlerType: (*BCPlatformServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetBCPlatform",
+			Handler:    _BCPlatformService_GetBCPlatform_Handler,
+		},
+		{
+			MethodName: "SetBCPlatform",
+			Handler:    _BCPlatformService_SetBCPlatform_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sc.proto",
+}

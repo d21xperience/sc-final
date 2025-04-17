@@ -75,7 +75,7 @@ func (s *PTKTerdaftarServiceServer) CreatePTKTerdaftar(ctx context.Context, req 
 	// conflictProto := repositories.ConvertConflictsToProto(conflicts, "PtkID", "Nama")
 
 	// simpan ke tabel_ptk_terdaftar
-	conflicts1, err := s.repo.SaveManyWithConflictCheck(ctx, schemaName, PTKTerdaftarModel, "PtkTerdaftarId", "ptk_terdaftar_id", 5)
+	conflicts1, err := s.repo.SaveManyWithConflictCheck(ctx, schemaName, PTKTerdaftarModel, "PtkTerdaftarId", "ptk_terdaftar_id", 100, nil)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "insert failed: %v", err)
 	}

@@ -26,6 +26,7 @@ type RombonganBelajar struct {
 	JurusanID            string          `json:"jurusan_id"`
 	JurusanIDStr         string          `json:"jurusan_id_str"`
 	AnggotaRombel        []AnggotaRombel `json:"anggota_rombel"`
+	Pembelajaran         []Pembelajaran  `json:"pembelajaran"`
 }
 
 type AnggotaRombel struct {
@@ -33,4 +34,16 @@ type AnggotaRombel struct {
 	PesertaDidikID      string `json:"peserta_didik_id"`
 	JenisPendaftaranID  string `json:"jenis_pendaftaran_id"`
 	JenisPendaftaranStr string `json:"jenis_pendaftaran_id_str"`
+}
+type Pembelajaran struct {
+	PembelajaranID       string  `gorm:"type:uuid;primaryKey" json:"pembelajaran_id"`
+	MataPelajaranID      int64   `gorm:"column:mata_pelajaran_id" json:"mata_pelajaran_id"`
+	MataPelajaranIDStr   string  `gorm:"column:mata_pelajaran_id_str" json:"mata_pelajaran_id_str"`
+	PTKTerdaftarID       string  `gorm:"type:uuid" json:"ptk_terdaftar_id"`
+	PTKID                string  `gorm:"type:uuid" json:"ptk_id"`
+	NamaMataPelajaran    string  `gorm:"column:nama_mata_pelajaran" json:"nama_mata_pelajaran"`
+	IndukPembelajaranID  *string `gorm:"type:uuid" json:"induk_pembelajaran_id"` // Nullable UUID
+	JamMengajarPerMinggu string  `gorm:"column:jam_mengajar_per_minggu" json:"jam_mengajar_per_minggu"`
+	StatusDiKurikulum    string  `gorm:"column:status_di_kurikulum" json:"status_di_kurikulum"`
+	StatusDiKurikulumStr string  `gorm:"column:status_di_kurikulum_str" json:"status_di_kurikulum_str"`
 }

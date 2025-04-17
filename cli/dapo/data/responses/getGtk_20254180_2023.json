@@ -1,0 +1,5 @@
+HTTP/1.0 403 Forbidden
+Cache-Control: no-cache
+Date:          Wed, 16 Apr 2025 16:20:12 GMT
+
+{"success":false,"http_code":403,"status_code":"Forbidden","message":"Semester tidak ditemukan"}

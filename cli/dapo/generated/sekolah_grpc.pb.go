@@ -1426,11 +1426,12 @@ var NilaiAkhirService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	KelasService_CreateKelas_FullMethodName       = "/sekolah.KelasService/CreateKelas"
-	KelasService_CreateBanyakKelas_FullMethodName = "/sekolah.KelasService/CreateBanyakKelas"
-	KelasService_GetKelas_FullMethodName          = "/sekolah.KelasService/GetKelas"
-	KelasService_UpdateKelas_FullMethodName       = "/sekolah.KelasService/UpdateKelas"
-	KelasService_DeleteKelas_FullMethodName       = "/sekolah.KelasService/DeleteKelas"
+	KelasService_CreateKelas_FullMethodName         = "/sekolah.KelasService/CreateKelas"
+	KelasService_CreateBanyakKelas_FullMethodName   = "/sekolah.KelasService/CreateBanyakKelas"
+	KelasService_GetKelas_FullMethodName            = "/sekolah.KelasService/GetKelas"
+	KelasService_UpdateKelas_FullMethodName         = "/sekolah.KelasService/UpdateKelas"
+	KelasService_DeleteKelas_FullMethodName         = "/sekolah.KelasService/DeleteKelas"
+	KelasService_ImportDapodikRombel_FullMethodName = "/sekolah.KelasService/ImportDapodikRombel"
 )
 
 // KelasServiceClient is the client API for KelasService service.
@@ -1446,6 +1447,7 @@ type KelasServiceClient interface {
 	GetKelas(ctx context.Context, in *GetKelasRequest, opts ...grpc.CallOption) (*GetKelasResponse, error)
 	UpdateKelas(ctx context.Context, in *UpdateKelasRequest, opts ...grpc.CallOption) (*UpdateKelasResponse, error)
 	DeleteKelas(ctx context.Context, in *DeleteKelasRequest, opts ...grpc.CallOption) (*DeleteKelasResponse, error)
+	ImportDapodikRombel(ctx context.Context, in *ImportDapodikRombelRequest, opts ...grpc.CallOption) (*ImportDapodikRombelResponse, error)
 }
 
 type kelasServiceClient struct {
@@ -1506,6 +1508,16 @@ func (c *kelasServiceClient) DeleteKelas(ctx context.Context, in *DeleteKelasReq
 	return out, nil
 }
 
+func (c *kelasServiceClient) ImportDapodikRombel(ctx context.Context, in *ImportDapodikRombelRequest, opts ...grpc.CallOption) (*ImportDapodikRombelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ImportDapodikRombelResponse)
+	err := c.cc.Invoke(ctx, KelasService_ImportDapodikRombel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // KelasServiceServer is the server API for KelasService service.
 // All implementations must embed UnimplementedKelasServiceServer
 // for forward compatibility.
@@ -1519,6 +1531,7 @@ type KelasServiceServer interface {
 	GetKelas(context.Context, *GetKelasRequest) (*GetKelasResponse, error)
 	UpdateKelas(context.Context, *UpdateKelasRequest) (*UpdateKelasResponse, error)
 	DeleteKelas(context.Context, *DeleteKelasRequest) (*DeleteKelasResponse, error)
+	ImportDapodikRombel(context.Context, *ImportDapodikRombelRequest) (*ImportDapodikRombelResponse, error)
 	mustEmbedUnimplementedKelasServiceServer()
 }
 
@@ -1543,6 +1556,9 @@ func (UnimplementedKelasServiceServer) UpdateKelas(context.Context, *UpdateKelas
 }
 func (UnimplementedKelasServiceServer) DeleteKelas(context.Context, *DeleteKelasRequest) (*DeleteKelasResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteKelas not implemented")
+}
+func (UnimplementedKelasServiceServer) ImportDapodikRombel(context.Context, *ImportDapodikRombelRequest) (*ImportDapodikRombelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ImportDapodikRombel not implemented")
 }
 func (UnimplementedKelasServiceServer) mustEmbedUnimplementedKelasServiceServer() {}
 func (UnimplementedKelasServiceServer) testEmbeddedByValue()                      {}
@@ -1655,6 +1671,24 @@ func _KelasService_DeleteKelas_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _KelasService_ImportDapodikRombel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImportDapodikRombelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KelasServiceServer).ImportDapodikRombel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KelasService_ImportDapodikRombel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KelasServiceServer).ImportDapodikRombel(ctx, req.(*ImportDapodikRombelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // KelasService_ServiceDesc is the grpc.ServiceDesc for KelasService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1681,6 +1715,10 @@ var KelasService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteKelas",
 			Handler:    _KelasService_DeleteKelas_Handler,
+		},
+		{
+			MethodName: "ImportDapodikRombel",
+			Handler:    _KelasService_ImportDapodikRombel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

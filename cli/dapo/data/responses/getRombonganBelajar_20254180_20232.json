@@ -1,0 +1,281 @@
+{
+    "results": 1,
+    "id": "rombongan_belajar_id",
+    "start": 0,
+    "limit": 20,
+    "rows": [
+        {
+            "rombongan_belajar_id": "7d737a75-a86b-46dd-abc1-30c0cb1c6acc",
+            "nama": "XI TKJ A",
+            "tingkat_pendidikan_id": "11",
+            "tingkat_pendidikan_id_str": "Kelas 11",
+            "semester_id": "20232",
+            "jenis_rombel": "1",
+            "jenis_rombel_str": "Kelas",
+            "kurikulum_id": 418,
+            "kurikulum_id_str": "SMK 2013 REV.\u00a0Teknik Komputer dan Jaringan",
+            "id_ruang": "87ac2656-f48a-46dd-a35a-42107f4af25c",
+            "id_ruang_str": "RK 19",
+            "moving_class": "Tidak",
+            "ptk_id": "316cdc4c-e731-450f-894b-c01d44f6fa90",
+            "ptk_id_str": "Lisdisah",
+            "jurusan_id": "15052515",
+            "jurusan_id_str": "Teknik Komputer dan Jaringan",
+            "anggota_rombel": [
+                {
+                    "anggota_rombel_id": "3b912045-8026-4fcb-8a77-02a7b81842a1",
+                    "peserta_didik_id": "15f7777d-2310-e211-9e40-af672d643093",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "f51c9a55-2fa9-4c8b-86b8-10140cdf0baf",
+                    "peserta_didik_id": "858394fa-e19e-40d8-aff8-9daff4f738d3",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "40f3c3e4-8a8d-4b46-84b1-16fd2404ba6e",
+                    "peserta_didik_id": "c8c895d2-8824-e211-9858-89468cd0a5f2",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "41c93412-4123-4409-8e84-19bada19af52",
+                    "peserta_didik_id": "1ba95ff7-d41d-e211-8a17-a5e04eba55e6",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "9eef0479-325d-4c75-8fce-1c4213ed1851",
+                    "peserta_didik_id": "810af9b9-0e02-e211-ade4-a187e4c576b9",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "2ebc89e1-73d4-452b-ae69-21bfc5f6293b",
+                    "peserta_didik_id": "78a9860b-f610-e211-bc5e-936e931a0268",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "39975bf5-0247-4464-9145-226f15032d0d",
+                    "peserta_didik_id": "0d552a53-e563-e211-8f96-eb7895e87973",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "cb4a4bfb-198a-4da5-99f2-296ce7e7e73a",
+                    "peserta_didik_id": "80f473e5-86f5-e111-997b-13ea63d9fa82",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "9000211b-e7bc-4f24-9bec-2d36e1dfc155",
+                    "peserta_didik_id": "de3de26e-81e5-11e3-8cbc-5b7b07cddc7e",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "adda10b4-15b3-49c0-b6eb-39a74fb31678",
+                    "peserta_didik_id": "41d61ad6-d723-e211-b82c-0f16e5506aa7",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "91f351f1-2b9f-4d62-b98d-3a8271e3bc3c",
+                    "peserta_didik_id": "a7e906be-9424-e211-9858-89468cd0a5f2",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "6fbb8f77-379c-4118-a349-46ffa036cfd2",
+                    "peserta_didik_id": "225bfd36-f4f7-e111-af83-ff03625b27ff",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "4531ae43-f799-4a2d-bbff-47fd2dd135d2",
+                    "peserta_didik_id": "05a98f6d-dd24-e211-9004-ff07e3074813",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "3b6740d2-d9fc-469d-a03b-537e9fa972de",
+                    "peserta_didik_id": "56fe3707-a3f5-e111-a3cf-011a548f1e6a",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "dd93737e-c979-498c-8786-581268447dec",
+                    "peserta_didik_id": "9a6a7e67-8afc-e111-9393-3f7e817d3d3e",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "971aafb8-5562-40af-b932-5f391e8d96da",
+                    "peserta_didik_id": "62505809-e5eb-428a-8598-450cb95bc1d7",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "987c9825-efee-4e7c-9f9a-62b717b96588",
+                    "peserta_didik_id": "4dc83ed8-6b09-e211-9554-b58beba27f5e",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "794d1006-541c-46ca-ac27-6a03837b8843",
+                    "peserta_didik_id": "57dbc658-389e-e111-9760-a13f651b7a65",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "b1c67cee-39d3-4dcb-b65b-6de503ee2621",
+                    "peserta_didik_id": "c8cbe0d9-959e-e211-9302-63d6271908e3",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "cea4761c-7fc0-4aab-854d-6e6beff43d8f",
+                    "peserta_didik_id": "efc2c942-8028-e211-b7db-d33cf8e57df4",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "a76c9ac8-5522-40e3-b879-71d44e64b8d9",
+                    "peserta_didik_id": "6895de7f-affa-e111-88aa-2d0e0d4c0f4b",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "adac60c0-17ee-4195-bcb3-75895ca6f9b0",
+                    "peserta_didik_id": "0160ce76-9928-e211-ac9a-272078961032",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "2990f3a8-ca9f-4ed2-b2fa-8136b6ad89b7",
+                    "peserta_didik_id": "19e86deb-380f-e211-a147-7db68ad6722f",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "830645ef-25e4-41a8-b9ee-81462e86d61e",
+                    "peserta_didik_id": "76c3cddc-8c24-e211-9858-89468cd0a5f2",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "ac7e54ab-8bbd-49c2-83b0-817fd29c954b",
+                    "peserta_didik_id": "4bbc9d6a-7739-11e3-9065-3f9807ca7d81",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "0499830c-4a23-4ea7-8370-81fe65d85aa6",
+                    "peserta_didik_id": "2fef7b0f-a48c-45c8-94fd-61b9ea0b540b",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "e2e0519e-3a01-4dd2-a0c8-846021015411",
+                    "peserta_didik_id": "6c6b9e9c-654b-4ca0-8a13-46710de93b7f",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "59a8ea17-aa52-4544-b6b1-92b430d54e81",
+                    "peserta_didik_id": "389d51a9-7318-e211-8227-230848409c51",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "cd592249-4887-402e-b434-9646dc0326a2",
+                    "peserta_didik_id": "4668f3fd-18bc-43d7-bed9-dfc1fb79ea34",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "a7c56d17-0823-4e5c-a652-9dd511d1912c",
+                    "peserta_didik_id": "e688843e-2bc6-46d5-be3d-a5444fcd09b6",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "7ed786b9-e043-45c4-8644-a245f0d792e7",
+                    "peserta_didik_id": "c9b8d3d7-1b09-e211-b090-1332e40bb507",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "6fcb5242-ad9e-454d-8e9f-b333809dc985",
+                    "peserta_didik_id": "019ddab2-c59f-11e5-8505-eb7a3e957d01",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "4a5ce5dd-b6e1-4629-9404-b37373505833",
+                    "peserta_didik_id": "165bfd36-f4f7-e111-af83-ff03625b27ff",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "09e16a81-bc9c-4fff-839d-bdc5698a6532",
+                    "peserta_didik_id": "cbadc98c-4f09-e211-88fb-b549f1ff77c0",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "7a500cd4-60b3-423d-8d0e-bde939e0a82c",
+                    "peserta_didik_id": "44feea0f-dc24-e211-8b03-a31fd803120e",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "e48d18fb-c771-40d3-9252-c40f92180924",
+                    "peserta_didik_id": "e3fbc98c-4f09-e211-88ff-b549f1ff77c0",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "ce009e36-804e-408e-971b-d0a0e7452af1",
+                    "peserta_didik_id": "8eb623e4-75fe-e111-9854-83de4554913b",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "596f9537-425b-4d81-8fbb-d19be2bab7db",
+                    "peserta_didik_id": "46ed0313-520d-e211-9a0c-c3c22fac0bc3",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "ce615ffc-146a-4043-a49c-d35d36774698",
+                    "peserta_didik_id": "5043c3c3-8472-48ee-b9cc-6cf6ef0d6bd4",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "981a86cc-600c-4a92-b825-d4784538619a",
+                    "peserta_didik_id": "041f8319-47f6-e111-b10a-c305ef5a05fa",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "3129b423-ad97-4291-84f1-edf886a5ef77",
+                    "peserta_didik_id": "7c11b3c0-82fe-e111-a0a6-7d6a009733e8",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                },
+                {
+                    "anggota_rombel_id": "86e79c7b-6936-42ae-8eda-f580eb4ef7d1",
+                    "peserta_didik_id": "9bfc7a18-f1f6-e111-876e-5fcc5b03a9a2",
+                    "jenis_pendaftaran_id": "6",
+                    "jenis_pendaftaran_id_str": "Lanjutan semester"
+                }
+            ],
+            "pembelajaran": []
+        }
+    ]
+}
