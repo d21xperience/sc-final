@@ -51,9 +51,9 @@ const dialogSelectplatforms = ref(false)
 const selectedPlatform = ref()
 const fetchPlatforms = async () => {
     payload.schemaname = store.getters["sekolahService/getTabeltenant"]?.schemaname
-    
+
     const res = await store.dispatch("scService/fetchBCPlatform", payload)
-    console.log(res)
+    // console.log(res)
     platforms.value = res.bcPlatform
     platforms.value.filter(platform => {
         if (platform.active) {
@@ -116,7 +116,6 @@ const platformDiactive = async () => {
     selectedPlatform.value = '';
 }
 onMounted(() => {
-    console.log("mounted")
     fetchPlatforms()
 });
 

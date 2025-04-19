@@ -1,0 +1,8 @@
+-- CREATE TABLE IF NOT EXISTS blockchain_platform (
+-- 	"id" UUID NOT NULL,
+-- 	"nm_blockchain" VARCHAR(50) NOT NULL,
+-- 	"active" BOOLEAN NULL DEFAULT 'false',
+-- 	"created_at" TIMESTAMP NULL DEFAULT 'now()',
+-- 	"updated_at" TIMESTAMP NULL DEFAULT 'now()',
+-- 	PRIMARY KEY ("id")
+-- );

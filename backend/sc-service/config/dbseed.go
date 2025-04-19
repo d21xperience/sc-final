@@ -109,6 +109,7 @@ func SeedBCNetworks() {
 
 	log.Println("Seeding completed!")
 }
+
 // func SeedAccountBC() {
 // 	accounts := []models.Account{
 // 		{
@@ -168,7 +169,7 @@ func SeedStudent() {
 			NIS:         "12345678",
 			NISN:        "87654321",
 			NIK:         "87654323",
-			TptLahir:    time.Date(2005, 10, 12, 0, 0, 0, 0, time.UTC),
+			TptLahir:    "Bandung",
 			TglLahir:    time.Date(2005, 10, 12, 0, 0, 0, 0, time.UTC),
 			AsalSekolah: "SMA Negeri 1",
 			CreatedAt:   time.Now(),
@@ -180,7 +181,7 @@ func SeedStudent() {
 			NIS:         "23456789",
 			NISN:        "98765432",
 			NIK:         "98765434",
-			TptLahir:    time.Date(2006, 5, 21, 0, 0, 0, 0, time.UTC),
+			TptLahir:    "Sumdedang",
 			TglLahir:    time.Date(2006, 5, 21, 0, 0, 0, 0, time.UTC),
 			AsalSekolah: "SMA Negeri 2",
 			CreatedAt:   time.Now(),

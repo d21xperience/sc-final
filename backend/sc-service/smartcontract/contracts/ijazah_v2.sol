@@ -45,7 +45,7 @@ contract VerifikasiIjazah {
         string memory _ipfsUrl,
         string[] memory _mataPelajaran,
         uint8[] memory _nilai
-    ) public isOwner {
+    ) public {
         require(
             degrees[_degreeHash].degreeHash == bytes32(0),
             "Ijazah sudah terdaftar."

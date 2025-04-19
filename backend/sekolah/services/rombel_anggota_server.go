@@ -165,6 +165,7 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 	rombelId := req.GetRombonganBelajarId()
 	var conditions = map[string]any{
 		"tabel_anggotakelas.semester_id": semesterId,
+		"jenis_rombel": 1,
 	}
 	if rombelId != "" {
 		conditions["tabel_anggotakelas.rombongan_belajar_id"] = rombelId

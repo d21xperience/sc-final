@@ -56,10 +56,13 @@ func RunGRPCServer() *grpc.Server {
 	// REGISTER REFERENSI TABEL SERVICE
 	referensiService := services.NewReferensiServiceServer()
 	pb.RegisterReferensiServiceServer(grpcServer, referensiService)
-	
+
 	// REGISTER PEMBELAJARAN SERVICE
 	pembelajaranService := services.NewPembelajaranServiceServer()
 	pb.RegisterPembelajaranServiceServer(grpcServer, pembelajaranService)
+	// REGISTER PEMBELAJARAN SERVICE
+	ijazahService := services.NewIjazahServiceServer()
+	pb.RegisterIjazahServiceServer(grpcServer, ijazahService)
 
 	return grpcServer
 }

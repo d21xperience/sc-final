@@ -7,14 +7,14 @@ const api = axios.create({
     "Content-Type": "application/json",
     "Content-Type": "Authorization",
   },
-  // timeout: 10000, // 10 detik
+  timeout: 20000, // 20 detik
 });
 
 const state = {
   loading: false,
   error: null,
   tabelTenant: JSON.parse(localStorage.getItem("tabelTenant")) || null,
-  // tabelSemester: JSON.parse(localStorage.getItem("tabelSemester")) || null,
+  tabelSemester: JSON.parse(localStorage.getItem("tabelSemester")) || null,
   tabelSekolah: JSON.parse(localStorage.getItem("tabelSekolah")) || null,
   tabelSiswaAktif: JSON.parse(localStorage.getItem("tabelSiswaAktif")) || null,
   tabelGuru: JSON.parse(localStorage.getItem("tabelGuru")) || null,
@@ -41,9 +41,9 @@ const mutations = {
     state.tabelTenant = tabelTenant;
     localStorage.setItem("tabelTenant", JSON.stringify(tabelTenant));
   },
-  SET_TABELSEMESTER(state, tabelSemester) {
-    state.tabelSemester = tabelSemester;
-    localStorage.setItem("tabelSemester", JSON.stringify(tabelSemester));
+  SET_TABELSEMESTER(state, value) {
+    state.tabelSemester = value;
+    localStorage.setItem("tabelSemester", JSON.stringify(value));
   },
   SET_TABELSEKOLAH(state, tabelSekolah) {
     state.tabelSekolah = tabelSekolah;
@@ -91,8 +91,8 @@ const actions = {
   // Semester
   // ================================================
   async fetchSemester({ commit }, semester_id) {
-    commit("SET_LOADING", true);
-    commit("SET_ERROR", null);
+    // commit("SET_LOADING", true);
+    // commit("SET_ERROR", null);
     try {
       const response = await api.get(`/ss/semester`, {
         params: {
@@ -117,10 +117,6 @@ const actions = {
   // ================================================
 
   async fetchRombel({ commit }, payload) {
-    commit("SET_LOADING", true);
-    commit("SET_ERROR", null);
-    // console.log(payload);
-
     try {
       const response = await api.get(`/ss/${payload.schemaname}/kelas`, {
         params: {
@@ -128,11 +124,8 @@ const actions = {
           kelas_id: payload.kelas_id,
         },
       });
-      // console.log(response.data);
-      // commit("SET_TABELSEMESTER", response.data.semester);
       return response.data.kelas; // Mengembalikan data sekolah
     } catch (error) {
-      // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal mengambil data rombel:", error);
       return null;
     } finally {
@@ -632,6 +625,28 @@ const actions = {
     try {
       const response = await api.post(`ss/pembelajaran/create`, payload);
       console.log(response.data);
+      return response.data; // Mengembalikan data sekolah
+    } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal mendaftarkan siswa baru:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
+
+  // ==================================
+  // IJAZAH SERVICE
+  // ==================================
+  async fetchProsesIjazah({ commit }, payload) {
+    try {
+      const response = await api.get(`ss/proses-ijazah`, {
+        params: {
+          schemaname: payload.schemaname,
+          semester_id: payload.semester_id,
+        },
+      });
+      // console.log(response.data);
       return response.data; // Mengembalikan data sekolah
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");

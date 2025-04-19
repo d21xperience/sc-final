@@ -60,7 +60,8 @@
 
 
                     <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa"
-                    scrollable scrollHeight="450px" dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
+                        scrollable scrollHeight="450px" dataKey="anggotaRombelId" :paginator="true" :rows="10"
+                        :filters="filters"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         :rowsPerPageOptions="[10, 20, 50]"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} siswa">
@@ -168,8 +169,8 @@
 
         <!-- import data -->
         <!-- DIALOG IMPORT -->
-        <DialogImport v-model:visible="dialogImport" @save="saveImport" @cancel="cancelImport"
-            template-type="siswa" :schema-name="schemaname" />
+        <DialogImport v-model:visible="dialogImport" @save="saveImport" @cancel="cancelImport" template-type="siswa"
+            :schema-name="schemaname" />
 
         <!-- end of import data -->
         <DialogLoading v-model="isLoading"> Memuat data, harap tunggu... </DialogLoading>
@@ -394,7 +395,7 @@ const fetchSiswa = async () => {
     }
     console.log(payload)
     const results = await store.dispatch("sekolahService/fetchSiswaAktif", payload)
-    console.log(results)
+    // console.log(results)
     siswa.value = results
     // results.forEach(item => {
     //     siswa.value.push(item)

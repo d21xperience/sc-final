@@ -262,11 +262,11 @@
 	},
 	"sources": {
 		"Desktop/Smart Contract/sc_ijazah/backend/sc-service/smartcontract/contracts/ijazah_v2.sol": {
-			"keccak256": "0x077a0dc2ef92d56fffe1ba7430bd2cb7ff1b838ce8e74e08bc83e7439d9c6073",
+			"keccak256": "0xd156dc3a3c4a3237a09efabfeec11879d6202824259e04b62238ec14987d88b5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4b4216300983c8ec0f416d80a466a4ca8d6881b3ac23f969250893e38ef06e3e",
-				"dweb:/ipfs/QmPHg2PvS2MFdYPfWmSeNZMrNUT5qqsGZQomJnNcJk9iR9"
+				"bzz-raw://3479c0464d78a959e8a6d4c6c7ab0db32b0c05373733992767c12efebcab8edd",
+				"dweb:/ipfs/QmUhaZufgJz3nUYiFL63tDbEXKmL2RcGAY6snEbc4QXeMQ"
 			]
 		}
 	},

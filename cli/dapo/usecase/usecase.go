@@ -199,6 +199,8 @@ func ProcessRombel(cfg *config.AppConfig, semesterID string) error {
 			TingkatPendidikanId: int32(utils.StringToInt(item.TingkatPendidikanID)),
 			NamaJurusanSp:       item.JurusanIDStr,
 			KurikulumId:         int32(item.KurikulumID),
+			JenisRombel:         int32(utils.StringToInt(item.JenisRombel)),
+			JurusanSpId:         &item.JurusanIDStr,
 			// JenisRombel:         item.JenisRombel,
 			AnggotaKelas: utils.ConvertModelsToPB(utils.SliceToPointer(item.AnggotaRombel), func(item *models.AnggotaRombel) *pb.AnggotaKelas {
 				return &pb.AnggotaKelas{

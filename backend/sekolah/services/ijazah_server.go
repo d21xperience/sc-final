@@ -13,13 +13,16 @@ import (
 
 type IjazahServiceServer struct {
 	pb.UnimplementedIjazahServiceServer
-	repo repositories.GenericRepository[models.Ijazah]
+	repo             repositories.GenericRepository[models.Ijazah]
+	repoAnggotaKelas repositories.GenericRepository[models.RombelAnggota]
 }
 
-func NewIjazahService() *IjazahServiceServer {
+func NewIjazahServiceServer() *IjazahServiceServer {
 	repoIjazah := repositories.NewIjazahRepository(config.DB)
+	repoAnggotaKelas := repositories.NewRombelAnggotaRepository(config.DB)
 	return &IjazahServiceServer{
-		repo: *repoIjazah,
+		repo:             *repoIjazah,
+		repoAnggotaKelas: *repoAnggotaKelas,
 	}
 }
 
@@ -33,11 +36,12 @@ func (s *IjazahServiceServer) CreateIjazah(ctx context.Context, req *pb.CreateIj
 }
 
 // **GetIjazah**
-func (s *IjazahServiceServer) GetIjazah(ctx context.Context, req *pb.GetIjazahRequest) (*pb.GetIjazahResponse, error) {
+func (s *IjazahServiceServer) GetProsesIjazah(ctx context.Context, req *pb.GetProsesIjazahRequest) (*pb.GetProsesIjazahResponse, error) {
+	var err error
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"Schemaname"}
+	requiredFields := []string{"Schemaname", "SemesterId"}
 	// Validasi request
-	err := utils.ValidateFields(req, requiredFields)
+	err = utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
@@ -46,54 +50,63 @@ func (s *IjazahServiceServer) GetIjazah(ctx context.Context, req *pb.GetIjazahRe
 		return nil, fmt.Errorf("schema name is required")
 	}
 
-	ijazahId := req.GetIjazahId()
-	// semesterId := req.GetSemesterId()
-	var conditions = map[string]interface{}{
-		"id": ijazahId,
+	// Cek apakah harus mengambil semua data atau data spesifik berdasarkan SemesterId
+	// kelasId := req.GetKelasId()
+	semesterId := req.GetSemesterId()
+	var rombelAnggota []models.RombelAnggota
+	var conditions = map[string]any{
+		"tabel_anggotakelas.status_keaktifan": 1,
+		"tabel_anggotakelas.semester_id":      semesterId,
+	}
+	if req.GetPesertaDidikId() != "" {
+		conditions["tabel_anggotakelas.peserta_didik_id"] = req.GetPesertaDidikId()
 	}
 
-	if ijazahId != "" {
-		// Ambil data ijazah berdasarkan RombonganBelajarId
-		rombel, err := s.repo.FindByID(ctx, ijazahId, schemaName, "id")
-		if err != nil {
-			return nil, err
-		}
-		return &pb.GetIjazahResponse{
-			Ijazah: []*pb.Ijazah{
-				ConvertModelToPB(rombel, func(model *models.Ijazah) *pb.Ijazah {
-					return &pb.Ijazah{
-						Nama: model.Nama,
-						Nisn: model.NISN,
-						Nis:  model.Nis,
-						Npsn: model.NPSN,
-					}
-				}),
-			},
-		}, nil
+	joins := []string{
+		// "JOIN tabel_ptk ON tabel_kelas.ptk_id = tabel_ptk.ptk_id",
+		// "JOIN tabel_pembelajaran ON tabel_kelas.rombongan_belajar_id = tabel_pembelajaran.rombongan_belajar_id",
+		// fmt.Sprintf("JOIN ref.jurusan ON %s.tabel_kelas.jurusan_id = ref.jurusan.jurusan_id", schemaName),
+		// fmt.Sprintf("JOIN ref.kurikulum ON %s.tabel_kelas.kurikulum_id = ref.kurikulum.kurikulum_id", schemaName),
+		// fmt.Sprintf("JOIN ref.tingkat_pendidikan ON %s.tabel_kelas.tingkat_pendidikan_id = ref.tingkat_pendidikan.tingkat_pendidikan_id", schemaName),
 	}
-	// Ambil semua data ijazah
-	// limit := req.GetLimit()
-	limit := 100
-	if limit == 0 {
-		limit = 100
-	}
-	// offset := req.GetOffset()
-	offset := 0
-	if offset == 0 {
-		offset = 0
-	}
-	banyakijazah, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, int(limit), int(offset))
+	preloads := []string{"PesertaDidik", "RombonganBelajar"}
+
+	groupByColumns := []string{} // Hindari duplikasi
+	rombelAnggota, err = s.repoAnggotaKelas.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns)
 	if err != nil {
-		log.Printf("[ERROR] Gagal menemukan ijazah di schema '%s': %v", schemaName, err)
-		return nil, fmt.Errorf("gagal menemukan ijazah di schema '%s': %w", schemaName, err)
+		return nil, err
 	}
-	banyakijazahList := ConvertModelsToPB(banyakijazah, func(model *models.Ijazah) *pb.Ijazah {
-		return &pb.Ijazah{
-			Nama: model.Nama,
+
+	banyakKelasList := utils.ConvertModelsToPB(rombelAnggota, func(kelas models.RombelAnggota) *pb.AnggotaKelas {
+		// jmlhAnggota, err := s.repoRombelAnggota.CountRows(ctx, schemaName, "rombongan_belajar_id", kelas.RombonganBelajarId.String())
+		if err != nil {
+			return nil
+		}
+		return &pb.AnggotaKelas{
+			RombonganBelajarId: kelas.RombonganBelajarId.String(),
+			SemesterId:         kelas.SemesterId,
+			// PesertaDidikId:     kelas.PesertaDidikId.String(),
+			AnggotaRombelId: kelas.AnggotaRombelId.String(),
+			PesertaDidik: &pb.Siswa{
+				PesertaDidikId: kelas.PesertaDidik.PesertaDidikId,
+				NmSiswa:        kelas.PesertaDidik.NmSiswa,
+				JenisKelamin:   kelas.PesertaDidik.JenisKelamin,
+				Nis:            kelas.PesertaDidik.Nis,
+				Nisn:           kelas.PesertaDidik.Nisn,
+				Nik:            utils.SafeString(kelas.PesertaDidik.Nik),
+				TempatLahir:    kelas.PesertaDidik.TempatLahir,
+				TanggalLahir:   kelas.PesertaDidik.TanggalLahir.String(),
+				Agama:          kelas.PesertaDidik.Agama,
+			},
+			RombonganBelajar: &pb.Kelas{
+				NmKelas: kelas.RombonganBelajar.NmKelas,
+			},
 		}
 	})
-	return &pb.GetIjazahResponse{
-		Ijazah: banyakijazahList,
+	return &pb.GetProsesIjazahResponse{
+		Status:       true,
+		Message:      "Sukses",
+		AnggotaKelas: banyakKelasList,
 	}, nil
 }
 

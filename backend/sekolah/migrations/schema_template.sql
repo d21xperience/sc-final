@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.tabel_anggotakelas (
 	peserta_didik_id UUID NOT NULL,
 	rombongan_belajar_id UUID NOT NULL,
 	semester_id CHAR(5) NOT NULL,
+	status_keaktifan INTEGER NOT NULL DEFAULT 0, -- 0 = aktif(sedang studi); 1= lulus; 2=keluar 
 	PRIMARY KEY (anggota_rombel_id),
 	CONSTRAINT "FK_tabel_anggotakelas_tabel_anggotakelas" FOREIGN KEY (rombongan_belajar_id) REFERENCES {{schema_name}}.tabel_kelas (rombongan_belajar_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT "FK_tabel_anggotakelas_tabel_siswa" FOREIGN KEY (peserta_didik_id) REFERENCES {{schema_name}}.tabel_siswa (peserta_didik_id) ON UPDATE CASCADE ON DELETE CASCADE,

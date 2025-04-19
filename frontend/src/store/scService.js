@@ -46,13 +46,13 @@ const mutations = {
 const actions = {
   async fetchBCPlatform({ commit }, payload) {
     try {
-      console.log(payload);
+      // console.log(payload);
       const response = await api.get(`/sc/platform`, {
         params: {
           schemaname: payload.schemaname,
         },
       });
-      console.log(response.data.bcPlatform);
+      // console.log(response.data.bcPlatform);
       response.data.bcPlatform.find((platform) => {
         if (platform.active) {
           commit("setBCPlatformSelected", platform);
@@ -232,6 +232,23 @@ const actions = {
           },
         }
       );
+      // commit("SET_BCNETWORK", response.data);
+      return response.data; // Mengembalikan data sekolah
+    } catch (error) {
+      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal membuat akun:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
+  async createIjazahBC({ commit }, payload) {
+    // commit("SET_LOADING", true);
+    // commit("SET_ERROR", null);
+    // console.log("Payload yang dikirim:", JSON.stringify(payload, null, 2));
+
+    try {
+      const response = await api.post(`/sc/ijazah-bc/create`, payload);
       // commit("SET_BCNETWORK", response.data);
       return response.data; // Mengembalikan data sekolah
     } catch (error) {

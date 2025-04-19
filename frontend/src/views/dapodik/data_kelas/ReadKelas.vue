@@ -124,6 +124,7 @@
         </template>
     </Dialog>
 
+    <DialogLoading :model-value=isLoading />
     <!-- import data -->
     <!-- DIALOG IMPORT -->
     <!-- <DialogImport v-model:visible="dialogImport" @save="saveImport" @cancel="cancelImport"
@@ -145,14 +146,9 @@ import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import Select from 'primevue/select';
 import MultiSelect from 'primevue/multiselect';
-
+import DialogLoading from '@/components/DialogLoading.vue';
 import EmptyData from '@/components/EmptyData.vue';
 import router from '@/router';
-
-defineProps({
-    kelasData: String
-});
-
 // ================================
 // composable
 // ================================
@@ -162,16 +158,29 @@ const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]
 
 const { fetchKelas, kelasList } = useSekolahService(schemaname, selectedSemester)
 // ================================
+defineProps({
+    kelasData: String
+});
+
+const isLoading = ref(false)
 
 
 watch(selectedSemester, (e, b) => {
-    fetchKelas()
+    fetchK()
 })
 onMounted(() => {
-    fetchKelas()
+    // console.log("onMounted")
+    fetchK()
     // getParamDialogImport()
 });
 
+const fetchK = async () => {
+    // Loading
+    isLoading.value = true
+    await fetchKelas()
+    isLoading.value = false
+
+}
 const getParamDialogImport = () => {
     schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
     // semester.value = store.getters["sekolahService/getSemester"]

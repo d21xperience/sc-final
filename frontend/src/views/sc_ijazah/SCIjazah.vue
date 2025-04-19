@@ -6,9 +6,9 @@
             <div class="flex flex-wrap justify-between items-center mb-2">
                 <h4 class="font-bold text-xl md:text-2xl">Data Ijazah</h4>
                 <div class="md:flex md:items-center md:space-x-2">
-                    <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
+                    <h3 class="text-slate-500 md:text-base text-sm">Tahun Lulus</h3>
                     <div>
-                        <Select v-model="selectedSemester" :options="semester" optionLabel="namaSemester"
+                        <Select v-model="selectedTahunAjaran" :options="tahunAjaranOptions" optionLabel="label"
                             placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" />
 
                     </div>
@@ -37,8 +37,9 @@
                             class="mr-2" />
                         <!-- <Button label="Proses" icon="pi pi-send" severity="info" @click="exportCSV($event)" /> -->
                         <IssueDegreeButton :degreeData="degreeData" :sekolah="sekolah" :ipfsUrl="ipfsUrl"
-                            :transcript="transcript" :contract="contract"
-                            class="bg-blue-600 p-3 rounded-lg text-white" />
+                            :transcript="transcript" :contract="contract" class="bg-blue-600 p-3 rounded-lg text-white"
+                            :disabled="!selectedSiswa"
+                            :class="{ 'bg-slate-500': !selectedSiswa || selectedSiswa.length === 0 || selectedSiswa.length > 2 }" />
                     </template>
 
                 </Toolbar>
@@ -67,8 +68,8 @@
         </div>
         <!-- </div> -->
         <!-- </div> -->
-        <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa" dataKey="id"
-            :paginator="true" :rows="10" :filters="filters"
+        <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa"
+            dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[10, 20, 50]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
@@ -79,58 +80,31 @@
                         :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
                 </template>
             </Column> -->
-            <Column field="nama" header="Nama" sortable>
+            <Column field="pesertaDidik.nmSiswa" header="Nama" sortable></Column>
+            <Column field="pesertaDidik.jenisKelamin" header="JK"></Column>
+            <Column field="pesertaDidik.nis" header="NIS"></Column>
+            <Column field="pesertaDidik.nisn" header="NISN"></Column>
+            <Column field="rombonganBelajar.nmKelas" header="Rombel"></Column>
+            <Column field="pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
+            <Column field="" header="Tgl. Lahir">
                 <template #body="slotProps">
-                    {{ slotProps.data.pesertaDidik.nmSiswa }}
+                    {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
                 </template>
+
             </Column>
-            <Column field="rombonganBelajar.nmKelas" header="Rombel">
-                <template #body="slotProps">
-                    {{ slotProps.data.rombonganBelajar.nmKelas }}
-                </template>
-            </Column>
-            <Column field="jk" header="Tahun Pelajaran">
-                <template #body="slotProps">
-                    {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                </template>
-            </Column>
-            <Column field="jk" header="Tempat,Tgl. Lahir">
-                <template #body="slotProps">
-                    {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                </template>
-            </Column>
-            <Column field="jk" header="Nama Ortu/Wali">
-                <template #body="slotProps">
-                    {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                </template>
-            </Column>
-            <Column field="jk" header="NIS">
-                <template #body="slotProps">
-                    {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                </template>
-            </Column>
-            <Column field="jk" header="NISN">
-                <template #body="slotProps">
-                    {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                </template>
-            </Column>
+            <Column field="jk" header="Nama Ortu/Wali"></Column>
             <Column field="jk" header="Sekolah Asal">
                 <template #body="slotProps">
-                    {{ slotProps.data.pesertaDidik.jenisKelamin }}
+                    {{ "SMK Pasundan Jatinangor" }}
                 </template>
             </Column>
             <Column field="jk" header="Tgl. Terbit">
-                <template #body="slotProps">
-                    {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                </template>
             </Column>
             <Column field="jk" header="No.Ijazah">
-                <template #body="slotProps">
-                    {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                </template>
+
             </Column>
             <!-- Jika SMK/MAK Program Keahlian & Kompetensi Keahlian akan muncul-->
-            <div v-if="['smk', 'mak'].includes(bentukPendidikan)">
+            <!-- <div v-if="['smk', 'mak'].includes(bentukPendidikan)">
                 <Column field="jk" header="Prog.Keahlian">
                     <template #body="slotProps">
                         {{ slotProps.data.pesertaDidik.jenisKelamin }}
@@ -141,7 +115,7 @@
                         {{ slotProps.data.pesertaDidik.jenisKelamin }}
                     </template>
                 </Column>
-            </div>
+            </div> -->
 
         </DataTable>
         <Dialog v-model:visible="visible" modal header="Tambah data ijazah">
@@ -153,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useStore } from "vuex";
 const store = useStore();
 import AddIjazah from './AddIjazah.vue';
@@ -178,39 +152,56 @@ import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
 import IssueDegreeForm from './IssueDegreeForm.vue';
 import IssueDegreeButton from '@/components/IssueDegreeButton.vue';
-
+import { useUtils } from '@/composables/useUtils'
+const { formatterDateID } = useUtils()
 
 const visible = ref(false)
 
 const selectedSiswa = ref();
-const siswa = ref(null);
+const siswa = ref();
 const bentukPendidikan = ref("smk")
 const filters = ref({
     'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
+// ================================
+const semester = ref()
+const selectedTahunAjaran = ref()
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
 
+// ================================
+const tahunAjaranOptions = ref()
+const fetchSemester = async () => {
+    try {
+        semester.value = await store.getters["sekolahService/getSemester"]
+        if (!semester.value) {
+            semester.value = await store.dispatch("sekolahService/fetchSemester")
+        }
+        tahunAjaranOptions.value = getTahunAjaran(semester.value)
+        // Ambil tahun ajaran terbaru berdasarkan tahun terbesar
+        selectedTahunAjaran.value = tahunAjaranOptions.value.reduce((latest, current) =>
+            current.tahunAjaranId > latest.tahunAjaranId ? current : latest
+        );
+    } catch (error) {
+        console.log(error)
+    }
+}
+watch(selectedTahunAjaran, async () => {
+    // Panggil data untuk mengumpulkan siswa
+    try {
+        let payload = {
+            schemaname: schemaname.value,
+            semester_id: selectedTahunAjaran.value.value
+        }
+        const results = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
+        if (results) {
+            // console.log(results.anggotaKelas)
+            siswa.value = results.anggotaKelas
+        }
+    } catch (error) {
 
-// =======SEMESTER=============
-const selectedSemester = ref();
-const semester = ref(null);
-// const fetchSemester = async () => {
-//     try {
-//         const results = await store.dispatch("sekolahService/fetchSemester")
-//         console.log(results)
-//         if (results) {
-//             semester.value = store.getters["sekolahService/getSemester"]
-//             // Ambil semester terbaru berdasarkan ID terbesar
-//             selectedSemester.value = semester.value.reduce((latest, current) =>
-//                 current.semesterId > latest.semesterId ? current : latest
-//             );
-//         }
-//     } catch (error) {
-
-//     }
-// }
-
-// ==================================
+    }
+})
 
 // ==================================
 const confirmDeleteSelected = () => {
@@ -223,24 +214,51 @@ const dataLulusan = ref();
 import { ethers } from 'ethers';
 // Dummy data (bisa kamu ambil dari API atau input form)
 const degreeData = ref({
-    name: "Andi Wijaya",
+    nama: "Andi Wijaya",
     nisn: "1234567890",
-    graduationYear: 2024,
+    nik: "3211142109820004",
+    tahun_lulus: 2024,
     major: "Rekayasa Perangkat Lunak"
 });
 const sekolah = ref("SMK PASUNDAN JATINANGOR");
 
 const ipfsUrl = ref("https://ipfs.io/ipfs/Qm...examplehash");
 const transcript = ref({
-    subjects: ["Matematika", "Pemrograman", "Basis Data"],
-    grades: [85, 90, 88]
+    mapel: ["Matematika", "Pemrograman", "Basis Data"],
+    nilai: [85, 90, 88]
 });
-const contract = ref(null);
+const contract = null;
 
-// onMounted(async () => {
-//     await initContract();
-// });
+watch(selectedSiswa, (newVal) => {
+    if (newVal.length === 1) {
+        degreeData.value = { ...newVal[0].pesertaDidik }; // Salin object pertama
+    }
+});
 
+
+
+
+onMounted(async () => {
+    // await initContract();
+    await fetchSemester()
+});
+// ==================================
+const getTahunAjaran = (semesterArray) => {
+    const unique = new Set();
+    // console.log(semesterArray)
+    return semesterArray
+        .filter(item => {
+            if (!unique.has(item.tahunAjaranId)) {
+                unique.add(item.tahunAjaranId);
+                return true;
+            }
+            return false;
+        })
+        .map(item => ({
+            label: item.tahunAjaranId,
+            value: item.tahunAjaranId + "2"
+        }));
+};
 // const initContract = async () => {
 //     try {
 //         if (window.ethereum) {

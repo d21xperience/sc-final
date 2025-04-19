@@ -26,6 +26,8 @@ const pembelajaranList = ref([])
 const guruList = ref()
 const rombel = ref()
 const schemaname = ref("")
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
+
 const fetchGuru = async () => {
     try {
         const cekGuru = await store.getters["sekolahService/getPTKTerdaftar"]
@@ -71,6 +73,7 @@ const fetchKelas = async () => {
             semester_id: selectedSemester.value?.semesterId,
             // kelas_id: kelasId
         }
+        // console.log(payload)
         const response = await store.dispatch("sekolahService/fetchRombel", payload);
 
         return response
@@ -87,10 +90,10 @@ onMounted(async () => {
     dataRombel.value = await fetchKelas()
     // fetchSiswa()
 });
-// watch(selectedSemester, (newVal, oldVal) => {
-//     console.log(newVal)
-//     // fetchRombel()
-// })
+watch(selectedSemester, (newVal, oldVal) => {
+    console.log(newVal)
+    // fetchRombel()
+})
 import DialogLoading from "@/components/DialogLoading.vue";
 
 const isLoading = ref(false);
@@ -221,10 +224,7 @@ const dialogStatus = ref(false)
 
 // ==================================
 // =======SEMESTER=============
-// const selectedSemester = ref();
 const semester = ref()
-const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"]);
-
 
 // ==================================
 // ==================================
@@ -270,6 +270,8 @@ const cancelImport = () => {
 
 const onRowExpand = (event) => {
     toast.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.nmKelas, life: 3000 });
+    // Ambil data mapel untuk kelas tertentu
+    console.log(event)
 };
 const onRowCollapse = (event) => {
     toast.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.nmKelas, life: 3000 });
@@ -415,11 +417,6 @@ const simpanKeDatabase = () => {
 
                                         <Select v-model="selectedJurusan" :options="jurusanOptions" option-label="label"
                                             option-value="value" placeholder="Pilih Jurusan" />
-
-                                        <!-- <Select v-model="selectedJurusan" :options="tingkatPendidikanOptions" optionLabel="nama"
-                                            placeholder="Rombel" class="w-full md:w-56 mr-2" />
-                                        <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                            placeholder="Tingkat" class="mr-2" /> -->
                                     </div>
                                 </div>
                             </template>
@@ -462,9 +459,10 @@ const simpanKeDatabase = () => {
                         </Column>
                         <template #expansion="slotProps">
                             <div class="p-4">
-                                <DataTable>
-                                    <Column field="id" header="Mata pelajaran" sortable></Column>
-                                    <Column field="customer" header="Guru Mapel" sortable></Column>
+                                <DataTable :value="slotProps.data.pembelajaran">
+                                    <!-- <p>{{ slotProps.data.pembelajaran }}</p> -->
+                                    <Column field="namaMataPelajaran" header="Mata pelajaran" sortable></Column>
+                                    <Column field="ptkTerdaftar.ptk.nama" header="Guru Mapel" sortable></Column>
                                     <!-- <Column field="date" header="Date" sortable></Column> -->
                                 </DataTable>
                             </div>

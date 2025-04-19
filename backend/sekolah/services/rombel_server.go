@@ -147,23 +147,22 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	// kelasId := req.GetKelasId()
 	semesterId := req.GetSemesterId()
 	var rombelModel []models.RombonganBelajar
-	var conditions map[string]any
-	if req.KelasId != "" {
-		conditions = map[string]any{
-			"rombongan_belajar_id": req.KelasId,
-		}
-	} else {
-		conditions = map[string]any{
-			"semester_id": semesterId,
-		}
+	var conditions = map[string]any{
+		"tabel_kelas.jenis_rombel": 1,
+		"tabel_kelas.semester_id":  semesterId,
 	}
+	if req.KelasId != "" {
+		conditions["tabel_kelas.rombongan_belajar_id"] = req.KelasId
+	}
+
 	joins := []string{
 		"JOIN tabel_ptk ON tabel_kelas.ptk_id = tabel_ptk.ptk_id",
+		"JOIN tabel_pembelajaran ON tabel_kelas.rombongan_belajar_id = tabel_pembelajaran.rombongan_belajar_id",
 		fmt.Sprintf("JOIN ref.jurusan ON %s.tabel_kelas.jurusan_id = ref.jurusan.jurusan_id", schemaName),
 		fmt.Sprintf("JOIN ref.kurikulum ON %s.tabel_kelas.kurikulum_id = ref.kurikulum.kurikulum_id", schemaName),
 		fmt.Sprintf("JOIN ref.tingkat_pendidikan ON %s.tabel_kelas.tingkat_pendidikan_id = ref.tingkat_pendidikan.tingkat_pendidikan_id", schemaName),
 	}
-	preloads := []string{"PTK", "Jurusan", "Kurikulum", "TingkatPendidikan"}
+	preloads := []string{"PTK", "Jurusan", "Kurikulum", "TingkatPendidikan", "Pembelajaran", "Pembelajaran.PTKTerdaftar","Pembelajaran.PTKTerdaftar.PTK"}
 
 	groupByColumns := []string{"tabel_kelas.rombongan_belajar_id"} // Hindari duplikasi
 	rombelModel, err = s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns)
@@ -172,10 +171,6 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	}
 
 	banyakKelasList := utils.ConvertModelsToPB(rombelModel, func(kelas models.RombonganBelajar) *pb.Kelas {
-		// jurusanSPId, err := utils.ConvertUUIDToStringViceVersa(kelas.JurusanSpId)
-		// if err != nil {
-		// 	return nil
-		// }
 		jmlhAnggota, err := s.repoRombelAnggota.CountRows(ctx, schemaName, "rombongan_belajar_id", kelas.RombonganBelajarId.String())
 		if err != nil {
 			return nil
@@ -222,7 +217,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 				MulaiBerlaku:        kelas.Kurikulum.MulaiBerlaku.Format("2006-01-02"),
 				JenjangPendidikanId: uint32(kelas.Kurikulum.JenjangPendidikanID),
 				SistemSks:           uint32(kelas.Kurikulum.SistemSKS),
-				JurusanId:           *kelas.Kurikulum.JurusanID,
+				JurusanId:           utils.SafeString(kelas.Kurikulum.JurusanID),
 			},
 			TingkatPendidikan: &pb.TingkatPendidikan{
 				TingkatPendidikanId: uint32(kelas.TingkatPendidikan.TingkatPendidikanID),
@@ -230,6 +225,21 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 				Nama:                kelas.TingkatPendidikan.Nama,
 				JenjangPendidikanId: uint32(kelas.TingkatPendidikan.JenjangPendidikanID),
 			},
+			Pembelajaran: utils.ConvertModelsToPB(kelas.Pembelajaran, func(item models.Pembelajaran) *pb.Pembelajaran {
+				return &pb.Pembelajaran{
+					PembelajaranId:     item.PembelajaranId.String(),
+					RombonganBelajarId: item.RombonganBelajarId.String(),
+					MataPelajaranId:    int32(item.MataPelajaranId),
+					NamaMataPelajaran:  utils.SafeString(item.NamaMataPelajaran),
+					PtkTerdaftarId:     item.PtkTerdaftarId.String(),
+					PtkTerdaftar: &pb.PTKTerdaftar{
+						PtkTerdaftarId: item.PTKTerdaftar.PtkTerdaftarId.String(),
+						Ptk: &pb.PTK{
+							Nama: item.PTKTerdaftar.PTK.Nama,
+						},
+					},
+				}
+			}),
 			JumlahAnggota: uint32(jmlhAnggota),
 		}
 	})
@@ -376,13 +386,6 @@ func (s *RombelServiceServer) ImportDapodikRombel(ctx context.Context, req *pb.I
 	}
 	schemaName := req.GetSchemaname()
 	kelas := req.Kelas
-	// rombelId := uuid.New()
-	// type rombelAnggota struct {
-	// 	AnggotaRombelId    uuid.UUID // UUID
-	// 	PesertaDidikId     uuid.UUID // UUID
-	// 	RombonganBelajarId uuid.UUID
-	// 	SemesterId         string
-	// }
 	simpanRombelAnggota := []models.RombelAnggota{}
 	simpanRombelPembelajaran := []models.Pembelajaran{}
 	kelasModel := utils.ConvertPBToModels(kelas, func(item *pb.Kelas) *models.RombonganBelajar {
@@ -416,6 +419,7 @@ func (s *RombelServiceServer) ImportDapodikRombel(ctx context.Context, req *pb.I
 			JenisRombel:         item.JenisRombel,
 			NamaJurusanSp:       item.NamaJurusanSp,
 			KurikulumId:         item.KurikulumId,
+			JurusanSpId:         utils.PointerToUUID(*item.JurusanSpId),
 		}
 	})
 	// simpan kelas ke database

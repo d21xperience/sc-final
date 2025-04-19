@@ -1,4 +1,3 @@
-<!-- File: src/components/IssueDegreeForm.vue -->
 <template>
     <button @click="handleSubmit" :disabled="isLoading">
         {{ isLoading ? 'Memproses...' : 'Verifikasi Ijazah' }}
@@ -6,72 +5,127 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ethers } from 'ethers';
-import { prepareDegreeIssue } from '@/utils/degreeHandler';
-import { Button } from 'primevue';
-// Props atau inject data jika diperlukan dari parent component atau pinia
-// Misalnya, kita asumsikan data ini di-passing sebagai props:
+import DegreeContractABI from '@/VerifikasiIjazahABI.json';
+import { keccak256, toUtf8Bytes } from 'ethers';
+import store from '@/store';
+const contractAddress = '0xdc64a140aa3e981100a9beca4e685f962f0cf6c9';
 const props = defineProps({
-    degreeData: Object,
+    degreeData: Object,  // { name, nisn, graduationYear, major }
     sekolah: String,
     ipfsUrl: String,
-    transcript: Object,
-    contract: Object
+    transcript: Object,  // { subjects: ["B. Indonesia", "Matematika"], grades: [85, 90] }
 });
 
+// State
 const isLoading = ref(false);
+const contract = ref(null);
 
+// Inisialisasi kontrak
+const loadContract = async () => {
+    if (window.ethereum) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        // const contractAddress = '0xdc64a140aa3e981100a9beca4e685f962f0cf6c9'; // ganti dengan address kontrak kamu
+        contract.value = new ethers.Contract(contractAddress, DegreeContractABI, signer);
+    } else {
+        alert('Metamask tidak ditemukan.');
+    }
+};
+
+// Fungsi untuk membuat hash ijazah (gunakan string JSON untuk konsistensi)
+const generateDegreeHash = (data) => {
+    const stringified = JSON.stringify(data);
+    return keccak256(toUtf8Bytes(stringified)); // ethers v6
+};
+
+// Fungsi submit
 const handleSubmit = async () => {
     isLoading.value = true;
     try {
-        // 1. Siapkan data
-        const { degreeHash, gasEstimate } = await prepareDegreeIssue(
-            props.degreeData,
-            props.sekolah,
-            props.ipfsUrl,
-            props.transcript
-        );
+        if (!contract.value) await loadContract();
 
-        // 2. Tampilkan gas fee ke user
-        const proceed = confirm(`Biaya gas: ${ethers.utils.formatUnits(gasEstimate, 'gwei')} Gwei. Lanjutkan?`);
-        if (!proceed) return;
+        // 1. Buat hash ijazah
+        const degreeHash = generateDegreeHash(props.degreeData);
+        const issueDate = Math.floor(Date.now() / 1000); // timestamp
 
-        // 3. Kirim transaksi
-        const tx = await props.contract.issueDegree(
+        // 2. Estimasi gas (opsional, bisa dilewatkan jika tidak diperlukan)
+        const gasEstimate = await contract.value.issueDegree.estimateGas(
             degreeHash,
             props.sekolah,
-            Math.floor(Date.now() / 1000),
+            issueDate,
             props.ipfsUrl,
             props.transcript.subjects,
             props.transcript.grades
         );
 
-        // 4. Tunggu konfirmasi
-        await tx.wait();
+        const proceed = confirm(`Biaya gas kira-kira: ${ethers.formatUnits(gasEstimate, 'gwei')} Gwei. Lanjutkan?`);
+        if (!proceed) return;
 
-        // 5. Simpan bukti ke backend
-        await saveToBackend(tx.hash);
+        // 3. Kirim transaksi
+        const tx = await contract.value.issueDegree(
+            degreeHash,
+            props.sekolah,
+            issueDate,
+            props.ipfsUrl,
+            props.transcript.subjects,
+            props.transcript.grades
+        );
 
-        alert("Ijazah berhasil diverifikasi!");
-    } catch (error) {
-        console.error("Error:", error);
-        alert(`Gagal: ${error.message}`);
+        await tx.wait(); // tunggu konfirmasi
+
+        alert("Ijazah berhasil diverifikasi di blockchain!");
+        // await saveToBackend(tx.hash, degreeHash);
+
+    } catch (err) {
+        console.error(err);
+        alert(`Gagal memproses: ${err.message}`);
     } finally {
         isLoading.value = false;
     }
 };
 
-const saveToBackend = async (txHash) => {
-    await fetch('/api/degrees', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            txHash,
-            degreeData: props.degreeData,
-            sekolah: props.sekolah,
-            ipfsUrl: props.ipfsUrl
-        })
-    });
+
+// const contract = ref(null);
+
+onMounted(async () => {
+    try {
+        if (window.ethereum) {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+
+            // const contractAddress = '0x700b6A60ce7EaaEA56F065753d8dcB9653dbAD35'; // HARUS STRING BUKAN undefined/objek
+            contract.value = new ethers.Contract(contractAddress, DegreeContractABI, signer);
+        } else {
+            alert('Metamask tidak ditemukan. Harap instal terlebih dahulu.');
+        }
+    } catch (err) {
+        console.error('Gagal menginisialisasi kontrak:', err);
+    }
+});
+// 🗄️ Simpan ke backend
+const saveToBackend = async (txHash, degreeHash) => {
+    // await fetch('/api/degrees', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({
+    //         txHash,
+    //         degreeHash,
+    //         degreeData: props.degreeData,
+    //         sekolah: props.sekolah,
+    //         ipfsUrl: props.ipfsUrl
+    //     })
+    // });
+    try {
+        const payload = {
+            schemaname: await store.getters["sekolahService/getSchemaname"]?.schemaname
+            
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
 };
 </script>

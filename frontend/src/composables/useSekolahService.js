@@ -7,12 +7,10 @@ export function useSekolahService(schemaname, selectedSemester) {
   const guruTerdaftarList = ref([]);
   const siswaList = ref([]);
   const kelasList = ref([]);
-  
+
   // console.log("schemaname di composable:", schemaname.value);
   // console.log("selectedSemester di composable:", selectedSemester.value);
-  const fetchTabeltenant = async ()=>{
-
-  }
+  const fetchTabeltenant = async () => {};
   const fetchGuruTerdaftar = async (ptkId = null) => {
     try {
       const payload = {
@@ -72,6 +70,29 @@ export function useSekolahService(schemaname, selectedSemester) {
     }
   };
 
+  const fetchSemester = async () => {
+    try {
+      const results = await store.dispatch("sekolahService/fetchSemester");
+      if (results) {
+        semester.value = store.getters["sekolahService/getSemester"];
+        // Cek apakah di vuex ada nilai
+        selectedSemester.value = await store.getters[
+          "sekolahService/getSelectedSemester"
+        ];
+        if (selectedSemester.value == null) {
+          // jika tidak ada, ambil semester terbaru berdasarkan ID terbesar
+          selectedSemester.value = semester.value.reduce((latest, current) =>
+            current.semesterId > latest.semesterId ? current : latest
+          );
+        }
+        // tetapkan semester yang dipilih
+        store.commit(
+          "sekolahService/SET_SELECTEDSEMESTER",
+          selectedSemester.value
+        );
+      }
+    } catch (error) {}
+  };
   return {
     fetchGuru,
     guruList,
@@ -79,5 +100,6 @@ export function useSekolahService(schemaname, selectedSemester) {
     guruTerdaftarList,
     fetchKelas,
     kelasList,
+    fetchSemester,
   };
 }

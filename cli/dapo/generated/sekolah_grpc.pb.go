@@ -2848,11 +2848,12 @@ var KenaikanService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	IjazahService_CreateIjazah_FullMethodName = "/sekolah.IjazahService/CreateIjazah"
-	IjazahService_GetIjazah_FullMethodName    = "/sekolah.IjazahService/GetIjazah"
-	IjazahService_UpdateIjazah_FullMethodName = "/sekolah.IjazahService/UpdateIjazah"
-	IjazahService_DeleteIjazah_FullMethodName = "/sekolah.IjazahService/DeleteIjazah"
-	IjazahService_UploadIjazah_FullMethodName = "/sekolah.IjazahService/UploadIjazah"
+	IjazahService_CreateIjazah_FullMethodName    = "/sekolah.IjazahService/CreateIjazah"
+	IjazahService_GetIjazah_FullMethodName       = "/sekolah.IjazahService/GetIjazah"
+	IjazahService_GetProsesIjazah_FullMethodName = "/sekolah.IjazahService/GetProsesIjazah"
+	IjazahService_UpdateIjazah_FullMethodName    = "/sekolah.IjazahService/UpdateIjazah"
+	IjazahService_DeleteIjazah_FullMethodName    = "/sekolah.IjazahService/DeleteIjazah"
+	IjazahService_UploadIjazah_FullMethodName    = "/sekolah.IjazahService/UploadIjazah"
 )
 
 // IjazahServiceClient is the client API for IjazahService service.
@@ -2866,6 +2867,7 @@ type IjazahServiceClient interface {
 	// CRUD IZAJAH
 	CreateIjazah(ctx context.Context, in *CreateIjazahRequest, opts ...grpc.CallOption) (*CreateIjazahResponse, error)
 	GetIjazah(ctx context.Context, in *GetIjazahRequest, opts ...grpc.CallOption) (*GetIjazahResponse, error)
+	GetProsesIjazah(ctx context.Context, in *GetProsesIjazahRequest, opts ...grpc.CallOption) (*GetProsesIjazahResponse, error)
 	UpdateIjazah(ctx context.Context, in *UpdateIjazahRequest, opts ...grpc.CallOption) (*UpdateIjazahResponse, error)
 	DeleteIjazah(ctx context.Context, in *DeleteIjazahRequest, opts ...grpc.CallOption) (*DeleteIjazahResponse, error)
 	// UPLOAD IJAZAH
@@ -2894,6 +2896,16 @@ func (c *ijazahServiceClient) GetIjazah(ctx context.Context, in *GetIjazahReques
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetIjazahResponse)
 	err := c.cc.Invoke(ctx, IjazahService_GetIjazah_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ijazahServiceClient) GetProsesIjazah(ctx context.Context, in *GetProsesIjazahRequest, opts ...grpc.CallOption) (*GetProsesIjazahResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetProsesIjazahResponse)
+	err := c.cc.Invoke(ctx, IjazahService_GetProsesIjazah_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2941,6 +2953,7 @@ type IjazahServiceServer interface {
 	// CRUD IZAJAH
 	CreateIjazah(context.Context, *CreateIjazahRequest) (*CreateIjazahResponse, error)
 	GetIjazah(context.Context, *GetIjazahRequest) (*GetIjazahResponse, error)
+	GetProsesIjazah(context.Context, *GetProsesIjazahRequest) (*GetProsesIjazahResponse, error)
 	UpdateIjazah(context.Context, *UpdateIjazahRequest) (*UpdateIjazahResponse, error)
 	DeleteIjazah(context.Context, *DeleteIjazahRequest) (*DeleteIjazahResponse, error)
 	// UPLOAD IJAZAH
@@ -2960,6 +2973,9 @@ func (UnimplementedIjazahServiceServer) CreateIjazah(context.Context, *CreateIja
 }
 func (UnimplementedIjazahServiceServer) GetIjazah(context.Context, *GetIjazahRequest) (*GetIjazahResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetIjazah not implemented")
+}
+func (UnimplementedIjazahServiceServer) GetProsesIjazah(context.Context, *GetProsesIjazahRequest) (*GetProsesIjazahResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProsesIjazah not implemented")
 }
 func (UnimplementedIjazahServiceServer) UpdateIjazah(context.Context, *UpdateIjazahRequest) (*UpdateIjazahResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateIjazah not implemented")
@@ -3023,6 +3039,24 @@ func _IjazahService_GetIjazah_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(IjazahServiceServer).GetIjazah(ctx, req.(*GetIjazahRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IjazahService_GetProsesIjazah_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProsesIjazahRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IjazahServiceServer).GetProsesIjazah(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IjazahService_GetProsesIjazah_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IjazahServiceServer).GetProsesIjazah(ctx, req.(*GetProsesIjazahRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3095,6 +3129,10 @@ var IjazahService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetIjazah",
 			Handler:    _IjazahService_GetIjazah_Handler,
+		},
+		{
+			MethodName: "GetProsesIjazah",
+			Handler:    _IjazahService_GetProsesIjazah_Handler,
 		},
 		{
 			MethodName: "UpdateIjazah",

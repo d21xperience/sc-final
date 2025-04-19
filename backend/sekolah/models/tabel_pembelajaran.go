@@ -17,9 +17,9 @@ type Pembelajaran struct {
 	IsDapo             *int       `gorm:"type:numeric(1,0);default:1"`
 
 	// Relasi
-	RombonganBelajar RombonganBelajar `gorm:"foreignKey:RombonganBelajarId;references:RombonganBelajarId"`
-	MataPelajaran    MataPelajaran    `gorm:"foreignKey:MataPelajaranId;references:MataPelajaranID"`
-	PTKTerdaftar     PTKTerdaftar     `gorm:"foreignKey:PtkTerdaftarId;references:PtkTerdaftarId"`
+	// RombonganBelajar RombonganBelajar `gorm:"foreignKey:RombonganBelajarId;references:RombonganBelajarId"`
+	// MataPelajaran    MataPelajaran    `gorm:"foreignKey:MataPelajaranId;references:MataPelajaranID"`
+	PTKTerdaftar PTKTerdaftar `gorm:"foreignKey:PtkTerdaftarId;references:PtkTerdaftarId"`
 }
 
 func (p *Pembelajaran) BeforeCreate(tx *gorm.DB) (err error) {
