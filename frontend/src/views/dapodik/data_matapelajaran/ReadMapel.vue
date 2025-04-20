@@ -17,7 +17,6 @@ import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-// import DataLulusanService from '@/service/ProductService.js';
 // =============UJI FITUR FOTO========================
 // import Image from 'primevue/image';
 // =====================================
@@ -25,8 +24,6 @@ const pembelajaran = ref({})
 const pembelajaranList = ref([])
 const guruList = ref()
 const rombel = ref()
-const schemaname = ref("")
-const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
 
 const fetchGuru = async () => {
     try {
@@ -66,33 +63,42 @@ const fetchMapel = async () => {
         console.log(error)
     }
 }
-const fetchKelas = async () => {
-    try {
-        const payload = {
-            schemaname: schemaname.value,
-            semester_id: selectedSemester.value?.semesterId,
-            // kelas_id: kelasId
-        }
-        // console.log(payload)
-        const response = await store.dispatch("sekolahService/fetchRombel", payload);
+// const fetchKelas = async () => {
+//     try {
+//         const payload = {
+//             schemaname: schemaname.value,
+//             semester_id: selectedSemester.value?.semesterId,
+//             // kelas_id: kelasId
+//         }
+//         const response = await store.dispatch("sekolahService/fetchRombel", payload);
 
-        return response
-    } catch (error) {
-        console.error("Gagal mengambil data kelas:", error);
-    }
-};
+//         return response
+//     } catch (error) {
+//         console.error("Gagal mengambil data kelas:", error);
+//     }
+// };
 // ==============================
 const dataRombel = ref([])
 onMounted(async () => {
-    semester.value = await store.getters["sekolahService/getSemester"]
-    schemaname.value = await store.getters["sekolahService/getTabeltenant"].schemaname
-    // fetchGuru()
-    dataRombel.value = await fetchKelas()
-    // fetchSiswa()
+    dataRombel.value = store.getters["sekolahService/getKelas"]
+    console.log(dataRombel.value)
+    if (!dataRombel.value || dataRombel.value.length === 0) {
+        console.log("cek")
+        dataRombel.value = await fetchKelas()
+
+    }
 });
-watch(selectedSemester, (newVal, oldVal) => {
+// ================================
+// composable
+// ================================
+import { useSekolahService } from '@/composables/useSekolahService'
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
+const { fetchKelas } = useSekolahService(schemaname, selectedSemester)
+// ================================
+watch(selectedSemester, async (newVal, oldVal) => {
     console.log(newVal)
-    // fetchRombel()
+    dataRombel.value = await fetchKelas()
 })
 import DialogLoading from "@/components/DialogLoading.vue";
 
@@ -101,7 +107,7 @@ const isLoading = ref(false);
 const dataConnected = ref(true)
 const toast = useToast();
 const dt = ref();
-const products = ref();
+// const products = ref();
 const mapelDialog = ref(false);
 const mapelList = ref([])
 const deletemapelDialog = ref(false);
@@ -110,6 +116,8 @@ const product = ref({});
 const dataLulusan = ref();
 const filters = ref({
     'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'jurusan': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'tingkat': { value: null, matchMode: FilterMatchMode.GREATER_THAN },
 });
 const submitted = ref(false);
 // const openNew = () => {
@@ -166,10 +174,6 @@ const editMapel = (mapel) => {
     pembelajaran.value.rombongan_belajar_id = kelas.value.rombonganBelajarId
     pembelajaran.value.semester_id = kelas.value.semesterId
 };
-// const confirmdeleteMapel = (prod) => {
-//     product.value = prod;
-//     deletemapelDialog.value = true;
-// };
 const deleteMapel = () => {
     products.value = products.value.filter(val => val.id !== product.value.id);
     deletemapelDialog.value = false;
@@ -192,69 +196,15 @@ const exportCSV = () => {
     // alert("hello")
     // dt.value.exportCSV();
 };
-const confirmDeleteSelected = () => {
-    deleteMapelsDialog.value = true;
-};
 const deletedataLulusan = () => {
     products.value = products.value.filter(val => !dataLulusan.value.includes(val));
     deleteMapelsDialog.value = false;
     dataLulusan.value = null;
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 };
-
-
-import Select from 'primevue/select';
-import EmptyData from '@/components/EmptyData.vue';
-const selectedJurusan = ref();
-
-// Fungsi yang menangkap event emit dari child
-const handleProfileFetched = (data) => {
-    dataConnected.value = data;
-    console.log("Data sekolah diterima di parent:", data);
-};
-
-const handleFetchError = (error) => {
-    dataConnected.value = data;
-    console.error("Error diterima di parent:", error);
-};
-
-// status siswa naik atau lulus
-const dialogStatus = ref(false)
-
-
 // ==================================
-// =======SEMESTER=============
-const semester = ref()
-
-// ==================================
-// ==================================
-// =======Siswa=============
-
-const fetchSiswa = async () => {
-    try {
-        let payload = {
-            semesterId: selectedSemester.value?.semesterId,
-            schemaname: schemaname.value
-        }
-        const results = await store.dispatch("sekolahService/fetchSiswa", payload)
-        // console.log(results)
-        if (results) {
-            siswa.value = store.getters["sekolahService/getSiswa"]
-            // // Ambil siswa terbaru berdasarkan ID terbesar
-            // expandeRows.value = siswa.value.reduce((latest, current) =>
-            //     current.siswaId > latest.siswaId ? current : latest
-            // );
-        }
-    } catch (error) {
-
-    }
-}
-
-// ==================================
-
 // ========IMPORT DATA========
 import DialogImport from '@/components/DialogImport.vue'
-import router from '@/router';
 const expandedRows = ref()
 const dialogImport = ref(false)
 const saveImport = (e) => {
@@ -277,41 +227,12 @@ const onRowCollapse = (event) => {
     toast.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.nmKelas, life: 3000 });
 };
 const expandAll = () => {
-    expandedRows.value = rombel.value.reduce((acc, p) => (acc[p.rombonganBelajarId] = true) && acc, {});
+    expandedRows.value = dataRombel.value.reduce((acc, p) => (acc[p.rombonganBelajarId] = true) && acc, {});
 };
 const collapseAll = () => {
     expandedRows.value = null;
 };
-const selectedTingkat = ref(null)
-const tingkatPendidikanOptions = computed(() => {
-    const unique = new Map()
-    dataRombel.value.forEach(item => {
-        const { tingkatPendidikanId, tingkatPendidikan } = item
-        if (tingkatPendidikan && !unique.has(tingkatPendidikanId)) {
-            unique.set(tingkatPendidikanId, {
-                label: tingkatPendidikan.nama,
-                value: tingkatPendidikanId
-            })
-        }
-    })
-    return Array.from(unique.values())
-})
 
-const jurusanOptions = computed(() => {
-    const unique = new Set();
-    return dataRombel.value
-        .filter(item => {
-            if (!unique.has(item.namaJurusanSp)) {
-                unique.add(item.namaJurusanSp);
-                return true;
-            }
-            return false;
-        })
-        .map(item => ({
-            label: item.namaJurusanSp,
-            value: item.namaJurusanSp
-        }));
-});
 
 import AutoComplete from 'primevue/autocomplete';
 import { debounce } from 'lodash';
@@ -348,23 +269,8 @@ const cancelAddMapel = () => {
     selectedGuru.value = {}
     selectedMapel.value = {}
 }
-// const addMapel = async () => {
-//     if (selectedGuru.value != null && selectedMapel.value != null) {
-//         alert("Tambah mapel")
 
-//     }
-// }
-
-
-// const ptk = computed(()=>{
-//     return selectedGuru.value.ptk
-// })
-
-// watch(selectedMapel, debounce((newVal) => {
-
-// }, 500))
 const generateUUID = () => crypto.randomUUID();
-
 
 const saveToDB = (req_Object, endpoint_String) => {
     console.log(endpoint_String)
@@ -403,82 +309,48 @@ const simpanKeDatabase = () => {
 
     <div class="">
         <div class="card">
-            <div v-if="dataConnected">
-                <div class="w-full my-2 container">
-                    <div class=" ">
-
-
-                        <Toolbar>
-                            <template #start>
-                                <div class="flex flex-wrap gap-2 items-center justify-between">
-                                    <div class="flex">
-                                        <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
-                                            option-label="label" option-value="value" placeholder="Pilih Tingkat" />
-
-                                        <Select v-model="selectedJurusan" :options="jurusanOptions" option-label="label"
-                                            option-value="value" placeholder="Pilih Jurusan" />
-                                    </div>
-                                </div>
-                            </template>
-                            <template #end>
-                                <IconField>
-                                    <InputIcon>
-                                        <i class="pi pi-search" />
-                                    </InputIcon>
-                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                </IconField>
-                            </template>
-                        </Toolbar>
-                    </div>
-
-                    <!-- {{ tingkatPendidikanOptions.value }} -->
-                    <DataTable ref="dt" v-model:expandedRows="expandedRows" stripedRows size="small" :value="dataRombel"
-                        @rowExpand="onRowExpand" @rowCollapse="onRowCollapse" dataKey="rombonganBelajarId"
-                        :paginator="true" :rows="10" :filters="filters"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        :rowsPerPageOptions="[10, 20, 50]"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
-                        <template #header>
-                            <div class="flex flex-wrap justify-end gap-2">
-                                <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />
-                                <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" />
-                            </div>
-                        </template>
-                        <Column expander style="width: 5rem" />
-                        <Column field="nmKelas" header="Name"></Column>
-                        <Column field="tingkatPendidikanId" header="Tingkat"></Column>
-                        <Column field="jurusan.namaJurusan" header="Jurusan"></Column>
-                        <Column field="ptk.nama" header="Wali Kelas"></Column>
-                        <Column field="ptk.nama" header="Jml.Mapel"></Column>
-                        <Column field="" header="Edit">
-                            <template #body="{ data }">
-                                <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editMapel(data)" />
-                                <!-- <Button icon="pi pi-trash" outlined rounded severity="danger"
+            <div class="w-full my-2 container">
+                <DataTable ref="dt" v-model:expandedRows="expandedRows" stripedRows size="small" :value="dataRombel"
+                    @rowExpand="onRowExpand" @rowCollapse="onRowCollapse" dataKey="rombonganBelajarId" :paginator="true"
+                    :rows="10" :filters="filters"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    :rowsPerPageOptions="[10, 20, 50]"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} kelas">
+                    <template #header>
+                        <div class="flex flex-wrap justify-end gap-2">
+                            <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />
+                            <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" />
+                        </div>
+                    </template>
+                    <Column expander style="width: 5rem" />
+                    <Column field="nmKelas" header="Name"></Column>
+                    <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
+                    <Column field="jurusan.namaJurusan" header="Jurusan" sortable></Column>
+                    <Column field="ptk.nama" header="Wali Kelas"></Column>
+                    <!-- <Column field="ptk.nama" header="Jml.Mapel"></Column> -->
+                    <Column field="" header="Edit">
+                        <template #body="{ data }">
+                            <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editMapel(data)" />
+                            <!-- <Button icon="pi pi-trash" outlined rounded severity="danger"
                                     @click="confirmdeleteMapel(data)" /> -->
-                            </template>
-                        </Column>
-                        <template #expansion="slotProps">
-                            <div class="p-4">
-                                <DataTable :value="slotProps.data.pembelajaran">
-                                    <!-- <p>{{ slotProps.data.pembelajaran }}</p> -->
-                                    <Column field="namaMataPelajaran" header="Mata pelajaran" sortable></Column>
-                                    <Column field="ptkTerdaftar.ptk.nama" header="Guru Mapel" sortable></Column>
-                                    <!-- <Column field="date" header="Date" sortable></Column> -->
-                                </DataTable>
-                            </div>
                         </template>
-                    </DataTable>
-
-                </div>
-            </div>
-            <div v-else>
-                <EmptyData @profileFetched="handleProfileFetched" @fetchError="handleFetchError" />
+                    </Column>
+                    <template #expansion="slotProps">
+                        <div class="p-4">
+                            <DataTable :value="slotProps.data.pembelajaran">
+                                <!-- <p>{{ slotProps.data.pembelajaran }}</p> -->
+                                <Column field="namaMataPelajaran" header="Mata pelajaran" sortable></Column>
+                                <Column field="ptkTerdaftar.ptk.nama" header="Guru Mapel" sortable></Column>
+                                <!-- <Column field="date" header="Date" sortable></Column> -->
+                            </DataTable>
+                        </div>
+                    </template>
+                </DataTable>
             </div>
         </div>
 
 
         <!-- DIALOGBOX FOR EDIT DATA -->
-
         <Dialog v-model:visible="mapelDialog" :style="{ width: '50%' }" header="Edit Data" :modal="true" position="top">
             <div class="">
                 <div class="my-2">

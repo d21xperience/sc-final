@@ -3535,6 +3535,7 @@ const (
 	DashboardService_GetCountSiswa_FullMethodName = "/sekolah.DashboardService/GetCountSiswa"
 	DashboardService_GetCountGuru_FullMethodName  = "/sekolah.DashboardService/GetCountGuru"
 	DashboardService_GetCountKelas_FullMethodName = "/sekolah.DashboardService/GetCountKelas"
+	DashboardService_GetInfoKelas_FullMethodName  = "/sekolah.DashboardService/GetInfoKelas"
 )
 
 // DashboardServiceClient is the client API for DashboardService service.
@@ -3548,6 +3549,7 @@ type DashboardServiceClient interface {
 	GetCountSiswa(ctx context.Context, in *GetCountSiswaRequest, opts ...grpc.CallOption) (*GetCountSiswaResponse, error)
 	GetCountGuru(ctx context.Context, in *GetCountGuruRequest, opts ...grpc.CallOption) (*GetCountGuruResponse, error)
 	GetCountKelas(ctx context.Context, in *GetCountKelasRequest, opts ...grpc.CallOption) (*GetCountKelasResponse, error)
+	GetInfoKelas(ctx context.Context, in *GetInfoKelasRequest, opts ...grpc.CallOption) (*GetInfoKelasResponse, error)
 }
 
 type dashboardServiceClient struct {
@@ -3588,6 +3590,16 @@ func (c *dashboardServiceClient) GetCountKelas(ctx context.Context, in *GetCount
 	return out, nil
 }
 
+func (c *dashboardServiceClient) GetInfoKelas(ctx context.Context, in *GetInfoKelasRequest, opts ...grpc.CallOption) (*GetInfoKelasResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetInfoKelasResponse)
+	err := c.cc.Invoke(ctx, DashboardService_GetInfoKelas_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DashboardServiceServer is the server API for DashboardService service.
 // All implementations must embed UnimplementedDashboardServiceServer
 // for forward compatibility.
@@ -3599,6 +3611,7 @@ type DashboardServiceServer interface {
 	GetCountSiswa(context.Context, *GetCountSiswaRequest) (*GetCountSiswaResponse, error)
 	GetCountGuru(context.Context, *GetCountGuruRequest) (*GetCountGuruResponse, error)
 	GetCountKelas(context.Context, *GetCountKelasRequest) (*GetCountKelasResponse, error)
+	GetInfoKelas(context.Context, *GetInfoKelasRequest) (*GetInfoKelasResponse, error)
 	mustEmbedUnimplementedDashboardServiceServer()
 }
 
@@ -3617,6 +3630,9 @@ func (UnimplementedDashboardServiceServer) GetCountGuru(context.Context, *GetCou
 }
 func (UnimplementedDashboardServiceServer) GetCountKelas(context.Context, *GetCountKelasRequest) (*GetCountKelasResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCountKelas not implemented")
+}
+func (UnimplementedDashboardServiceServer) GetInfoKelas(context.Context, *GetInfoKelasRequest) (*GetInfoKelasResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInfoKelas not implemented")
 }
 func (UnimplementedDashboardServiceServer) mustEmbedUnimplementedDashboardServiceServer() {}
 func (UnimplementedDashboardServiceServer) testEmbeddedByValue()                          {}
@@ -3693,6 +3709,24 @@ func _DashboardService_GetCountKelas_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DashboardService_GetInfoKelas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInfoKelasRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardServiceServer).GetInfoKelas(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DashboardService_GetInfoKelas_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardServiceServer).GetInfoKelas(ctx, req.(*GetInfoKelasRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DashboardService_ServiceDesc is the grpc.ServiceDesc for DashboardService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -3711,6 +3745,10 @@ var DashboardService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCountKelas",
 			Handler:    _DashboardService_GetCountKelas_Handler,
+		},
+		{
+			MethodName: "GetInfoKelas",
+			Handler:    _DashboardService_GetInfoKelas_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

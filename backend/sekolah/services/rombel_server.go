@@ -162,10 +162,11 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 		fmt.Sprintf("JOIN ref.kurikulum ON %s.tabel_kelas.kurikulum_id = ref.kurikulum.kurikulum_id", schemaName),
 		fmt.Sprintf("JOIN ref.tingkat_pendidikan ON %s.tabel_kelas.tingkat_pendidikan_id = ref.tingkat_pendidikan.tingkat_pendidikan_id", schemaName),
 	}
-	preloads := []string{"PTK", "Jurusan", "Kurikulum", "TingkatPendidikan", "Pembelajaran", "Pembelajaran.PTKTerdaftar","Pembelajaran.PTKTerdaftar.PTK"}
+	preloads := []string{"PTK", "Jurusan", "Kurikulum", "TingkatPendidikan", "Pembelajaran", "Pembelajaran.PTKTerdaftar", "Pembelajaran.PTKTerdaftar.PTK"}
 
-	groupByColumns := []string{"tabel_kelas.rombongan_belajar_id"} // Hindari duplikasi
-	rombelModel, err = s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns)
+	groupBy := []string{"tabel_kelas.rombongan_belajar_id"} // Hindari duplikasi
+	orderBy := []string{"tabel_kelas.nm_kelas"} // Hindari duplikasi
+	rombelModel, err = s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupBy, orderBy)
 	if err != nil {
 		return nil, err
 	}

@@ -401,7 +401,7 @@ func (s *BlockchainService) CreateIjazahBlockchain(ctx context.Context, req *pb.
 	// schemaName := req.GetSchemaname()
 	// semesterId := req.GetSemesterId()
 	// rombelId := req.GetRombonganBelajarId()
-
+	// modelIjazah := models.Certificate
 	return &pb.CreateIjazahBlockchainResponse{
 		Status:  true,
 		Message: "Berhasil",

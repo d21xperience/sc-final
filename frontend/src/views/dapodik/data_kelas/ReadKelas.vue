@@ -170,6 +170,7 @@ watch(selectedSemester, (e, b) => {
 })
 onMounted(() => {
     // console.log("onMounted")
+    
     fetchK()
     // getParamDialogImport()
 });
@@ -181,14 +182,11 @@ const fetchK = async () => {
     isLoading.value = false
 
 }
-const getParamDialogImport = () => {
-    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
-    // semester.value = store.getters["sekolahService/getSemester"]
+// const getParamDialogImport = () => {
+//     schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
+//     // semester.value = store.getters["sekolahService/getSemester"]
 
-}
-
-
-
+// }
 
 const dataConnected = ref(true)
 const toast = useToast();

@@ -40,10 +40,10 @@
                             <template #start>
                                 <div class="flex flex-wrap gap-2 items-center justify-between">
                                     <div class="flex">
-                                        <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                            placeholder="Rombel" class="w-full md:w-56 mr-2" />
-                                        <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                            placeholder="Tingkat" class="mr-2" />
+                                        <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
+                                            optionLabel="label" placeholder="Tingkat" class="w-full md:w-56 mr-2" />
+                                        <Select v-model="selectedJurusan" :options="jurusanOptions" optionLabel="label"
+                                            placeholder="Rombel" class="mr-2" />
                                     </div>
                                 </div>
                             </template>
@@ -79,7 +79,11 @@
                         <Column field="pesertaDidik.nis" header="NIS" sortable></Column>
                         <Column field="pesertaDidik.agama" header="Agama"></Column>
                         <Column field="pesertaDidik.tempatLahir" header="Tpt Lahir"></Column>
-                        <Column field="pesertaDidik.tanggalLahir" header="Tgl Lahir"></Column>
+                        <Column field="pesertaDidik.tanggalLahir" header="Tgl Lahir">
+                            <template #body="slotProps">
+                                {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
+                            </template>
+                        </Column>
                         <!-- <Column field="tingkat" header="Tingkat" sortable>
                             <template #body="slotProps">
                                 {{ slotProps.data.rombonganBelajar.tingkatPendidikanId }}
@@ -197,22 +201,19 @@ import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-import DataLulusanService from '@/service/ProductService.js';
-// =============UJI FITUR FOTO========================
-import Image from 'primevue/image';
-// =====================================
 
 
 // ==============================
 onMounted(async () => {
-    semester.value = store.getters["sekolahService/getSemester"]
-    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
-    fetchSiswa()
+    //semester.value = store.getters["sekolahService/getSemester"]
+    // schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
+    siswa.value = store.getters["sekolahService/getSiswaAktif"]
+    // console.log(siswa.value)
+    if (!siswa.value) {
+        siswa.value = fetchSiswa()
+    }
+    // console.log(jurusanOptions.value)
 });
-// watch(selectedSemester, (newVal, oldVal) => {
-//     console.log(newVal)
-//     // fetchRombel()
-// })
 import DialogLoading from "@/components/DialogLoading.vue";
 
 const isLoading = ref(false);
@@ -230,17 +231,7 @@ const filters = ref({
     'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 const submitted = ref(false);
-// const statuses = ref([
-//     { label: 'INSTOCK', value: 'instock' },
-//     { label: 'LOWSTOCK', value: 'lowstock' },
-//     { label: 'OUTOFSTOCK', value: 'outofstock' }
-// ]);
 
-// const formatCurrency = (value) => {
-//     if (value)
-//         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-//     return;
-// };
 const openNew = () => {
     router.push({ name: "inputSiswa" })
 };
@@ -270,14 +261,6 @@ const saveProduct = () => {
         product.value = {};
     }
 };
-// const editProduct = (prod) => {
-//     product.value = { ...prod };
-//     productDialog.value = true;
-// };
-// const confirmDeleteProduct = (prod) => {
-//     product.value = prod;
-//     deleteProductDialog.value = true;
-// };
 const deleteProduct = () => {
     products.value = products.value.filter(val => val.id !== product.value.id);
     deleteProductDialog.value = false;
@@ -318,46 +301,9 @@ const deletedataLulusan = () => {
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 };
 
-// const getStatusLabel = (status) => {
-//     switch (status) {
-//         case 'INSTOCK':
-//             return 'success';
-
-//         case 'LOWSTOCK':
-//             return 'warn';
-
-//         case 'OUTOFSTOCK':
-//             return 'danger';
-
-//         default:
-//             return null;
-//     }
-// };
-
-
 
 import Select from 'primevue/select';
 import EmptyData from '@/components/EmptyData.vue';
-
-// // select tahun ijazah
-// const selectedCity = ref();
-// const cities = ref([
-//     { name: '2023/2024 Ganjil', code: '20231' },
-//     { name: '2023/2024 Genap', code: '20232' },
-//     { name: '2022/2023', code: '20222' },
-//     { name: '2021/2022', code: '20212' },
-//     { name: '2022/2021', code: '20202' },
-//     { name: '2019/2020', code: '20192' }
-// ]);
-const selectedJurusan = ref();
-const jurusan = ref([
-    { name: 'Teknik Kendaraan Ringan', code: 'TKR' },
-    { name: 'Teknik Mesin Sepeda Motor', code: 'TSM' },
-    { name: 'Teknik Komputer dan Jaringan', code: 'TKJ' },
-    { name: 'Otomatisasi Perkantoran', code: 'OTKP' },
-    { name: 'AKuntansi Lembaga', code: 'AKL' }
-]);
-
 // Fungsi yang menangkap event emit dari child
 const handleProfileFetched = (data) => {
     dataConnected.value = data;
@@ -375,57 +321,19 @@ const dialogStatus = ref(false)
 
 // ==================================
 // =======SEMESTER=============
-// const selectedSemester = ref();
-const semester = ref()
-const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"]);
-watch(selectedSemester, (e, b) => {
-    fetchSiswa()
-})
-const schemaname = ref("")
-// ==================================
-// ==================================
-// =======Siswa=============
 const selectedSiswa = ref();
 const siswa = ref([]);
-const fetchSiswa = async () => {
-    const payload = {
-        // page: 1,
-        semesterId: selectedSemester.value.semesterId,
-        schemaname: schemaname.value,
-    }
-    console.log(payload)
-    const results = await store.dispatch("sekolahService/fetchSiswaAktif", payload)
-    // console.log(results)
-    siswa.value = results
-    // results.forEach(item => {
-    //     siswa.value.push(item)
-    // });
-}
-
-
-
-/*const fetchSiswa = async () => {
-    try {
-        let payload = {
-            semesterId: selectedSemester.value?.semesterId,
-            schemaname: schemaname.value
-        }
-        const results = await store.dispatch("sekolahService/fetchSiswa", payload)
-        // console.log(results)
-        if (results) {
-            siswa.value = store.getters["sekolahService/getSiswa"]
-            // // Ambil siswa terbaru berdasarkan ID terbesar
-            // selectedSiswa.value = siswa.value.reduce((latest, current) =>
-            //     current.siswaId > latest.siswaId ? current : latest
-            // );
-        }
-    } catch (error) {
-
-    }
-}
-*/
-// ==================================
-
+// ================================
+// composable
+// ================================
+import { useSekolahService } from '@/composables/useSekolahService'
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
+const { fetchSiswa } = useSekolahService(schemaname, selectedSemester)
+// ================================
+watch(selectedSemester, async (e, b) => {
+    siswa.value = await fetchSiswa()
+})
 // ========IMPORT DATA========
 import DialogImport from '@/components/DialogImport.vue'
 import router from '@/router';
@@ -441,6 +349,49 @@ const cancelImport = () => {
     dialogImport.value = false;
 };
 // ===========================================
+// import { useRombelOptions } from '@/composables/useOptions'
+// const { jurusanOptions, tingkatPendidikanOptions } = useRombelOptions(siswa)
+// const tes = ref()
+// const selectedJurusan = ref();
+// const jurusan = ref([
+//     { name: 'Teknik Kendaraan Ringan', code: 'TKR' },
+//     { name: 'Teknik Mesin Sepeda Motor', code: 'TSM' },
+//     { name: 'Teknik Komputer dan Jaringan', code: 'TKJ' },
+//     { name: 'Otomatisasi Perkantoran', code: 'OTKP' },
+//     { name: 'AKuntansi Lembaga', code: 'AKL' }
+// ]);
 
-
+import { useUtils } from '@/composables/useUtils'
+const { formatterDateID } = useUtils()
+const tingkatPendidikanOptions = computed(() => {
+    const unique = new Map()
+    siswa.value.forEach(item => {
+        console.log(item)
+        const { tingkatPendidikanId, tingkatPendidikan } = item.rombonganBelajar
+        if (tingkatPendidikan && !unique.has(tingkatPendidikanId)) {
+            unique.set(tingkatPendidikanId, {
+                label: tingkatPendidikan.nama,
+                value: tingkatPendidikanId
+            })
+        }
+    })
+    return Array.from(unique.values())
+})
+const selectedTingkat = ref();
+const selectedJurusan = ref();
+const jurusanOptions = computed(() => {
+    const unique = new Set();
+    return siswa.value
+        .filter(item => {
+            if (!unique.has(item.rombonganBelajar.namaJurusanSp)) {
+                unique.add(item.rombonganBelajar.namaJurusanSp);
+                return true;
+            }
+            return false;
+        })
+        .map(item => ({
+            label: item.rombonganBelajar.namaJurusanSp,
+            value: item.rombonganBelajar.namaJurusanSp
+        }));
+});
 </script>

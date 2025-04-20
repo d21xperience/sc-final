@@ -98,7 +98,7 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 		"semester_id": semesterId,
 	}
 	groupByColumns := []string{"tabel_nilaiakhir.id_nilai_akhir"} // Hindari duplikasi
-	nilaiAkhirModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns)
+	nilaiAkhirModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -110,10 +110,9 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 		}
 		return &pb.NilaiAkhir{
 			AnggotaRombelId: anggotaRombelId.(string),
-			MataPelajaranId: *model.MataPelajaranId,
+			MataPelajaranId: utils.PointerToUint32(model.MataPelajaranId),
 			SemesterId:      model.SemesterId,
-			NilaiPeng:       *model.NilaiPeng,
-
+			NilaiPeng:       utils.PointerToUint32(model.NilaiPeng),
 			// nilaiAkhirId:    model.nilaiAkhirId,
 			// PesertaDidikId:  model.PesertaDidikId,
 			// SemesterId:      model.SemesterId,

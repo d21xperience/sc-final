@@ -28,6 +28,7 @@ const state = {
   tabelAnggotaKelas:
     JSON.parse(localStorage.getItem("tabelAnggotaKelas")) || [],
   tabelMapel: JSON.parse(localStorage.getItem("tabelMapel")) || null,
+  tabelKelas: JSON.parse(localStorage.getItem("tabelKelas")) || null,
 };
 
 const mutations = {
@@ -75,6 +76,10 @@ const mutations = {
   SET_SELECTEDSEMESTER(state, value) {
     state.selectedSemester = value;
     localStorage.setItem("selectedSemester", JSON.stringify(value));
+  },
+  SET_TABELKELAS(state, value) {
+    state.tabelMapel = value;
+    localStorage.setItem("tabelKelas", JSON.stringify(value));
   },
   SET_TABELANGGOTAKELAS(state, value) {
     state.selectedSemester = value;
@@ -124,6 +129,7 @@ const actions = {
           kelas_id: payload.kelas_id,
         },
       });
+      commit("SET_TABELKELAS", response.data.kelas);
       return response.data.kelas; // Mengembalikan data sekolah
     } catch (error) {
       console.error("Gagal mengambil data rombel:", error);
@@ -287,14 +293,15 @@ const actions = {
           // schemaname: schemaname,
         },
       });
-      console.log(response.data);
+      // console.log(response);
+
       return response.data; // Mengembalikan data sekolah
     } catch (error) {
-      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal mengambil data siswa:", error);
       return null;
     } finally {
-      commit("SET_LOADING", false);
+      // commit("SET_LOADING", false);
     }
   },
   async fetchSiswaAktif({ commit }, payload) {
@@ -309,7 +316,7 @@ const actions = {
         }
       );
       // console.log(response.data.anggotaKelas);
-      // commit("SET_TABELSISWAAKTIF", response.data.anggotaKelas);
+      commit("SET_TABELSISWAAKTIF", response.data.anggotaKelas);
       return response.data.anggotaKelas;
     } catch (error) {
       commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
@@ -670,7 +677,9 @@ const getters = {
   getSelectedSemester: (state) => state.selectedSemester,
   getTingkatPendidikan: (state) => state.tabelTingkatPendidikan,
   getTabelAnggotaKelas: (state) => state.tabelAnggotaKelas,
+  getSiswaAktif: (state) => state.tabelSiswaAktif,
   getMapel: (state) => state.tabelMapel,
+  getKelas: (state) => state.tabelKelas,
 };
 
 export default {

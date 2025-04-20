@@ -5,7 +5,7 @@ export function useSekolahService(schemaname, selectedSemester) {
   const store = useStore();
   const guruList = ref([]);
   const guruTerdaftarList = ref([]);
-  const siswaList = ref([]);
+  // const siswaList = ref([]);
   const kelasList = ref([]);
 
   // console.log("schemaname di composable:", schemaname.value);
@@ -65,11 +65,48 @@ export function useSekolahService(schemaname, selectedSemester) {
         payload
       );
       kelasList.value = response;
+      return response;
     } catch (error) {
       console.error("Gagal mengambil data kelas:", error);
     }
   };
+  const fetchAnggotaKelas = async (anggotaRombelId = null) => {
+    try {
+      const payload = {
+        schemaname: schemaname.value,
+        semester_id: selectedSemester.value?.semesterId,
+      };
 
+      if (anggotaRombelId) {
+        payload.anggota_rombel_id = anggotaRombelId;
+      }
+      const response = await store.dispatch(
+        "sekolahService/fetchSiswaAktif",
+        payload
+      );
+      return response;
+    } catch (error) {
+      console.error("Gagal mengambil data kelas:", error);
+    }
+  };
+  const fetchSiswaAktif = async () => {
+    const payload = {
+      // page: 1,
+      semesterId: selectedSemester.value.semesterId,
+      schemaname: schemaname.value,
+    };
+    // console.log(payload)
+    const results = await store.dispatch(
+      "sekolahService/fetchSiswaAktif",
+      payload
+    );
+    // console.log(results)
+    return results;
+    // siswaList.value = results;
+    // results.forEach(item => {
+    //     siswa.value.push(item)
+    // });
+  };
   const fetchSemester = async () => {
     try {
       const results = await store.dispatch("sekolahService/fetchSemester");
@@ -99,7 +136,9 @@ export function useSekolahService(schemaname, selectedSemester) {
     fetchGuruTerdaftar,
     guruTerdaftarList,
     fetchKelas,
+    // fetchSiswa,
     kelasList,
     fetchSemester,
+    fetchSiswaAktif,
   };
 }

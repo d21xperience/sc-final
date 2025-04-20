@@ -291,6 +291,7 @@ func (r *GenericRepository[T]) FindWithPreloadAndJoins(
 	preloads []string,
 	conditions map[string]interface{},
 	groupByColumns []string,
+	orderBy []string,
 ) ([]T, error) {
 	var results []T
 	tx := r.db.WithContext(ctx)
@@ -317,7 +318,10 @@ func (r *GenericRepository[T]) FindWithPreloadAndJoins(
 	if len(groupByColumns) > 0 {
 		tx = tx.Group(strings.Join(groupByColumns, ", "))
 	}
-
+	// Tambahkan ORDER BY jika ada
+	if len(orderBy) > 0 {
+		tx = tx.Order(strings.Join(orderBy, ", ")) // Gabungkan semua kolom ORDER BY
+	}
 	// Eksekusi Query dengan kondisi
 	if err := tx.Where(conditions).Find(&results).Error; err != nil {
 		return nil, err

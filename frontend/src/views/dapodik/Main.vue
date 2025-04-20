@@ -26,8 +26,8 @@
                             </router-link>
                             <span v-else class="text-surface-700 dark:text-surface-0">{{ item.label }}</span>
                         </template>
-                    </Breadcrumb>
-                </div> -->
+</Breadcrumb>
+</div> -->
             </div>
         </div>
         <!-- </div> -->
@@ -114,7 +114,7 @@ const fetchSemester = async () => {
             store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedSemester.value)
         }
     } catch (error) {
-
+        console.lod(error)
     }
 }
 

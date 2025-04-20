@@ -155,7 +155,8 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 	preloads := []string{"PTK"}
 
 	conditions := map[string]interface{}{
-		"tahun_ajaran_id": req.GetTahunAjaranId(),
+		"tabel_ptk_terdaftar.tahun_ajaran_id": req.GetTahunAjaranId(),
+		"tabel_ptk.jenis_ptk_id":              4,
 	}
 	orderBy := []string{"nama ASC"}
 	// groupByColumns := []string{"tabel_ptk_terdaftar.ptk_terdaftar_id"} // Hindari duplikasi

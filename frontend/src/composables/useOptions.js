@@ -17,6 +17,7 @@ export function useRombelOptions(dataRombel) {
   });
 
   const jurusanOptions = computed(() => {
+    console.log(dataRombel)
     const map = new Map();
     for (const item of dataRombel.value) {
       const jur = item.jurusan;

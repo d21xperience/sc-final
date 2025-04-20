@@ -72,7 +72,7 @@ func (s *IjazahServiceServer) GetProsesIjazah(ctx context.Context, req *pb.GetPr
 	preloads := []string{"PesertaDidik", "RombonganBelajar"}
 
 	groupByColumns := []string{} // Hindari duplikasi
-	rombelAnggota, err = s.repoAnggotaKelas.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns)
+	rombelAnggota, err = s.repoAnggotaKelas.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns,nil)
 	if err != nil {
 		return nil, err
 	}

@@ -31,16 +31,26 @@ export function useUtils(dataRombel) {
   //   });
 
   const formatterDateID = (tanggalRaw) => {
-    // const tanggalRaw = "2006-11-28 00:00:00 +0000 UTC";
-    const tanggal = new Date(tanggalRaw);
+    if (!tanggalRaw) return "-";
+
+    // Normalize format: Ganti spasi ke 'T' jika diperlukan
+    let normalizedDate = tanggalRaw.replace(" ", "T");
+
+    // Buat objek Date
+    const tanggal = new Date(normalizedDate);
+
+    // Cek validitas
+    if (isNaN(tanggal)) return "-";
 
     const formatter = new Intl.DateTimeFormat("id-ID", {
       day: "2-digit",
       month: "long",
       year: "numeric",
     });
+
     return formatter.format(tanggal);
   };
+
   return {
     // tingkatPendidikanOptions,
     // jurusanOptions,

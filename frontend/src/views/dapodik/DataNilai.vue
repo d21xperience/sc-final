@@ -1,221 +1,9 @@
-<template>
-
-    <div class="">
-        <div class="card">
-            <div v-if="dataConnected">
-                <div class="">
-                    <div class="my-2 ">
-                        <div class="">
-                            <div class="flex flex-wrap justify-between items-center mb-2">
-                                <h4 class="font-bold text-xl md:text-2xl">Data Transkrip Nilai</h4>
-                                <div class="md:flex md:items-center md:space-x-2">
-                                    <h3 class="text-slate-500 md:text-base text-sm">Tahun Pelajaran</h3>
-                                    <div>
-                                        <Select v-model="selectedSemester" :options="semester"
-                                            optionLabel="namaSemester" placeholder="Tahun Pelajaran"
-                                            class="w-full md:w-52 mr-2" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <Toolbar>
-                                    <template #start>
-                                        <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
-                                            :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2"
-                                            class="mr-2" />
-                                        <Button icon="pi pi-trash" severity="danger" class="mr-2"
-                                            @click="confirmDeleteSelected"
-                                            :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <!-- <Button label="Lulus" severity="warn" class="mr-2" @click="dialogStatus = true"
-                                            :disabled="!dataLulusan || !dataLulusan.length" />
-                                        <Button label="Naik" severity="warn" class="mr-2" @click="openNew"
-                                            :disabled="!dataLulusan || !dataLulusan.length" /> -->
-                                    </template>
-                                    <template #end>
-                                        <Button label="Import" icon="pi pi-download" severity="warn"
-                                            @click="dialogImport = true" class="mr-2" />
-                                        <Button label="Export" icon="pi pi-upload" severity="help"
-                                            @click="exportCSV($event)" class="mr-2" />
-                                        <Button label="Proses" icon="pi pi-send" severity="info"
-                                            @click="exportCSV($event)" />
-                                    </template>
-
-                                </Toolbar>
-                            </div>
-
-                            <Toolbar>
-                                <template #start>
-                                    <div class="flex flex-wrap gap-2 items-center justify-between">
-                                        <div class="flex">
-                                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                                placeholder="Rombel" class="w-full md:w-56 mr-2" />
-                                            <!-- <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                                placeholder="Tingkat" class="mr-2" /> -->
-                                        </div>
-                                    </div>
-                                </template>
-                                <template #end>
-                                    <IconField>
-                                        <InputIcon>
-                                            <i class="pi pi-search" />
-                                        </InputIcon>
-                                        <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                    </IconField>
-                                </template>
-                            </Toolbar>
-                        </div>
-                    </div>
-                </div>
-
-
-                <DataTable ref="dt" v-model:expandedRows="selectedSiswa" stripedRows size="small" :value="siswa"
-                    dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[10, 20, 50]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    @rowExpand="onRowExpand" @rowCollapse="onRowCollapse">
-                    <template #header>
-                        <div class="flex flex-wrap justify-end gap-2">
-                            <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />
-                            <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" />
-                        </div>
-                    </template>
-                    <Column expander style="width: 5rem" />
-                    <Column field="pesertaDidik.nmSiswa" header="Nama" sortable></Column>
-                    <Column field="rombonganBelajar.nmKelas" header="Rombel" sortable> </Column>
-                    <Column field="jk" header="Rerata Nilai">
-                        <template #body="slotProps">
-                            {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                        </template>
-                    </Column>
-                    <template #expansion="slotProps">
-                        <div class="p-4">
-                            <!-- <h5>Orders for {{ slotProps.data.name }}</h5> -->
-                            <DataTable :value="slotProps.data.orders">
-                                <Column field="id" header="Nama Mapel" sortable></Column>
-                                <Column field="customer" header="Smt1" sortable></Column>
-                                <Column field="date" header="Smt2" sortable></Column>
-                                <Column field="date" header="Smt3" sortable></Column>
-                                <Column field="date" header="Smt4" sortable></Column>
-                                <Column field="amount" header="Smt5" sortable>
-                                    <template #body="slotProps">
-                                        {{ formatCurrency(slotProps.data.amount) }}
-                                    </template>
-                                </Column>
-                                <Column field="status" header="Smt6" sortable>
-                                    <template #body="slotProps">
-                                        <!-- <Tag :value="slotProps.data.status.toLowerCase()"
-                                            :severity="getOrderSeverity(slotProps.data)" /> -->
-                                    </template>
-                                </Column>
-                                <Column headerStyle="width:4rem">
-                                    <template #body>
-                                        <Button icon="pi pi-search" />
-                                    </template>
-                                </Column>
-                            </DataTable>
-                        </div>
-                    </template>
-                </DataTable>
-
-            </div>
-            <div v-else>
-                <EmptyData @profileFetched="handleProfileFetched" @fetchError="handleFetchError" />
-            </div>
-        </div>
-
-
-        <!-- DIALOGBOX FOR EDIT DATA -->
-        <Dialog v-model:visible="productDialog" :style="{ height: '650px', width: '450px' }" header="Edit Data"
-            :modal="true">
-            <div class="flex flex-wrap gap-6">
-                <div>
-                    <label for="name" class="block font-bold">NISN</label>
-                    <InputText id="name" v-model.trim="product.code" required="true" autofocus
-                        :invalid="submitted && !product.code" fluid />
-                    <small v-if="submitted && !product.code" class="text-red-500">NISN is required.</small>
-                </div>
-                <div>
-                    <label for="name" class="block font-bold ">Nama</label>
-                    <InputText id="name" v-model.trim="product.name" required="true" autofocus
-                        :invalid="submitted && !product.name" fluid />
-                    <small v-if="submitted && !product.name" class="text-red-500">Nama is required.</small>
-                </div>
-                <div>
-                    <label for="name" class="block font-bold ">Rerata Nilai</label>
-                    <InputText id="name" v-model.trim="product.price" required="true" autofocus
-                        :invalid="submitted && !product.price" fluid />
-                    <small v-if="submitted && !product.price" class="text-red-500">Nilai is required.</small>
-                </div>
-                <div>
-                    <label for="name" class="block font-bold ">Thn Lulus</label>
-                    <InputText id="name" v-model.trim="product.category" required="true" autofocus
-                        :invalid="submitted && !product.category" fluid />
-                    <small v-if="submitted && !product.category" class="text-red-500">Thn lulus is required.</small>
-                </div>
-            </div>
-
-            <template #footer>
-                <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-                <Button label="Save" icon="pi pi-check" @click="saveProduct" />
-            </template>
-        </Dialog>
-
-        <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
-            <div class="flex items-center gap-4">
-                <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="product">Are you sure you want to delete <b>{{ product.name }}</b>?</span>
-            </div>
-            <template #footer>
-                <Button label="No" icon="pi pi-times" text @click="deleteProductDialog = false" />
-                <Button label="Yes" icon="pi pi-check" @click="deleteProduct" />
-            </template>
-        </Dialog>
-
-        <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
-            <div class="flex items-center gap-4">
-                <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="product">Apakah data lulusan akan dihapus?</span>
-            </div>
-            <template #footer>
-                <Button label="Tidak" icon="pi pi-times" text @click="deleteProductsDialog = false" />
-                <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
-            </template>
-        </Dialog>
-
-        <!-- Dialog Status kenaikan/ lulus -->
-        <Dialog v-model:visible="dialogStatus" :style="{ width: '450px' }" header="Confirm" :modal="true">
-            <div class="flex items-center gap-4">
-                <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="product">Apakah siswa akan diluluskan?</span>
-            </div>
-            <template #footer>
-                <Button label="Tidak" icon="pi pi-times" text @click="dialogStatus = false" />
-                <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
-            </template>
-        </Dialog>
-
-
-
-        <!-- import data -->
-        <!-- DIALOG IMPORT -->
-        <DialogImport v-model:visible="dialogImport" :semester="semester" @save="saveImport" @cancel="cancelImport"
-            template-type="nilai_akhir" :schema-name="schemaname" />
-    </div>
-</template>
-
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-
-// ===========================
-// STORE
+import { ref, onMounted, watch, computed, onBeforeMount } from 'vue';
 import { useStore } from "vuex";
 const store = useStore();
-// ===========================
+// import FileUpload from 'primevue/fileupload';
 
-
-// ===========================
-// PRIMEVUE
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
@@ -229,91 +17,151 @@ import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-import DataLulusanService from '@/service/ProductService.js';
 // =============UJI FITUR FOTO========================
-import Image from 'primevue/image';
+// import Image from 'primevue/image';
 // =====================================
+const pembelajaran = ref({})
+const pembelajaranList = ref([])
+const guruList = ref()
+const rombel = ref()
 
+const fetchGuru = async () => {
+    try {
+        const cekGuru = await store.getters["sekolahService/getPTKTerdaftar"]
+        if (cekGuru == null) {
+            let payload = {
+                tahunAjaranId: selectedSemester.value?.tahunAjaranId,
+                schemaname: schemaname.value
+            }
+            const response = await store.dispatch("sekolahService/fetchPTKTerdaftar", payload)
+            // console.log(response)
+            guruList.value = response
+        } else {
+            guruList.value = cekGuru
+        }
 
-onMounted(() => {
-    fetchSemester()
-    getParamDialogImport()
-    fetchSiswa()
-});
-
-const semester = ref()
-const schemaname = ref("")
-const getParamDialogImport = () => {
-    schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
-    semester.value = store.getters["sekolahService/getSemester"]
-
+    } catch (error) {
+        console.error(error)
+    }
 }
+
+const fetchMapel = async () => {
+    try {
+        const cekMapel = await store.getters["sekolahService/getMapel"]
+        // console.log(cekMapel)
+        if (cekMapel == null) {
+            const payload = {
+                mapel_id: ""
+            }
+            const response = await store.dispatch("sekolahService/fetchMapel", payload)
+            // console.log(response)
+            mapelList.value = response
+        } else {
+            mapelList.value = cekMapel
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// ==============================
+const dataSiswaAktif = ref([])
+onMounted(async () => {
+    dataSiswaAktif.value = store.getters["sekolahService/getSiswaAktif"]
+    if (!dataSiswaAktif.value || dataSiswaAktif.value.length === 0) {
+        dataSiswaAktif.value = await fetchSiswaAktif()
+
+    }
+});
+// ================================
+// composable
+// ================================
+import { useSekolahService } from '@/composables/useSekolahService'
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
+const { fetchSiswaAktif } = useSekolahService(schemaname, selectedSemester)
+// ================================
+watch(selectedSemester, async (newVal, oldVal) => {
+    console.log(newVal)
+    dataSiswaAktif.value = await fetchSiswaAktif()
+})
+import DialogLoading from "@/components/DialogLoading.vue";
+
+const isLoading = ref(false);
+
 const dataConnected = ref(true)
 const toast = useToast();
 const dt = ref();
-const products = ref();
-const productDialog = ref(false);
-const deleteProductDialog = ref(false);
-const deleteProductsDialog = ref(false);
+// const products = ref();
+const mapelDialog = ref(false);
+const mapelList = ref([])
+const deletemapelDialog = ref(false);
+const deleteMapelsDialog = ref(false);
 const product = ref({});
 const dataLulusan = ref();
 const filters = ref({
     'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'jurusan': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'tingkat': { value: null, matchMode: FilterMatchMode.GREATER_THAN },
 });
 const submitted = ref(false);
-const statuses = ref([
-    { label: 'INSTOCK', value: 'instock' },
-    { label: 'LOWSTOCK', value: 'lowstock' },
-    { label: 'OUTOFSTOCK', value: 'outofstock' }
-]);
+// const openNew = () => {
+//     mapelDialog.value = true
+//     // router.push({ name: "inputMapel" })
+// };
+const addMapelDialog = ref(false)
+const openNewMapel = async () => {
+    addMapelDialog.value = true
+    fetchMapel()
+    fetchGuru()
 
-const formatCurrency = (value) => {
-    if (value)
-        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    return;
-};
-const openNew = () => {
-    product.value = {};
-    submitted.value = false;
-    productDialog.value = true;
-};
+}
 const hideDialog = () => {
-    productDialog.value = false;
+    mapelDialog.value = false;
+    // selectedMapel.value = 
     submitted.value = false;
 };
-const saveProduct = () => {
+const tambahPembelajaran = () => {
+    console.log("submitted", submitted.value)
+    // console.log("selecteGuru",!selectedGuru.value)
+    // console.log(submitted.value && !selectedGuru.value)
     submitted.value = true;
-
-    if (product?.value.name?.trim()) {
-        if (product.value.id) {
-            product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
-            products.value[findIndexById(product.value.id)] = product.value;
+    if (selectedMapel?.value.nama?.trim()) {
+        if (pembelajaran.value.pembelajaran_id) {
+            pembelajaran.value.inventoryStatus = pembelajaran.value.inventoryStatus.value ? pembelajaran.value.inventoryStatus.value : pembelajaran.value.inventoryStatus;
+            // products.value[findIndexById(product.value.id)] = product.value;
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
         }
         else {
-            product.value.id = createId();
-            product.value.code = createId();
-            product.value.image = 'product-placeholder.svg';
-            product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
-            products.value.push(product.value);
+            pembelajaran.value.pembelajaran_id = generateUUID();
+            pembelajaran.value.ptk_terdaftar_id = selectedGuru.value?.ptkTerdaftarId
+            pembelajaran.value.nama = selectedGuru.value?.ptk.nama
+            pembelajaran.value.mata_pelajaran_id = selectedMapel.value.mataPelajaranId
+            pembelajaran.value.nama_mata_pelajaran = selectedMapel.value.nama
+            // product.value.code = createId();
+            // product.value.image = 'product-placeholder.svg';
+            // product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
+            pembelajaranList.value.push(pembelajaran.value);
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
         }
 
-        productDialog.value = false;
-        product.value = {};
+        // console.log(pembelajaran.value)
+
+        selectedGuru.value = {}
+        selectedMapel.value = {}
+        // pembelajaran.value = {};
     }
 };
-const editProduct = (prod) => {
-    product.value = { ...prod };
-    productDialog.value = true;
+const kelas = ref({})
+const editMapel = (mapel) => {
+    kelas.value = { ...mapel };
+    mapelDialog.value = true;
+    pembelajaran.value.rombongan_belajar_id = kelas.value.rombonganBelajarId
+    pembelajaran.value.semester_id = kelas.value.semesterId
 };
-const confirmDeleteProduct = (prod) => {
-    product.value = prod;
-    deleteProductDialog.value = true;
-};
-const deleteProduct = () => {
+const deleteMapel = () => {
     products.value = products.value.filter(val => val.id !== product.value.id);
-    deleteProductDialog.value = false;
+    deletemapelDialog.value = false;
     product.value = {};
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
 };
@@ -328,151 +176,24 @@ const findIndexById = (id) => {
 
     return index;
 };
-const createId = () => {
-    let id = '';
-    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (var i = 0; i < 5; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
-}
 const exportCSV = () => {
-    dt.value.exportCSV();
-};
-const confirmDeleteSelected = () => {
-    deleteProductsDialog.value = true;
+    isLoading.value = true
+    // alert("hello")
+    // dt.value.exportCSV();
 };
 const deletedataLulusan = () => {
     products.value = products.value.filter(val => !dataLulusan.value.includes(val));
-    deleteProductsDialog.value = false;
+    deleteMapelsDialog.value = false;
     dataLulusan.value = null;
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 };
-
-const getStatusLabel = (status) => {
-    switch (status) {
-        case 'INSTOCK':
-            return 'success';
-
-        case 'LOWSTOCK':
-            return 'warn';
-
-        case 'OUTOFSTOCK':
-            return 'danger';
-
-        default:
-            return null;
-    }
-};
-
-
-
-import Select from 'primevue/select';
-import EmptyData from '@/components/EmptyData.vue';
-
-// select tahun ijazah
-const selectedCity = ref();
-const cities = ref([
-    { name: '2023/2024 Ganjil', code: '20231' },
-    { name: '2023/2024 Genap', code: '20232' },
-    { name: '2022/2023', code: '20222' },
-    { name: '2021/2022', code: '20212' },
-    { name: '2022/2021', code: '20202' },
-    { name: '2019/2020', code: '20192' }
-]);
-const selectedJurusan = ref();
-const jurusan = ref([
-    { name: 'Teknik Kendaraan Ringan', code: 'TKR' },
-    { name: 'Teknik Mesin Sepeda Motor', code: 'TSM' },
-    { name: 'Teknik Komputer dan Jaringan', code: 'TKJ' },
-    { name: 'Otomatisasi Perkantoran', code: 'OTKP' },
-    { name: 'AKuntansi Lembaga', code: 'AKL' }
-]);
-
-// Fungsi yang menangkap event emit dari child
-const handleProfileFetched = (data) => {
-    dataConnected.value = data;
-    console.log("Data sekolah diterima di parent:", data);
-};
-
-const handleFetchError = (error) => {
-    dataConnected.value = data;
-    console.error("Error diterima di parent:", error);
-};
-
-// status siswa naik atau lulus
-const dialogStatus = ref(false)
-
-
 // ==================================
-// =======SEMESTER=============
-const selectedSemester = ref();
-// const semester = ref(null);
-const fetchSemester = async () => {
-    try {
-        
-        const results = await store.dispatch("sekolahService/fetchSemester")
-        // console.log(results)
-        if (results) {
-            semester.value = store.getters["sekolahService/getSemester"]
-            // Ambil semester terbaru berdasarkan ID terbesar
-            selectedSemester.value = semester.value.reduce((latest, current) =>
-                current.semesterId > latest.semesterId ? current : latest
-            );
-        }
-    } catch (error) {
-
-    }
-}
-// ==================================
-
-// ==================================
-// =======Siswa=============
-const selectedSiswa = ref();
-const siswa = ref(null);
-const fetchSiswa = async () => {
-    try {
-        console.log("fethcSiswa")
-        let payload = {
-            semesterId: semester.value,
-            schemaname: schemaname.value
-        }
-        console.log(payload)
-        const results = await store.dispatch("sekolahService/fetchSiswa", payload)
-        // console.log(results)
-        if (results) {
-            siswa.value = store.getters["sekolahService/getSiswa"]
-            // // Ambil siswa terbaru berdasarkan ID terbesar
-            // selectedSiswa.value = siswa.value.reduce((latest, current) =>
-            //     current.siswaId > latest.siswaId ? current : latest
-            // );
-        }
-    } catch (error) {
-
-    }
-}
-
-// ==================================
-
-
-const onRowExpand = (event) => {
-    toast.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.name, life: 3000 });
-};
-const onRowCollapse = (event) => {
-    toast.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.name, life: 3000 });
-};
-const expandAll = () => {
-    expandedRows.value = products.value.reduce((acc, p) => (acc[p.id] = true) && acc, {});
-};
-const collapseAll = () => {
-    expandedRows.value = null;
-};
-
 // ========IMPORT DATA========
-import DialogImport from '../../components/DialogImport.vue'
+import DialogImport from '@/components/DialogImport.vue'
+const expandedRows = ref()
 const dialogImport = ref(false)
-const saveImport = () => {
-    console.log("Data disimpan:", selectedSemester.value);
+const saveImport = (e) => {
+    // console.log("Data disimpan:", e);
     dialogImport.value = false;
 };
 
@@ -480,12 +201,278 @@ const cancelImport = () => {
     console.log("Import dibatalkan");
     dialogImport.value = false;
 };
-const templateUrl = ref("http://localhost:8183/api/v1/ss/download/template?template-type=siswa");
 // ===========================================
 
+const onRowExpand = (event) => {
+    toast.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.nmKelas, life: 3000 });
+    // Ambil data mapel untuk kelas tertentu
+    console.log(event)
+};
+const onRowCollapse = (event) => {
+    toast.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.nmKelas, life: 3000 });
+};
+const expandAll = () => {
+    expandedRows.value = dataSiswaAktif.value.reduce((acc, p) => (acc[p.rombonganBelajarId] = true) && acc, {});
+};
+const collapseAll = () => {
+    expandedRows.value = null;
+};
 
 
+import AutoComplete from 'primevue/autocomplete';
+import { debounce } from 'lodash';
 
+const selectedMapel = ref()
+const filteredMapel = ref()
+const searchMapel = (event) => {
+    setTimeout(() => {
+        let query = event.query.toLowerCase();
+        filteredMapel.value = mapelList.value.filter((mapel) =>
+            mapel.nama.toLowerCase().includes(query)
+        );
+    }, 250);
+}
+const selectedGuru = ref()
+const filteredGuru = ref()
+const searchGuru = (event) => {
+    setTimeout(() => {
+        let query = event.query.toLowerCase();
 
+        filteredGuru.value = guruList.value.filter((guru) =>
+            guru.ptk.nama.toLowerCase().includes(query)
+        );
+    }, 250);
+}
+const handleKeydown = (event) => {
+    if (event.key === " ") {
+        selectedMapel.value += " "; // Menambahkan spasi ke query
+    }
+};
 
+const cancelAddMapel = () => {
+    addMapelDialog.value = false
+    selectedGuru.value = {}
+    selectedMapel.value = {}
+}
+
+const generateUUID = () => crypto.randomUUID();
+
+const saveToDB = (req_Object, endpoint_String) => {
+    console.log(endpoint_String)
+    try {
+        const payload = {
+            schemaname: req_Object?.schemaname,
+            pembelajaran: req_Object?.data
+        }
+        const results = store.dispatch(endpoint_String, payload)
+        if (results) {
+            return results
+        } else {
+            null
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const simpanKeDatabase = () => {
+    // mapelDialog.value = false;
+    // simpan di localstorage
+    const aData = []
+    aData.push(pembelajaran.value)
+    const req_Object = {
+        schemaname: schemaname.value,
+        data: aData
+    }
+    // console.log(req_Object)
+    const endpoint = "sekolahService/createPembelajaran"
+    saveToDB(req_Object, endpoint)
+    // localStorage.setItem("unsavedPembelajaran", JSON.stringify(pembelajaran.value));
+}
 </script>
+<template>
+
+    <div class="">
+        <div class="card">
+            <div class="w-full my-2 container">
+                <div>
+                    <Toolbar>
+                            <!-- <template #start>
+                                <div class="flex flex-wrap gap-2 items-center justify-between">
+                                    <div class="flex">
+                                        <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
+                                            optionLabel="label" placeholder="Tingkat" class="w-full md:w-56 mr-2" />
+                                        <Select v-model="selectedJurusan" :options="jurusanOptions" optionLabel="label"
+                                            placeholder="Rombel" class="mr-2" />
+                                    </div>
+                                </div>
+                            </template> -->
+                            <template #start>
+                                <IconField>
+                                    <InputIcon>
+                                        <i class="pi pi-search" />
+                                    </InputIcon>
+                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
+                                </IconField>
+                            </template>
+                        </Toolbar>
+                </div>
+                <DataTable ref="dt" v-model:expandedRows="expandedRows" stripedRows size="small" :value="dataSiswaAktif"
+                    @rowExpand="onRowExpand" @rowCollapse="onRowCollapse" dataKey="anggotaRombelId" :paginator="true"
+                    :rows="10" :filters="filters"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    :rowsPerPageOptions="[10, 20, 50]"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} kelas">
+                    <template #header>
+                        <div class="flex flex-wrap justify-end gap-2">
+                            <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />
+                            <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" />
+                        </div>
+                    </template>
+                    <Column expander style="width: 5rem" />
+                    <Column field="nmSiswa" header="Name"></Column>
+                    <Column field="nmKelas" header="Name"></Column>
+                    <!-- <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column> -->
+                    <!-- <Column field="jurusan.namaJurusan" header="Jurusan" sortable></Column> -->
+                    <!-- <Column field="waliKelas" header="Wali Kelas"></Column> -->
+                    <!-- <Column field="ptk.nama" header="Jml.Mapel"></Column> -->
+                    <Column field="" header="Edit">
+                        <template #body="{ data }">
+                            <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editMapel(data)" />
+                            <!-- <Button icon="pi pi-trash" outlined rounded severity="danger"
+                                    @click="confirmdeleteMapel(data)" /> -->
+                        </template>
+                    </Column>
+                    <template #expansion="slotProps">
+                        <div class="p-4">
+                            <DataTable :value="slotProps.data.nilai">
+                                <!-- <p>{{ slotProps.data }}</p> -->
+                                <Column field="mataPelajaran.nama" header="Nama mata pelajaran"></Column>
+                                <Column field="nilaiPeng" header="1">
+                                
+                                </Column>
+                                <Column field="nilaiPeng" header="2"></Column>
+                                <Column field="ptkTerdaftar.ptk.nama" header="3"></Column>
+                                <Column field="ptkTerdaftar.ptk.nama" header="4"></Column>
+                                <Column field="ptkTerdaftar.ptk.nama" header="5"></Column>
+                                <Column field="ptkTerdaftar.ptk.nama" header="6"></Column>
+
+                                <!-- <Column field="date" header="Date" sortable></Column> -->
+                            </DataTable>
+                        </div>
+                    </template>
+                </DataTable>
+            </div>
+        </div>
+
+
+        <!-- DIALOGBOX FOR EDIT DATA -->
+        <Dialog v-model:visible="mapelDialog" :style="{ width: '50%' }" header="Edit Data" :modal="true" position="top">
+            <div class="">
+                <div class="my-2">
+                    <label for="name" class="block font-bold">Nama Kelas</label>
+                    <InputText id="name" v-model.trim="kelas.nmKelas" required="true" autofocus disabled
+                        :invalid="submitted && !kelas.nmKelas" fluid class="w-full" />
+                    <small v-if="submitted && !kelas.nmKelas" class="text-red-500">NISN is required.</small>
+                </div>
+
+                <div>
+                    <div class="mb-2">
+                        <Toolbar>
+                            <template #start>
+                                <Button icon="pi pi-plus" severity="success" class="mr-2" @click="openNewMapel"
+                                    v-tooltip.bottom="'Tambah data'" />
+                                <!-- <Button icon="pi pi-pencil" severity="warn" @click="editKelas(selectedKelas)"
+                                    :disabled="!selectedKelas || !selectedKelas.length || selectedKelas.length > 1"
+                                    class="mr-2" v-tooltip.bottom="'Edit data'" />
+                                <Button icon="pi pi-trash" severity="danger" class="mr-2" @click="confirmDeleteSelected"
+                                    :disabled="!selectedKelas || !selectedKelas.length"
+                                    v-tooltip.bottom="'Hapus data'" /> -->
+                            </template>
+                            <template #end>
+                                <Button label="Import" icon="pi pi-download" severity="warn"
+                                    @click="dialogImport = true" class="mr-2 text-sm"
+                                    v-tooltip.bottom="'Import siswa'" />
+                                <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
+                                    class="mr-2 text-sm" />
+
+                            </template>
+
+                        </Toolbar>
+                    </div>
+                    <DataTable ref="dt" :value="pembelajaranList" dataKey="pembelajaran_id">
+                        <Column field="nama_mata_pelajaran" header="Mata pelajaran"></Column>
+                        <Column field="nama" header="Guru Mapel"></Column>
+                    </DataTable>
+                </div>
+            </div>
+
+            <template #footer>
+                <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
+                <Button label="Save" icon="pi pi-check" @click="simpanKeDatabase" />
+            </template>
+        </Dialog>
+
+        <Dialog v-model:visible="deletemapelDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+            <div class="flex items-center gap-4">
+                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <span v-if="product">Are you sure you want to delete <b>{{ product.name }}</b>?</span>
+            </div>
+            <template #footer>
+                <Button label="No" icon="pi pi-times" text @click="deletemapelDialog = false" />
+                <Button label="Yes" icon="pi pi-check" @click="deleteMapel" />
+            </template>
+        </Dialog>
+
+        <Dialog v-model:visible="deleteMapelsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+            <div class="flex items-center gap-4">
+                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <span v-if="product">Apakah data lulusan akan dihapus?</span>
+            </div>
+            <template #footer>
+                <Button label="Tidak" icon="pi pi-times" text @click="deleteMapelsDialog = false" />
+                <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
+            </template>
+        </Dialog>
+
+        <!-- Dialog Tambah mapel -->
+        <Dialog v-model:visible="addMapelDialog" :style="{ width: '450px' }" header="Tambah mapel" :modal="true"
+            position="top">
+            <div class="">
+                <div class="flex space-x-1">
+                    <div class="">
+                        <label for="mata-pelajaran">Mata pelajaran</label>
+                        <AutoComplete v-model="selectedMapel" :suggestions="filteredMapel" optionLabel="nama"
+                            @complete="searchMapel" @keydown.space.prevent="handleKeydown" placeholder="Cari Mapel..."
+                            class="w-full" fluid :invalid="submitted && !selectedMapel" />
+                        <small v-if="submitted && !selectedMapel" class="text-red-500">Subject is
+                            required.</small>
+                    </div>
+                    <div class="">
+                        <label for="mata-pelajaran">Guru Mapel</label>
+                        <AutoComplete v-model="selectedGuru" :suggestions="filteredGuru" optionLabel="ptk.nama"
+                            @complete="searchGuru" @keydown.space.prevent="handleKeydown" placeholder="Cari Guru..."
+                            class="w-full" fluid dropdown :invalid="submitted && !selectedGuru" />
+                        <small v-if="submitted && !selectedGuru" class="text-red-500">Teacher is
+                            required.</small>
+
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <Button label="Tidak" icon="pi pi-times" text @click="cancelAddMapel" />
+                <Button label="Tambah" icon="pi pi-check" text @click="tambahPembelajaran" />
+            </template>
+        </Dialog>
+
+
+        <!-- import data -->
+        <!-- DIALOG IMPORT -->
+        <DialogImport v-model:visible="dialogImport" @save="saveImport" @cancel="cancelImport" template-type="siswa"
+            :schema-name="schemaname" />
+
+        <!-- end of import data -->
+        <DialogLoading v-model="isLoading"> Memuat data, harap tunggu... </DialogLoading>
+
+    </div>
+</template>

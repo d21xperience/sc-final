@@ -36,6 +36,7 @@ type RombelAnggota struct {
 	StatusKeaktifan    uint32           `gorm:"column:status_keaktifan"`
 	PesertaDidik       PesertaDidik     `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
 	RombonganBelajar   RombonganBelajar `gorm:"foreignKey:RombonganBelajarId;references:RombonganBelajarId"`
+	NilaiAkhir         []NilaiAkhir     `gorm:"foreignKey:AnggotaRombelId;references:AnggotaRombelId"`
 }
 
 func (RombonganBelajar) TableName() string {

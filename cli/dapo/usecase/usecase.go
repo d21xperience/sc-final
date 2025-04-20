@@ -89,9 +89,9 @@ func ProcessPtk(cfg *config.AppConfig, semesterID string) error {
 			PtkId:          item.PTKID,
 			TahunAjaranId:  item.TahunAjaranID,
 			Ptk: &pb.PTK{
-				PtkId: item.PTKID,
-				Nama:  item.Nama,
-				// JenisPtkId:   int32(utils.ParseInt(item.JenisPTKID)),
+				PtkId:        item.PTKID,
+				Nama:         item.Nama,
+				JenisPtkId:   int32(item.JenisPTKID),
 				JenisKelamin: item.JenisKelamin,
 				TempatLahir:  item.TempatLahir,
 				TanggalLahir: item.TanggalLahir,

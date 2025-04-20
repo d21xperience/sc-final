@@ -22,7 +22,7 @@ type PTKTerdaftar struct {
 	AgamaIDStr              string              `json:"agama_id_str"`
 	NUPTK                   string              `json:"nuptk"`
 	NIK                     string              `json:"nik"`
-	JenisPTKID              string              `json:"jenis_ptk_id"`
+	JenisPTKID              int                 `json:"jenis_ptk_id"`
 	JenisPTKIDStr           string              `json:"jenis_ptk_id_str"`
 	StatusKepegawaianID     int                 `json:"status_kepegawaian_id"`
 	StatusKepegawaianIDStr  string              `json:"status_kepegawaian_id_str"`

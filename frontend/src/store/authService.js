@@ -65,6 +65,7 @@ const mutations = {
     localStorage.removeItem("tabelSiswaAktif");
     localStorage.removeItem("tabelPTKTerdaftar");
     localStorage.removeItem("tabelMapel");
+    localStorage.removeItem("tabelKelas");
   },
   SET_SEKOLAH(state, sekolah) {
     state.sekolah = sekolah;
