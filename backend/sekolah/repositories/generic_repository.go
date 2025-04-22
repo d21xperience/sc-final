@@ -130,8 +130,7 @@ func (r *GenericRepository[T]) FindAllByConditions(
 	ctx context.Context,
 	schemaName string,
 	conditions map[string]any, // Parameter untuk kondisi WHERE
-	limit, offset int,
-) ([]*T, error) {
+	limit, offset int, orderBy []string) ([]*T, error) {
 	var entities []*T
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
@@ -145,6 +144,10 @@ func (r *GenericRepository[T]) FindAllByConditions(
 	// Tambahkan kondisi WHERE jika ada
 	if len(conditions) > 0 {
 		query = query.Where(conditions)
+	}
+	// Tambahkan ORDER BY jika ada
+	if len(orderBy) > 0 {
+		query = query.Order(strings.Join(orderBy, ", ")) // Gabungkan semua kolom ORDER BY
 	}
 
 	// Eksekusi query

@@ -300,7 +300,7 @@ func (s *RombelAnggotaService) SearchAnggotaKelas(ctx context.Context, req *pb.S
 		conditions := map[string]any{
 			"semester_id": semesterId,
 		}
-		mod, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, 100, 0)
+		mod, err := s.repo.FindAllByConditions(ctx, schemaName, conditions, 100, 0, nil)
 		if err != nil {
 			log.Printf("[ERROR] Gagal menemukan siswa di schema '%s': %v", schemaName, err)
 			return nil, fmt.Errorf("gagal menemukan siswa di schema '%s': %w", schemaName, err)

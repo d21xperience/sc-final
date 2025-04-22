@@ -67,7 +67,10 @@ func (s *SemesterServiceServer) GetSemester(ctx context.Context, req *pb.GetSeme
 		conditions := map[string]interface{}{
 			"periode_aktif": 1,
 		}
-		SemesterModels, err := s.repo.FindAllByConditions(ctx, "ref", conditions, 100, 0)
+		orderBy := []string{
+			"semester_id",
+		}
+		SemesterModels, err := s.repo.FindAllByConditions(ctx, "ref", conditions, 100, 0, orderBy)
 		if err != nil {
 			log.Printf("[ERROR] Gagal menemukan tahun ajaran di schema '%s': %v", "ref", err)
 			return nil, fmt.Errorf("gagal menemukan tahun ajaran di schema '%s': %w", "ref", err)

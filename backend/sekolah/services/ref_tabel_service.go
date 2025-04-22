@@ -91,7 +91,7 @@ func (s *ReferensiServiceServer) GetTingkatPendidikan(ctx context.Context, req *
 	conditions := map[string]interface{}{
 		"jenjang_pendidikan_id": req.GetJenjangPendidikanId(),
 	}
-	mod, err := s.repoTingkatPendidikan.FindAllByConditions(ctx, "ref", conditions, 100, 0)
+	mod, err := s.repoTingkatPendidikan.FindAllByConditions(ctx, "ref", conditions, 100, 0, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +133,7 @@ func (s *ReferensiServiceServer) GetKurikulum(ctx context.Context, req *pb.GetKu
 	conditions := map[string]any{
 		"jurusan_id": req.GetJurusanId(),
 	}
-	mod, err := s.repoKurikulum.FindAllByConditions(ctx, "ref", conditions, 1000, 0)
+	mod, err := s.repoKurikulum.FindAllByConditions(ctx, "ref", conditions, 1000, 0, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -165,7 +165,7 @@ func (s *ReferensiServiceServer) GetJurusan(ctx context.Context, req *pb.GetJuru
 		"jenjang_pendidikan_id": req.GetJenjangPendidikanId(),
 		param:                   1,
 	}
-	mod, err := s.repoJurusan.FindAllByConditions(ctx, "ref", conditions, 100, 0)
+	mod, err := s.repoJurusan.FindAllByConditions(ctx, "ref", conditions, 100, 0, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -201,7 +201,7 @@ func (s *ReferensiServiceServer) GetMapel(ctx context.Context, req *pb.GetMapelR
 	if mapelId != "" {
 		conditions["mapel_id"] = mapelId
 	}
-	mod, err := s.repoMapel.FindAllByConditions(ctx, "ref", conditions, 7000, 0)
+	mod, err := s.repoMapel.FindAllByConditions(ctx, "ref", conditions, 7000, 0, nil)
 	if err != nil {
 		return nil, err
 	}

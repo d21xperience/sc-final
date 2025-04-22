@@ -65,7 +65,7 @@ func (s *schemaServiceImpl) GetSchemaBySchemaname(schemaName string) (*models.Se
 	conditions := map[string]interface{}{
 		"schema_name": schemaName,
 	}
-	res, err := s.sekolahTabelTenant.FindAllByConditions(ctx, "public", conditions, 100, 0)
+	res, err := s.sekolahTabelTenant.FindAllByConditions(ctx, "public", conditions, 100, 0, nil)
 	if err != nil {
 		return nil, err
 	}
