@@ -97,7 +97,7 @@ func (s *ReferensiServiceServer) GetTingkatPendidikan(ctx context.Context, req *
 	}
 	res := utils.ConvertModelsToPB(mod, func(re *models.TingkatPendidikan) *pb.TingkatPendidikan {
 		return &pb.TingkatPendidikan{
-			TingkatPendidikanId: uint32(re.TingkatPendidikanID),
+			TingkatPendidikanId: int32(re.TingkatPendidikanID),
 			JenjangPendidikanId: uint32(re.JenjangPendidikanID),
 			Kode:                re.Kode,
 			Nama:                re.Nama,

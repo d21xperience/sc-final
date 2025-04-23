@@ -21,7 +21,7 @@ type NilaiAkhir struct {
 	IDMinat         string    `gorm:"column:id_minat"`                  // ID Minat
 	Semester        *uint32   `gorm:"column:semester"`                  // Semester
 	// Relasi
-	// PesertaDidik  PesertaDidik  `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
+	PesertaDidik  PesertaDidik  `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
 	MataPelajaran MataPelajaran `gorm:"foreignKey:MataPelajaranId;references:MataPelajaranID"`
 	// AnggotaRombel RombelAnggota `gorm:"foreignKey:AnggotaRombelId;references:AnggotaRombelId"`
 }
@@ -32,7 +32,7 @@ type NilaiSiswa struct {
 	RombonganBelajarId uuid.UUID
 	NmKelas            string
 	SemesterId         string
-	NilaiAkhir         NilaiAkhir
+	NilaiAkhir         []NilaiAkhir
 }
 
 // type NIlaiRerataAkhir struct {

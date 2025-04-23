@@ -165,7 +165,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	preloads := []string{"PTK", "Jurusan", "Kurikulum", "TingkatPendidikan", "Pembelajaran", "Pembelajaran.PTKTerdaftar", "Pembelajaran.PTKTerdaftar.PTK"}
 
 	groupBy := []string{"tabel_kelas.rombongan_belajar_id"} // Hindari duplikasi
-	orderBy := []string{"tabel_kelas.nm_kelas"} // Hindari duplikasi
+	orderBy := []string{"tabel_kelas.nm_kelas"}             // Hindari duplikasi
 	rombelModel, err = s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupBy, orderBy)
 	if err != nil {
 		return nil, err
@@ -221,7 +221,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 				JurusanId:           utils.SafeString(kelas.Kurikulum.JurusanID),
 			},
 			TingkatPendidikan: &pb.TingkatPendidikan{
-				TingkatPendidikanId: uint32(kelas.TingkatPendidikan.TingkatPendidikanID),
+				TingkatPendidikanId: int32(kelas.TingkatPendidikan.TingkatPendidikanID),
 				Kode:                kelas.TingkatPendidikan.Kode,
 				Nama:                kelas.TingkatPendidikan.Nama,
 				JenjangPendidikanId: uint32(kelas.TingkatPendidikan.JenjangPendidikanID),

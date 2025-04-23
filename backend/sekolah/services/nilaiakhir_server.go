@@ -15,13 +15,16 @@ import (
 
 type NilaiAkhirServiceServer struct {
 	pb.UnimplementedNilaiAkhirServiceServer
-	repo repositories.GenericRepository[models.NilaiAkhir]
+	repo              repositories.GenericRepository[models.NilaiAkhir]
+	repoRombelAnggota repositories.GenericRepository[models.RombelAnggota]
 }
 
 func NewNilaiAkhirServiceServer() *NilaiAkhirServiceServer {
 	repoNilaiAkhir := repositories.NewNilaiAkhirRepository(config.DB)
+	repoRombelAnggota := repositories.NewRombelAnggotaRepository(config.DB)
 	return &NilaiAkhirServiceServer{
-		repo: *repoNilaiAkhir,
+		repo:              *repoNilaiAkhir,
+		repoRombelAnggota: *repoRombelAnggota,
 	}
 }
 
@@ -89,37 +92,50 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 	}
 	schemaName := req.GetSchemaname()
 	semesterId := req.GetSemesterId()
-	joins := []string{
-		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_nilaiakhir.peserta_didik_id",
-		// "JOIN ref.jurusan ON tabel_kelas.jurusan_id = ref.jurusan.jurusan_id",
-	}
-	preloads := []string{"PesertaDidik"}
+
 	var conditions = map[string]interface{}{
-		"semester_id": semesterId,
+		"tabel_anggotakelas.semester_id": semesterId,
+		"tabel_kelas.jenis_rombel":       1,
 	}
-	groupByColumns := []string{"tabel_nilaiakhir.id_nilai_akhir"} // Hindari duplikasi
-	nilaiAkhirModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns, nil)
+	if req.GetPesertaDidikId() != "" {
+		conditions["tabel_anggotakelas.peserta_didik_id"] = req.GetPesertaDidikId()
+	}
+	joins := []string{
+		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
+		"JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = tabel_anggotakelas.rombongan_belajar_id",
+		"JOIN tabel_ptk ON tabel_ptk.ptk_id = tabel_kelas.ptk_id",
+	}
+	preloads := []string{"PesertaDidik", "RombonganBelajar", "RombonganBelajar.PTK", "NilaiAkhir", "NilaiAkhir.MataPelajaran"}
+
+	orderBy := []string{"tabel_kelas.nm_kelas ASC", "tabel_siswa.nm_siswa ASC"} // Hindari duplikasi
+	anggotaRombelModel, err := s.repoRombelAnggota.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
 	if err != nil {
 		return nil, err
 	}
 
-	NilaiAkhirList := utils.ConvertModelsToPB(nilaiAkhirModel, func(model models.NilaiAkhir) *pb.NilaiAkhir {
-		anggotaRombelId, err := utils.ConvertUUIDToStringViceVersa(model.AnggotaRombelId)
-		if err != nil {
-			return nil
-		}
-		return &pb.NilaiAkhir{
-			AnggotaRombelId: anggotaRombelId.(string),
-			MataPelajaranId: utils.PointerToUint32(model.MataPelajaranId),
-			SemesterId:      model.SemesterId,
-			NilaiPeng:       utils.PointerToUint32(model.NilaiPeng),
-			// nilaiAkhirId:    model.nilaiAkhirId,
-			// PesertaDidikId:  model.PesertaDidikId,
-			// SemesterId:      model.SemesterId,
+	NilaiAkhirList := utils.ConvertModelsToPB(anggotaRombelModel, func(item models.RombelAnggota) *pb.NilaiSiswa {
+		return &pb.NilaiSiswa{
+			PesertaDidikId:      item.PesertaDidikId.String(),
+			NmSiswa:             item.PesertaDidik.NmSiswa,
+			RombonganBelajarId:  item.AnggotaRombelId.String(),
+			NmKelas:             item.RombonganBelajar.NmKelas,
+			TingkatPendidikanId: item.RombonganBelajar.TingkatPendidikanId,
+			NilaiAkhir: utils.ConvertModelsToPB(item.NilaiAkhir, func(item models.NilaiAkhir) *pb.NilaiAkhir {
+				return &pb.NilaiAkhir{
+					IdNilaiAkhir:    item.IdNilaiAkhir.String(),
+					NilaiPeng:       utils.PointerToUint32(item.NilaiPeng),
+					MataPelajaranId: utils.PointerToUint32(item.MataPelajaranId),
+					SemesterId:      item.SemesterId,
+					Semester:        utils.PointerToUint32(item.Semester),
+					MataPelajaran: &pb.Mapel{
+						Nama: item.MataPelajaran.Nama,
+					},
+				}
+			}),
 		}
 	})
 	return &pb.GetNilaiAkhirResponse{
-		Nilai: NilaiAkhirList,
+		NilaiSiswa: NilaiAkhirList,
 	}, nil
 }
 

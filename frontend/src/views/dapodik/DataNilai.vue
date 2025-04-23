@@ -65,11 +65,12 @@ const fetchMapel = async () => {
 }
 
 // ==============================
-const dataSiswaAktif = ref([])
+const dataNilaiSiswa = ref([])
 onMounted(async () => {
-    dataSiswaAktif.value = store.getters["sekolahService/getSiswaAktif"]
-    if (!dataSiswaAktif.value || dataSiswaAktif.value.length === 0) {
-        dataSiswaAktif.value = await fetchSiswaAktif()
+    // console.log("onMounted data nilai")
+    dataNilaiSiswa.value = store.getters["sekolahService/getNilaiSiswa"]
+    if (!dataNilaiSiswa.value || dataNilaiSiswa.value.length === 0) {
+        dataNilaiSiswa.value = await fetchNilaiSiswa()
 
     }
 });
@@ -79,11 +80,11 @@ onMounted(async () => {
 import { useSekolahService } from '@/composables/useSekolahService'
 const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
 const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
-const { fetchSiswaAktif } = useSekolahService(schemaname, selectedSemester)
+const { fetchNilaiSiswa } = useSekolahService(schemaname, selectedSemester)
 // ================================
 watch(selectedSemester, async (newVal, oldVal) => {
-    console.log(newVal)
-    dataSiswaAktif.value = await fetchSiswaAktif()
+    // console.log(newVal)
+    dataNilaiSiswa.value = await fetchNilaiSiswa()
 })
 import DialogLoading from "@/components/DialogLoading.vue";
 
@@ -206,13 +207,13 @@ const cancelImport = () => {
 const onRowExpand = (event) => {
     toast.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.nmKelas, life: 3000 });
     // Ambil data mapel untuk kelas tertentu
-    console.log(event)
+    // console.log(event)
 };
 const onRowCollapse = (event) => {
     toast.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.nmKelas, life: 3000 });
 };
 const expandAll = () => {
-    expandedRows.value = dataSiswaAktif.value.reduce((acc, p) => (acc[p.rombonganBelajarId] = true) && acc, {});
+    expandedRows.value = dataNilaiSiswa.value.reduce((acc, p) => (acc[p.rombonganBelajarId] = true) && acc, {});
 };
 const collapseAll = () => {
     expandedRows.value = null;
@@ -289,6 +290,27 @@ const simpanKeDatabase = () => {
     saveToDB(req_Object, endpoint)
     // localStorage.setItem("unsavedPembelajaran", JSON.stringify(pembelajaran.value));
 }
+
+// Menentukan semester berdasarkan tingkat pendidikan
+function mapSemesterToLokal(semesterCode, tingkatPendidikan, semesterAktif) {
+    const currentIndex = (tingkatPendidikan - 10) * 2 + (semesterAktif - 1);
+
+    // Buat semua semester dari awal (semester 1 = 10 ganjil)
+    const allSemester = [];
+    for (let i = 0; i < 6; i++) {
+        const tahun = 2021 + Math.floor(i / 2); // ubah sesuai tahun ajaran awal sekolah
+        const sem = (i % 2) + 1;
+        allSemester.push({
+            kode: `${tahun}${sem}`, // misal 20221, 20222, dst
+            semesterLokal: i + 1
+        });
+    }
+
+    // Cari semester lokal yang sesuai
+    const found = allSemester.find(s => s.kode === semesterCode);
+    return found ? found.semesterLokal : null;
+}
+
 </script>
 <template>
 
@@ -297,7 +319,7 @@ const simpanKeDatabase = () => {
             <div class="w-full my-2 container">
                 <div>
                     <Toolbar>
-                            <!-- <template #start>
+                        <!-- <template #start>
                                 <div class="flex flex-wrap gap-2 items-center justify-between">
                                     <div class="flex">
                                         <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
@@ -307,18 +329,18 @@ const simpanKeDatabase = () => {
                                     </div>
                                 </div>
                             </template> -->
-                            <template #start>
-                                <IconField>
-                                    <InputIcon>
-                                        <i class="pi pi-search" />
-                                    </InputIcon>
-                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                </IconField>
-                            </template>
-                        </Toolbar>
+                        <template #start>
+                            <IconField>
+                                <InputIcon>
+                                    <i class="pi pi-search" />
+                                </InputIcon>
+                                <InputText v-model="filters['global'].value" placeholder="Search..." />
+                            </IconField>
+                        </template>
+                    </Toolbar>
                 </div>
-                <DataTable ref="dt" v-model:expandedRows="expandedRows" stripedRows size="small" :value="dataSiswaAktif"
-                    @rowExpand="onRowExpand" @rowCollapse="onRowCollapse" dataKey="anggotaRombelId" :paginator="true"
+                <DataTable ref="dt" v-model:expandedRows="expandedRows" stripedRows size="small" :value="dataNilaiSiswa"
+                    @rowExpand="onRowExpand" @rowCollapse="onRowCollapse" dataKey="pesertaDidikId" :paginator="true"
                     :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[10, 20, 50]"
@@ -329,10 +351,13 @@ const simpanKeDatabase = () => {
                             <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" />
                         </div>
                     </template>
+                    <template #empty>
+                        <p class="flex justify-center text-xl">Data Tidak ditemukan.</p>
+                    </template>
                     <Column expander style="width: 5rem" />
                     <Column field="nmSiswa" header="Name"></Column>
-                    <Column field="nmKelas" header="Name"></Column>
-                    <!-- <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column> -->
+                    <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
+                    <Column field="nmKelas" header="Nama Kelas"></Column>
                     <!-- <Column field="jurusan.namaJurusan" header="Jurusan" sortable></Column> -->
                     <!-- <Column field="waliKelas" header="Wali Kelas"></Column> -->
                     <!-- <Column field="ptk.nama" header="Jml.Mapel"></Column> -->
@@ -345,19 +370,15 @@ const simpanKeDatabase = () => {
                     </Column>
                     <template #expansion="slotProps">
                         <div class="p-4">
-                            <DataTable :value="slotProps.data.nilai">
-                                <!-- <p>{{ slotProps.data }}</p> -->
-                                <Column field="mataPelajaran.nama" header="Nama mata pelajaran"></Column>
-                                <Column field="nilaiPeng" header="1">
-                                
-                                </Column>
-                                <Column field="nilaiPeng" header="2"></Column>
-                                <Column field="ptkTerdaftar.ptk.nama" header="3"></Column>
-                                <Column field="ptkTerdaftar.ptk.nama" header="4"></Column>
-                                <Column field="ptkTerdaftar.ptk.nama" header="5"></Column>
-                                <Column field="ptkTerdaftar.ptk.nama" header="6"></Column>
-
-                                <!-- <Column field="date" header="Date" sortable></Column> -->
+                            <DataTable :value="slotProps.data.nilaiAkhir">
+                                {{ slotProps.data }}
+                                <Column field="mataPelajaran.nama" header="Mata pelajaran"></Column>
+                                <Column field="" header="Semester 1"></Column>
+                                <Column field="" header="Semester 2"></Column>
+                                <Column field="" header="Semester 3"></Column>
+                                <Column field="" header="Semester 4"></Column>
+                                <Column field="" header="Semester 5"></Column>
+                                <Column field="" header="Semester 6"></Column>
                             </DataTable>
                         </div>
                     </template>

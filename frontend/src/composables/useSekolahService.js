@@ -130,6 +130,28 @@ export function useSekolahService(schemaname, selectedSemester) {
       }
     } catch (error) {}
   };
+
+  const fetchNilaiSiswa = async (pesertaDidikId = null) => {
+    const payload = {
+      // page: 1,
+      semesterId: selectedSemester.value.semesterId,
+      schemaname: schemaname.value,
+    };
+    // console.log(payload);
+    if (pesertaDidikId) {
+      payload.peserta_didik_id = pesertaDidikId;
+    }
+    const results = await store.dispatch(
+      "sekolahService/fetchNilaiSiswa",
+      payload
+    );
+    // console.log(results)
+    return results;
+    // siswaList.value = results;
+    // results.forEach(item => {
+    //     siswa.value.push(item)
+    // });
+  };
   return {
     fetchGuru,
     guruList,
@@ -140,5 +162,6 @@ export function useSekolahService(schemaname, selectedSemester) {
     kelasList,
     fetchSemester,
     fetchSiswaAktif,
+    fetchNilaiSiswa,
   };
 }

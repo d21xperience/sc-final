@@ -809,6 +809,53 @@ func (x *GetSemesterResponse) GetSemester() []*Semester {
 	return nil
 }
 
+//	message GetCurrentSemesterRequest {
+//	  // string semester_id = 1;
+//	}
+type GetCurrentSemesterResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Semester      *Semester              `protobuf:"bytes,1,opt,name=semester,proto3" json:"semester,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCurrentSemesterResponse) Reset() {
+	*x = GetCurrentSemesterResponse{}
+	mi := &file_sekolah_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCurrentSemesterResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCurrentSemesterResponse) ProtoMessage() {}
+
+func (x *GetCurrentSemesterResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_sekolah_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCurrentSemesterResponse.ProtoReflect.Descriptor instead.
+func (*GetCurrentSemesterResponse) Descriptor() ([]byte, []int) {
+	return file_sekolah_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetCurrentSemesterResponse) GetSemester() *Semester {
+	if x != nil {
+		return x.Semester
+	}
+	return nil
+}
+
 type UpdateSemesterRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Semester      *Semester              `protobuf:"bytes,1,opt,name=semester,proto3" json:"semester,omitempty"`
@@ -818,7 +865,7 @@ type UpdateSemesterRequest struct {
 
 func (x *UpdateSemesterRequest) Reset() {
 	*x = UpdateSemesterRequest{}
-	mi := &file_sekolah_proto_msgTypes[14]
+	mi := &file_sekolah_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -830,7 +877,7 @@ func (x *UpdateSemesterRequest) String() string {
 func (*UpdateSemesterRequest) ProtoMessage() {}
 
 func (x *UpdateSemesterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[14]
+	mi := &file_sekolah_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -843,7 +890,7 @@ func (x *UpdateSemesterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSemesterRequest.ProtoReflect.Descriptor instead.
 func (*UpdateSemesterRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{14}
+	return file_sekolah_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *UpdateSemesterRequest) GetSemester() *Semester {
@@ -863,7 +910,7 @@ type UpdateSemesterResponse struct {
 
 func (x *UpdateSemesterResponse) Reset() {
 	*x = UpdateSemesterResponse{}
-	mi := &file_sekolah_proto_msgTypes[15]
+	mi := &file_sekolah_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -875,7 +922,7 @@ func (x *UpdateSemesterResponse) String() string {
 func (*UpdateSemesterResponse) ProtoMessage() {}
 
 func (x *UpdateSemesterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[15]
+	mi := &file_sekolah_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -888,7 +935,7 @@ func (x *UpdateSemesterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSemesterResponse.ProtoReflect.Descriptor instead.
 func (*UpdateSemesterResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{15}
+	return file_sekolah_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *UpdateSemesterResponse) GetMessage() string {
@@ -914,7 +961,7 @@ type DeleteSemesterRequest struct {
 
 func (x *DeleteSemesterRequest) Reset() {
 	*x = DeleteSemesterRequest{}
-	mi := &file_sekolah_proto_msgTypes[16]
+	mi := &file_sekolah_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -926,7 +973,7 @@ func (x *DeleteSemesterRequest) String() string {
 func (*DeleteSemesterRequest) ProtoMessage() {}
 
 func (x *DeleteSemesterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[16]
+	mi := &file_sekolah_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -939,7 +986,7 @@ func (x *DeleteSemesterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteSemesterRequest.ProtoReflect.Descriptor instead.
 func (*DeleteSemesterRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{16}
+	return file_sekolah_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *DeleteSemesterRequest) GetSemesterId() string {
@@ -959,7 +1006,7 @@ type DeleteSemesterResponse struct {
 
 func (x *DeleteSemesterResponse) Reset() {
 	*x = DeleteSemesterResponse{}
-	mi := &file_sekolah_proto_msgTypes[17]
+	mi := &file_sekolah_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -971,7 +1018,7 @@ func (x *DeleteSemesterResponse) String() string {
 func (*DeleteSemesterResponse) ProtoMessage() {}
 
 func (x *DeleteSemesterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[17]
+	mi := &file_sekolah_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -984,7 +1031,7 @@ func (x *DeleteSemesterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteSemesterResponse.ProtoReflect.Descriptor instead.
 func (*DeleteSemesterResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{17}
+	return file_sekolah_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *DeleteSemesterResponse) GetMessage() string {
@@ -1022,7 +1069,7 @@ type Sekolah struct {
 
 func (x *Sekolah) Reset() {
 	*x = Sekolah{}
-	mi := &file_sekolah_proto_msgTypes[18]
+	mi := &file_sekolah_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1034,7 +1081,7 @@ func (x *Sekolah) String() string {
 func (*Sekolah) ProtoMessage() {}
 
 func (x *Sekolah) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[18]
+	mi := &file_sekolah_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1047,7 +1094,7 @@ func (x *Sekolah) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Sekolah.ProtoReflect.Descriptor instead.
 func (*Sekolah) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{18}
+	return file_sekolah_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *Sekolah) GetSekolahId() int32 {
@@ -1163,7 +1210,7 @@ type SekolahDapo struct {
 
 func (x *SekolahDapo) Reset() {
 	*x = SekolahDapo{}
-	mi := &file_sekolah_proto_msgTypes[19]
+	mi := &file_sekolah_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1175,7 +1222,7 @@ func (x *SekolahDapo) String() string {
 func (*SekolahDapo) ProtoMessage() {}
 
 func (x *SekolahDapo) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[19]
+	mi := &file_sekolah_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1188,7 +1235,7 @@ func (x *SekolahDapo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SekolahDapo.ProtoReflect.Descriptor instead.
 func (*SekolahDapo) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{19}
+	return file_sekolah_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *SekolahDapo) GetSekolahId() string {
@@ -1347,7 +1394,7 @@ type TabelSekolahRequest struct {
 
 func (x *TabelSekolahRequest) Reset() {
 	*x = TabelSekolahRequest{}
-	mi := &file_sekolah_proto_msgTypes[20]
+	mi := &file_sekolah_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1359,7 +1406,7 @@ func (x *TabelSekolahRequest) String() string {
 func (*TabelSekolahRequest) ProtoMessage() {}
 
 func (x *TabelSekolahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[20]
+	mi := &file_sekolah_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1372,7 +1419,7 @@ func (x *TabelSekolahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TabelSekolahRequest.ProtoReflect.Descriptor instead.
 func (*TabelSekolahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{20}
+	return file_sekolah_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *TabelSekolahRequest) GetSekolah() *Sekolah {
@@ -1392,7 +1439,7 @@ type TabelSekolahResponse struct {
 
 func (x *TabelSekolahResponse) Reset() {
 	*x = TabelSekolahResponse{}
-	mi := &file_sekolah_proto_msgTypes[21]
+	mi := &file_sekolah_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1404,7 +1451,7 @@ func (x *TabelSekolahResponse) String() string {
 func (*TabelSekolahResponse) ProtoMessage() {}
 
 func (x *TabelSekolahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[21]
+	mi := &file_sekolah_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1417,7 +1464,7 @@ func (x *TabelSekolahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TabelSekolahResponse.ProtoReflect.Descriptor instead.
 func (*TabelSekolahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{21}
+	return file_sekolah_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *TabelSekolahResponse) GetMessage() string {
@@ -1444,7 +1491,7 @@ type SchoolRequest struct {
 
 func (x *SchoolRequest) Reset() {
 	*x = SchoolRequest{}
-	mi := &file_sekolah_proto_msgTypes[22]
+	mi := &file_sekolah_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1456,7 +1503,7 @@ func (x *SchoolRequest) String() string {
 func (*SchoolRequest) ProtoMessage() {}
 
 func (x *SchoolRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[22]
+	mi := &file_sekolah_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1469,7 +1516,7 @@ func (x *SchoolRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SchoolRequest.ProtoReflect.Descriptor instead.
 func (*SchoolRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{22}
+	return file_sekolah_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *SchoolRequest) GetSchoolId() string {
@@ -1496,7 +1543,7 @@ type SchoolResponse struct {
 
 func (x *SchoolResponse) Reset() {
 	*x = SchoolResponse{}
-	mi := &file_sekolah_proto_msgTypes[23]
+	mi := &file_sekolah_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1508,7 +1555,7 @@ func (x *SchoolResponse) String() string {
 func (*SchoolResponse) ProtoMessage() {}
 
 func (x *SchoolResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[23]
+	mi := &file_sekolah_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1521,7 +1568,7 @@ func (x *SchoolResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SchoolResponse.ProtoReflect.Descriptor instead.
 func (*SchoolResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{23}
+	return file_sekolah_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *SchoolResponse) GetSchoolName() string {
@@ -1547,7 +1594,7 @@ type SekolahTabelTenantRequest struct {
 
 func (x *SekolahTabelTenantRequest) Reset() {
 	*x = SekolahTabelTenantRequest{}
-	mi := &file_sekolah_proto_msgTypes[24]
+	mi := &file_sekolah_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1559,7 +1606,7 @@ func (x *SekolahTabelTenantRequest) String() string {
 func (*SekolahTabelTenantRequest) ProtoMessage() {}
 
 func (x *SekolahTabelTenantRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[24]
+	mi := &file_sekolah_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1572,7 +1619,7 @@ func (x *SekolahTabelTenantRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SekolahTabelTenantRequest.ProtoReflect.Descriptor instead.
 func (*SekolahTabelTenantRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{24}
+	return file_sekolah_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *SekolahTabelTenantRequest) GetSekolahId() int32 {
@@ -1593,7 +1640,7 @@ type SekolahTabelTenantResponse struct {
 
 func (x *SekolahTabelTenantResponse) Reset() {
 	*x = SekolahTabelTenantResponse{}
-	mi := &file_sekolah_proto_msgTypes[25]
+	mi := &file_sekolah_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1605,7 +1652,7 @@ func (x *SekolahTabelTenantResponse) String() string {
 func (*SekolahTabelTenantResponse) ProtoMessage() {}
 
 func (x *SekolahTabelTenantResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[25]
+	mi := &file_sekolah_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1618,7 +1665,7 @@ func (x *SekolahTabelTenantResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SekolahTabelTenantResponse.ProtoReflect.Descriptor instead.
 func (*SekolahTabelTenantResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{25}
+	return file_sekolah_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *SekolahTabelTenantResponse) GetSekolahId() int32 {
@@ -1652,7 +1699,7 @@ type CreateSekolahRequest struct {
 
 func (x *CreateSekolahRequest) Reset() {
 	*x = CreateSekolahRequest{}
-	mi := &file_sekolah_proto_msgTypes[26]
+	mi := &file_sekolah_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1664,7 +1711,7 @@ func (x *CreateSekolahRequest) String() string {
 func (*CreateSekolahRequest) ProtoMessage() {}
 
 func (x *CreateSekolahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[26]
+	mi := &file_sekolah_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1677,7 +1724,7 @@ func (x *CreateSekolahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSekolahRequest.ProtoReflect.Descriptor instead.
 func (*CreateSekolahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{26}
+	return file_sekolah_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *CreateSekolahRequest) GetSchemaname() string {
@@ -1704,7 +1751,7 @@ type CreateSekolahResponse struct {
 
 func (x *CreateSekolahResponse) Reset() {
 	*x = CreateSekolahResponse{}
-	mi := &file_sekolah_proto_msgTypes[27]
+	mi := &file_sekolah_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1716,7 +1763,7 @@ func (x *CreateSekolahResponse) String() string {
 func (*CreateSekolahResponse) ProtoMessage() {}
 
 func (x *CreateSekolahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[27]
+	mi := &file_sekolah_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1729,7 +1776,7 @@ func (x *CreateSekolahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSekolahResponse.ProtoReflect.Descriptor instead.
 func (*CreateSekolahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{27}
+	return file_sekolah_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *CreateSekolahResponse) GetMessage() string {
@@ -1755,7 +1802,7 @@ type GetSekolahRequest struct {
 
 func (x *GetSekolahRequest) Reset() {
 	*x = GetSekolahRequest{}
-	mi := &file_sekolah_proto_msgTypes[28]
+	mi := &file_sekolah_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1767,7 +1814,7 @@ func (x *GetSekolahRequest) String() string {
 func (*GetSekolahRequest) ProtoMessage() {}
 
 func (x *GetSekolahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[28]
+	mi := &file_sekolah_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1780,7 +1827,7 @@ func (x *GetSekolahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSekolahRequest.ProtoReflect.Descriptor instead.
 func (*GetSekolahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{28}
+	return file_sekolah_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *GetSekolahRequest) GetSchemaname() string {
@@ -1799,7 +1846,7 @@ type GetSekolahResponse struct {
 
 func (x *GetSekolahResponse) Reset() {
 	*x = GetSekolahResponse{}
-	mi := &file_sekolah_proto_msgTypes[29]
+	mi := &file_sekolah_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1811,7 +1858,7 @@ func (x *GetSekolahResponse) String() string {
 func (*GetSekolahResponse) ProtoMessage() {}
 
 func (x *GetSekolahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[29]
+	mi := &file_sekolah_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1824,7 +1871,7 @@ func (x *GetSekolahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSekolahResponse.ProtoReflect.Descriptor instead.
 func (*GetSekolahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{29}
+	return file_sekolah_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *GetSekolahResponse) GetSekolah() *SekolahDapo {
@@ -1844,7 +1891,7 @@ type UpdateSekolahRequest struct {
 
 func (x *UpdateSekolahRequest) Reset() {
 	*x = UpdateSekolahRequest{}
-	mi := &file_sekolah_proto_msgTypes[30]
+	mi := &file_sekolah_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1856,7 +1903,7 @@ func (x *UpdateSekolahRequest) String() string {
 func (*UpdateSekolahRequest) ProtoMessage() {}
 
 func (x *UpdateSekolahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[30]
+	mi := &file_sekolah_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1869,7 +1916,7 @@ func (x *UpdateSekolahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSekolahRequest.ProtoReflect.Descriptor instead.
 func (*UpdateSekolahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{30}
+	return file_sekolah_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *UpdateSekolahRequest) GetSchemaname() string {
@@ -1896,7 +1943,7 @@ type UpdateSekolahResponse struct {
 
 func (x *UpdateSekolahResponse) Reset() {
 	*x = UpdateSekolahResponse{}
-	mi := &file_sekolah_proto_msgTypes[31]
+	mi := &file_sekolah_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1908,7 +1955,7 @@ func (x *UpdateSekolahResponse) String() string {
 func (*UpdateSekolahResponse) ProtoMessage() {}
 
 func (x *UpdateSekolahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[31]
+	mi := &file_sekolah_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1921,7 +1968,7 @@ func (x *UpdateSekolahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSekolahResponse.ProtoReflect.Descriptor instead.
 func (*UpdateSekolahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{31}
+	return file_sekolah_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *UpdateSekolahResponse) GetMessage() string {
@@ -1965,7 +2012,7 @@ type Siswa struct {
 
 func (x *Siswa) Reset() {
 	*x = Siswa{}
-	mi := &file_sekolah_proto_msgTypes[32]
+	mi := &file_sekolah_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1977,7 +2024,7 @@ func (x *Siswa) String() string {
 func (*Siswa) ProtoMessage() {}
 
 func (x *Siswa) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[32]
+	mi := &file_sekolah_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1990,7 +2037,7 @@ func (x *Siswa) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Siswa.ProtoReflect.Descriptor instead.
 func (*Siswa) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{32}
+	return file_sekolah_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *Siswa) GetPesertaDidikId() string {
@@ -2139,7 +2186,7 @@ type SiswaPelengkap struct {
 
 func (x *SiswaPelengkap) Reset() {
 	*x = SiswaPelengkap{}
-	mi := &file_sekolah_proto_msgTypes[33]
+	mi := &file_sekolah_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2151,7 +2198,7 @@ func (x *SiswaPelengkap) String() string {
 func (*SiswaPelengkap) ProtoMessage() {}
 
 func (x *SiswaPelengkap) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[33]
+	mi := &file_sekolah_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2164,7 +2211,7 @@ func (x *SiswaPelengkap) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SiswaPelengkap.ProtoReflect.Descriptor instead.
 func (*SiswaPelengkap) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{33}
+	return file_sekolah_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *SiswaPelengkap) GetPelengkapSiswaId() string {
@@ -2262,7 +2309,7 @@ type CreateSiswaRequest struct {
 
 func (x *CreateSiswaRequest) Reset() {
 	*x = CreateSiswaRequest{}
-	mi := &file_sekolah_proto_msgTypes[34]
+	mi := &file_sekolah_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2274,7 +2321,7 @@ func (x *CreateSiswaRequest) String() string {
 func (*CreateSiswaRequest) ProtoMessage() {}
 
 func (x *CreateSiswaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[34]
+	mi := &file_sekolah_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2287,7 +2334,7 @@ func (x *CreateSiswaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSiswaRequest.ProtoReflect.Descriptor instead.
 func (*CreateSiswaRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{34}
+	return file_sekolah_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *CreateSiswaRequest) GetSchemaname() string {
@@ -2314,7 +2361,7 @@ type CreateSiswaResponse struct {
 
 func (x *CreateSiswaResponse) Reset() {
 	*x = CreateSiswaResponse{}
-	mi := &file_sekolah_proto_msgTypes[35]
+	mi := &file_sekolah_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2326,7 +2373,7 @@ func (x *CreateSiswaResponse) String() string {
 func (*CreateSiswaResponse) ProtoMessage() {}
 
 func (x *CreateSiswaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[35]
+	mi := &file_sekolah_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2339,7 +2386,7 @@ func (x *CreateSiswaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSiswaResponse.ProtoReflect.Descriptor instead.
 func (*CreateSiswaResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{35}
+	return file_sekolah_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *CreateSiswaResponse) GetMessage() string {
@@ -2368,7 +2415,7 @@ type CreateBanyakSiswaRequest struct {
 
 func (x *CreateBanyakSiswaRequest) Reset() {
 	*x = CreateBanyakSiswaRequest{}
-	mi := &file_sekolah_proto_msgTypes[36]
+	mi := &file_sekolah_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2380,7 +2427,7 @@ func (x *CreateBanyakSiswaRequest) String() string {
 func (*CreateBanyakSiswaRequest) ProtoMessage() {}
 
 func (x *CreateBanyakSiswaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[36]
+	mi := &file_sekolah_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2393,7 +2440,7 @@ func (x *CreateBanyakSiswaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakSiswaRequest.ProtoReflect.Descriptor instead.
 func (*CreateBanyakSiswaRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{36}
+	return file_sekolah_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *CreateBanyakSiswaRequest) GetSchemaname() string {
@@ -2427,7 +2474,7 @@ type CreateBanyakSiswaResponse struct {
 
 func (x *CreateBanyakSiswaResponse) Reset() {
 	*x = CreateBanyakSiswaResponse{}
-	mi := &file_sekolah_proto_msgTypes[37]
+	mi := &file_sekolah_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2439,7 +2486,7 @@ func (x *CreateBanyakSiswaResponse) String() string {
 func (*CreateBanyakSiswaResponse) ProtoMessage() {}
 
 func (x *CreateBanyakSiswaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[37]
+	mi := &file_sekolah_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2452,7 +2499,7 @@ func (x *CreateBanyakSiswaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakSiswaResponse.ProtoReflect.Descriptor instead.
 func (*CreateBanyakSiswaResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{37}
+	return file_sekolah_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *CreateBanyakSiswaResponse) GetMessage() string {
@@ -2480,7 +2527,7 @@ type GetSiswaRequest struct {
 
 func (x *GetSiswaRequest) Reset() {
 	*x = GetSiswaRequest{}
-	mi := &file_sekolah_proto_msgTypes[38]
+	mi := &file_sekolah_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2492,7 +2539,7 @@ func (x *GetSiswaRequest) String() string {
 func (*GetSiswaRequest) ProtoMessage() {}
 
 func (x *GetSiswaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[38]
+	mi := &file_sekolah_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2505,7 +2552,7 @@ func (x *GetSiswaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSiswaRequest.ProtoReflect.Descriptor instead.
 func (*GetSiswaRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{38}
+	return file_sekolah_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *GetSiswaRequest) GetSchemaname() string {
@@ -2538,7 +2585,7 @@ type GetSiswaResponse struct {
 
 func (x *GetSiswaResponse) Reset() {
 	*x = GetSiswaResponse{}
-	mi := &file_sekolah_proto_msgTypes[39]
+	mi := &file_sekolah_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2550,7 +2597,7 @@ func (x *GetSiswaResponse) String() string {
 func (*GetSiswaResponse) ProtoMessage() {}
 
 func (x *GetSiswaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[39]
+	mi := &file_sekolah_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2563,7 +2610,7 @@ func (x *GetSiswaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSiswaResponse.ProtoReflect.Descriptor instead.
 func (*GetSiswaResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{39}
+	return file_sekolah_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *GetSiswaResponse) GetSiswa() []*SiswaPelengkap {
@@ -2584,7 +2631,7 @@ type UpdateSiswaRequest struct {
 
 func (x *UpdateSiswaRequest) Reset() {
 	*x = UpdateSiswaRequest{}
-	mi := &file_sekolah_proto_msgTypes[40]
+	mi := &file_sekolah_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2596,7 +2643,7 @@ func (x *UpdateSiswaRequest) String() string {
 func (*UpdateSiswaRequest) ProtoMessage() {}
 
 func (x *UpdateSiswaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[40]
+	mi := &file_sekolah_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2609,7 +2656,7 @@ func (x *UpdateSiswaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSiswaRequest.ProtoReflect.Descriptor instead.
 func (*UpdateSiswaRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{40}
+	return file_sekolah_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *UpdateSiswaRequest) GetSchemaname() string {
@@ -2643,7 +2690,7 @@ type UpdateSiswaResponse struct {
 
 func (x *UpdateSiswaResponse) Reset() {
 	*x = UpdateSiswaResponse{}
-	mi := &file_sekolah_proto_msgTypes[41]
+	mi := &file_sekolah_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2655,7 +2702,7 @@ func (x *UpdateSiswaResponse) String() string {
 func (*UpdateSiswaResponse) ProtoMessage() {}
 
 func (x *UpdateSiswaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[41]
+	mi := &file_sekolah_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2668,7 +2715,7 @@ func (x *UpdateSiswaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSiswaResponse.ProtoReflect.Descriptor instead.
 func (*UpdateSiswaResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{41}
+	return file_sekolah_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *UpdateSiswaResponse) GetMessage() string {
@@ -2695,7 +2742,7 @@ type DeleteSiswaRequest struct {
 
 func (x *DeleteSiswaRequest) Reset() {
 	*x = DeleteSiswaRequest{}
-	mi := &file_sekolah_proto_msgTypes[42]
+	mi := &file_sekolah_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2707,7 +2754,7 @@ func (x *DeleteSiswaRequest) String() string {
 func (*DeleteSiswaRequest) ProtoMessage() {}
 
 func (x *DeleteSiswaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[42]
+	mi := &file_sekolah_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2720,7 +2767,7 @@ func (x *DeleteSiswaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteSiswaRequest.ProtoReflect.Descriptor instead.
 func (*DeleteSiswaRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{42}
+	return file_sekolah_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *DeleteSiswaRequest) GetSchemaname() string {
@@ -2747,7 +2794,7 @@ type DeleteSiswaResponse struct {
 
 func (x *DeleteSiswaResponse) Reset() {
 	*x = DeleteSiswaResponse{}
-	mi := &file_sekolah_proto_msgTypes[43]
+	mi := &file_sekolah_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2759,7 +2806,7 @@ func (x *DeleteSiswaResponse) String() string {
 func (*DeleteSiswaResponse) ProtoMessage() {}
 
 func (x *DeleteSiswaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[43]
+	mi := &file_sekolah_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2772,7 +2819,7 @@ func (x *DeleteSiswaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteSiswaResponse.ProtoReflect.Descriptor instead.
 func (*DeleteSiswaResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{43}
+	return file_sekolah_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *DeleteSiswaResponse) GetMessage() string {
@@ -2800,7 +2847,7 @@ type SearchSiswaRequest struct {
 
 func (x *SearchSiswaRequest) Reset() {
 	*x = SearchSiswaRequest{}
-	mi := &file_sekolah_proto_msgTypes[44]
+	mi := &file_sekolah_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2812,7 +2859,7 @@ func (x *SearchSiswaRequest) String() string {
 func (*SearchSiswaRequest) ProtoMessage() {}
 
 func (x *SearchSiswaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[44]
+	mi := &file_sekolah_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2825,7 +2872,7 @@ func (x *SearchSiswaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchSiswaRequest.ProtoReflect.Descriptor instead.
 func (*SearchSiswaRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{44}
+	return file_sekolah_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *SearchSiswaRequest) GetSchemaname() string {
@@ -2858,7 +2905,7 @@ type SearchSiswaResponse struct {
 
 func (x *SearchSiswaResponse) Reset() {
 	*x = SearchSiswaResponse{}
-	mi := &file_sekolah_proto_msgTypes[45]
+	mi := &file_sekolah_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2870,7 +2917,7 @@ func (x *SearchSiswaResponse) String() string {
 func (*SearchSiswaResponse) ProtoMessage() {}
 
 func (x *SearchSiswaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[45]
+	mi := &file_sekolah_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2883,7 +2930,7 @@ func (x *SearchSiswaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchSiswaResponse.ProtoReflect.Descriptor instead.
 func (*SearchSiswaResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{45}
+	return file_sekolah_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *SearchSiswaResponse) GetSiswa() []*Siswa {
@@ -2906,7 +2953,7 @@ type UploadDataSekolahRequest struct {
 
 func (x *UploadDataSekolahRequest) Reset() {
 	*x = UploadDataSekolahRequest{}
-	mi := &file_sekolah_proto_msgTypes[46]
+	mi := &file_sekolah_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2918,7 +2965,7 @@ func (x *UploadDataSekolahRequest) String() string {
 func (*UploadDataSekolahRequest) ProtoMessage() {}
 
 func (x *UploadDataSekolahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[46]
+	mi := &file_sekolah_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2931,7 +2978,7 @@ func (x *UploadDataSekolahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadDataSekolahRequest.ProtoReflect.Descriptor instead.
 func (*UploadDataSekolahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{46}
+	return file_sekolah_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *UploadDataSekolahRequest) GetUploadType() string {
@@ -2979,7 +3026,7 @@ type UploadDataSekolahResponse struct {
 
 func (x *UploadDataSekolahResponse) Reset() {
 	*x = UploadDataSekolahResponse{}
-	mi := &file_sekolah_proto_msgTypes[47]
+	mi := &file_sekolah_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2991,7 +3038,7 @@ func (x *UploadDataSekolahResponse) String() string {
 func (*UploadDataSekolahResponse) ProtoMessage() {}
 
 func (x *UploadDataSekolahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[47]
+	mi := &file_sekolah_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3004,7 +3051,7 @@ func (x *UploadDataSekolahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadDataSekolahResponse.ProtoReflect.Descriptor instead.
 func (*UploadDataSekolahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{47}
+	return file_sekolah_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *UploadDataSekolahResponse) GetMessage() string {
@@ -3032,7 +3079,7 @@ type DownloadDataSekolahRequest struct {
 
 func (x *DownloadDataSekolahRequest) Reset() {
 	*x = DownloadDataSekolahRequest{}
-	mi := &file_sekolah_proto_msgTypes[48]
+	mi := &file_sekolah_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3044,7 +3091,7 @@ func (x *DownloadDataSekolahRequest) String() string {
 func (*DownloadDataSekolahRequest) ProtoMessage() {}
 
 func (x *DownloadDataSekolahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[48]
+	mi := &file_sekolah_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3057,7 +3104,7 @@ func (x *DownloadDataSekolahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DownloadDataSekolahRequest.ProtoReflect.Descriptor instead.
 func (*DownloadDataSekolahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{48}
+	return file_sekolah_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *DownloadDataSekolahRequest) GetDownloadType() string {
@@ -3091,7 +3138,7 @@ type DownloadDataSekolahResponse struct {
 
 func (x *DownloadDataSekolahResponse) Reset() {
 	*x = DownloadDataSekolahResponse{}
-	mi := &file_sekolah_proto_msgTypes[49]
+	mi := &file_sekolah_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3103,7 +3150,7 @@ func (x *DownloadDataSekolahResponse) String() string {
 func (*DownloadDataSekolahResponse) ProtoMessage() {}
 
 func (x *DownloadDataSekolahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[49]
+	mi := &file_sekolah_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3116,7 +3163,7 @@ func (x *DownloadDataSekolahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DownloadDataSekolahResponse.ProtoReflect.Descriptor instead.
 func (*DownloadDataSekolahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{49}
+	return file_sekolah_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *DownloadDataSekolahResponse) GetFilename() string {
@@ -3142,14 +3189,14 @@ type Mapel1 struct {
 	KlpMpl              string                 `protobuf:"bytes,5,opt,name=klp_mpl,json=klpMpl,proto3" json:"klp_mpl,omitempty"`
 	KurikulumId         string                 `protobuf:"bytes,6,opt,name=kurikulum_id,json=kurikulumId,proto3" json:"kurikulum_id,omitempty"`
 	UrutRapor           int32                  `protobuf:"varint,7,opt,name=urut_rapor,json=urutRapor,proto3" json:"urut_rapor,omitempty"`
-	TingkatPendidikanId string                 `protobuf:"bytes,8,opt,name=tingkat_pendidikan_id,json=tingkatPendidikanId,proto3" json:"tingkat_pendidikan_id,omitempty"`
+	TingkatPendidikanId int32                  `protobuf:"varint,8,opt,name=tingkat_pendidikan_id,json=tingkatPendidikanId,proto3" json:"tingkat_pendidikan_id,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
 
 func (x *Mapel1) Reset() {
 	*x = Mapel1{}
-	mi := &file_sekolah_proto_msgTypes[50]
+	mi := &file_sekolah_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3161,7 +3208,7 @@ func (x *Mapel1) String() string {
 func (*Mapel1) ProtoMessage() {}
 
 func (x *Mapel1) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[50]
+	mi := &file_sekolah_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3174,7 +3221,7 @@ func (x *Mapel1) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Mapel1.ProtoReflect.Descriptor instead.
 func (*Mapel1) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{50}
+	return file_sekolah_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *Mapel1) GetIdMapMapel() int32 {
@@ -3226,11 +3273,11 @@ func (x *Mapel1) GetUrutRapor() int32 {
 	return 0
 }
 
-func (x *Mapel1) GetTingkatPendidikanId() string {
+func (x *Mapel1) GetTingkatPendidikanId() int32 {
 	if x != nil {
 		return x.TingkatPendidikanId
 	}
-	return ""
+	return 0
 }
 
 type Mapel struct {
@@ -3248,7 +3295,7 @@ type Mapel struct {
 
 func (x *Mapel) Reset() {
 	*x = Mapel{}
-	mi := &file_sekolah_proto_msgTypes[51]
+	mi := &file_sekolah_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3260,7 +3307,7 @@ func (x *Mapel) String() string {
 func (*Mapel) ProtoMessage() {}
 
 func (x *Mapel) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[51]
+	mi := &file_sekolah_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3273,7 +3320,7 @@ func (x *Mapel) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Mapel.ProtoReflect.Descriptor instead.
 func (*Mapel) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{51}
+	return file_sekolah_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *Mapel) GetMataPelajaranId() int32 {
@@ -3349,7 +3396,7 @@ type NilaiAkhir struct {
 
 func (x *NilaiAkhir) Reset() {
 	*x = NilaiAkhir{}
-	mi := &file_sekolah_proto_msgTypes[52]
+	mi := &file_sekolah_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3361,7 +3408,7 @@ func (x *NilaiAkhir) String() string {
 func (*NilaiAkhir) ProtoMessage() {}
 
 func (x *NilaiAkhir) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[52]
+	mi := &file_sekolah_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3374,7 +3421,7 @@ func (x *NilaiAkhir) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NilaiAkhir.ProtoReflect.Descriptor instead.
 func (*NilaiAkhir) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{52}
+	return file_sekolah_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *NilaiAkhir) GetIdNilaiAkhir() string {
@@ -3490,20 +3537,20 @@ func (x *NilaiAkhir) GetMataPelajaran() *Mapel {
 }
 
 type NilaiSiswa struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	PesertaDidikId     string                 `protobuf:"bytes,1,opt,name=peserta_didik_id,json=pesertaDidikId,proto3" json:"peserta_didik_id,omitempty"`
-	NmSiswa            string                 `protobuf:"bytes,2,opt,name=nm_siswa,json=nmSiswa,proto3" json:"nm_siswa,omitempty"`
-	RombonganBelajarId string                 `protobuf:"bytes,3,opt,name=rombongan_belajar_id,json=rombonganBelajarId,proto3" json:"rombongan_belajar_id,omitempty"`
-	NmKelas            string                 `protobuf:"bytes,4,opt,name=nm_kelas,json=nmKelas,proto3" json:"nm_kelas,omitempty"`
-	SemesterId         string                 `protobuf:"bytes,5,opt,name=semester_id,json=semesterId,proto3" json:"semester_id,omitempty"`
-	NilaiAkhir         []*NilaiAkhir          `protobuf:"bytes,6,rep,name=nilai_akhir,json=nilaiAkhir,proto3" json:"nilai_akhir,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	PesertaDidikId      string                 `protobuf:"bytes,1,opt,name=peserta_didik_id,json=pesertaDidikId,proto3" json:"peserta_didik_id,omitempty"`
+	NmSiswa             string                 `protobuf:"bytes,2,opt,name=nm_siswa,json=nmSiswa,proto3" json:"nm_siswa,omitempty"`
+	RombonganBelajarId  string                 `protobuf:"bytes,3,opt,name=rombongan_belajar_id,json=rombonganBelajarId,proto3" json:"rombongan_belajar_id,omitempty"`
+	NmKelas             string                 `protobuf:"bytes,4,opt,name=nm_kelas,json=nmKelas,proto3" json:"nm_kelas,omitempty"`
+	TingkatPendidikanId int32                  `protobuf:"varint,5,opt,name=tingkat_pendidikan_id,json=tingkatPendidikanId,proto3" json:"tingkat_pendidikan_id,omitempty"`
+	NilaiAkhir          []*NilaiAkhir          `protobuf:"bytes,6,rep,name=nilai_akhir,json=nilaiAkhir,proto3" json:"nilai_akhir,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *NilaiSiswa) Reset() {
 	*x = NilaiSiswa{}
-	mi := &file_sekolah_proto_msgTypes[53]
+	mi := &file_sekolah_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3515,7 +3562,7 @@ func (x *NilaiSiswa) String() string {
 func (*NilaiSiswa) ProtoMessage() {}
 
 func (x *NilaiSiswa) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[53]
+	mi := &file_sekolah_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3528,7 +3575,7 @@ func (x *NilaiSiswa) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NilaiSiswa.ProtoReflect.Descriptor instead.
 func (*NilaiSiswa) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{53}
+	return file_sekolah_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *NilaiSiswa) GetPesertaDidikId() string {
@@ -3559,11 +3606,11 @@ func (x *NilaiSiswa) GetNmKelas() string {
 	return ""
 }
 
-func (x *NilaiSiswa) GetSemesterId() string {
+func (x *NilaiSiswa) GetTingkatPendidikanId() int32 {
 	if x != nil {
-		return x.SemesterId
+		return x.TingkatPendidikanId
 	}
-	return ""
+	return 0
 }
 
 func (x *NilaiSiswa) GetNilaiAkhir() []*NilaiAkhir {
@@ -3583,7 +3630,7 @@ type CreateNilaiAkhirRequest struct {
 
 func (x *CreateNilaiAkhirRequest) Reset() {
 	*x = CreateNilaiAkhirRequest{}
-	mi := &file_sekolah_proto_msgTypes[54]
+	mi := &file_sekolah_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3595,7 +3642,7 @@ func (x *CreateNilaiAkhirRequest) String() string {
 func (*CreateNilaiAkhirRequest) ProtoMessage() {}
 
 func (x *CreateNilaiAkhirRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[54]
+	mi := &file_sekolah_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3608,7 +3655,7 @@ func (x *CreateNilaiAkhirRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateNilaiAkhirRequest.ProtoReflect.Descriptor instead.
 func (*CreateNilaiAkhirRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{54}
+	return file_sekolah_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *CreateNilaiAkhirRequest) GetSchemaname() string {
@@ -3635,7 +3682,7 @@ type CreateNilaiAkhirResponse struct {
 
 func (x *CreateNilaiAkhirResponse) Reset() {
 	*x = CreateNilaiAkhirResponse{}
-	mi := &file_sekolah_proto_msgTypes[55]
+	mi := &file_sekolah_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3647,7 +3694,7 @@ func (x *CreateNilaiAkhirResponse) String() string {
 func (*CreateNilaiAkhirResponse) ProtoMessage() {}
 
 func (x *CreateNilaiAkhirResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[55]
+	mi := &file_sekolah_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3660,7 +3707,7 @@ func (x *CreateNilaiAkhirResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateNilaiAkhirResponse.ProtoReflect.Descriptor instead.
 func (*CreateNilaiAkhirResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{55}
+	return file_sekolah_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *CreateNilaiAkhirResponse) GetMessage() string {
@@ -3678,17 +3725,17 @@ func (x *CreateNilaiAkhirResponse) GetStatus() bool {
 }
 
 type GetNilaiAkhirRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Schemaname    string                 `protobuf:"bytes,1,opt,name=schemaname,proto3" json:"schemaname,omitempty"`
-	SemesterId    string                 `protobuf:"bytes,2,opt,name=semester_id,json=semesterId,proto3" json:"semester_id,omitempty"`
-	IdNilaiAkhir  string                 `protobuf:"bytes,3,opt,name=id_nilai_akhir,json=idNilaiAkhir,proto3" json:"id_nilai_akhir,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Schemaname     string                 `protobuf:"bytes,1,opt,name=schemaname,proto3" json:"schemaname,omitempty"`
+	SemesterId     string                 `protobuf:"bytes,2,opt,name=semester_id,json=semesterId,proto3" json:"semester_id,omitempty"`
+	PesertaDidikId string                 `protobuf:"bytes,3,opt,name=peserta_didik_id,json=pesertaDidikId,proto3" json:"peserta_didik_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *GetNilaiAkhirRequest) Reset() {
 	*x = GetNilaiAkhirRequest{}
-	mi := &file_sekolah_proto_msgTypes[56]
+	mi := &file_sekolah_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3700,7 +3747,7 @@ func (x *GetNilaiAkhirRequest) String() string {
 func (*GetNilaiAkhirRequest) ProtoMessage() {}
 
 func (x *GetNilaiAkhirRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[56]
+	mi := &file_sekolah_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3713,7 +3760,7 @@ func (x *GetNilaiAkhirRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNilaiAkhirRequest.ProtoReflect.Descriptor instead.
 func (*GetNilaiAkhirRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{56}
+	return file_sekolah_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *GetNilaiAkhirRequest) GetSchemaname() string {
@@ -3730,23 +3777,23 @@ func (x *GetNilaiAkhirRequest) GetSemesterId() string {
 	return ""
 }
 
-func (x *GetNilaiAkhirRequest) GetIdNilaiAkhir() string {
+func (x *GetNilaiAkhirRequest) GetPesertaDidikId() string {
 	if x != nil {
-		return x.IdNilaiAkhir
+		return x.PesertaDidikId
 	}
 	return ""
 }
 
 type GetNilaiAkhirResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Nilai         []*NilaiAkhir          `protobuf:"bytes,1,rep,name=nilai,proto3" json:"nilai,omitempty"`
+	NilaiSiswa    []*NilaiSiswa          `protobuf:"bytes,1,rep,name=nilai_siswa,json=nilaiSiswa,proto3" json:"nilai_siswa,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetNilaiAkhirResponse) Reset() {
 	*x = GetNilaiAkhirResponse{}
-	mi := &file_sekolah_proto_msgTypes[57]
+	mi := &file_sekolah_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3758,7 +3805,7 @@ func (x *GetNilaiAkhirResponse) String() string {
 func (*GetNilaiAkhirResponse) ProtoMessage() {}
 
 func (x *GetNilaiAkhirResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[57]
+	mi := &file_sekolah_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3771,12 +3818,12 @@ func (x *GetNilaiAkhirResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNilaiAkhirResponse.ProtoReflect.Descriptor instead.
 func (*GetNilaiAkhirResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{57}
+	return file_sekolah_proto_rawDescGZIP(), []int{58}
 }
 
-func (x *GetNilaiAkhirResponse) GetNilai() []*NilaiAkhir {
+func (x *GetNilaiAkhirResponse) GetNilaiSiswa() []*NilaiSiswa {
 	if x != nil {
-		return x.Nilai
+		return x.NilaiSiswa
 	}
 	return nil
 }
@@ -3792,7 +3839,7 @@ type UpdateNilaiAkhirRequest struct {
 
 func (x *UpdateNilaiAkhirRequest) Reset() {
 	*x = UpdateNilaiAkhirRequest{}
-	mi := &file_sekolah_proto_msgTypes[58]
+	mi := &file_sekolah_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3804,7 +3851,7 @@ func (x *UpdateNilaiAkhirRequest) String() string {
 func (*UpdateNilaiAkhirRequest) ProtoMessage() {}
 
 func (x *UpdateNilaiAkhirRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[58]
+	mi := &file_sekolah_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3817,7 +3864,7 @@ func (x *UpdateNilaiAkhirRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateNilaiAkhirRequest.ProtoReflect.Descriptor instead.
 func (*UpdateNilaiAkhirRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{58}
+	return file_sekolah_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *UpdateNilaiAkhirRequest) GetSchemaname() string {
@@ -3851,7 +3898,7 @@ type UpdateNilaiAkhirResponse struct {
 
 func (x *UpdateNilaiAkhirResponse) Reset() {
 	*x = UpdateNilaiAkhirResponse{}
-	mi := &file_sekolah_proto_msgTypes[59]
+	mi := &file_sekolah_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3863,7 +3910,7 @@ func (x *UpdateNilaiAkhirResponse) String() string {
 func (*UpdateNilaiAkhirResponse) ProtoMessage() {}
 
 func (x *UpdateNilaiAkhirResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[59]
+	mi := &file_sekolah_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3876,7 +3923,7 @@ func (x *UpdateNilaiAkhirResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateNilaiAkhirResponse.ProtoReflect.Descriptor instead.
 func (*UpdateNilaiAkhirResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{59}
+	return file_sekolah_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *UpdateNilaiAkhirResponse) GetMessage() string {
@@ -3903,7 +3950,7 @@ type DeleteNilaiAkhirRequest struct {
 
 func (x *DeleteNilaiAkhirRequest) Reset() {
 	*x = DeleteNilaiAkhirRequest{}
-	mi := &file_sekolah_proto_msgTypes[60]
+	mi := &file_sekolah_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3915,7 +3962,7 @@ func (x *DeleteNilaiAkhirRequest) String() string {
 func (*DeleteNilaiAkhirRequest) ProtoMessage() {}
 
 func (x *DeleteNilaiAkhirRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[60]
+	mi := &file_sekolah_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3928,7 +3975,7 @@ func (x *DeleteNilaiAkhirRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteNilaiAkhirRequest.ProtoReflect.Descriptor instead.
 func (*DeleteNilaiAkhirRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{60}
+	return file_sekolah_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *DeleteNilaiAkhirRequest) GetSchemaname() string {
@@ -3955,7 +4002,7 @@ type DeleteNilaiAkhirResponse struct {
 
 func (x *DeleteNilaiAkhirResponse) Reset() {
 	*x = DeleteNilaiAkhirResponse{}
-	mi := &file_sekolah_proto_msgTypes[61]
+	mi := &file_sekolah_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3967,7 +4014,7 @@ func (x *DeleteNilaiAkhirResponse) String() string {
 func (*DeleteNilaiAkhirResponse) ProtoMessage() {}
 
 func (x *DeleteNilaiAkhirResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[61]
+	mi := &file_sekolah_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3980,7 +4027,7 @@ func (x *DeleteNilaiAkhirResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteNilaiAkhirResponse.ProtoReflect.Descriptor instead.
 func (*DeleteNilaiAkhirResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{61}
+	return file_sekolah_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *DeleteNilaiAkhirResponse) GetMessage() string {
@@ -4023,7 +4070,7 @@ type Kelas struct {
 
 func (x *Kelas) Reset() {
 	*x = Kelas{}
-	mi := &file_sekolah_proto_msgTypes[62]
+	mi := &file_sekolah_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4035,7 +4082,7 @@ func (x *Kelas) String() string {
 func (*Kelas) ProtoMessage() {}
 
 func (x *Kelas) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[62]
+	mi := &file_sekolah_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4048,7 +4095,7 @@ func (x *Kelas) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Kelas.ProtoReflect.Descriptor instead.
 func (*Kelas) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{62}
+	return file_sekolah_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *Kelas) GetRombonganBelajarId() string {
@@ -4188,7 +4235,7 @@ type CreateKelasRequest struct {
 
 func (x *CreateKelasRequest) Reset() {
 	*x = CreateKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[63]
+	mi := &file_sekolah_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4200,7 +4247,7 @@ func (x *CreateKelasRequest) String() string {
 func (*CreateKelasRequest) ProtoMessage() {}
 
 func (x *CreateKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[63]
+	mi := &file_sekolah_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4213,7 +4260,7 @@ func (x *CreateKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateKelasRequest.ProtoReflect.Descriptor instead.
 func (*CreateKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{63}
+	return file_sekolah_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *CreateKelasRequest) GetSchemaname() string {
@@ -4247,7 +4294,7 @@ type CreateKelasResponse struct {
 
 func (x *CreateKelasResponse) Reset() {
 	*x = CreateKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[64]
+	mi := &file_sekolah_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4259,7 +4306,7 @@ func (x *CreateKelasResponse) String() string {
 func (*CreateKelasResponse) ProtoMessage() {}
 
 func (x *CreateKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[64]
+	mi := &file_sekolah_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4272,7 +4319,7 @@ func (x *CreateKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateKelasResponse.ProtoReflect.Descriptor instead.
 func (*CreateKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{64}
+	return file_sekolah_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *CreateKelasResponse) GetMessage() string {
@@ -4301,7 +4348,7 @@ type CreateBanyakKelasRequest struct {
 
 func (x *CreateBanyakKelasRequest) Reset() {
 	*x = CreateBanyakKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[65]
+	mi := &file_sekolah_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4313,7 +4360,7 @@ func (x *CreateBanyakKelasRequest) String() string {
 func (*CreateBanyakKelasRequest) ProtoMessage() {}
 
 func (x *CreateBanyakKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[65]
+	mi := &file_sekolah_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4326,7 +4373,7 @@ func (x *CreateBanyakKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakKelasRequest.ProtoReflect.Descriptor instead.
 func (*CreateBanyakKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{65}
+	return file_sekolah_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *CreateBanyakKelasRequest) GetSchemaname() string {
@@ -4354,7 +4401,7 @@ type CreateBanyakKelasResponse struct {
 
 func (x *CreateBanyakKelasResponse) Reset() {
 	*x = CreateBanyakKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[66]
+	mi := &file_sekolah_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4366,7 +4413,7 @@ func (x *CreateBanyakKelasResponse) String() string {
 func (*CreateBanyakKelasResponse) ProtoMessage() {}
 
 func (x *CreateBanyakKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[66]
+	mi := &file_sekolah_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4379,7 +4426,7 @@ func (x *CreateBanyakKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakKelasResponse.ProtoReflect.Descriptor instead.
 func (*CreateBanyakKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{66}
+	return file_sekolah_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *CreateBanyakKelasResponse) GetMessage() string {
@@ -4416,7 +4463,7 @@ type GetKelasRequest struct {
 
 func (x *GetKelasRequest) Reset() {
 	*x = GetKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[67]
+	mi := &file_sekolah_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4428,7 +4475,7 @@ func (x *GetKelasRequest) String() string {
 func (*GetKelasRequest) ProtoMessage() {}
 
 func (x *GetKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[67]
+	mi := &file_sekolah_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4441,7 +4488,7 @@ func (x *GetKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetKelasRequest.ProtoReflect.Descriptor instead.
 func (*GetKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{67}
+	return file_sekolah_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *GetKelasRequest) GetSchemaname() string {
@@ -4488,7 +4535,7 @@ type GetKelasResponse struct {
 
 func (x *GetKelasResponse) Reset() {
 	*x = GetKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[68]
+	mi := &file_sekolah_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4500,7 +4547,7 @@ func (x *GetKelasResponse) String() string {
 func (*GetKelasResponse) ProtoMessage() {}
 
 func (x *GetKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[68]
+	mi := &file_sekolah_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4513,7 +4560,7 @@ func (x *GetKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetKelasResponse.ProtoReflect.Descriptor instead.
 func (*GetKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{68}
+	return file_sekolah_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *GetKelasResponse) GetKelas() []*Kelas {
@@ -4535,7 +4582,7 @@ type UpdateKelasRequest struct {
 
 func (x *UpdateKelasRequest) Reset() {
 	*x = UpdateKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[69]
+	mi := &file_sekolah_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4547,7 +4594,7 @@ func (x *UpdateKelasRequest) String() string {
 func (*UpdateKelasRequest) ProtoMessage() {}
 
 func (x *UpdateKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[69]
+	mi := &file_sekolah_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4560,7 +4607,7 @@ func (x *UpdateKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateKelasRequest.ProtoReflect.Descriptor instead.
 func (*UpdateKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{69}
+	return file_sekolah_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *UpdateKelasRequest) GetSchemaname() string {
@@ -4594,7 +4641,7 @@ type UpdateKelasResponse struct {
 
 func (x *UpdateKelasResponse) Reset() {
 	*x = UpdateKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[70]
+	mi := &file_sekolah_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4606,7 +4653,7 @@ func (x *UpdateKelasResponse) String() string {
 func (*UpdateKelasResponse) ProtoMessage() {}
 
 func (x *UpdateKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[70]
+	mi := &file_sekolah_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4619,7 +4666,7 @@ func (x *UpdateKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateKelasResponse.ProtoReflect.Descriptor instead.
 func (*UpdateKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{70}
+	return file_sekolah_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *UpdateKelasResponse) GetMessage() string {
@@ -4646,7 +4693,7 @@ type DeleteKelasRequest struct {
 
 func (x *DeleteKelasRequest) Reset() {
 	*x = DeleteKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[71]
+	mi := &file_sekolah_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4658,7 +4705,7 @@ func (x *DeleteKelasRequest) String() string {
 func (*DeleteKelasRequest) ProtoMessage() {}
 
 func (x *DeleteKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[71]
+	mi := &file_sekolah_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4671,7 +4718,7 @@ func (x *DeleteKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteKelasRequest.ProtoReflect.Descriptor instead.
 func (*DeleteKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{71}
+	return file_sekolah_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *DeleteKelasRequest) GetSchemaname() string {
@@ -4698,7 +4745,7 @@ type DeleteKelasResponse struct {
 
 func (x *DeleteKelasResponse) Reset() {
 	*x = DeleteKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[72]
+	mi := &file_sekolah_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4710,7 +4757,7 @@ func (x *DeleteKelasResponse) String() string {
 func (*DeleteKelasResponse) ProtoMessage() {}
 
 func (x *DeleteKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[72]
+	mi := &file_sekolah_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4723,7 +4770,7 @@ func (x *DeleteKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteKelasResponse.ProtoReflect.Descriptor instead.
 func (*DeleteKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{72}
+	return file_sekolah_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *DeleteKelasResponse) GetMessage() string {
@@ -4750,7 +4797,7 @@ type ImportDapodikRombelRequest struct {
 
 func (x *ImportDapodikRombelRequest) Reset() {
 	*x = ImportDapodikRombelRequest{}
-	mi := &file_sekolah_proto_msgTypes[73]
+	mi := &file_sekolah_proto_msgTypes[74]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4762,7 +4809,7 @@ func (x *ImportDapodikRombelRequest) String() string {
 func (*ImportDapodikRombelRequest) ProtoMessage() {}
 
 func (x *ImportDapodikRombelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[73]
+	mi := &file_sekolah_proto_msgTypes[74]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4775,7 +4822,7 @@ func (x *ImportDapodikRombelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ImportDapodikRombelRequest.ProtoReflect.Descriptor instead.
 func (*ImportDapodikRombelRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{73}
+	return file_sekolah_proto_rawDescGZIP(), []int{74}
 }
 
 func (x *ImportDapodikRombelRequest) GetSchemaname() string {
@@ -4803,7 +4850,7 @@ type ImportDapodikRombelResponse struct {
 
 func (x *ImportDapodikRombelResponse) Reset() {
 	*x = ImportDapodikRombelResponse{}
-	mi := &file_sekolah_proto_msgTypes[74]
+	mi := &file_sekolah_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4815,7 +4862,7 @@ func (x *ImportDapodikRombelResponse) String() string {
 func (*ImportDapodikRombelResponse) ProtoMessage() {}
 
 func (x *ImportDapodikRombelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[74]
+	mi := &file_sekolah_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4828,7 +4875,7 @@ func (x *ImportDapodikRombelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ImportDapodikRombelResponse.ProtoReflect.Descriptor instead.
 func (*ImportDapodikRombelResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{74}
+	return file_sekolah_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *ImportDapodikRombelResponse) GetMessage() string {
@@ -4871,7 +4918,7 @@ type AnggotaKelas struct {
 
 func (x *AnggotaKelas) Reset() {
 	*x = AnggotaKelas{}
-	mi := &file_sekolah_proto_msgTypes[75]
+	mi := &file_sekolah_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4883,7 +4930,7 @@ func (x *AnggotaKelas) String() string {
 func (*AnggotaKelas) ProtoMessage() {}
 
 func (x *AnggotaKelas) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[75]
+	mi := &file_sekolah_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4896,7 +4943,7 @@ func (x *AnggotaKelas) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AnggotaKelas.ProtoReflect.Descriptor instead.
 func (*AnggotaKelas) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{75}
+	return file_sekolah_proto_rawDescGZIP(), []int{76}
 }
 
 func (x *AnggotaKelas) GetAnggotaRombelId() string {
@@ -4987,7 +5034,7 @@ type CreateAnggotaKelasRequest struct {
 
 func (x *CreateAnggotaKelasRequest) Reset() {
 	*x = CreateAnggotaKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[76]
+	mi := &file_sekolah_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4999,7 +5046,7 @@ func (x *CreateAnggotaKelasRequest) String() string {
 func (*CreateAnggotaKelasRequest) ProtoMessage() {}
 
 func (x *CreateAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[76]
+	mi := &file_sekolah_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5012,7 +5059,7 @@ func (x *CreateAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateAnggotaKelasRequest.ProtoReflect.Descriptor instead.
 func (*CreateAnggotaKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{76}
+	return file_sekolah_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *CreateAnggotaKelasRequest) GetSchemaname() string {
@@ -5046,7 +5093,7 @@ type CreateAnggotaKelasResponse struct {
 
 func (x *CreateAnggotaKelasResponse) Reset() {
 	*x = CreateAnggotaKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[77]
+	mi := &file_sekolah_proto_msgTypes[78]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5058,7 +5105,7 @@ func (x *CreateAnggotaKelasResponse) String() string {
 func (*CreateAnggotaKelasResponse) ProtoMessage() {}
 
 func (x *CreateAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[77]
+	mi := &file_sekolah_proto_msgTypes[78]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5071,7 +5118,7 @@ func (x *CreateAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateAnggotaKelasResponse.ProtoReflect.Descriptor instead.
 func (*CreateAnggotaKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{77}
+	return file_sekolah_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *CreateAnggotaKelasResponse) GetMessage() string {
@@ -5098,7 +5145,7 @@ type CreateBanyakAnggotaKelasRequest struct {
 
 func (x *CreateBanyakAnggotaKelasRequest) Reset() {
 	*x = CreateBanyakAnggotaKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[78]
+	mi := &file_sekolah_proto_msgTypes[79]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5110,7 +5157,7 @@ func (x *CreateBanyakAnggotaKelasRequest) String() string {
 func (*CreateBanyakAnggotaKelasRequest) ProtoMessage() {}
 
 func (x *CreateBanyakAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[78]
+	mi := &file_sekolah_proto_msgTypes[79]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5123,7 +5170,7 @@ func (x *CreateBanyakAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakAnggotaKelasRequest.ProtoReflect.Descriptor instead.
 func (*CreateBanyakAnggotaKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{78}
+	return file_sekolah_proto_rawDescGZIP(), []int{79}
 }
 
 func (x *CreateBanyakAnggotaKelasRequest) GetSchemaname() string {
@@ -5150,7 +5197,7 @@ type CreateBanyakAnggotaKelasResponse struct {
 
 func (x *CreateBanyakAnggotaKelasResponse) Reset() {
 	*x = CreateBanyakAnggotaKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[79]
+	mi := &file_sekolah_proto_msgTypes[80]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5162,7 +5209,7 @@ func (x *CreateBanyakAnggotaKelasResponse) String() string {
 func (*CreateBanyakAnggotaKelasResponse) ProtoMessage() {}
 
 func (x *CreateBanyakAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[79]
+	mi := &file_sekolah_proto_msgTypes[80]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5175,7 +5222,7 @@ func (x *CreateBanyakAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakAnggotaKelasResponse.ProtoReflect.Descriptor instead.
 func (*CreateBanyakAnggotaKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{79}
+	return file_sekolah_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *CreateBanyakAnggotaKelasResponse) GetMessage() string {
@@ -5203,7 +5250,7 @@ type GetAnggotaKelasRequest struct {
 
 func (x *GetAnggotaKelasRequest) Reset() {
 	*x = GetAnggotaKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[80]
+	mi := &file_sekolah_proto_msgTypes[81]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5215,7 +5262,7 @@ func (x *GetAnggotaKelasRequest) String() string {
 func (*GetAnggotaKelasRequest) ProtoMessage() {}
 
 func (x *GetAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[80]
+	mi := &file_sekolah_proto_msgTypes[81]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5228,7 +5275,7 @@ func (x *GetAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAnggotaKelasRequest.ProtoReflect.Descriptor instead.
 func (*GetAnggotaKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{80}
+	return file_sekolah_proto_rawDescGZIP(), []int{81}
 }
 
 func (x *GetAnggotaKelasRequest) GetSchemaname() string {
@@ -5261,7 +5308,7 @@ type GetAnggotaKelasResponse struct {
 
 func (x *GetAnggotaKelasResponse) Reset() {
 	*x = GetAnggotaKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[81]
+	mi := &file_sekolah_proto_msgTypes[82]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5273,7 +5320,7 @@ func (x *GetAnggotaKelasResponse) String() string {
 func (*GetAnggotaKelasResponse) ProtoMessage() {}
 
 func (x *GetAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[81]
+	mi := &file_sekolah_proto_msgTypes[82]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5286,7 +5333,7 @@ func (x *GetAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAnggotaKelasResponse.ProtoReflect.Descriptor instead.
 func (*GetAnggotaKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{81}
+	return file_sekolah_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *GetAnggotaKelasResponse) GetAnggotaKelas() []*AnggotaKelas {
@@ -5306,7 +5353,7 @@ type UpdateAnggotaKelasRequest struct {
 
 func (x *UpdateAnggotaKelasRequest) Reset() {
 	*x = UpdateAnggotaKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[82]
+	mi := &file_sekolah_proto_msgTypes[83]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5318,7 +5365,7 @@ func (x *UpdateAnggotaKelasRequest) String() string {
 func (*UpdateAnggotaKelasRequest) ProtoMessage() {}
 
 func (x *UpdateAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[82]
+	mi := &file_sekolah_proto_msgTypes[83]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5331,7 +5378,7 @@ func (x *UpdateAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAnggotaKelasRequest.ProtoReflect.Descriptor instead.
 func (*UpdateAnggotaKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{82}
+	return file_sekolah_proto_rawDescGZIP(), []int{83}
 }
 
 func (x *UpdateAnggotaKelasRequest) GetSchemaname() string {
@@ -5358,7 +5405,7 @@ type UpdateAnggotaKelasResponse struct {
 
 func (x *UpdateAnggotaKelasResponse) Reset() {
 	*x = UpdateAnggotaKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[83]
+	mi := &file_sekolah_proto_msgTypes[84]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5370,7 +5417,7 @@ func (x *UpdateAnggotaKelasResponse) String() string {
 func (*UpdateAnggotaKelasResponse) ProtoMessage() {}
 
 func (x *UpdateAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[83]
+	mi := &file_sekolah_proto_msgTypes[84]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5383,7 +5430,7 @@ func (x *UpdateAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAnggotaKelasResponse.ProtoReflect.Descriptor instead.
 func (*UpdateAnggotaKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{83}
+	return file_sekolah_proto_rawDescGZIP(), []int{84}
 }
 
 func (x *UpdateAnggotaKelasResponse) GetMessage() string {
@@ -5410,7 +5457,7 @@ type DeleteAnggotaKelasRequest struct {
 
 func (x *DeleteAnggotaKelasRequest) Reset() {
 	*x = DeleteAnggotaKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[84]
+	mi := &file_sekolah_proto_msgTypes[85]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5422,7 +5469,7 @@ func (x *DeleteAnggotaKelasRequest) String() string {
 func (*DeleteAnggotaKelasRequest) ProtoMessage() {}
 
 func (x *DeleteAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[84]
+	mi := &file_sekolah_proto_msgTypes[85]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5435,7 +5482,7 @@ func (x *DeleteAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAnggotaKelasRequest.ProtoReflect.Descriptor instead.
 func (*DeleteAnggotaKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{84}
+	return file_sekolah_proto_rawDescGZIP(), []int{85}
 }
 
 func (x *DeleteAnggotaKelasRequest) GetSchemaname() string {
@@ -5462,7 +5509,7 @@ type DeleteAnggotaKelasResponse struct {
 
 func (x *DeleteAnggotaKelasResponse) Reset() {
 	*x = DeleteAnggotaKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[85]
+	mi := &file_sekolah_proto_msgTypes[86]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5474,7 +5521,7 @@ func (x *DeleteAnggotaKelasResponse) String() string {
 func (*DeleteAnggotaKelasResponse) ProtoMessage() {}
 
 func (x *DeleteAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[85]
+	mi := &file_sekolah_proto_msgTypes[86]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5487,7 +5534,7 @@ func (x *DeleteAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAnggotaKelasResponse.ProtoReflect.Descriptor instead.
 func (*DeleteAnggotaKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{85}
+	return file_sekolah_proto_rawDescGZIP(), []int{86}
 }
 
 func (x *DeleteAnggotaKelasResponse) GetMessage() string {
@@ -5516,7 +5563,7 @@ type SearchAnggotaKelasRequest struct {
 
 func (x *SearchAnggotaKelasRequest) Reset() {
 	*x = SearchAnggotaKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[86]
+	mi := &file_sekolah_proto_msgTypes[87]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5528,7 +5575,7 @@ func (x *SearchAnggotaKelasRequest) String() string {
 func (*SearchAnggotaKelasRequest) ProtoMessage() {}
 
 func (x *SearchAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[86]
+	mi := &file_sekolah_proto_msgTypes[87]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5541,7 +5588,7 @@ func (x *SearchAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchAnggotaKelasRequest.ProtoReflect.Descriptor instead.
 func (*SearchAnggotaKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{86}
+	return file_sekolah_proto_rawDescGZIP(), []int{87}
 }
 
 func (x *SearchAnggotaKelasRequest) GetSchemaname() string {
@@ -5581,7 +5628,7 @@ type SearchAnggotaKelasResponse struct {
 
 func (x *SearchAnggotaKelasResponse) Reset() {
 	*x = SearchAnggotaKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[87]
+	mi := &file_sekolah_proto_msgTypes[88]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5593,7 +5640,7 @@ func (x *SearchAnggotaKelasResponse) String() string {
 func (*SearchAnggotaKelasResponse) ProtoMessage() {}
 
 func (x *SearchAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[87]
+	mi := &file_sekolah_proto_msgTypes[88]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5606,7 +5653,7 @@ func (x *SearchAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchAnggotaKelasResponse.ProtoReflect.Descriptor instead.
 func (*SearchAnggotaKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{87}
+	return file_sekolah_proto_rawDescGZIP(), []int{88}
 }
 
 func (x *SearchAnggotaKelasResponse) GetAnggotaKelas() []*AnggotaKelas {
@@ -5628,7 +5675,7 @@ type FilterAnggotaKelasRequest struct {
 
 func (x *FilterAnggotaKelasRequest) Reset() {
 	*x = FilterAnggotaKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[88]
+	mi := &file_sekolah_proto_msgTypes[89]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5640,7 +5687,7 @@ func (x *FilterAnggotaKelasRequest) String() string {
 func (*FilterAnggotaKelasRequest) ProtoMessage() {}
 
 func (x *FilterAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[88]
+	mi := &file_sekolah_proto_msgTypes[89]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5653,7 +5700,7 @@ func (x *FilterAnggotaKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FilterAnggotaKelasRequest.ProtoReflect.Descriptor instead.
 func (*FilterAnggotaKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{88}
+	return file_sekolah_proto_rawDescGZIP(), []int{89}
 }
 
 func (x *FilterAnggotaKelasRequest) GetSchemaname() string {
@@ -5693,7 +5740,7 @@ type FilterAnggotaKelasResponse struct {
 
 func (x *FilterAnggotaKelasResponse) Reset() {
 	*x = FilterAnggotaKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[89]
+	mi := &file_sekolah_proto_msgTypes[90]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5705,7 +5752,7 @@ func (x *FilterAnggotaKelasResponse) String() string {
 func (*FilterAnggotaKelasResponse) ProtoMessage() {}
 
 func (x *FilterAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[89]
+	mi := &file_sekolah_proto_msgTypes[90]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5718,7 +5765,7 @@ func (x *FilterAnggotaKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FilterAnggotaKelasResponse.ProtoReflect.Descriptor instead.
 func (*FilterAnggotaKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{89}
+	return file_sekolah_proto_rawDescGZIP(), []int{90}
 }
 
 func (x *FilterAnggotaKelasResponse) GetAnggotaKelas() []*AnggotaKelas {
@@ -5740,7 +5787,7 @@ type ConflictRow struct {
 
 func (x *ConflictRow) Reset() {
 	*x = ConflictRow{}
-	mi := &file_sekolah_proto_msgTypes[90]
+	mi := &file_sekolah_proto_msgTypes[91]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5752,7 +5799,7 @@ func (x *ConflictRow) String() string {
 func (*ConflictRow) ProtoMessage() {}
 
 func (x *ConflictRow) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[90]
+	mi := &file_sekolah_proto_msgTypes[91]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5765,7 +5812,7 @@ func (x *ConflictRow) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConflictRow.ProtoReflect.Descriptor instead.
 func (*ConflictRow) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{90}
+	return file_sekolah_proto_rawDescGZIP(), []int{91}
 }
 
 func (x *ConflictRow) GetIndex() int32 {
@@ -5807,7 +5854,7 @@ type ConflictResponse struct {
 
 func (x *ConflictResponse) Reset() {
 	*x = ConflictResponse{}
-	mi := &file_sekolah_proto_msgTypes[91]
+	mi := &file_sekolah_proto_msgTypes[92]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5819,7 +5866,7 @@ func (x *ConflictResponse) String() string {
 func (*ConflictResponse) ProtoMessage() {}
 
 func (x *ConflictResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[91]
+	mi := &file_sekolah_proto_msgTypes[92]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5832,7 +5879,7 @@ func (x *ConflictResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConflictResponse.ProtoReflect.Descriptor instead.
 func (*ConflictResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{91}
+	return file_sekolah_proto_rawDescGZIP(), []int{92}
 }
 
 func (x *ConflictResponse) GetMessage() string {
@@ -5879,7 +5926,7 @@ type PTK struct {
 
 func (x *PTK) Reset() {
 	*x = PTK{}
-	mi := &file_sekolah_proto_msgTypes[92]
+	mi := &file_sekolah_proto_msgTypes[93]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5891,7 +5938,7 @@ func (x *PTK) String() string {
 func (*PTK) ProtoMessage() {}
 
 func (x *PTK) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[92]
+	mi := &file_sekolah_proto_msgTypes[93]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5904,7 +5951,7 @@ func (x *PTK) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PTK.ProtoReflect.Descriptor instead.
 func (*PTK) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{92}
+	return file_sekolah_proto_rawDescGZIP(), []int{93}
 }
 
 func (x *PTK) GetPtkId() string {
@@ -6017,7 +6064,7 @@ type CreatePTKRequest struct {
 
 func (x *CreatePTKRequest) Reset() {
 	*x = CreatePTKRequest{}
-	mi := &file_sekolah_proto_msgTypes[93]
+	mi := &file_sekolah_proto_msgTypes[94]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6029,7 +6076,7 @@ func (x *CreatePTKRequest) String() string {
 func (*CreatePTKRequest) ProtoMessage() {}
 
 func (x *CreatePTKRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[93]
+	mi := &file_sekolah_proto_msgTypes[94]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6042,7 +6089,7 @@ func (x *CreatePTKRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePTKRequest.ProtoReflect.Descriptor instead.
 func (*CreatePTKRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{93}
+	return file_sekolah_proto_rawDescGZIP(), []int{94}
 }
 
 func (x *CreatePTKRequest) GetSchemaname() string {
@@ -6070,7 +6117,7 @@ type CreatePTKResponse struct {
 
 func (x *CreatePTKResponse) Reset() {
 	*x = CreatePTKResponse{}
-	mi := &file_sekolah_proto_msgTypes[94]
+	mi := &file_sekolah_proto_msgTypes[95]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6082,7 +6129,7 @@ func (x *CreatePTKResponse) String() string {
 func (*CreatePTKResponse) ProtoMessage() {}
 
 func (x *CreatePTKResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[94]
+	mi := &file_sekolah_proto_msgTypes[95]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6095,7 +6142,7 @@ func (x *CreatePTKResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePTKResponse.ProtoReflect.Descriptor instead.
 func (*CreatePTKResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{94}
+	return file_sekolah_proto_rawDescGZIP(), []int{95}
 }
 
 func (x *CreatePTKResponse) GetMessage() string {
@@ -6129,7 +6176,7 @@ type GetPTKRequest struct {
 
 func (x *GetPTKRequest) Reset() {
 	*x = GetPTKRequest{}
-	mi := &file_sekolah_proto_msgTypes[95]
+	mi := &file_sekolah_proto_msgTypes[96]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6141,7 +6188,7 @@ func (x *GetPTKRequest) String() string {
 func (*GetPTKRequest) ProtoMessage() {}
 
 func (x *GetPTKRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[95]
+	mi := &file_sekolah_proto_msgTypes[96]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6154,7 +6201,7 @@ func (x *GetPTKRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPTKRequest.ProtoReflect.Descriptor instead.
 func (*GetPTKRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{95}
+	return file_sekolah_proto_rawDescGZIP(), []int{96}
 }
 
 func (x *GetPTKRequest) GetSchemaname() string {
@@ -6180,7 +6227,7 @@ type GetPTKResponse struct {
 
 func (x *GetPTKResponse) Reset() {
 	*x = GetPTKResponse{}
-	mi := &file_sekolah_proto_msgTypes[96]
+	mi := &file_sekolah_proto_msgTypes[97]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6192,7 +6239,7 @@ func (x *GetPTKResponse) String() string {
 func (*GetPTKResponse) ProtoMessage() {}
 
 func (x *GetPTKResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[96]
+	mi := &file_sekolah_proto_msgTypes[97]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6205,7 +6252,7 @@ func (x *GetPTKResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPTKResponse.ProtoReflect.Descriptor instead.
 func (*GetPTKResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{96}
+	return file_sekolah_proto_rawDescGZIP(), []int{97}
 }
 
 func (x *GetPTKResponse) GetPTK() []*PTK {
@@ -6225,7 +6272,7 @@ type UpdatePTKRequest struct {
 
 func (x *UpdatePTKRequest) Reset() {
 	*x = UpdatePTKRequest{}
-	mi := &file_sekolah_proto_msgTypes[97]
+	mi := &file_sekolah_proto_msgTypes[98]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6237,7 +6284,7 @@ func (x *UpdatePTKRequest) String() string {
 func (*UpdatePTKRequest) ProtoMessage() {}
 
 func (x *UpdatePTKRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[97]
+	mi := &file_sekolah_proto_msgTypes[98]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6250,7 +6297,7 @@ func (x *UpdatePTKRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePTKRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePTKRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{97}
+	return file_sekolah_proto_rawDescGZIP(), []int{98}
 }
 
 func (x *UpdatePTKRequest) GetSchemaname() string {
@@ -6277,7 +6324,7 @@ type UpdatePTKResponse struct {
 
 func (x *UpdatePTKResponse) Reset() {
 	*x = UpdatePTKResponse{}
-	mi := &file_sekolah_proto_msgTypes[98]
+	mi := &file_sekolah_proto_msgTypes[99]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6289,7 +6336,7 @@ func (x *UpdatePTKResponse) String() string {
 func (*UpdatePTKResponse) ProtoMessage() {}
 
 func (x *UpdatePTKResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[98]
+	mi := &file_sekolah_proto_msgTypes[99]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6302,7 +6349,7 @@ func (x *UpdatePTKResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePTKResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePTKResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{98}
+	return file_sekolah_proto_rawDescGZIP(), []int{99}
 }
 
 func (x *UpdatePTKResponse) GetMessage() string {
@@ -6329,7 +6376,7 @@ type DeletePTKRequest struct {
 
 func (x *DeletePTKRequest) Reset() {
 	*x = DeletePTKRequest{}
-	mi := &file_sekolah_proto_msgTypes[99]
+	mi := &file_sekolah_proto_msgTypes[100]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6341,7 +6388,7 @@ func (x *DeletePTKRequest) String() string {
 func (*DeletePTKRequest) ProtoMessage() {}
 
 func (x *DeletePTKRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[99]
+	mi := &file_sekolah_proto_msgTypes[100]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6354,7 +6401,7 @@ func (x *DeletePTKRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePTKRequest.ProtoReflect.Descriptor instead.
 func (*DeletePTKRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{99}
+	return file_sekolah_proto_rawDescGZIP(), []int{100}
 }
 
 func (x *DeletePTKRequest) GetSchemaname() string {
@@ -6381,7 +6428,7 @@ type DeletePTKResponse struct {
 
 func (x *DeletePTKResponse) Reset() {
 	*x = DeletePTKResponse{}
-	mi := &file_sekolah_proto_msgTypes[100]
+	mi := &file_sekolah_proto_msgTypes[101]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6393,7 +6440,7 @@ func (x *DeletePTKResponse) String() string {
 func (*DeletePTKResponse) ProtoMessage() {}
 
 func (x *DeletePTKResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[100]
+	mi := &file_sekolah_proto_msgTypes[101]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6406,7 +6453,7 @@ func (x *DeletePTKResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePTKResponse.ProtoReflect.Descriptor instead.
 func (*DeletePTKResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{100}
+	return file_sekolah_proto_rawDescGZIP(), []int{101}
 }
 
 func (x *DeletePTKResponse) GetMessage() string {
@@ -6436,7 +6483,7 @@ type PTKTerdaftar struct {
 
 func (x *PTKTerdaftar) Reset() {
 	*x = PTKTerdaftar{}
-	mi := &file_sekolah_proto_msgTypes[101]
+	mi := &file_sekolah_proto_msgTypes[102]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6448,7 +6495,7 @@ func (x *PTKTerdaftar) String() string {
 func (*PTKTerdaftar) ProtoMessage() {}
 
 func (x *PTKTerdaftar) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[101]
+	mi := &file_sekolah_proto_msgTypes[102]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6461,7 +6508,7 @@ func (x *PTKTerdaftar) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PTKTerdaftar.ProtoReflect.Descriptor instead.
 func (*PTKTerdaftar) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{101}
+	return file_sekolah_proto_rawDescGZIP(), []int{102}
 }
 
 func (x *PTKTerdaftar) GetPtkTerdaftarId() string {
@@ -6509,7 +6556,7 @@ type CreatePTKTerdaftarRequest struct {
 
 func (x *CreatePTKTerdaftarRequest) Reset() {
 	*x = CreatePTKTerdaftarRequest{}
-	mi := &file_sekolah_proto_msgTypes[102]
+	mi := &file_sekolah_proto_msgTypes[103]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6521,7 +6568,7 @@ func (x *CreatePTKTerdaftarRequest) String() string {
 func (*CreatePTKTerdaftarRequest) ProtoMessage() {}
 
 func (x *CreatePTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[102]
+	mi := &file_sekolah_proto_msgTypes[103]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6534,7 +6581,7 @@ func (x *CreatePTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePTKTerdaftarRequest.ProtoReflect.Descriptor instead.
 func (*CreatePTKTerdaftarRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{102}
+	return file_sekolah_proto_rawDescGZIP(), []int{103}
 }
 
 func (x *CreatePTKTerdaftarRequest) GetSchemaname() string {
@@ -6562,7 +6609,7 @@ type CreatePTKTerdaftarResponse struct {
 
 func (x *CreatePTKTerdaftarResponse) Reset() {
 	*x = CreatePTKTerdaftarResponse{}
-	mi := &file_sekolah_proto_msgTypes[103]
+	mi := &file_sekolah_proto_msgTypes[104]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6574,7 +6621,7 @@ func (x *CreatePTKTerdaftarResponse) String() string {
 func (*CreatePTKTerdaftarResponse) ProtoMessage() {}
 
 func (x *CreatePTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[103]
+	mi := &file_sekolah_proto_msgTypes[104]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6587,7 +6634,7 @@ func (x *CreatePTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePTKTerdaftarResponse.ProtoReflect.Descriptor instead.
 func (*CreatePTKTerdaftarResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{103}
+	return file_sekolah_proto_rawDescGZIP(), []int{104}
 }
 
 func (x *CreatePTKTerdaftarResponse) GetMessage() string {
@@ -6621,7 +6668,7 @@ type CreateBanyakPTKTerdaftarRequest struct {
 
 func (x *CreateBanyakPTKTerdaftarRequest) Reset() {
 	*x = CreateBanyakPTKTerdaftarRequest{}
-	mi := &file_sekolah_proto_msgTypes[104]
+	mi := &file_sekolah_proto_msgTypes[105]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6633,7 +6680,7 @@ func (x *CreateBanyakPTKTerdaftarRequest) String() string {
 func (*CreateBanyakPTKTerdaftarRequest) ProtoMessage() {}
 
 func (x *CreateBanyakPTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[104]
+	mi := &file_sekolah_proto_msgTypes[105]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6646,7 +6693,7 @@ func (x *CreateBanyakPTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakPTKTerdaftarRequest.ProtoReflect.Descriptor instead.
 func (*CreateBanyakPTKTerdaftarRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{104}
+	return file_sekolah_proto_rawDescGZIP(), []int{105}
 }
 
 func (x *CreateBanyakPTKTerdaftarRequest) GetSchemaname() string {
@@ -6674,7 +6721,7 @@ type CreateBanyakPTKTerdaftarResponse struct {
 
 func (x *CreateBanyakPTKTerdaftarResponse) Reset() {
 	*x = CreateBanyakPTKTerdaftarResponse{}
-	mi := &file_sekolah_proto_msgTypes[105]
+	mi := &file_sekolah_proto_msgTypes[106]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6686,7 +6733,7 @@ func (x *CreateBanyakPTKTerdaftarResponse) String() string {
 func (*CreateBanyakPTKTerdaftarResponse) ProtoMessage() {}
 
 func (x *CreateBanyakPTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[105]
+	mi := &file_sekolah_proto_msgTypes[106]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6699,7 +6746,7 @@ func (x *CreateBanyakPTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakPTKTerdaftarResponse.ProtoReflect.Descriptor instead.
 func (*CreateBanyakPTKTerdaftarResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{105}
+	return file_sekolah_proto_rawDescGZIP(), []int{106}
 }
 
 func (x *CreateBanyakPTKTerdaftarResponse) GetMessage() string {
@@ -6734,7 +6781,7 @@ type GetPTKTerdaftarRequest struct {
 
 func (x *GetPTKTerdaftarRequest) Reset() {
 	*x = GetPTKTerdaftarRequest{}
-	mi := &file_sekolah_proto_msgTypes[106]
+	mi := &file_sekolah_proto_msgTypes[107]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6746,7 +6793,7 @@ func (x *GetPTKTerdaftarRequest) String() string {
 func (*GetPTKTerdaftarRequest) ProtoMessage() {}
 
 func (x *GetPTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[106]
+	mi := &file_sekolah_proto_msgTypes[107]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6759,7 +6806,7 @@ func (x *GetPTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPTKTerdaftarRequest.ProtoReflect.Descriptor instead.
 func (*GetPTKTerdaftarRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{106}
+	return file_sekolah_proto_rawDescGZIP(), []int{107}
 }
 
 func (x *GetPTKTerdaftarRequest) GetSchemaname() string {
@@ -6793,7 +6840,7 @@ type GetPTKTerdaftarResponse struct {
 
 func (x *GetPTKTerdaftarResponse) Reset() {
 	*x = GetPTKTerdaftarResponse{}
-	mi := &file_sekolah_proto_msgTypes[107]
+	mi := &file_sekolah_proto_msgTypes[108]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6805,7 +6852,7 @@ func (x *GetPTKTerdaftarResponse) String() string {
 func (*GetPTKTerdaftarResponse) ProtoMessage() {}
 
 func (x *GetPTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[107]
+	mi := &file_sekolah_proto_msgTypes[108]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6818,7 +6865,7 @@ func (x *GetPTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPTKTerdaftarResponse.ProtoReflect.Descriptor instead.
 func (*GetPTKTerdaftarResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{107}
+	return file_sekolah_proto_rawDescGZIP(), []int{108}
 }
 
 func (x *GetPTKTerdaftarResponse) GetPtkTerdaftar() []*PTKTerdaftar {
@@ -6845,7 +6892,7 @@ type UpdatePTKTerdaftarRequest struct {
 
 func (x *UpdatePTKTerdaftarRequest) Reset() {
 	*x = UpdatePTKTerdaftarRequest{}
-	mi := &file_sekolah_proto_msgTypes[108]
+	mi := &file_sekolah_proto_msgTypes[109]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6857,7 +6904,7 @@ func (x *UpdatePTKTerdaftarRequest) String() string {
 func (*UpdatePTKTerdaftarRequest) ProtoMessage() {}
 
 func (x *UpdatePTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[108]
+	mi := &file_sekolah_proto_msgTypes[109]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6870,7 +6917,7 @@ func (x *UpdatePTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePTKTerdaftarRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePTKTerdaftarRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{108}
+	return file_sekolah_proto_rawDescGZIP(), []int{109}
 }
 
 func (x *UpdatePTKTerdaftarRequest) GetSchemaname() string {
@@ -6897,7 +6944,7 @@ type UpdatePTKTerdaftarResponse struct {
 
 func (x *UpdatePTKTerdaftarResponse) Reset() {
 	*x = UpdatePTKTerdaftarResponse{}
-	mi := &file_sekolah_proto_msgTypes[109]
+	mi := &file_sekolah_proto_msgTypes[110]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6909,7 +6956,7 @@ func (x *UpdatePTKTerdaftarResponse) String() string {
 func (*UpdatePTKTerdaftarResponse) ProtoMessage() {}
 
 func (x *UpdatePTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[109]
+	mi := &file_sekolah_proto_msgTypes[110]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6922,7 +6969,7 @@ func (x *UpdatePTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePTKTerdaftarResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePTKTerdaftarResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{109}
+	return file_sekolah_proto_rawDescGZIP(), []int{110}
 }
 
 func (x *UpdatePTKTerdaftarResponse) GetMessage() string {
@@ -6949,7 +6996,7 @@ type DeletePTKTerdaftarRequest struct {
 
 func (x *DeletePTKTerdaftarRequest) Reset() {
 	*x = DeletePTKTerdaftarRequest{}
-	mi := &file_sekolah_proto_msgTypes[110]
+	mi := &file_sekolah_proto_msgTypes[111]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6961,7 +7008,7 @@ func (x *DeletePTKTerdaftarRequest) String() string {
 func (*DeletePTKTerdaftarRequest) ProtoMessage() {}
 
 func (x *DeletePTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[110]
+	mi := &file_sekolah_proto_msgTypes[111]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6974,7 +7021,7 @@ func (x *DeletePTKTerdaftarRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePTKTerdaftarRequest.ProtoReflect.Descriptor instead.
 func (*DeletePTKTerdaftarRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{110}
+	return file_sekolah_proto_rawDescGZIP(), []int{111}
 }
 
 func (x *DeletePTKTerdaftarRequest) GetSchemaname() string {
@@ -7001,7 +7048,7 @@ type DeletePTKTerdaftarResponse struct {
 
 func (x *DeletePTKTerdaftarResponse) Reset() {
 	*x = DeletePTKTerdaftarResponse{}
-	mi := &file_sekolah_proto_msgTypes[111]
+	mi := &file_sekolah_proto_msgTypes[112]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7013,7 +7060,7 @@ func (x *DeletePTKTerdaftarResponse) String() string {
 func (*DeletePTKTerdaftarResponse) ProtoMessage() {}
 
 func (x *DeletePTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[111]
+	mi := &file_sekolah_proto_msgTypes[112]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7026,7 +7073,7 @@ func (x *DeletePTKTerdaftarResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePTKTerdaftarResponse.ProtoReflect.Descriptor instead.
 func (*DeletePTKTerdaftarResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{111}
+	return file_sekolah_proto_rawDescGZIP(), []int{112}
 }
 
 func (x *DeletePTKTerdaftarResponse) GetMessage() string {
@@ -7054,7 +7101,7 @@ type Kenaikan struct {
 
 func (x *Kenaikan) Reset() {
 	*x = Kenaikan{}
-	mi := &file_sekolah_proto_msgTypes[112]
+	mi := &file_sekolah_proto_msgTypes[113]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7066,7 +7113,7 @@ func (x *Kenaikan) String() string {
 func (*Kenaikan) ProtoMessage() {}
 
 func (x *Kenaikan) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[112]
+	mi := &file_sekolah_proto_msgTypes[113]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7079,7 +7126,7 @@ func (x *Kenaikan) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Kenaikan.ProtoReflect.Descriptor instead.
 func (*Kenaikan) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{112}
+	return file_sekolah_proto_rawDescGZIP(), []int{113}
 }
 
 func (x *Kenaikan) GetSemesterId() string {
@@ -7112,7 +7159,7 @@ type CreateKenaikanRequest struct {
 
 func (x *CreateKenaikanRequest) Reset() {
 	*x = CreateKenaikanRequest{}
-	mi := &file_sekolah_proto_msgTypes[113]
+	mi := &file_sekolah_proto_msgTypes[114]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7124,7 +7171,7 @@ func (x *CreateKenaikanRequest) String() string {
 func (*CreateKenaikanRequest) ProtoMessage() {}
 
 func (x *CreateKenaikanRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[113]
+	mi := &file_sekolah_proto_msgTypes[114]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7137,7 +7184,7 @@ func (x *CreateKenaikanRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateKenaikanRequest.ProtoReflect.Descriptor instead.
 func (*CreateKenaikanRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{113}
+	return file_sekolah_proto_rawDescGZIP(), []int{114}
 }
 
 func (x *CreateKenaikanRequest) GetKenaikan() *Kenaikan {
@@ -7156,7 +7203,7 @@ type CreateKenaikanResponse struct {
 
 func (x *CreateKenaikanResponse) Reset() {
 	*x = CreateKenaikanResponse{}
-	mi := &file_sekolah_proto_msgTypes[114]
+	mi := &file_sekolah_proto_msgTypes[115]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7168,7 +7215,7 @@ func (x *CreateKenaikanResponse) String() string {
 func (*CreateKenaikanResponse) ProtoMessage() {}
 
 func (x *CreateKenaikanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[114]
+	mi := &file_sekolah_proto_msgTypes[115]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7181,7 +7228,7 @@ func (x *CreateKenaikanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateKenaikanResponse.ProtoReflect.Descriptor instead.
 func (*CreateKenaikanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{114}
+	return file_sekolah_proto_rawDescGZIP(), []int{115}
 }
 
 func (x *CreateKenaikanResponse) GetMessage() string {
@@ -7200,7 +7247,7 @@ type GetKenaikanRequest struct {
 
 func (x *GetKenaikanRequest) Reset() {
 	*x = GetKenaikanRequest{}
-	mi := &file_sekolah_proto_msgTypes[115]
+	mi := &file_sekolah_proto_msgTypes[116]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7212,7 +7259,7 @@ func (x *GetKenaikanRequest) String() string {
 func (*GetKenaikanRequest) ProtoMessage() {}
 
 func (x *GetKenaikanRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[115]
+	mi := &file_sekolah_proto_msgTypes[116]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7225,7 +7272,7 @@ func (x *GetKenaikanRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetKenaikanRequest.ProtoReflect.Descriptor instead.
 func (*GetKenaikanRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{115}
+	return file_sekolah_proto_rawDescGZIP(), []int{116}
 }
 
 func (x *GetKenaikanRequest) GetSemesterId() string {
@@ -7245,7 +7292,7 @@ type GetKenaikanResponse struct {
 
 func (x *GetKenaikanResponse) Reset() {
 	*x = GetKenaikanResponse{}
-	mi := &file_sekolah_proto_msgTypes[116]
+	mi := &file_sekolah_proto_msgTypes[117]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7257,7 +7304,7 @@ func (x *GetKenaikanResponse) String() string {
 func (*GetKenaikanResponse) ProtoMessage() {}
 
 func (x *GetKenaikanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[116]
+	mi := &file_sekolah_proto_msgTypes[117]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7270,7 +7317,7 @@ func (x *GetKenaikanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetKenaikanResponse.ProtoReflect.Descriptor instead.
 func (*GetKenaikanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{116}
+	return file_sekolah_proto_rawDescGZIP(), []int{117}
 }
 
 func (x *GetKenaikanResponse) GetAnggotaKelas() []*AnggotaKelas {
@@ -7298,7 +7345,7 @@ type FilterKenaikanRequest struct {
 
 func (x *FilterKenaikanRequest) Reset() {
 	*x = FilterKenaikanRequest{}
-	mi := &file_sekolah_proto_msgTypes[117]
+	mi := &file_sekolah_proto_msgTypes[118]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7310,7 +7357,7 @@ func (x *FilterKenaikanRequest) String() string {
 func (*FilterKenaikanRequest) ProtoMessage() {}
 
 func (x *FilterKenaikanRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[117]
+	mi := &file_sekolah_proto_msgTypes[118]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7323,7 +7370,7 @@ func (x *FilterKenaikanRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FilterKenaikanRequest.ProtoReflect.Descriptor instead.
 func (*FilterKenaikanRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{117}
+	return file_sekolah_proto_rawDescGZIP(), []int{118}
 }
 
 func (x *FilterKenaikanRequest) GetSemesterId() string {
@@ -7357,7 +7404,7 @@ type FilterKenaikanResponse struct {
 
 func (x *FilterKenaikanResponse) Reset() {
 	*x = FilterKenaikanResponse{}
-	mi := &file_sekolah_proto_msgTypes[118]
+	mi := &file_sekolah_proto_msgTypes[119]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7369,7 +7416,7 @@ func (x *FilterKenaikanResponse) String() string {
 func (*FilterKenaikanResponse) ProtoMessage() {}
 
 func (x *FilterKenaikanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[118]
+	mi := &file_sekolah_proto_msgTypes[119]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7382,7 +7429,7 @@ func (x *FilterKenaikanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FilterKenaikanResponse.ProtoReflect.Descriptor instead.
 func (*FilterKenaikanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{118}
+	return file_sekolah_proto_rawDescGZIP(), []int{119}
 }
 
 func (x *FilterKenaikanResponse) GetAnggotaKelas() []*AnggotaKelas {
@@ -7408,7 +7455,7 @@ type UpdateKenaikanRequest struct {
 
 func (x *UpdateKenaikanRequest) Reset() {
 	*x = UpdateKenaikanRequest{}
-	mi := &file_sekolah_proto_msgTypes[119]
+	mi := &file_sekolah_proto_msgTypes[120]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7420,7 +7467,7 @@ func (x *UpdateKenaikanRequest) String() string {
 func (*UpdateKenaikanRequest) ProtoMessage() {}
 
 func (x *UpdateKenaikanRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[119]
+	mi := &file_sekolah_proto_msgTypes[120]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7433,7 +7480,7 @@ func (x *UpdateKenaikanRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateKenaikanRequest.ProtoReflect.Descriptor instead.
 func (*UpdateKenaikanRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{119}
+	return file_sekolah_proto_rawDescGZIP(), []int{120}
 }
 
 func (x *UpdateKenaikanRequest) GetKenaikan() *Kenaikan {
@@ -7452,7 +7499,7 @@ type UpdateKenaikanResponse struct {
 
 func (x *UpdateKenaikanResponse) Reset() {
 	*x = UpdateKenaikanResponse{}
-	mi := &file_sekolah_proto_msgTypes[120]
+	mi := &file_sekolah_proto_msgTypes[121]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7464,7 +7511,7 @@ func (x *UpdateKenaikanResponse) String() string {
 func (*UpdateKenaikanResponse) ProtoMessage() {}
 
 func (x *UpdateKenaikanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[120]
+	mi := &file_sekolah_proto_msgTypes[121]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7477,7 +7524,7 @@ func (x *UpdateKenaikanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateKenaikanResponse.ProtoReflect.Descriptor instead.
 func (*UpdateKenaikanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{120}
+	return file_sekolah_proto_rawDescGZIP(), []int{121}
 }
 
 func (x *UpdateKenaikanResponse) GetMessage() string {
@@ -7496,7 +7543,7 @@ type DeleteKenaikanRequest struct {
 
 func (x *DeleteKenaikanRequest) Reset() {
 	*x = DeleteKenaikanRequest{}
-	mi := &file_sekolah_proto_msgTypes[121]
+	mi := &file_sekolah_proto_msgTypes[122]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7508,7 +7555,7 @@ func (x *DeleteKenaikanRequest) String() string {
 func (*DeleteKenaikanRequest) ProtoMessage() {}
 
 func (x *DeleteKenaikanRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[121]
+	mi := &file_sekolah_proto_msgTypes[122]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7521,7 +7568,7 @@ func (x *DeleteKenaikanRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteKenaikanRequest.ProtoReflect.Descriptor instead.
 func (*DeleteKenaikanRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{121}
+	return file_sekolah_proto_rawDescGZIP(), []int{122}
 }
 
 func (x *DeleteKenaikanRequest) GetKenaikan() *Kenaikan {
@@ -7540,7 +7587,7 @@ type DeleteKenaikanResponse struct {
 
 func (x *DeleteKenaikanResponse) Reset() {
 	*x = DeleteKenaikanResponse{}
-	mi := &file_sekolah_proto_msgTypes[122]
+	mi := &file_sekolah_proto_msgTypes[123]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7552,7 +7599,7 @@ func (x *DeleteKenaikanResponse) String() string {
 func (*DeleteKenaikanResponse) ProtoMessage() {}
 
 func (x *DeleteKenaikanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[122]
+	mi := &file_sekolah_proto_msgTypes[123]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7565,7 +7612,7 @@ func (x *DeleteKenaikanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteKenaikanResponse.ProtoReflect.Descriptor instead.
 func (*DeleteKenaikanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{122}
+	return file_sekolah_proto_rawDescGZIP(), []int{123}
 }
 
 func (x *DeleteKenaikanResponse) GetMessage() string {
@@ -7584,7 +7631,7 @@ type UploadKenaikanRequest struct {
 
 func (x *UploadKenaikanRequest) Reset() {
 	*x = UploadKenaikanRequest{}
-	mi := &file_sekolah_proto_msgTypes[123]
+	mi := &file_sekolah_proto_msgTypes[124]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7596,7 +7643,7 @@ func (x *UploadKenaikanRequest) String() string {
 func (*UploadKenaikanRequest) ProtoMessage() {}
 
 func (x *UploadKenaikanRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[123]
+	mi := &file_sekolah_proto_msgTypes[124]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7609,7 +7656,7 @@ func (x *UploadKenaikanRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadKenaikanRequest.ProtoReflect.Descriptor instead.
 func (*UploadKenaikanRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{123}
+	return file_sekolah_proto_rawDescGZIP(), []int{124}
 }
 
 func (x *UploadKenaikanRequest) GetKenaikan() []*Kenaikan {
@@ -7628,7 +7675,7 @@ type UploadKenaikanResponse struct {
 
 func (x *UploadKenaikanResponse) Reset() {
 	*x = UploadKenaikanResponse{}
-	mi := &file_sekolah_proto_msgTypes[124]
+	mi := &file_sekolah_proto_msgTypes[125]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7640,7 +7687,7 @@ func (x *UploadKenaikanResponse) String() string {
 func (*UploadKenaikanResponse) ProtoMessage() {}
 
 func (x *UploadKenaikanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[124]
+	mi := &file_sekolah_proto_msgTypes[125]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7653,7 +7700,7 @@ func (x *UploadKenaikanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadKenaikanResponse.ProtoReflect.Descriptor instead.
 func (*UploadKenaikanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{124}
+	return file_sekolah_proto_rawDescGZIP(), []int{125}
 }
 
 func (x *UploadKenaikanResponse) GetMessage() string {
@@ -7690,7 +7737,7 @@ type Ijazah struct {
 
 func (x *Ijazah) Reset() {
 	*x = Ijazah{}
-	mi := &file_sekolah_proto_msgTypes[125]
+	mi := &file_sekolah_proto_msgTypes[126]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7702,7 +7749,7 @@ func (x *Ijazah) String() string {
 func (*Ijazah) ProtoMessage() {}
 
 func (x *Ijazah) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[125]
+	mi := &file_sekolah_proto_msgTypes[126]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7715,7 +7762,7 @@ func (x *Ijazah) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Ijazah.ProtoReflect.Descriptor instead.
 func (*Ijazah) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{125}
+	return file_sekolah_proto_rawDescGZIP(), []int{126}
 }
 
 func (x *Ijazah) GetID() string {
@@ -7861,7 +7908,7 @@ type CreateIjazahRequest struct {
 
 func (x *CreateIjazahRequest) Reset() {
 	*x = CreateIjazahRequest{}
-	mi := &file_sekolah_proto_msgTypes[126]
+	mi := &file_sekolah_proto_msgTypes[127]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7873,7 +7920,7 @@ func (x *CreateIjazahRequest) String() string {
 func (*CreateIjazahRequest) ProtoMessage() {}
 
 func (x *CreateIjazahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[126]
+	mi := &file_sekolah_proto_msgTypes[127]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7886,7 +7933,7 @@ func (x *CreateIjazahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateIjazahRequest.ProtoReflect.Descriptor instead.
 func (*CreateIjazahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{126}
+	return file_sekolah_proto_rawDescGZIP(), []int{127}
 }
 
 func (x *CreateIjazahRequest) GetSchemaname() string {
@@ -7913,7 +7960,7 @@ type CreateIjazahResponse struct {
 
 func (x *CreateIjazahResponse) Reset() {
 	*x = CreateIjazahResponse{}
-	mi := &file_sekolah_proto_msgTypes[127]
+	mi := &file_sekolah_proto_msgTypes[128]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7925,7 +7972,7 @@ func (x *CreateIjazahResponse) String() string {
 func (*CreateIjazahResponse) ProtoMessage() {}
 
 func (x *CreateIjazahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[127]
+	mi := &file_sekolah_proto_msgTypes[128]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7938,7 +7985,7 @@ func (x *CreateIjazahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateIjazahResponse.ProtoReflect.Descriptor instead.
 func (*CreateIjazahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{127}
+	return file_sekolah_proto_rawDescGZIP(), []int{128}
 }
 
 func (x *CreateIjazahResponse) GetMessage() string {
@@ -7965,7 +8012,7 @@ type CreateBanyakIjazahRequest struct {
 
 func (x *CreateBanyakIjazahRequest) Reset() {
 	*x = CreateBanyakIjazahRequest{}
-	mi := &file_sekolah_proto_msgTypes[128]
+	mi := &file_sekolah_proto_msgTypes[129]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7977,7 +8024,7 @@ func (x *CreateBanyakIjazahRequest) String() string {
 func (*CreateBanyakIjazahRequest) ProtoMessage() {}
 
 func (x *CreateBanyakIjazahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[128]
+	mi := &file_sekolah_proto_msgTypes[129]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7990,7 +8037,7 @@ func (x *CreateBanyakIjazahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakIjazahRequest.ProtoReflect.Descriptor instead.
 func (*CreateBanyakIjazahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{128}
+	return file_sekolah_proto_rawDescGZIP(), []int{129}
 }
 
 func (x *CreateBanyakIjazahRequest) GetSchemaname() string {
@@ -8017,7 +8064,7 @@ type CreateBanyakIjazahResponse struct {
 
 func (x *CreateBanyakIjazahResponse) Reset() {
 	*x = CreateBanyakIjazahResponse{}
-	mi := &file_sekolah_proto_msgTypes[129]
+	mi := &file_sekolah_proto_msgTypes[130]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8029,7 +8076,7 @@ func (x *CreateBanyakIjazahResponse) String() string {
 func (*CreateBanyakIjazahResponse) ProtoMessage() {}
 
 func (x *CreateBanyakIjazahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[129]
+	mi := &file_sekolah_proto_msgTypes[130]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8042,7 +8089,7 @@ func (x *CreateBanyakIjazahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakIjazahResponse.ProtoReflect.Descriptor instead.
 func (*CreateBanyakIjazahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{129}
+	return file_sekolah_proto_rawDescGZIP(), []int{130}
 }
 
 func (x *CreateBanyakIjazahResponse) GetMessage() string {
@@ -8070,7 +8117,7 @@ type GetIjazahRequest struct {
 
 func (x *GetIjazahRequest) Reset() {
 	*x = GetIjazahRequest{}
-	mi := &file_sekolah_proto_msgTypes[130]
+	mi := &file_sekolah_proto_msgTypes[131]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8082,7 +8129,7 @@ func (x *GetIjazahRequest) String() string {
 func (*GetIjazahRequest) ProtoMessage() {}
 
 func (x *GetIjazahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[130]
+	mi := &file_sekolah_proto_msgTypes[131]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8095,7 +8142,7 @@ func (x *GetIjazahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetIjazahRequest.ProtoReflect.Descriptor instead.
 func (*GetIjazahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{130}
+	return file_sekolah_proto_rawDescGZIP(), []int{131}
 }
 
 func (x *GetIjazahRequest) GetSchemaname() string {
@@ -8130,7 +8177,7 @@ type GetIjazahResponse struct {
 
 func (x *GetIjazahResponse) Reset() {
 	*x = GetIjazahResponse{}
-	mi := &file_sekolah_proto_msgTypes[131]
+	mi := &file_sekolah_proto_msgTypes[132]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8142,7 +8189,7 @@ func (x *GetIjazahResponse) String() string {
 func (*GetIjazahResponse) ProtoMessage() {}
 
 func (x *GetIjazahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[131]
+	mi := &file_sekolah_proto_msgTypes[132]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8155,7 +8202,7 @@ func (x *GetIjazahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetIjazahResponse.ProtoReflect.Descriptor instead.
 func (*GetIjazahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{131}
+	return file_sekolah_proto_rawDescGZIP(), []int{132}
 }
 
 func (x *GetIjazahResponse) GetIjazah() []*Ijazah {
@@ -8190,7 +8237,7 @@ type GetProsesIjazahRequest struct {
 
 func (x *GetProsesIjazahRequest) Reset() {
 	*x = GetProsesIjazahRequest{}
-	mi := &file_sekolah_proto_msgTypes[132]
+	mi := &file_sekolah_proto_msgTypes[133]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8202,7 +8249,7 @@ func (x *GetProsesIjazahRequest) String() string {
 func (*GetProsesIjazahRequest) ProtoMessage() {}
 
 func (x *GetProsesIjazahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[132]
+	mi := &file_sekolah_proto_msgTypes[133]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8215,7 +8262,7 @@ func (x *GetProsesIjazahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProsesIjazahRequest.ProtoReflect.Descriptor instead.
 func (*GetProsesIjazahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{132}
+	return file_sekolah_proto_rawDescGZIP(), []int{133}
 }
 
 func (x *GetProsesIjazahRequest) GetSchemaname() string {
@@ -8250,7 +8297,7 @@ type GetProsesIjazahResponse struct {
 
 func (x *GetProsesIjazahResponse) Reset() {
 	*x = GetProsesIjazahResponse{}
-	mi := &file_sekolah_proto_msgTypes[133]
+	mi := &file_sekolah_proto_msgTypes[134]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8262,7 +8309,7 @@ func (x *GetProsesIjazahResponse) String() string {
 func (*GetProsesIjazahResponse) ProtoMessage() {}
 
 func (x *GetProsesIjazahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[133]
+	mi := &file_sekolah_proto_msgTypes[134]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8275,7 +8322,7 @@ func (x *GetProsesIjazahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProsesIjazahResponse.ProtoReflect.Descriptor instead.
 func (*GetProsesIjazahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{133}
+	return file_sekolah_proto_rawDescGZIP(), []int{134}
 }
 
 func (x *GetProsesIjazahResponse) GetAnggotaKelas() []*AnggotaKelas {
@@ -8309,7 +8356,7 @@ type UpdateIjazahRequest struct {
 
 func (x *UpdateIjazahRequest) Reset() {
 	*x = UpdateIjazahRequest{}
-	mi := &file_sekolah_proto_msgTypes[134]
+	mi := &file_sekolah_proto_msgTypes[135]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8321,7 +8368,7 @@ func (x *UpdateIjazahRequest) String() string {
 func (*UpdateIjazahRequest) ProtoMessage() {}
 
 func (x *UpdateIjazahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[134]
+	mi := &file_sekolah_proto_msgTypes[135]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8334,7 +8381,7 @@ func (x *UpdateIjazahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateIjazahRequest.ProtoReflect.Descriptor instead.
 func (*UpdateIjazahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{134}
+	return file_sekolah_proto_rawDescGZIP(), []int{135}
 }
 
 func (x *UpdateIjazahRequest) GetIjazah() *Ijazah {
@@ -8361,7 +8408,7 @@ type UpdateIjazahResponse struct {
 
 func (x *UpdateIjazahResponse) Reset() {
 	*x = UpdateIjazahResponse{}
-	mi := &file_sekolah_proto_msgTypes[135]
+	mi := &file_sekolah_proto_msgTypes[136]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8373,7 +8420,7 @@ func (x *UpdateIjazahResponse) String() string {
 func (*UpdateIjazahResponse) ProtoMessage() {}
 
 func (x *UpdateIjazahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[135]
+	mi := &file_sekolah_proto_msgTypes[136]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8386,7 +8433,7 @@ func (x *UpdateIjazahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateIjazahResponse.ProtoReflect.Descriptor instead.
 func (*UpdateIjazahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{135}
+	return file_sekolah_proto_rawDescGZIP(), []int{136}
 }
 
 func (x *UpdateIjazahResponse) GetMessage() string {
@@ -8413,7 +8460,7 @@ type DeleteIjazahRequest struct {
 
 func (x *DeleteIjazahRequest) Reset() {
 	*x = DeleteIjazahRequest{}
-	mi := &file_sekolah_proto_msgTypes[136]
+	mi := &file_sekolah_proto_msgTypes[137]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8425,7 +8472,7 @@ func (x *DeleteIjazahRequest) String() string {
 func (*DeleteIjazahRequest) ProtoMessage() {}
 
 func (x *DeleteIjazahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[136]
+	mi := &file_sekolah_proto_msgTypes[137]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8438,7 +8485,7 @@ func (x *DeleteIjazahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteIjazahRequest.ProtoReflect.Descriptor instead.
 func (*DeleteIjazahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{136}
+	return file_sekolah_proto_rawDescGZIP(), []int{137}
 }
 
 func (x *DeleteIjazahRequest) GetIjazahId() string {
@@ -8465,7 +8512,7 @@ type DeleteIjazahResponse struct {
 
 func (x *DeleteIjazahResponse) Reset() {
 	*x = DeleteIjazahResponse{}
-	mi := &file_sekolah_proto_msgTypes[137]
+	mi := &file_sekolah_proto_msgTypes[138]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8477,7 +8524,7 @@ func (x *DeleteIjazahResponse) String() string {
 func (*DeleteIjazahResponse) ProtoMessage() {}
 
 func (x *DeleteIjazahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[137]
+	mi := &file_sekolah_proto_msgTypes[138]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8490,7 +8537,7 @@ func (x *DeleteIjazahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteIjazahResponse.ProtoReflect.Descriptor instead.
 func (*DeleteIjazahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{137}
+	return file_sekolah_proto_rawDescGZIP(), []int{138}
 }
 
 func (x *DeleteIjazahResponse) GetMessage() string {
@@ -8516,7 +8563,7 @@ type UploadIjazahRequest struct {
 
 func (x *UploadIjazahRequest) Reset() {
 	*x = UploadIjazahRequest{}
-	mi := &file_sekolah_proto_msgTypes[138]
+	mi := &file_sekolah_proto_msgTypes[139]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8528,7 +8575,7 @@ func (x *UploadIjazahRequest) String() string {
 func (*UploadIjazahRequest) ProtoMessage() {}
 
 func (x *UploadIjazahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[138]
+	mi := &file_sekolah_proto_msgTypes[139]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8541,7 +8588,7 @@ func (x *UploadIjazahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadIjazahRequest.ProtoReflect.Descriptor instead.
 func (*UploadIjazahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{138}
+	return file_sekolah_proto_rawDescGZIP(), []int{139}
 }
 
 func (x *UploadIjazahRequest) GetIjazahFile() []byte {
@@ -8561,7 +8608,7 @@ type UploadIjazahResponse struct {
 
 func (x *UploadIjazahResponse) Reset() {
 	*x = UploadIjazahResponse{}
-	mi := &file_sekolah_proto_msgTypes[139]
+	mi := &file_sekolah_proto_msgTypes[140]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8573,7 +8620,7 @@ func (x *UploadIjazahResponse) String() string {
 func (*UploadIjazahResponse) ProtoMessage() {}
 
 func (x *UploadIjazahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[139]
+	mi := &file_sekolah_proto_msgTypes[140]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8586,7 +8633,7 @@ func (x *UploadIjazahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadIjazahResponse.ProtoReflect.Descriptor instead.
 func (*UploadIjazahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{139}
+	return file_sekolah_proto_rawDescGZIP(), []int{140}
 }
 
 func (x *UploadIjazahResponse) GetStatus() bool {
@@ -8615,7 +8662,7 @@ type TranskripNilai struct {
 
 func (x *TranskripNilai) Reset() {
 	*x = TranskripNilai{}
-	mi := &file_sekolah_proto_msgTypes[140]
+	mi := &file_sekolah_proto_msgTypes[141]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8627,7 +8674,7 @@ func (x *TranskripNilai) String() string {
 func (*TranskripNilai) ProtoMessage() {}
 
 func (x *TranskripNilai) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[140]
+	mi := &file_sekolah_proto_msgTypes[141]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8640,7 +8687,7 @@ func (x *TranskripNilai) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TranskripNilai.ProtoReflect.Descriptor instead.
 func (*TranskripNilai) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{140}
+	return file_sekolah_proto_rawDescGZIP(), []int{141}
 }
 
 func (x *TranskripNilai) GetPesertaDidikId() string {
@@ -8673,7 +8720,7 @@ type CreateTranskripNilaiRequest struct {
 
 func (x *CreateTranskripNilaiRequest) Reset() {
 	*x = CreateTranskripNilaiRequest{}
-	mi := &file_sekolah_proto_msgTypes[141]
+	mi := &file_sekolah_proto_msgTypes[142]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8685,7 +8732,7 @@ func (x *CreateTranskripNilaiRequest) String() string {
 func (*CreateTranskripNilaiRequest) ProtoMessage() {}
 
 func (x *CreateTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[141]
+	mi := &file_sekolah_proto_msgTypes[142]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8698,7 +8745,7 @@ func (x *CreateTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTranskripNilaiRequest.ProtoReflect.Descriptor instead.
 func (*CreateTranskripNilaiRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{141}
+	return file_sekolah_proto_rawDescGZIP(), []int{142}
 }
 
 func (x *CreateTranskripNilaiRequest) GetTranskripNilai() []*TranskripNilai {
@@ -8718,7 +8765,7 @@ type CreateTranskripNilaiResponse struct {
 
 func (x *CreateTranskripNilaiResponse) Reset() {
 	*x = CreateTranskripNilaiResponse{}
-	mi := &file_sekolah_proto_msgTypes[142]
+	mi := &file_sekolah_proto_msgTypes[143]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8730,7 +8777,7 @@ func (x *CreateTranskripNilaiResponse) String() string {
 func (*CreateTranskripNilaiResponse) ProtoMessage() {}
 
 func (x *CreateTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[142]
+	mi := &file_sekolah_proto_msgTypes[143]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8743,7 +8790,7 @@ func (x *CreateTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTranskripNilaiResponse.ProtoReflect.Descriptor instead.
 func (*CreateTranskripNilaiResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{142}
+	return file_sekolah_proto_rawDescGZIP(), []int{143}
 }
 
 func (x *CreateTranskripNilaiResponse) GetStatus() bool {
@@ -8769,7 +8816,7 @@ type GetTranskripNilaiRequest struct {
 
 func (x *GetTranskripNilaiRequest) Reset() {
 	*x = GetTranskripNilaiRequest{}
-	mi := &file_sekolah_proto_msgTypes[143]
+	mi := &file_sekolah_proto_msgTypes[144]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8781,7 +8828,7 @@ func (x *GetTranskripNilaiRequest) String() string {
 func (*GetTranskripNilaiRequest) ProtoMessage() {}
 
 func (x *GetTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[143]
+	mi := &file_sekolah_proto_msgTypes[144]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8794,7 +8841,7 @@ func (x *GetTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTranskripNilaiRequest.ProtoReflect.Descriptor instead.
 func (*GetTranskripNilaiRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{143}
+	return file_sekolah_proto_rawDescGZIP(), []int{144}
 }
 
 func (x *GetTranskripNilaiRequest) GetTranskripNilaiId() string {
@@ -8815,7 +8862,7 @@ type GetTranskripNilaiResponse struct {
 
 func (x *GetTranskripNilaiResponse) Reset() {
 	*x = GetTranskripNilaiResponse{}
-	mi := &file_sekolah_proto_msgTypes[144]
+	mi := &file_sekolah_proto_msgTypes[145]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8827,7 +8874,7 @@ func (x *GetTranskripNilaiResponse) String() string {
 func (*GetTranskripNilaiResponse) ProtoMessage() {}
 
 func (x *GetTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[144]
+	mi := &file_sekolah_proto_msgTypes[145]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8840,7 +8887,7 @@ func (x *GetTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTranskripNilaiResponse.ProtoReflect.Descriptor instead.
 func (*GetTranskripNilaiResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{144}
+	return file_sekolah_proto_rawDescGZIP(), []int{145}
 }
 
 func (x *GetTranskripNilaiResponse) GetTranskripNilai() []*TranskripNilai {
@@ -8873,7 +8920,7 @@ type UpdateTranskripNilaiRequest struct {
 
 func (x *UpdateTranskripNilaiRequest) Reset() {
 	*x = UpdateTranskripNilaiRequest{}
-	mi := &file_sekolah_proto_msgTypes[145]
+	mi := &file_sekolah_proto_msgTypes[146]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8885,7 +8932,7 @@ func (x *UpdateTranskripNilaiRequest) String() string {
 func (*UpdateTranskripNilaiRequest) ProtoMessage() {}
 
 func (x *UpdateTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[145]
+	mi := &file_sekolah_proto_msgTypes[146]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8898,7 +8945,7 @@ func (x *UpdateTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateTranskripNilaiRequest.ProtoReflect.Descriptor instead.
 func (*UpdateTranskripNilaiRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{145}
+	return file_sekolah_proto_rawDescGZIP(), []int{146}
 }
 
 func (x *UpdateTranskripNilaiRequest) GetTranskripNilai() *TranskripNilai {
@@ -8918,7 +8965,7 @@ type UpdateTranskripNilaiResponse struct {
 
 func (x *UpdateTranskripNilaiResponse) Reset() {
 	*x = UpdateTranskripNilaiResponse{}
-	mi := &file_sekolah_proto_msgTypes[146]
+	mi := &file_sekolah_proto_msgTypes[147]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8930,7 +8977,7 @@ func (x *UpdateTranskripNilaiResponse) String() string {
 func (*UpdateTranskripNilaiResponse) ProtoMessage() {}
 
 func (x *UpdateTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[146]
+	mi := &file_sekolah_proto_msgTypes[147]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8943,7 +8990,7 @@ func (x *UpdateTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateTranskripNilaiResponse.ProtoReflect.Descriptor instead.
 func (*UpdateTranskripNilaiResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{146}
+	return file_sekolah_proto_rawDescGZIP(), []int{147}
 }
 
 func (x *UpdateTranskripNilaiResponse) GetStatus() bool {
@@ -8969,7 +9016,7 @@ type DeleteTranskripNilaiRequest struct {
 
 func (x *DeleteTranskripNilaiRequest) Reset() {
 	*x = DeleteTranskripNilaiRequest{}
-	mi := &file_sekolah_proto_msgTypes[147]
+	mi := &file_sekolah_proto_msgTypes[148]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8981,7 +9028,7 @@ func (x *DeleteTranskripNilaiRequest) String() string {
 func (*DeleteTranskripNilaiRequest) ProtoMessage() {}
 
 func (x *DeleteTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[147]
+	mi := &file_sekolah_proto_msgTypes[148]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8994,7 +9041,7 @@ func (x *DeleteTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTranskripNilaiRequest.ProtoReflect.Descriptor instead.
 func (*DeleteTranskripNilaiRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{147}
+	return file_sekolah_proto_rawDescGZIP(), []int{148}
 }
 
 func (x *DeleteTranskripNilaiRequest) GetTranskripNilaiId() uint64 {
@@ -9014,7 +9061,7 @@ type DeleteTranskripNilaiResponse struct {
 
 func (x *DeleteTranskripNilaiResponse) Reset() {
 	*x = DeleteTranskripNilaiResponse{}
-	mi := &file_sekolah_proto_msgTypes[148]
+	mi := &file_sekolah_proto_msgTypes[149]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9026,7 +9073,7 @@ func (x *DeleteTranskripNilaiResponse) String() string {
 func (*DeleteTranskripNilaiResponse) ProtoMessage() {}
 
 func (x *DeleteTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[148]
+	mi := &file_sekolah_proto_msgTypes[149]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9039,7 +9086,7 @@ func (x *DeleteTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTranskripNilaiResponse.ProtoReflect.Descriptor instead.
 func (*DeleteTranskripNilaiResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{148}
+	return file_sekolah_proto_rawDescGZIP(), []int{149}
 }
 
 func (x *DeleteTranskripNilaiResponse) GetStatus() bool {
@@ -9065,7 +9112,7 @@ type UploadTranskripNilaiRequest struct {
 
 func (x *UploadTranskripNilaiRequest) Reset() {
 	*x = UploadTranskripNilaiRequest{}
-	mi := &file_sekolah_proto_msgTypes[149]
+	mi := &file_sekolah_proto_msgTypes[150]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9077,7 +9124,7 @@ func (x *UploadTranskripNilaiRequest) String() string {
 func (*UploadTranskripNilaiRequest) ProtoMessage() {}
 
 func (x *UploadTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[149]
+	mi := &file_sekolah_proto_msgTypes[150]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9090,7 +9137,7 @@ func (x *UploadTranskripNilaiRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadTranskripNilaiRequest.ProtoReflect.Descriptor instead.
 func (*UploadTranskripNilaiRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{149}
+	return file_sekolah_proto_rawDescGZIP(), []int{150}
 }
 
 func (x *UploadTranskripNilaiRequest) GetTranskripFile() []byte {
@@ -9110,7 +9157,7 @@ type UploadTranskripNilaiResponse struct {
 
 func (x *UploadTranskripNilaiResponse) Reset() {
 	*x = UploadTranskripNilaiResponse{}
-	mi := &file_sekolah_proto_msgTypes[150]
+	mi := &file_sekolah_proto_msgTypes[151]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9122,7 +9169,7 @@ func (x *UploadTranskripNilaiResponse) String() string {
 func (*UploadTranskripNilaiResponse) ProtoMessage() {}
 
 func (x *UploadTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[150]
+	mi := &file_sekolah_proto_msgTypes[151]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9135,7 +9182,7 @@ func (x *UploadTranskripNilaiResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadTranskripNilaiResponse.ProtoReflect.Descriptor instead.
 func (*UploadTranskripNilaiResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{150}
+	return file_sekolah_proto_rawDescGZIP(), []int{151}
 }
 
 func (x *UploadTranskripNilaiResponse) GetStatus() bool {
@@ -9162,7 +9209,7 @@ type DownloadSekolahRequest struct {
 
 func (x *DownloadSekolahRequest) Reset() {
 	*x = DownloadSekolahRequest{}
-	mi := &file_sekolah_proto_msgTypes[151]
+	mi := &file_sekolah_proto_msgTypes[152]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9174,7 +9221,7 @@ func (x *DownloadSekolahRequest) String() string {
 func (*DownloadSekolahRequest) ProtoMessage() {}
 
 func (x *DownloadSekolahRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[151]
+	mi := &file_sekolah_proto_msgTypes[152]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9187,7 +9234,7 @@ func (x *DownloadSekolahRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DownloadSekolahRequest.ProtoReflect.Descriptor instead.
 func (*DownloadSekolahRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{151}
+	return file_sekolah_proto_rawDescGZIP(), []int{152}
 }
 
 func (x *DownloadSekolahRequest) GetFileName() string {
@@ -9213,7 +9260,7 @@ type DownloadSekolahResponse struct {
 
 func (x *DownloadSekolahResponse) Reset() {
 	*x = DownloadSekolahResponse{}
-	mi := &file_sekolah_proto_msgTypes[152]
+	mi := &file_sekolah_proto_msgTypes[153]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9225,7 +9272,7 @@ func (x *DownloadSekolahResponse) String() string {
 func (*DownloadSekolahResponse) ProtoMessage() {}
 
 func (x *DownloadSekolahResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[152]
+	mi := &file_sekolah_proto_msgTypes[153]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9238,7 +9285,7 @@ func (x *DownloadSekolahResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DownloadSekolahResponse.ProtoReflect.Descriptor instead.
 func (*DownloadSekolahResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{152}
+	return file_sekolah_proto_rawDescGZIP(), []int{153}
 }
 
 func (x *DownloadSekolahResponse) GetFile() []byte {
@@ -9258,7 +9305,7 @@ type GetCountSiswaRequest struct {
 
 func (x *GetCountSiswaRequest) Reset() {
 	*x = GetCountSiswaRequest{}
-	mi := &file_sekolah_proto_msgTypes[153]
+	mi := &file_sekolah_proto_msgTypes[154]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9270,7 +9317,7 @@ func (x *GetCountSiswaRequest) String() string {
 func (*GetCountSiswaRequest) ProtoMessage() {}
 
 func (x *GetCountSiswaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[153]
+	mi := &file_sekolah_proto_msgTypes[154]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9283,7 +9330,7 @@ func (x *GetCountSiswaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountSiswaRequest.ProtoReflect.Descriptor instead.
 func (*GetCountSiswaRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{153}
+	return file_sekolah_proto_rawDescGZIP(), []int{154}
 }
 
 func (x *GetCountSiswaRequest) GetSchemaname() string {
@@ -9309,7 +9356,7 @@ type GetCountSiswaResponse struct {
 
 func (x *GetCountSiswaResponse) Reset() {
 	*x = GetCountSiswaResponse{}
-	mi := &file_sekolah_proto_msgTypes[154]
+	mi := &file_sekolah_proto_msgTypes[155]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9321,7 +9368,7 @@ func (x *GetCountSiswaResponse) String() string {
 func (*GetCountSiswaResponse) ProtoMessage() {}
 
 func (x *GetCountSiswaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[154]
+	mi := &file_sekolah_proto_msgTypes[155]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9334,7 +9381,7 @@ func (x *GetCountSiswaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountSiswaResponse.ProtoReflect.Descriptor instead.
 func (*GetCountSiswaResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{154}
+	return file_sekolah_proto_rawDescGZIP(), []int{155}
 }
 
 func (x *GetCountSiswaResponse) GetCountSiswa() int64 {
@@ -9354,7 +9401,7 @@ type GetCountGuruRequest struct {
 
 func (x *GetCountGuruRequest) Reset() {
 	*x = GetCountGuruRequest{}
-	mi := &file_sekolah_proto_msgTypes[155]
+	mi := &file_sekolah_proto_msgTypes[156]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9366,7 +9413,7 @@ func (x *GetCountGuruRequest) String() string {
 func (*GetCountGuruRequest) ProtoMessage() {}
 
 func (x *GetCountGuruRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[155]
+	mi := &file_sekolah_proto_msgTypes[156]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9379,7 +9426,7 @@ func (x *GetCountGuruRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountGuruRequest.ProtoReflect.Descriptor instead.
 func (*GetCountGuruRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{155}
+	return file_sekolah_proto_rawDescGZIP(), []int{156}
 }
 
 func (x *GetCountGuruRequest) GetSchemaname() string {
@@ -9405,7 +9452,7 @@ type GetCountGuruResponse struct {
 
 func (x *GetCountGuruResponse) Reset() {
 	*x = GetCountGuruResponse{}
-	mi := &file_sekolah_proto_msgTypes[156]
+	mi := &file_sekolah_proto_msgTypes[157]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9417,7 +9464,7 @@ func (x *GetCountGuruResponse) String() string {
 func (*GetCountGuruResponse) ProtoMessage() {}
 
 func (x *GetCountGuruResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[156]
+	mi := &file_sekolah_proto_msgTypes[157]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9430,7 +9477,7 @@ func (x *GetCountGuruResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountGuruResponse.ProtoReflect.Descriptor instead.
 func (*GetCountGuruResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{156}
+	return file_sekolah_proto_rawDescGZIP(), []int{157}
 }
 
 func (x *GetCountGuruResponse) GetCountGuru() int64 {
@@ -9450,7 +9497,7 @@ type GetCountKelasRequest struct {
 
 func (x *GetCountKelasRequest) Reset() {
 	*x = GetCountKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[157]
+	mi := &file_sekolah_proto_msgTypes[158]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9462,7 +9509,7 @@ func (x *GetCountKelasRequest) String() string {
 func (*GetCountKelasRequest) ProtoMessage() {}
 
 func (x *GetCountKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[157]
+	mi := &file_sekolah_proto_msgTypes[158]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9475,7 +9522,7 @@ func (x *GetCountKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountKelasRequest.ProtoReflect.Descriptor instead.
 func (*GetCountKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{157}
+	return file_sekolah_proto_rawDescGZIP(), []int{158}
 }
 
 func (x *GetCountKelasRequest) GetSchemaname() string {
@@ -9501,7 +9548,7 @@ type GetCountKelasResponse struct {
 
 func (x *GetCountKelasResponse) Reset() {
 	*x = GetCountKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[158]
+	mi := &file_sekolah_proto_msgTypes[159]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9513,7 +9560,7 @@ func (x *GetCountKelasResponse) String() string {
 func (*GetCountKelasResponse) ProtoMessage() {}
 
 func (x *GetCountKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[158]
+	mi := &file_sekolah_proto_msgTypes[159]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9526,7 +9573,7 @@ func (x *GetCountKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountKelasResponse.ProtoReflect.Descriptor instead.
 func (*GetCountKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{158}
+	return file_sekolah_proto_rawDescGZIP(), []int{159}
 }
 
 func (x *GetCountKelasResponse) GetCountKelas() int64 {
@@ -9546,7 +9593,7 @@ type InfoKelas struct {
 
 func (x *InfoKelas) Reset() {
 	*x = InfoKelas{}
-	mi := &file_sekolah_proto_msgTypes[159]
+	mi := &file_sekolah_proto_msgTypes[160]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9558,7 +9605,7 @@ func (x *InfoKelas) String() string {
 func (*InfoKelas) ProtoMessage() {}
 
 func (x *InfoKelas) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[159]
+	mi := &file_sekolah_proto_msgTypes[160]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9571,7 +9618,7 @@ func (x *InfoKelas) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InfoKelas.ProtoReflect.Descriptor instead.
 func (*InfoKelas) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{159}
+	return file_sekolah_proto_rawDescGZIP(), []int{160}
 }
 
 func (x *InfoKelas) GetRombelBelalajarId() string {
@@ -9598,7 +9645,7 @@ type GetInfoKelasRequest struct {
 
 func (x *GetInfoKelasRequest) Reset() {
 	*x = GetInfoKelasRequest{}
-	mi := &file_sekolah_proto_msgTypes[160]
+	mi := &file_sekolah_proto_msgTypes[161]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9610,7 +9657,7 @@ func (x *GetInfoKelasRequest) String() string {
 func (*GetInfoKelasRequest) ProtoMessage() {}
 
 func (x *GetInfoKelasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[160]
+	mi := &file_sekolah_proto_msgTypes[161]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9623,7 +9670,7 @@ func (x *GetInfoKelasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetInfoKelasRequest.ProtoReflect.Descriptor instead.
 func (*GetInfoKelasRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{160}
+	return file_sekolah_proto_rawDescGZIP(), []int{161}
 }
 
 func (x *GetInfoKelasRequest) GetSchemaname() string {
@@ -9649,7 +9696,7 @@ type GetInfoKelasResponse struct {
 
 func (x *GetInfoKelasResponse) Reset() {
 	*x = GetInfoKelasResponse{}
-	mi := &file_sekolah_proto_msgTypes[161]
+	mi := &file_sekolah_proto_msgTypes[162]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9661,7 +9708,7 @@ func (x *GetInfoKelasResponse) String() string {
 func (*GetInfoKelasResponse) ProtoMessage() {}
 
 func (x *GetInfoKelasResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[161]
+	mi := &file_sekolah_proto_msgTypes[162]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9674,7 +9721,7 @@ func (x *GetInfoKelasResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetInfoKelasResponse.ProtoReflect.Descriptor instead.
 func (*GetInfoKelasResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{161}
+	return file_sekolah_proto_rawDescGZIP(), []int{162}
 }
 
 func (x *GetInfoKelasResponse) GetInfoKelas() []*InfoKelas {
@@ -9692,7 +9739,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_sekolah_proto_msgTypes[162]
+	mi := &file_sekolah_proto_msgTypes[163]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9704,7 +9751,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[162]
+	mi := &file_sekolah_proto_msgTypes[163]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9717,7 +9764,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{162}
+	return file_sekolah_proto_rawDescGZIP(), []int{163}
 }
 
 type BentukPendidikan struct {
@@ -9739,7 +9786,7 @@ type BentukPendidikan struct {
 
 func (x *BentukPendidikan) Reset() {
 	*x = BentukPendidikan{}
-	mi := &file_sekolah_proto_msgTypes[163]
+	mi := &file_sekolah_proto_msgTypes[164]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9751,7 +9798,7 @@ func (x *BentukPendidikan) String() string {
 func (*BentukPendidikan) ProtoMessage() {}
 
 func (x *BentukPendidikan) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[163]
+	mi := &file_sekolah_proto_msgTypes[164]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9764,7 +9811,7 @@ func (x *BentukPendidikan) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BentukPendidikan.ProtoReflect.Descriptor instead.
 func (*BentukPendidikan) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{163}
+	return file_sekolah_proto_rawDescGZIP(), []int{164}
 }
 
 func (x *BentukPendidikan) GetBentukPendidikanId() uint32 {
@@ -9856,7 +9903,7 @@ type Jenjang struct {
 
 func (x *Jenjang) Reset() {
 	*x = Jenjang{}
-	mi := &file_sekolah_proto_msgTypes[164]
+	mi := &file_sekolah_proto_msgTypes[165]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9868,7 +9915,7 @@ func (x *Jenjang) String() string {
 func (*Jenjang) ProtoMessage() {}
 
 func (x *Jenjang) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[164]
+	mi := &file_sekolah_proto_msgTypes[165]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9881,7 +9928,7 @@ func (x *Jenjang) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Jenjang.ProtoReflect.Descriptor instead.
 func (*Jenjang) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{164}
+	return file_sekolah_proto_rawDescGZIP(), []int{165}
 }
 
 func (x *Jenjang) GetJenjangPendidikanId() uint32 {
@@ -9914,7 +9961,7 @@ func (x *Jenjang) GetJenjangOrang() uint32 {
 
 type TingkatPendidikan struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
-	TingkatPendidikanId uint32                 `protobuf:"varint,1,opt,name=tingkat_pendidikan_id,json=tingkatPendidikanId,proto3" json:"tingkat_pendidikan_id,omitempty"`
+	TingkatPendidikanId int32                  `protobuf:"varint,1,opt,name=tingkat_pendidikan_id,json=tingkatPendidikanId,proto3" json:"tingkat_pendidikan_id,omitempty"`
 	Kode                string                 `protobuf:"bytes,2,opt,name=kode,proto3" json:"kode,omitempty"`
 	Nama                string                 `protobuf:"bytes,3,opt,name=nama,proto3" json:"nama,omitempty"`
 	JenjangPendidikanId uint32                 `protobuf:"varint,4,opt,name=jenjang_pendidikan_id,json=jenjangPendidikanId,proto3" json:"jenjang_pendidikan_id,omitempty"`
@@ -9924,7 +9971,7 @@ type TingkatPendidikan struct {
 
 func (x *TingkatPendidikan) Reset() {
 	*x = TingkatPendidikan{}
-	mi := &file_sekolah_proto_msgTypes[165]
+	mi := &file_sekolah_proto_msgTypes[166]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9936,7 +9983,7 @@ func (x *TingkatPendidikan) String() string {
 func (*TingkatPendidikan) ProtoMessage() {}
 
 func (x *TingkatPendidikan) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[165]
+	mi := &file_sekolah_proto_msgTypes[166]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9949,10 +9996,10 @@ func (x *TingkatPendidikan) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TingkatPendidikan.ProtoReflect.Descriptor instead.
 func (*TingkatPendidikan) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{165}
+	return file_sekolah_proto_rawDescGZIP(), []int{166}
 }
 
-func (x *TingkatPendidikan) GetTingkatPendidikanId() uint32 {
+func (x *TingkatPendidikan) GetTingkatPendidikanId() int32 {
 	if x != nil {
 		return x.TingkatPendidikanId
 	}
@@ -9990,7 +10037,7 @@ type StatusKepemilikan struct {
 
 func (x *StatusKepemilikan) Reset() {
 	*x = StatusKepemilikan{}
-	mi := &file_sekolah_proto_msgTypes[166]
+	mi := &file_sekolah_proto_msgTypes[167]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10002,7 +10049,7 @@ func (x *StatusKepemilikan) String() string {
 func (*StatusKepemilikan) ProtoMessage() {}
 
 func (x *StatusKepemilikan) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[166]
+	mi := &file_sekolah_proto_msgTypes[167]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10015,7 +10062,7 @@ func (x *StatusKepemilikan) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusKepemilikan.ProtoReflect.Descriptor instead.
 func (*StatusKepemilikan) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{166}
+	return file_sekolah_proto_rawDescGZIP(), []int{167}
 }
 
 func (x *StatusKepemilikan) GetStatusKepemilikanId() uint32 {
@@ -10051,7 +10098,7 @@ type Jurusan struct {
 
 func (x *Jurusan) Reset() {
 	*x = Jurusan{}
-	mi := &file_sekolah_proto_msgTypes[167]
+	mi := &file_sekolah_proto_msgTypes[168]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10063,7 +10110,7 @@ func (x *Jurusan) String() string {
 func (*Jurusan) ProtoMessage() {}
 
 func (x *Jurusan) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[167]
+	mi := &file_sekolah_proto_msgTypes[168]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10076,7 +10123,7 @@ func (x *Jurusan) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Jurusan.ProtoReflect.Descriptor instead.
 func (*Jurusan) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{167}
+	return file_sekolah_proto_rawDescGZIP(), []int{168}
 }
 
 func (x *Jurusan) GetJurusanId() string {
@@ -10165,7 +10212,7 @@ type Kurikulum struct {
 
 func (x *Kurikulum) Reset() {
 	*x = Kurikulum{}
-	mi := &file_sekolah_proto_msgTypes[168]
+	mi := &file_sekolah_proto_msgTypes[169]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10177,7 +10224,7 @@ func (x *Kurikulum) String() string {
 func (*Kurikulum) ProtoMessage() {}
 
 func (x *Kurikulum) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[168]
+	mi := &file_sekolah_proto_msgTypes[169]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10190,7 +10237,7 @@ func (x *Kurikulum) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Kurikulum.ProtoReflect.Descriptor instead.
 func (*Kurikulum) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{168}
+	return file_sekolah_proto_rawDescGZIP(), []int{169}
 }
 
 func (x *Kurikulum) GetKurikulumId() uint32 {
@@ -10251,7 +10298,7 @@ type GetBentukPendidikanResponse struct {
 
 func (x *GetBentukPendidikanResponse) Reset() {
 	*x = GetBentukPendidikanResponse{}
-	mi := &file_sekolah_proto_msgTypes[169]
+	mi := &file_sekolah_proto_msgTypes[170]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10263,7 +10310,7 @@ func (x *GetBentukPendidikanResponse) String() string {
 func (*GetBentukPendidikanResponse) ProtoMessage() {}
 
 func (x *GetBentukPendidikanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[169]
+	mi := &file_sekolah_proto_msgTypes[170]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10276,7 +10323,7 @@ func (x *GetBentukPendidikanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBentukPendidikanResponse.ProtoReflect.Descriptor instead.
 func (*GetBentukPendidikanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{169}
+	return file_sekolah_proto_rawDescGZIP(), []int{170}
 }
 
 func (x *GetBentukPendidikanResponse) GetBentukPendidikan() []*BentukPendidikan {
@@ -10295,7 +10342,7 @@ type GetJenjangResponse struct {
 
 func (x *GetJenjangResponse) Reset() {
 	*x = GetJenjangResponse{}
-	mi := &file_sekolah_proto_msgTypes[170]
+	mi := &file_sekolah_proto_msgTypes[171]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10307,7 +10354,7 @@ func (x *GetJenjangResponse) String() string {
 func (*GetJenjangResponse) ProtoMessage() {}
 
 func (x *GetJenjangResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[170]
+	mi := &file_sekolah_proto_msgTypes[171]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10320,7 +10367,7 @@ func (x *GetJenjangResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJenjangResponse.ProtoReflect.Descriptor instead.
 func (*GetJenjangResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{170}
+	return file_sekolah_proto_rawDescGZIP(), []int{171}
 }
 
 func (x *GetJenjangResponse) GetJenjang() []*Jenjang {
@@ -10339,7 +10386,7 @@ type GetTingkatPendidikanRequest struct {
 
 func (x *GetTingkatPendidikanRequest) Reset() {
 	*x = GetTingkatPendidikanRequest{}
-	mi := &file_sekolah_proto_msgTypes[171]
+	mi := &file_sekolah_proto_msgTypes[172]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10351,7 +10398,7 @@ func (x *GetTingkatPendidikanRequest) String() string {
 func (*GetTingkatPendidikanRequest) ProtoMessage() {}
 
 func (x *GetTingkatPendidikanRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[171]
+	mi := &file_sekolah_proto_msgTypes[172]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10364,7 +10411,7 @@ func (x *GetTingkatPendidikanRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTingkatPendidikanRequest.ProtoReflect.Descriptor instead.
 func (*GetTingkatPendidikanRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{171}
+	return file_sekolah_proto_rawDescGZIP(), []int{172}
 }
 
 func (x *GetTingkatPendidikanRequest) GetJenjangPendidikanId() string {
@@ -10383,7 +10430,7 @@ type GetTingkatPendidikanResponse struct {
 
 func (x *GetTingkatPendidikanResponse) Reset() {
 	*x = GetTingkatPendidikanResponse{}
-	mi := &file_sekolah_proto_msgTypes[172]
+	mi := &file_sekolah_proto_msgTypes[173]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10395,7 +10442,7 @@ func (x *GetTingkatPendidikanResponse) String() string {
 func (*GetTingkatPendidikanResponse) ProtoMessage() {}
 
 func (x *GetTingkatPendidikanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[172]
+	mi := &file_sekolah_proto_msgTypes[173]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10408,7 +10455,7 @@ func (x *GetTingkatPendidikanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTingkatPendidikanResponse.ProtoReflect.Descriptor instead.
 func (*GetTingkatPendidikanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{172}
+	return file_sekolah_proto_rawDescGZIP(), []int{173}
 }
 
 func (x *GetTingkatPendidikanResponse) GetTingkatPendidikan() []*TingkatPendidikan {
@@ -10427,7 +10474,7 @@ type GetStatusKepemilikanResponse struct {
 
 func (x *GetStatusKepemilikanResponse) Reset() {
 	*x = GetStatusKepemilikanResponse{}
-	mi := &file_sekolah_proto_msgTypes[173]
+	mi := &file_sekolah_proto_msgTypes[174]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10439,7 +10486,7 @@ func (x *GetStatusKepemilikanResponse) String() string {
 func (*GetStatusKepemilikanResponse) ProtoMessage() {}
 
 func (x *GetStatusKepemilikanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[173]
+	mi := &file_sekolah_proto_msgTypes[174]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10452,7 +10499,7 @@ func (x *GetStatusKepemilikanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetStatusKepemilikanResponse.ProtoReflect.Descriptor instead.
 func (*GetStatusKepemilikanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{173}
+	return file_sekolah_proto_rawDescGZIP(), []int{174}
 }
 
 func (x *GetStatusKepemilikanResponse) GetStatusKepemilikan() []*StatusKepemilikan {
@@ -10472,7 +10519,7 @@ type GetJurusanRequest struct {
 
 func (x *GetJurusanRequest) Reset() {
 	*x = GetJurusanRequest{}
-	mi := &file_sekolah_proto_msgTypes[174]
+	mi := &file_sekolah_proto_msgTypes[175]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10484,7 +10531,7 @@ func (x *GetJurusanRequest) String() string {
 func (*GetJurusanRequest) ProtoMessage() {}
 
 func (x *GetJurusanRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[174]
+	mi := &file_sekolah_proto_msgTypes[175]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10497,7 +10544,7 @@ func (x *GetJurusanRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJurusanRequest.ProtoReflect.Descriptor instead.
 func (*GetJurusanRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{174}
+	return file_sekolah_proto_rawDescGZIP(), []int{175}
 }
 
 func (x *GetJurusanRequest) GetJenjangPendidikanId() string {
@@ -10523,7 +10570,7 @@ type GetJurusanResponse struct {
 
 func (x *GetJurusanResponse) Reset() {
 	*x = GetJurusanResponse{}
-	mi := &file_sekolah_proto_msgTypes[175]
+	mi := &file_sekolah_proto_msgTypes[176]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10535,7 +10582,7 @@ func (x *GetJurusanResponse) String() string {
 func (*GetJurusanResponse) ProtoMessage() {}
 
 func (x *GetJurusanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[175]
+	mi := &file_sekolah_proto_msgTypes[176]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10548,7 +10595,7 @@ func (x *GetJurusanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJurusanResponse.ProtoReflect.Descriptor instead.
 func (*GetJurusanResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{175}
+	return file_sekolah_proto_rawDescGZIP(), []int{176}
 }
 
 func (x *GetJurusanResponse) GetJurusan() []*Jurusan {
@@ -10567,7 +10614,7 @@ type GetKurikulumRequest struct {
 
 func (x *GetKurikulumRequest) Reset() {
 	*x = GetKurikulumRequest{}
-	mi := &file_sekolah_proto_msgTypes[176]
+	mi := &file_sekolah_proto_msgTypes[177]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10579,7 +10626,7 @@ func (x *GetKurikulumRequest) String() string {
 func (*GetKurikulumRequest) ProtoMessage() {}
 
 func (x *GetKurikulumRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[176]
+	mi := &file_sekolah_proto_msgTypes[177]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10592,7 +10639,7 @@ func (x *GetKurikulumRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetKurikulumRequest.ProtoReflect.Descriptor instead.
 func (*GetKurikulumRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{176}
+	return file_sekolah_proto_rawDescGZIP(), []int{177}
 }
 
 func (x *GetKurikulumRequest) GetJurusanId() string {
@@ -10611,7 +10658,7 @@ type GetKurikulumResponse struct {
 
 func (x *GetKurikulumResponse) Reset() {
 	*x = GetKurikulumResponse{}
-	mi := &file_sekolah_proto_msgTypes[177]
+	mi := &file_sekolah_proto_msgTypes[178]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10623,7 +10670,7 @@ func (x *GetKurikulumResponse) String() string {
 func (*GetKurikulumResponse) ProtoMessage() {}
 
 func (x *GetKurikulumResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[177]
+	mi := &file_sekolah_proto_msgTypes[178]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10636,7 +10683,7 @@ func (x *GetKurikulumResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetKurikulumResponse.ProtoReflect.Descriptor instead.
 func (*GetKurikulumResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{177}
+	return file_sekolah_proto_rawDescGZIP(), []int{178}
 }
 
 func (x *GetKurikulumResponse) GetKurikulum() []*Kurikulum {
@@ -10655,7 +10702,7 @@ type GetMapelRequest struct {
 
 func (x *GetMapelRequest) Reset() {
 	*x = GetMapelRequest{}
-	mi := &file_sekolah_proto_msgTypes[178]
+	mi := &file_sekolah_proto_msgTypes[179]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10667,7 +10714,7 @@ func (x *GetMapelRequest) String() string {
 func (*GetMapelRequest) ProtoMessage() {}
 
 func (x *GetMapelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[178]
+	mi := &file_sekolah_proto_msgTypes[179]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10680,7 +10727,7 @@ func (x *GetMapelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMapelRequest.ProtoReflect.Descriptor instead.
 func (*GetMapelRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{178}
+	return file_sekolah_proto_rawDescGZIP(), []int{179}
 }
 
 func (x *GetMapelRequest) GetMapelId() string {
@@ -10699,7 +10746,7 @@ type GetMapelResponse struct {
 
 func (x *GetMapelResponse) Reset() {
 	*x = GetMapelResponse{}
-	mi := &file_sekolah_proto_msgTypes[179]
+	mi := &file_sekolah_proto_msgTypes[180]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10711,7 +10758,7 @@ func (x *GetMapelResponse) String() string {
 func (*GetMapelResponse) ProtoMessage() {}
 
 func (x *GetMapelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[179]
+	mi := &file_sekolah_proto_msgTypes[180]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10724,7 +10771,7 @@ func (x *GetMapelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMapelResponse.ProtoReflect.Descriptor instead.
 func (*GetMapelResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{179}
+	return file_sekolah_proto_rawDescGZIP(), []int{180}
 }
 
 func (x *GetMapelResponse) GetMapel() []*Mapel {
@@ -10752,7 +10799,7 @@ type Pembelajaran struct {
 
 func (x *Pembelajaran) Reset() {
 	*x = Pembelajaran{}
-	mi := &file_sekolah_proto_msgTypes[180]
+	mi := &file_sekolah_proto_msgTypes[181]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10764,7 +10811,7 @@ func (x *Pembelajaran) String() string {
 func (*Pembelajaran) ProtoMessage() {}
 
 func (x *Pembelajaran) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[180]
+	mi := &file_sekolah_proto_msgTypes[181]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10777,7 +10824,7 @@ func (x *Pembelajaran) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Pembelajaran.ProtoReflect.Descriptor instead.
 func (*Pembelajaran) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{180}
+	return file_sekolah_proto_rawDescGZIP(), []int{181}
 }
 
 func (x *Pembelajaran) GetPembelajaranId() string {
@@ -10860,7 +10907,7 @@ type CreatePembelajaranRequest struct {
 
 func (x *CreatePembelajaranRequest) Reset() {
 	*x = CreatePembelajaranRequest{}
-	mi := &file_sekolah_proto_msgTypes[181]
+	mi := &file_sekolah_proto_msgTypes[182]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10872,7 +10919,7 @@ func (x *CreatePembelajaranRequest) String() string {
 func (*CreatePembelajaranRequest) ProtoMessage() {}
 
 func (x *CreatePembelajaranRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[181]
+	mi := &file_sekolah_proto_msgTypes[182]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10885,7 +10932,7 @@ func (x *CreatePembelajaranRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePembelajaranRequest.ProtoReflect.Descriptor instead.
 func (*CreatePembelajaranRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{181}
+	return file_sekolah_proto_rawDescGZIP(), []int{182}
 }
 
 func (x *CreatePembelajaranRequest) GetPembelajaran() []*Pembelajaran {
@@ -10912,7 +10959,7 @@ type CreatePembelajaranResponse struct {
 
 func (x *CreatePembelajaranResponse) Reset() {
 	*x = CreatePembelajaranResponse{}
-	mi := &file_sekolah_proto_msgTypes[182]
+	mi := &file_sekolah_proto_msgTypes[183]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10924,7 +10971,7 @@ func (x *CreatePembelajaranResponse) String() string {
 func (*CreatePembelajaranResponse) ProtoMessage() {}
 
 func (x *CreatePembelajaranResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[182]
+	mi := &file_sekolah_proto_msgTypes[183]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10937,7 +10984,7 @@ func (x *CreatePembelajaranResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePembelajaranResponse.ProtoReflect.Descriptor instead.
 func (*CreatePembelajaranResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{182}
+	return file_sekolah_proto_rawDescGZIP(), []int{183}
 }
 
 func (x *CreatePembelajaranResponse) GetMessage() string {
@@ -10964,7 +11011,7 @@ type CreateBanyakPembelajaranRequest struct {
 
 func (x *CreateBanyakPembelajaranRequest) Reset() {
 	*x = CreateBanyakPembelajaranRequest{}
-	mi := &file_sekolah_proto_msgTypes[183]
+	mi := &file_sekolah_proto_msgTypes[184]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10976,7 +11023,7 @@ func (x *CreateBanyakPembelajaranRequest) String() string {
 func (*CreateBanyakPembelajaranRequest) ProtoMessage() {}
 
 func (x *CreateBanyakPembelajaranRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[183]
+	mi := &file_sekolah_proto_msgTypes[184]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10989,7 +11036,7 @@ func (x *CreateBanyakPembelajaranRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakPembelajaranRequest.ProtoReflect.Descriptor instead.
 func (*CreateBanyakPembelajaranRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{183}
+	return file_sekolah_proto_rawDescGZIP(), []int{184}
 }
 
 func (x *CreateBanyakPembelajaranRequest) GetSchemaname() string {
@@ -11016,7 +11063,7 @@ type CreateBanyakPembelajaranResponse struct {
 
 func (x *CreateBanyakPembelajaranResponse) Reset() {
 	*x = CreateBanyakPembelajaranResponse{}
-	mi := &file_sekolah_proto_msgTypes[184]
+	mi := &file_sekolah_proto_msgTypes[185]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11028,7 +11075,7 @@ func (x *CreateBanyakPembelajaranResponse) String() string {
 func (*CreateBanyakPembelajaranResponse) ProtoMessage() {}
 
 func (x *CreateBanyakPembelajaranResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[184]
+	mi := &file_sekolah_proto_msgTypes[185]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11041,7 +11088,7 @@ func (x *CreateBanyakPembelajaranResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBanyakPembelajaranResponse.ProtoReflect.Descriptor instead.
 func (*CreateBanyakPembelajaranResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{184}
+	return file_sekolah_proto_rawDescGZIP(), []int{185}
 }
 
 func (x *CreateBanyakPembelajaranResponse) GetMessage() string {
@@ -11069,7 +11116,7 @@ type GetPembelajaranRequest struct {
 
 func (x *GetPembelajaranRequest) Reset() {
 	*x = GetPembelajaranRequest{}
-	mi := &file_sekolah_proto_msgTypes[185]
+	mi := &file_sekolah_proto_msgTypes[186]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11081,7 +11128,7 @@ func (x *GetPembelajaranRequest) String() string {
 func (*GetPembelajaranRequest) ProtoMessage() {}
 
 func (x *GetPembelajaranRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[185]
+	mi := &file_sekolah_proto_msgTypes[186]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11094,7 +11141,7 @@ func (x *GetPembelajaranRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPembelajaranRequest.ProtoReflect.Descriptor instead.
 func (*GetPembelajaranRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{185}
+	return file_sekolah_proto_rawDescGZIP(), []int{186}
 }
 
 func (x *GetPembelajaranRequest) GetSchemaname() string {
@@ -11127,7 +11174,7 @@ type GetPembelajaranResponse struct {
 
 func (x *GetPembelajaranResponse) Reset() {
 	*x = GetPembelajaranResponse{}
-	mi := &file_sekolah_proto_msgTypes[186]
+	mi := &file_sekolah_proto_msgTypes[187]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11139,7 +11186,7 @@ func (x *GetPembelajaranResponse) String() string {
 func (*GetPembelajaranResponse) ProtoMessage() {}
 
 func (x *GetPembelajaranResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[186]
+	mi := &file_sekolah_proto_msgTypes[187]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11152,7 +11199,7 @@ func (x *GetPembelajaranResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPembelajaranResponse.ProtoReflect.Descriptor instead.
 func (*GetPembelajaranResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{186}
+	return file_sekolah_proto_rawDescGZIP(), []int{187}
 }
 
 func (x *GetPembelajaranResponse) GetPembelajaran() []*Pembelajaran {
@@ -11173,7 +11220,7 @@ type UpdatePembelajaranRequest struct {
 
 func (x *UpdatePembelajaranRequest) Reset() {
 	*x = UpdatePembelajaranRequest{}
-	mi := &file_sekolah_proto_msgTypes[187]
+	mi := &file_sekolah_proto_msgTypes[188]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11185,7 +11232,7 @@ func (x *UpdatePembelajaranRequest) String() string {
 func (*UpdatePembelajaranRequest) ProtoMessage() {}
 
 func (x *UpdatePembelajaranRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[187]
+	mi := &file_sekolah_proto_msgTypes[188]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11198,7 +11245,7 @@ func (x *UpdatePembelajaranRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePembelajaranRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePembelajaranRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{187}
+	return file_sekolah_proto_rawDescGZIP(), []int{188}
 }
 
 func (x *UpdatePembelajaranRequest) GetSchemaname() string {
@@ -11225,7 +11272,7 @@ type UpdatePembelajaranResponse struct {
 
 func (x *UpdatePembelajaranResponse) Reset() {
 	*x = UpdatePembelajaranResponse{}
-	mi := &file_sekolah_proto_msgTypes[188]
+	mi := &file_sekolah_proto_msgTypes[189]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11237,7 +11284,7 @@ func (x *UpdatePembelajaranResponse) String() string {
 func (*UpdatePembelajaranResponse) ProtoMessage() {}
 
 func (x *UpdatePembelajaranResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[188]
+	mi := &file_sekolah_proto_msgTypes[189]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11250,7 +11297,7 @@ func (x *UpdatePembelajaranResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePembelajaranResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePembelajaranResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{188}
+	return file_sekolah_proto_rawDescGZIP(), []int{189}
 }
 
 func (x *UpdatePembelajaranResponse) GetMessage() string {
@@ -11277,7 +11324,7 @@ type DeletePembelajaranRequest struct {
 
 func (x *DeletePembelajaranRequest) Reset() {
 	*x = DeletePembelajaranRequest{}
-	mi := &file_sekolah_proto_msgTypes[189]
+	mi := &file_sekolah_proto_msgTypes[190]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11289,7 +11336,7 @@ func (x *DeletePembelajaranRequest) String() string {
 func (*DeletePembelajaranRequest) ProtoMessage() {}
 
 func (x *DeletePembelajaranRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[189]
+	mi := &file_sekolah_proto_msgTypes[190]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11302,7 +11349,7 @@ func (x *DeletePembelajaranRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePembelajaranRequest.ProtoReflect.Descriptor instead.
 func (*DeletePembelajaranRequest) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{189}
+	return file_sekolah_proto_rawDescGZIP(), []int{190}
 }
 
 func (x *DeletePembelajaranRequest) GetSchemaname() string {
@@ -11329,7 +11376,7 @@ type DeletePembelajaranResponse struct {
 
 func (x *DeletePembelajaranResponse) Reset() {
 	*x = DeletePembelajaranResponse{}
-	mi := &file_sekolah_proto_msgTypes[190]
+	mi := &file_sekolah_proto_msgTypes[191]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11341,7 +11388,7 @@ func (x *DeletePembelajaranResponse) String() string {
 func (*DeletePembelajaranResponse) ProtoMessage() {}
 
 func (x *DeletePembelajaranResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_sekolah_proto_msgTypes[190]
+	mi := &file_sekolah_proto_msgTypes[191]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11354,7 +11401,7 @@ func (x *DeletePembelajaranResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePembelajaranResponse.ProtoReflect.Descriptor instead.
 func (*DeletePembelajaranResponse) Descriptor() ([]byte, []int) {
-	return file_sekolah_proto_rawDescGZIP(), []int{190}
+	return file_sekolah_proto_rawDescGZIP(), []int{191}
 }
 
 func (x *DeletePembelajaranResponse) GetMessage() string {
@@ -11475,400 +11522,406 @@ var file_sekolah_proto_rawDesc = []byte{
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2d, 0x0a, 0x08, 0x73, 0x65, 0x6d, 0x65, 0x73,
 	0x74, 0x65, 0x72, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x73, 0x65, 0x6b, 0x6f,
 	0x6c, 0x61, 0x68, 0x2e, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x08, 0x73, 0x65,
-	0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x22, 0x46, 0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
-	0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
-	0x2d, 0x0a, 0x08, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x0b, 0x32, 0x11, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x65, 0x6d, 0x65,
-	0x73, 0x74, 0x65, 0x72, 0x52, 0x08, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x22, 0x4a,
-	0x0a, 0x16, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73,
-	0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61,
-	0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x38, 0x0a, 0x15, 0x44, 0x65,
-	0x6c, 0x65, 0x74, 0x65, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x5f,
-	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74,
-	0x65, 0x72, 0x49, 0x64, 0x22, 0x4a, 0x0a, 0x16, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x65,
-	0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18,
-	0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74,
-	0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73,
-	0x22, 0xfd, 0x02, 0x0a, 0x07, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x12, 0x1d, 0x0a, 0x0a,
-	0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05,
-	0x52, 0x09, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x49, 0x64, 0x12, 0x2a, 0x0a, 0x11, 0x73,
-	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x69, 0x64, 0x5f, 0x65, 0x6e, 0x6b, 0x72, 0x69, 0x70,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0f, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x49,
-	0x64, 0x45, 0x6e, 0x6b, 0x72, 0x69, 0x70, 0x12, 0x1c, 0x0a, 0x09, 0x6b, 0x65, 0x63, 0x61, 0x6d,
-	0x61, 0x74, 0x61, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6b, 0x65, 0x63, 0x61,
-	0x6d, 0x61, 0x74, 0x61, 0x6e, 0x12, 0x1c, 0x0a, 0x09, 0x6b, 0x61, 0x62, 0x75, 0x70, 0x61, 0x74,
-	0x65, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6b, 0x61, 0x62, 0x75, 0x70, 0x61,
-	0x74, 0x65, 0x6e, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x72, 0x6f, 0x70, 0x69, 0x6e, 0x73, 0x69, 0x18,
-	0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x72, 0x6f, 0x70, 0x69, 0x6e, 0x73, 0x69, 0x12,
-	0x25, 0x0a, 0x0e, 0x6b, 0x6f, 0x64, 0x65, 0x5f, 0x6b, 0x65, 0x63, 0x61, 0x6d, 0x61, 0x74, 0x61,
-	0x6e, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x6b, 0x6f, 0x64, 0x65, 0x4b, 0x65, 0x63,
-	0x61, 0x6d, 0x61, 0x74, 0x61, 0x6e, 0x12, 0x19, 0x0a, 0x08, 0x6b, 0x6f, 0x64, 0x65, 0x5f, 0x6b,
-	0x61, 0x62, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6b, 0x6f, 0x64, 0x65, 0x4b, 0x61,
-	0x62, 0x12, 0x1b, 0x0a, 0x09, 0x6b, 0x6f, 0x64, 0x65, 0x5f, 0x70, 0x72, 0x6f, 0x70, 0x18, 0x08,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6b, 0x6f, 0x64, 0x65, 0x50, 0x72, 0x6f, 0x70, 0x12, 0x21,
-	0x0a, 0x0c, 0x6e, 0x61, 0x6d, 0x61, 0x5f, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x18, 0x09,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x6e, 0x61, 0x6d, 0x61, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
-	0x68, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x70, 0x73, 0x6e, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x04, 0x6e, 0x70, 0x73, 0x6e, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x5f,
-	0x6a, 0x61, 0x6c, 0x61, 0x6e, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x61, 0x6c, 0x61,
-	0x6d, 0x61, 0x74, 0x4a, 0x61, 0x6c, 0x61, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74,
-	0x75, 0x73, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73,
-	0x22, 0xff, 0x04, 0x0a, 0x0b, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x44, 0x61, 0x70, 0x6f,
-	0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x69, 0x64, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x69, 0x64,
-	0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
-	0x6e, 0x61, 0x6d, 0x61, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x70, 0x73, 0x6e, 0x18, 0x03, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x04, 0x6e, 0x70, 0x73, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x6e, 0x73, 0x73, 0x18,
-	0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6e, 0x73, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x6c,
-	0x61, 0x6d, 0x61, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x6c, 0x61, 0x6d,
-	0x61, 0x74, 0x12, 0x15, 0x0a, 0x06, 0x6b, 0x64, 0x5f, 0x70, 0x6f, 0x73, 0x18, 0x06, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x05, 0x6b, 0x64, 0x50, 0x6f, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x74, 0x65, 0x6c,
-	0x65, 0x70, 0x6f, 0x6e, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x74, 0x65, 0x6c, 0x65,
-	0x70, 0x6f, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x66, 0x61, 0x78, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x03, 0x66, 0x61, 0x78, 0x12, 0x1c, 0x0a, 0x09, 0x6b, 0x65, 0x6c, 0x75, 0x72, 0x61, 0x68,
-	0x61, 0x6e, 0x18, 0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6b, 0x65, 0x6c, 0x75, 0x72, 0x61,
-	0x68, 0x61, 0x6e, 0x12, 0x1c, 0x0a, 0x09, 0x6b, 0x65, 0x63, 0x61, 0x6d, 0x61, 0x74, 0x61, 0x6e,
-	0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6b, 0x65, 0x63, 0x61, 0x6d, 0x61, 0x74, 0x61,
-	0x6e, 0x12, 0x19, 0x0a, 0x08, 0x6b, 0x61, 0x62, 0x5f, 0x6b, 0x6f, 0x74, 0x61, 0x18, 0x0b, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x07, 0x6b, 0x61, 0x62, 0x4b, 0x6f, 0x74, 0x61, 0x12, 0x1a, 0x0a, 0x08,
-	0x70, 0x72, 0x6f, 0x70, 0x69, 0x6e, 0x73, 0x69, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
-	0x70, 0x72, 0x6f, 0x70, 0x69, 0x6e, 0x73, 0x69, 0x12, 0x18, 0x0a, 0x07, 0x77, 0x65, 0x62, 0x73,
-	0x69, 0x74, 0x65, 0x18, 0x0d, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x77, 0x65, 0x62, 0x73, 0x69,
-	0x74, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x0e, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x1b, 0x0a, 0x09, 0x6e, 0x6d, 0x5f, 0x6b,
-	0x65, 0x70, 0x73, 0x65, 0x6b, 0x18, 0x0f, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6e, 0x6d, 0x4b,
-	0x65, 0x70, 0x73, 0x65, 0x6b, 0x12, 0x1d, 0x0a, 0x0a, 0x6e, 0x69, 0x70, 0x5f, 0x6b, 0x65, 0x70,
-	0x73, 0x65, 0x6b, 0x18, 0x10, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x69, 0x70, 0x4b, 0x65,
-	0x70, 0x73, 0x65, 0x6b, 0x12, 0x1d, 0x0a, 0x0a, 0x6e, 0x69, 0x79, 0x5f, 0x6b, 0x65, 0x70, 0x73,
-	0x65, 0x6b, 0x18, 0x11, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x69, 0x79, 0x4b, 0x65, 0x70,
-	0x73, 0x65, 0x6b, 0x12, 0x32, 0x0a, 0x15, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x5f, 0x6b, 0x65,
-	0x70, 0x65, 0x6d, 0x69, 0x6c, 0x69, 0x6b, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x12, 0x20, 0x01,
-	0x28, 0x05, 0x52, 0x13, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4b, 0x65, 0x70, 0x65, 0x6d, 0x69,
-	0x6c, 0x69, 0x6b, 0x61, 0x6e, 0x49, 0x64, 0x12, 0x23, 0x0a, 0x0d, 0x6b, 0x6f, 0x64, 0x65, 0x5f,
-	0x61, 0x6b, 0x74, 0x69, 0x76, 0x61, 0x73, 0x69, 0x18, 0x13, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c,
-	0x6b, 0x6f, 0x64, 0x65, 0x41, 0x6b, 0x74, 0x69, 0x76, 0x61, 0x73, 0x69, 0x12, 0x30, 0x0a, 0x14,
-	0x62, 0x65, 0x6e, 0x74, 0x75, 0x6b, 0x5f, 0x70, 0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61,
-	0x6e, 0x5f, 0x69, 0x64, 0x18, 0x14, 0x20, 0x01, 0x28, 0x05, 0x52, 0x12, 0x62, 0x65, 0x6e, 0x74,
-	0x75, 0x6b, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e, 0x49, 0x64, 0x12, 0x32,
-	0x0a, 0x15, 0x6a, 0x65, 0x6e, 0x6a, 0x61, 0x6e, 0x67, 0x5f, 0x70, 0x65, 0x6e, 0x64, 0x69, 0x64,
-	0x69, 0x6b, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x15, 0x20, 0x01, 0x28, 0x05, 0x52, 0x13, 0x6a,
-	0x65, 0x6e, 0x6a, 0x61, 0x6e, 0x67, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e,
-	0x49, 0x64, 0x22, 0x41, 0x0a, 0x13, 0x54, 0x61, 0x62, 0x65, 0x6c, 0x53, 0x65, 0x6b, 0x6f, 0x6c,
-	0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x07, 0x73, 0x65, 0x6b,
-	0x6f, 0x6c, 0x61, 0x68, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x73, 0x65, 0x6b,
-	0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x07, 0x73, 0x65,
-	0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x22, 0x48, 0x0a, 0x14, 0x54, 0x61, 0x62, 0x65, 0x6c, 0x53, 0x65,
-	0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a,
-	0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07,
-	0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75,
-	0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22,
-	0x4c, 0x0a, 0x0d, 0x53, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x12, 0x1b, 0x0a, 0x09, 0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x08, 0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x49, 0x64, 0x12, 0x1e, 0x0a,
-	0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x4b, 0x0a,
-	0x0e, 0x53, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x1f, 0x0a, 0x0b, 0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x4e, 0x61, 0x6d, 0x65,
-	0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x22, 0x3a, 0x0a, 0x19, 0x53, 0x65,
-	0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x54, 0x61, 0x62, 0x65, 0x6c, 0x54, 0x65, 0x6e, 0x61, 0x6e, 0x74,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x65, 0x6b, 0x6f, 0x6c,
-	0x61, 0x68, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x09, 0x73, 0x65, 0x6b,
-	0x6f, 0x6c, 0x61, 0x68, 0x49, 0x64, 0x22, 0x7e, 0x0a, 0x1a, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
-	0x68, 0x54, 0x61, 0x62, 0x65, 0x6c, 0x54, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f,
-	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x09, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
-	0x68, 0x49, 0x64, 0x12, 0x21, 0x0a, 0x0c, 0x6e, 0x61, 0x6d, 0x61, 0x5f, 0x73, 0x65, 0x6b, 0x6f,
-	0x6c, 0x61, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x6e, 0x61, 0x6d, 0x61, 0x53,
-	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61,
-	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65,
-	0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x66, 0x0a, 0x14, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
-	0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e,
-	0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x2e,
-	0x0a, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x14, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
-	0x68, 0x44, 0x61, 0x70, 0x6f, 0x52, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x22, 0x49,
-	0x0a, 0x15, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61,
-	0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
-	0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x33, 0x0a, 0x11, 0x47, 0x65, 0x74,
-	0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e,
-	0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x44,
-	0x0a, 0x12, 0x47, 0x65, 0x74, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2e, 0x0a, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e,
-	0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x44, 0x61, 0x70, 0x6f, 0x52, 0x07, 0x73, 0x65, 0x6b,
-	0x6f, 0x6c, 0x61, 0x68, 0x22, 0x66, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x65,
-	0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a,
-	0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x2e, 0x0a, 0x07,
-	0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e,
-	0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x44,
-	0x61, 0x70, 0x6f, 0x52, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x22, 0x49, 0x0a, 0x15,
-	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x73,
+	0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x22, 0x4b, 0x0a, 0x1a, 0x47, 0x65, 0x74, 0x43, 0x75, 0x72,
+	0x72, 0x65, 0x6e, 0x74, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2d, 0x0a, 0x08, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68,
+	0x2e, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x08, 0x73, 0x65, 0x6d, 0x65, 0x73,
+	0x74, 0x65, 0x72, 0x22, 0x46, 0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6d,
+	0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2d, 0x0a, 0x08,
+	0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11,
+	0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65,
+	0x72, 0x52, 0x08, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x22, 0x4a, 0x0a, 0x16, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73,
 	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12,
 	0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52,
-	0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0xb6, 0x04, 0x0a, 0x05, 0x53, 0x69, 0x73, 0x77,
-	0x61, 0x12, 0x28, 0x0a, 0x10, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64,
-	0x69, 0x6b, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x65, 0x73,
-	0x65, 0x72, 0x74, 0x61, 0x44, 0x69, 0x64, 0x69, 0x6b, 0x49, 0x64, 0x12, 0x10, 0x0a, 0x03, 0x6e,
-	0x69, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6e, 0x69, 0x73, 0x12, 0x12, 0x0a,
-	0x04, 0x6e, 0x69, 0x73, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x69, 0x73,
-	0x6e, 0x12, 0x19, 0x0a, 0x08, 0x6e, 0x6d, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x04, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x07, 0x6e, 0x6d, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12, 0x21, 0x0a, 0x0c,
-	0x74, 0x65, 0x6d, 0x70, 0x61, 0x74, 0x5f, 0x6c, 0x61, 0x68, 0x69, 0x72, 0x18, 0x05, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x0b, 0x74, 0x65, 0x6d, 0x70, 0x61, 0x74, 0x4c, 0x61, 0x68, 0x69, 0x72, 0x12,
-	0x23, 0x0a, 0x0d, 0x74, 0x61, 0x6e, 0x67, 0x67, 0x61, 0x6c, 0x5f, 0x6c, 0x61, 0x68, 0x69, 0x72,
-	0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x74, 0x61, 0x6e, 0x67, 0x67, 0x61, 0x6c, 0x4c,
-	0x61, 0x68, 0x69, 0x72, 0x12, 0x23, 0x0a, 0x0d, 0x6a, 0x65, 0x6e, 0x69, 0x73, 0x5f, 0x6b, 0x65,
-	0x6c, 0x61, 0x6d, 0x69, 0x6e, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x6a, 0x65, 0x6e,
-	0x69, 0x73, 0x4b, 0x65, 0x6c, 0x61, 0x6d, 0x69, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x61, 0x67, 0x61,
-	0x6d, 0x61, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x61, 0x67, 0x61, 0x6d, 0x61, 0x12,
-	0x21, 0x0a, 0x0c, 0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18,
-	0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x53, 0x69, 0x73,
-	0x77, 0x61, 0x12, 0x23, 0x0a, 0x0d, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f, 0x6e, 0x5f, 0x73, 0x69,
-	0x73, 0x77, 0x61, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x74, 0x65, 0x6c, 0x65, 0x70,
-	0x6f, 0x6e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12, 0x29, 0x0a, 0x10, 0x64, 0x69, 0x74, 0x65, 0x72,
-	0x69, 0x6d, 0x61, 0x5f, 0x74, 0x61, 0x6e, 0x67, 0x67, 0x61, 0x6c, 0x18, 0x0b, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0f, 0x64, 0x69, 0x74, 0x65, 0x72, 0x69, 0x6d, 0x61, 0x54, 0x61, 0x6e, 0x67, 0x67,
-	0x61, 0x6c, 0x12, 0x17, 0x0a, 0x07, 0x6e, 0x6d, 0x5f, 0x61, 0x79, 0x61, 0x68, 0x18, 0x0c, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x06, 0x6e, 0x6d, 0x41, 0x79, 0x61, 0x68, 0x12, 0x15, 0x0a, 0x06, 0x6e,
-	0x6d, 0x5f, 0x69, 0x62, 0x75, 0x18, 0x0d, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6e, 0x6d, 0x49,
-	0x62, 0x75, 0x12, 0x25, 0x0a, 0x0e, 0x70, 0x65, 0x6b, 0x65, 0x72, 0x6a, 0x61, 0x61, 0x6e, 0x5f,
-	0x61, 0x79, 0x61, 0x68, 0x18, 0x0e, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x70, 0x65, 0x6b, 0x65,
-	0x72, 0x6a, 0x61, 0x61, 0x6e, 0x41, 0x79, 0x61, 0x68, 0x12, 0x23, 0x0a, 0x0d, 0x70, 0x65, 0x6b,
-	0x65, 0x72, 0x6a, 0x61, 0x61, 0x6e, 0x5f, 0x69, 0x62, 0x75, 0x18, 0x0f, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0c, 0x70, 0x65, 0x6b, 0x65, 0x72, 0x6a, 0x61, 0x61, 0x6e, 0x49, 0x62, 0x75, 0x12, 0x17,
-	0x0a, 0x07, 0x6e, 0x6d, 0x5f, 0x77, 0x61, 0x6c, 0x69, 0x18, 0x10, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x06, 0x6e, 0x6d, 0x57, 0x61, 0x6c, 0x69, 0x12, 0x25, 0x0a, 0x0e, 0x70, 0x65, 0x6b, 0x65, 0x72,
-	0x6a, 0x61, 0x61, 0x6e, 0x5f, 0x77, 0x61, 0x6c, 0x69, 0x18, 0x11, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x0d, 0x70, 0x65, 0x6b, 0x65, 0x72, 0x6a, 0x61, 0x61, 0x6e, 0x57, 0x61, 0x6c, 0x69, 0x12, 0x10,
-	0x0a, 0x03, 0x6e, 0x69, 0x6b, 0x18, 0x12, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6e, 0x69, 0x6b,
-	0x22, 0xc2, 0x03, 0x0a, 0x0e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x50, 0x65, 0x6c, 0x65, 0x6e, 0x67,
-	0x6b, 0x61, 0x70, 0x12, 0x2c, 0x0a, 0x12, 0x70, 0x65, 0x6c, 0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70,
-	0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x10, 0x70, 0x65, 0x6c, 0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70, 0x53, 0x69, 0x73, 0x77, 0x61, 0x49,
-	0x64, 0x12, 0x28, 0x0a, 0x10, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64,
-	0x69, 0x6b, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x65, 0x73,
-	0x65, 0x72, 0x74, 0x61, 0x44, 0x69, 0x64, 0x69, 0x6b, 0x49, 0x64, 0x12, 0x28, 0x0a, 0x10, 0x73,
-	0x74, 0x61, 0x74, 0x75, 0x73, 0x5f, 0x64, 0x61, 0x6c, 0x61, 0x6d, 0x5f, 0x6b, 0x65, 0x6c, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x44, 0x61, 0x6c,
-	0x61, 0x6d, 0x4b, 0x65, 0x6c, 0x12, 0x17, 0x0a, 0x07, 0x61, 0x6e, 0x61, 0x6b, 0x5f, 0x6b, 0x65,
-	0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x6e, 0x61, 0x6b, 0x4b, 0x65, 0x12, 0x21,
-	0x0a, 0x0c, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x61, 0x73, 0x61, 0x6c, 0x18, 0x05,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x41, 0x73, 0x61,
-	0x6c, 0x12, 0x25, 0x0a, 0x0e, 0x64, 0x69, 0x74, 0x65, 0x72, 0x69, 0x6d, 0x61, 0x5f, 0x6b, 0x65,
-	0x6c, 0x61, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x64, 0x69, 0x74, 0x65, 0x72,
-	0x69, 0x6d, 0x61, 0x4b, 0x65, 0x6c, 0x61, 0x73, 0x12, 0x1f, 0x0a, 0x0b, 0x61, 0x6c, 0x61, 0x6d,
-	0x61, 0x74, 0x5f, 0x6f, 0x72, 0x74, 0x75, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x61,
-	0x6c, 0x61, 0x6d, 0x61, 0x74, 0x4f, 0x72, 0x74, 0x75, 0x12, 0x21, 0x0a, 0x0c, 0x74, 0x65, 0x6c,
-	0x65, 0x70, 0x6f, 0x6e, 0x5f, 0x6f, 0x72, 0x74, 0x75, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x0b, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f, 0x6e, 0x4f, 0x72, 0x74, 0x75, 0x12, 0x1f, 0x0a, 0x0b,
-	0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x5f, 0x77, 0x61, 0x6c, 0x69, 0x18, 0x09, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0a, 0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x57, 0x61, 0x6c, 0x69, 0x12, 0x21, 0x0a,
-	0x0c, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f, 0x6e, 0x5f, 0x77, 0x61, 0x6c, 0x69, 0x18, 0x0a, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x0b, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f, 0x6e, 0x57, 0x61, 0x6c, 0x69,
-	0x12, 0x1d, 0x0a, 0x0a, 0x66, 0x6f, 0x74, 0x6f, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x0b,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x66, 0x6f, 0x74, 0x6f, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12,
-	0x24, 0x0a, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e,
-	0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x05,
-	0x73, 0x69, 0x73, 0x77, 0x61, 0x22, 0x5a, 0x0a, 0x12, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53,
-	0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73,
-	0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x24, 0x0a, 0x05, 0x73,
-	0x69, 0x73, 0x77, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x73, 0x65, 0x6b,
-	0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x05, 0x73, 0x69, 0x73, 0x77,
-	0x61, 0x22, 0x47, 0x0a, 0x13, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x69, 0x73, 0x77, 0x61,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73,
-	0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61,
-	0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x99, 0x01, 0x0a, 0x18, 0x43,
-	0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x61, 0x6e, 0x79, 0x61, 0x6b, 0x53, 0x69, 0x73, 0x77, 0x61,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d,
-	0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68,
-	0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x24, 0x0a, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61,
-	0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68,
-	0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x12, 0x37, 0x0a,
-	0x09, 0x63, 0x6f, 0x6e, 0x66, 0x6c, 0x69, 0x63, 0x74, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b,
-	0x32, 0x19, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x6c,
-	0x69, 0x63, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x09, 0x63, 0x6f, 0x6e,
-	0x66, 0x6c, 0x69, 0x63, 0x74, 0x73, 0x22, 0x4d, 0x0a, 0x19, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
-	0x42, 0x61, 0x6e, 0x79, 0x61, 0x6b, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x16, 0x0a,
-	0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73,
-	0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x5f, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x53, 0x69, 0x73, 0x77,
-	0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65,
-	0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63,
-	0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x61, 0x67, 0x65,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x70, 0x61, 0x67, 0x65, 0x12, 0x18, 0x0a, 0x07,
-	0x70, 0x65, 0x72, 0x70, 0x61, 0x67, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x07, 0x70,
-	0x65, 0x72, 0x70, 0x61, 0x67, 0x65, 0x22, 0x41, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x53, 0x69, 0x73,
-	0x77, 0x61, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2d, 0x0a, 0x05, 0x73, 0x69,
-	0x73, 0x77, 0x61, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x73, 0x65, 0x6b, 0x6f,
-	0x6c, 0x61, 0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x50, 0x65, 0x6c, 0x65, 0x6e, 0x67, 0x6b,
-	0x61, 0x70, 0x52, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x22, 0x9c, 0x01, 0x0a, 0x12, 0x55, 0x70,
-	0x64, 0x61, 0x74, 0x65, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65,
-	0x12, 0x24, 0x0a, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x0e, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52,
-	0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x12, 0x40, 0x0a, 0x0f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x5f,
-	0x70, 0x65, 0x6c, 0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x17, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x50,
-	0x65, 0x6c, 0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70, 0x52, 0x0e, 0x73, 0x69, 0x73, 0x77, 0x61, 0x50,
-	0x65, 0x6c, 0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70, 0x22, 0x47, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61,
-	0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75,
-	0x73, 0x22, 0x4f, 0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x69, 0x73, 0x77, 0x61,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d,
-	0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68,
-	0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x73, 0x69, 0x73, 0x77, 0x61,
-	0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x69, 0x73, 0x77, 0x61,
-	0x49, 0x64, 0x22, 0x47, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x69, 0x73, 0x77,
-	0x61, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73,
-	0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73,
-	0x61, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x93, 0x01, 0x0a, 0x12,
-	0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61,
-	0x6d, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x6e, 0x6d, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e, 0x6d, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12, 0x2d, 0x0a,
-	0x10, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x5f, 0x69,
-	0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x0e, 0x70, 0x65, 0x73, 0x65, 0x72,
-	0x74, 0x61, 0x44, 0x69, 0x64, 0x69, 0x6b, 0x49, 0x64, 0x88, 0x01, 0x01, 0x42, 0x13, 0x0a, 0x11,
-	0x5f, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x5f, 0x69,
-	0x64, 0x22, 0x3b, 0x0a, 0x13, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x53, 0x69, 0x73, 0x77, 0x61,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x24, 0x0a, 0x05, 0x73, 0x69, 0x73, 0x77,
-	0x61, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
-	0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x22, 0xac,
-	0x01, 0x0a, 0x18, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x44, 0x61, 0x74, 0x61, 0x53, 0x65, 0x6b,
-	0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x75,
-	0x70, 0x6c, 0x6f, 0x61, 0x64, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0a, 0x75, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x79, 0x70, 0x65, 0x12, 0x1e, 0x0a, 0x0a,
-	0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1f, 0x0a, 0x0b,
-	0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0a, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x49, 0x64, 0x12, 0x12, 0x0a,
-	0x04, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x66, 0x69, 0x6c,
-	0x65, 0x12, 0x1a, 0x0a, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x05, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x50, 0x0a,
-	0x19, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x44, 0x61, 0x74, 0x61, 0x53, 0x65, 0x6b, 0x6f, 0x6c,
+	0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x38, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x49,
+	0x64, 0x22, 0x4a, 0x0a, 0x16, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x65, 0x6d, 0x65, 0x73,
+	0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d,
+	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65,
+	0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0xfd, 0x02,
+	0x0a, 0x07, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x65, 0x6b,
+	0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x09, 0x73,
+	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x49, 0x64, 0x12, 0x2a, 0x0a, 0x11, 0x73, 0x65, 0x6b, 0x6f,
+	0x6c, 0x61, 0x68, 0x5f, 0x69, 0x64, 0x5f, 0x65, 0x6e, 0x6b, 0x72, 0x69, 0x70, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0f, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x49, 0x64, 0x45, 0x6e,
+	0x6b, 0x72, 0x69, 0x70, 0x12, 0x1c, 0x0a, 0x09, 0x6b, 0x65, 0x63, 0x61, 0x6d, 0x61, 0x74, 0x61,
+	0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6b, 0x65, 0x63, 0x61, 0x6d, 0x61, 0x74,
+	0x61, 0x6e, 0x12, 0x1c, 0x0a, 0x09, 0x6b, 0x61, 0x62, 0x75, 0x70, 0x61, 0x74, 0x65, 0x6e, 0x18,
+	0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6b, 0x61, 0x62, 0x75, 0x70, 0x61, 0x74, 0x65, 0x6e,
+	0x12, 0x1a, 0x0a, 0x08, 0x70, 0x72, 0x6f, 0x70, 0x69, 0x6e, 0x73, 0x69, 0x18, 0x05, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x08, 0x70, 0x72, 0x6f, 0x70, 0x69, 0x6e, 0x73, 0x69, 0x12, 0x25, 0x0a, 0x0e,
+	0x6b, 0x6f, 0x64, 0x65, 0x5f, 0x6b, 0x65, 0x63, 0x61, 0x6d, 0x61, 0x74, 0x61, 0x6e, 0x18, 0x06,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x6b, 0x6f, 0x64, 0x65, 0x4b, 0x65, 0x63, 0x61, 0x6d, 0x61,
+	0x74, 0x61, 0x6e, 0x12, 0x19, 0x0a, 0x08, 0x6b, 0x6f, 0x64, 0x65, 0x5f, 0x6b, 0x61, 0x62, 0x18,
+	0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6b, 0x6f, 0x64, 0x65, 0x4b, 0x61, 0x62, 0x12, 0x1b,
+	0x0a, 0x09, 0x6b, 0x6f, 0x64, 0x65, 0x5f, 0x70, 0x72, 0x6f, 0x70, 0x18, 0x08, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x08, 0x6b, 0x6f, 0x64, 0x65, 0x50, 0x72, 0x6f, 0x70, 0x12, 0x21, 0x0a, 0x0c, 0x6e,
+	0x61, 0x6d, 0x61, 0x5f, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x18, 0x09, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0b, 0x6e, 0x61, 0x6d, 0x61, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x12, 0x12,
+	0x0a, 0x04, 0x6e, 0x70, 0x73, 0x6e, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x70,
+	0x73, 0x6e, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x5f, 0x6a, 0x61, 0x6c,
+	0x61, 0x6e, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74,
+	0x4a, 0x61, 0x6c, 0x61, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18,
+	0x0c, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0xff, 0x04,
+	0x0a, 0x0b, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x44, 0x61, 0x70, 0x6f, 0x12, 0x1e, 0x0a,
+	0x0a, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0a, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x69, 0x64, 0x12, 0x12, 0x0a,
+	0x04, 0x6e, 0x61, 0x6d, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d,
+	0x61, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x70, 0x73, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x04, 0x6e, 0x70, 0x73, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x6e, 0x73, 0x73, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x03, 0x6e, 0x73, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x6c, 0x61, 0x6d, 0x61,
+	0x74, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x12,
+	0x15, 0x0a, 0x06, 0x6b, 0x64, 0x5f, 0x70, 0x6f, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x6b, 0x64, 0x50, 0x6f, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f,
+	0x6e, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f, 0x6e,
+	0x12, 0x10, 0x0a, 0x03, 0x66, 0x61, 0x78, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x66,
+	0x61, 0x78, 0x12, 0x1c, 0x0a, 0x09, 0x6b, 0x65, 0x6c, 0x75, 0x72, 0x61, 0x68, 0x61, 0x6e, 0x18,
+	0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6b, 0x65, 0x6c, 0x75, 0x72, 0x61, 0x68, 0x61, 0x6e,
+	0x12, 0x1c, 0x0a, 0x09, 0x6b, 0x65, 0x63, 0x61, 0x6d, 0x61, 0x74, 0x61, 0x6e, 0x18, 0x0a, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x09, 0x6b, 0x65, 0x63, 0x61, 0x6d, 0x61, 0x74, 0x61, 0x6e, 0x12, 0x19,
+	0x0a, 0x08, 0x6b, 0x61, 0x62, 0x5f, 0x6b, 0x6f, 0x74, 0x61, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x07, 0x6b, 0x61, 0x62, 0x4b, 0x6f, 0x74, 0x61, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x72, 0x6f,
+	0x70, 0x69, 0x6e, 0x73, 0x69, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x72, 0x6f,
+	0x70, 0x69, 0x6e, 0x73, 0x69, 0x12, 0x18, 0x0a, 0x07, 0x77, 0x65, 0x62, 0x73, 0x69, 0x74, 0x65,
+	0x18, 0x0d, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x77, 0x65, 0x62, 0x73, 0x69, 0x74, 0x65, 0x12,
+	0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x0e, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x1b, 0x0a, 0x09, 0x6e, 0x6d, 0x5f, 0x6b, 0x65, 0x70, 0x73,
+	0x65, 0x6b, 0x18, 0x0f, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6e, 0x6d, 0x4b, 0x65, 0x70, 0x73,
+	0x65, 0x6b, 0x12, 0x1d, 0x0a, 0x0a, 0x6e, 0x69, 0x70, 0x5f, 0x6b, 0x65, 0x70, 0x73, 0x65, 0x6b,
+	0x18, 0x10, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x69, 0x70, 0x4b, 0x65, 0x70, 0x73, 0x65,
+	0x6b, 0x12, 0x1d, 0x0a, 0x0a, 0x6e, 0x69, 0x79, 0x5f, 0x6b, 0x65, 0x70, 0x73, 0x65, 0x6b, 0x18,
+	0x11, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x69, 0x79, 0x4b, 0x65, 0x70, 0x73, 0x65, 0x6b,
+	0x12, 0x32, 0x0a, 0x15, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x5f, 0x6b, 0x65, 0x70, 0x65, 0x6d,
+	0x69, 0x6c, 0x69, 0x6b, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x12, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x13, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4b, 0x65, 0x70, 0x65, 0x6d, 0x69, 0x6c, 0x69, 0x6b,
+	0x61, 0x6e, 0x49, 0x64, 0x12, 0x23, 0x0a, 0x0d, 0x6b, 0x6f, 0x64, 0x65, 0x5f, 0x61, 0x6b, 0x74,
+	0x69, 0x76, 0x61, 0x73, 0x69, 0x18, 0x13, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x6b, 0x6f, 0x64,
+	0x65, 0x41, 0x6b, 0x74, 0x69, 0x76, 0x61, 0x73, 0x69, 0x12, 0x30, 0x0a, 0x14, 0x62, 0x65, 0x6e,
+	0x74, 0x75, 0x6b, 0x5f, 0x70, 0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e, 0x5f, 0x69,
+	0x64, 0x18, 0x14, 0x20, 0x01, 0x28, 0x05, 0x52, 0x12, 0x62, 0x65, 0x6e, 0x74, 0x75, 0x6b, 0x50,
+	0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e, 0x49, 0x64, 0x12, 0x32, 0x0a, 0x15, 0x6a,
+	0x65, 0x6e, 0x6a, 0x61, 0x6e, 0x67, 0x5f, 0x70, 0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61,
+	0x6e, 0x5f, 0x69, 0x64, 0x18, 0x15, 0x20, 0x01, 0x28, 0x05, 0x52, 0x13, 0x6a, 0x65, 0x6e, 0x6a,
+	0x61, 0x6e, 0x67, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e, 0x49, 0x64, 0x22,
+	0x41, 0x0a, 0x13, 0x54, 0x61, 0x62, 0x65, 0x6c, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
+	0x68, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
+	0x68, 0x2e, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c,
+	0x61, 0x68, 0x22, 0x48, 0x0a, 0x14, 0x54, 0x61, 0x62, 0x65, 0x6c, 0x53, 0x65, 0x6b, 0x6f, 0x6c,
 	0x61, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65,
 	0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73,
-	0x73, 0x61, 0x67, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x5f, 0x75, 0x72, 0x6c,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x66, 0x69, 0x6c, 0x65, 0x55, 0x72, 0x6c, 0x22,
-	0x7d, 0x0a, 0x1a, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x44, 0x61, 0x74, 0x61, 0x53,
-	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x23, 0x0a,
-	0x0d, 0x64, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x64, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x79,
-	0x70, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61,
-	0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x4d,
-	0x0a, 0x1b, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x44, 0x61, 0x74, 0x61, 0x53, 0x65,
-	0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a,
-	0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x66, 0x69, 0x6c,
-	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x66, 0x69, 0x6c, 0x65, 0x22, 0xa9, 0x02,
-	0x0a, 0x06, 0x4d, 0x61, 0x70, 0x65, 0x6c, 0x31, 0x12, 0x20, 0x0a, 0x0c, 0x69, 0x64, 0x5f, 0x6d,
-	0x61, 0x70, 0x5f, 0x6d, 0x61, 0x70, 0x65, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0a,
-	0x69, 0x64, 0x4d, 0x61, 0x70, 0x4d, 0x61, 0x70, 0x65, 0x6c, 0x12, 0x2a, 0x0a, 0x11, 0x6d, 0x61,
+	0x73, 0x61, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x4c, 0x0a, 0x0d,
+	0x53, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1b, 0x0a,
+	0x09, 0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x08, 0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x49, 0x64, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63,
+	0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
+	0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x4b, 0x0a, 0x0e, 0x53, 0x63,
+	0x68, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x0b,
+	0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a,
+	0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07,
+	0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x22, 0x3a, 0x0a, 0x19, 0x53, 0x65, 0x6b, 0x6f, 0x6c,
+	0x61, 0x68, 0x54, 0x61, 0x62, 0x65, 0x6c, 0x54, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x09, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
+	0x68, 0x49, 0x64, 0x22, 0x7e, 0x0a, 0x1a, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x54, 0x61,
+	0x62, 0x65, 0x6c, 0x54, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x69, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x09, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x49, 0x64,
+	0x12, 0x21, 0x0a, 0x0c, 0x6e, 0x61, 0x6d, 0x61, 0x5f, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x6e, 0x61, 0x6d, 0x61, 0x53, 0x65, 0x6b, 0x6f,
+	0x6c, 0x61, 0x68, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d,
+	0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e,
+	0x61, 0x6d, 0x65, 0x22, 0x66, 0x0a, 0x14, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6b,
+	0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73,
+	0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x2e, 0x0a, 0x07, 0x73,
+	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x73,
+	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x44, 0x61,
+	0x70, 0x6f, 0x52, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x22, 0x49, 0x0a, 0x15, 0x43,
+	0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x16,
+	0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06,
+	0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x33, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x53, 0x65, 0x6b,
+	0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73,
+	0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x44, 0x0a, 0x12, 0x47,
+	0x65, 0x74, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x2e, 0x0a, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x14, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x65, 0x6b,
+	0x6f, 0x6c, 0x61, 0x68, 0x44, 0x61, 0x70, 0x6f, 0x52, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
+	0x68, 0x22, 0x66, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6b, 0x6f, 0x6c,
+	0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68,
+	0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73,
+	0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x2e, 0x0a, 0x07, 0x73, 0x65, 0x6b,
+	0x6f, 0x6c, 0x61, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x73, 0x65, 0x6b,
+	0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x44, 0x61, 0x70, 0x6f,
+	0x52, 0x07, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x22, 0x49, 0x0a, 0x15, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06,
+	0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74,
+	0x61, 0x74, 0x75, 0x73, 0x22, 0xb6, 0x04, 0x0a, 0x05, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12, 0x28,
+	0x0a, 0x10, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x5f,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74,
+	0x61, 0x44, 0x69, 0x64, 0x69, 0x6b, 0x49, 0x64, 0x12, 0x10, 0x0a, 0x03, 0x6e, 0x69, 0x73, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6e, 0x69, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x69,
+	0x73, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x69, 0x73, 0x6e, 0x12, 0x19,
+	0x0a, 0x08, 0x6e, 0x6d, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x07, 0x6e, 0x6d, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12, 0x21, 0x0a, 0x0c, 0x74, 0x65, 0x6d,
+	0x70, 0x61, 0x74, 0x5f, 0x6c, 0x61, 0x68, 0x69, 0x72, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0b, 0x74, 0x65, 0x6d, 0x70, 0x61, 0x74, 0x4c, 0x61, 0x68, 0x69, 0x72, 0x12, 0x23, 0x0a, 0x0d,
+	0x74, 0x61, 0x6e, 0x67, 0x67, 0x61, 0x6c, 0x5f, 0x6c, 0x61, 0x68, 0x69, 0x72, 0x18, 0x06, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0c, 0x74, 0x61, 0x6e, 0x67, 0x67, 0x61, 0x6c, 0x4c, 0x61, 0x68, 0x69,
+	0x72, 0x12, 0x23, 0x0a, 0x0d, 0x6a, 0x65, 0x6e, 0x69, 0x73, 0x5f, 0x6b, 0x65, 0x6c, 0x61, 0x6d,
+	0x69, 0x6e, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x6a, 0x65, 0x6e, 0x69, 0x73, 0x4b,
+	0x65, 0x6c, 0x61, 0x6d, 0x69, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x61, 0x67, 0x61, 0x6d, 0x61, 0x18,
+	0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x61, 0x67, 0x61, 0x6d, 0x61, 0x12, 0x21, 0x0a, 0x0c,
+	0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x09, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0b, 0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12,
+	0x23, 0x0a, 0x0d, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f, 0x6e, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61,
+	0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f, 0x6e, 0x53,
+	0x69, 0x73, 0x77, 0x61, 0x12, 0x29, 0x0a, 0x10, 0x64, 0x69, 0x74, 0x65, 0x72, 0x69, 0x6d, 0x61,
+	0x5f, 0x74, 0x61, 0x6e, 0x67, 0x67, 0x61, 0x6c, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0f,
+	0x64, 0x69, 0x74, 0x65, 0x72, 0x69, 0x6d, 0x61, 0x54, 0x61, 0x6e, 0x67, 0x67, 0x61, 0x6c, 0x12,
+	0x17, 0x0a, 0x07, 0x6e, 0x6d, 0x5f, 0x61, 0x79, 0x61, 0x68, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x06, 0x6e, 0x6d, 0x41, 0x79, 0x61, 0x68, 0x12, 0x15, 0x0a, 0x06, 0x6e, 0x6d, 0x5f, 0x69,
+	0x62, 0x75, 0x18, 0x0d, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6e, 0x6d, 0x49, 0x62, 0x75, 0x12,
+	0x25, 0x0a, 0x0e, 0x70, 0x65, 0x6b, 0x65, 0x72, 0x6a, 0x61, 0x61, 0x6e, 0x5f, 0x61, 0x79, 0x61,
+	0x68, 0x18, 0x0e, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x70, 0x65, 0x6b, 0x65, 0x72, 0x6a, 0x61,
+	0x61, 0x6e, 0x41, 0x79, 0x61, 0x68, 0x12, 0x23, 0x0a, 0x0d, 0x70, 0x65, 0x6b, 0x65, 0x72, 0x6a,
+	0x61, 0x61, 0x6e, 0x5f, 0x69, 0x62, 0x75, 0x18, 0x0f, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x70,
+	0x65, 0x6b, 0x65, 0x72, 0x6a, 0x61, 0x61, 0x6e, 0x49, 0x62, 0x75, 0x12, 0x17, 0x0a, 0x07, 0x6e,
+	0x6d, 0x5f, 0x77, 0x61, 0x6c, 0x69, 0x18, 0x10, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6e, 0x6d,
+	0x57, 0x61, 0x6c, 0x69, 0x12, 0x25, 0x0a, 0x0e, 0x70, 0x65, 0x6b, 0x65, 0x72, 0x6a, 0x61, 0x61,
+	0x6e, 0x5f, 0x77, 0x61, 0x6c, 0x69, 0x18, 0x11, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x70, 0x65,
+	0x6b, 0x65, 0x72, 0x6a, 0x61, 0x61, 0x6e, 0x57, 0x61, 0x6c, 0x69, 0x12, 0x10, 0x0a, 0x03, 0x6e,
+	0x69, 0x6b, 0x18, 0x12, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6e, 0x69, 0x6b, 0x22, 0xc2, 0x03,
+	0x0a, 0x0e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x50, 0x65, 0x6c, 0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70,
+	0x12, 0x2c, 0x0a, 0x12, 0x70, 0x65, 0x6c, 0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70, 0x5f, 0x73, 0x69,
+	0x73, 0x77, 0x61, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x70, 0x65,
+	0x6c, 0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70, 0x53, 0x69, 0x73, 0x77, 0x61, 0x49, 0x64, 0x12, 0x28,
+	0x0a, 0x10, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x5f,
+	0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74,
+	0x61, 0x44, 0x69, 0x64, 0x69, 0x6b, 0x49, 0x64, 0x12, 0x28, 0x0a, 0x10, 0x73, 0x74, 0x61, 0x74,
+	0x75, 0x73, 0x5f, 0x64, 0x61, 0x6c, 0x61, 0x6d, 0x5f, 0x6b, 0x65, 0x6c, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0e, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x44, 0x61, 0x6c, 0x61, 0x6d, 0x4b,
+	0x65, 0x6c, 0x12, 0x17, 0x0a, 0x07, 0x61, 0x6e, 0x61, 0x6b, 0x5f, 0x6b, 0x65, 0x18, 0x04, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x6e, 0x61, 0x6b, 0x4b, 0x65, 0x12, 0x21, 0x0a, 0x0c, 0x73,
+	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x5f, 0x61, 0x73, 0x61, 0x6c, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0b, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x41, 0x73, 0x61, 0x6c, 0x12, 0x25,
+	0x0a, 0x0e, 0x64, 0x69, 0x74, 0x65, 0x72, 0x69, 0x6d, 0x61, 0x5f, 0x6b, 0x65, 0x6c, 0x61, 0x73,
+	0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x64, 0x69, 0x74, 0x65, 0x72, 0x69, 0x6d, 0x61,
+	0x4b, 0x65, 0x6c, 0x61, 0x73, 0x12, 0x1f, 0x0a, 0x0b, 0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x5f,
+	0x6f, 0x72, 0x74, 0x75, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x61, 0x6c, 0x61, 0x6d,
+	0x61, 0x74, 0x4f, 0x72, 0x74, 0x75, 0x12, 0x21, 0x0a, 0x0c, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f,
+	0x6e, 0x5f, 0x6f, 0x72, 0x74, 0x75, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x74, 0x65,
+	0x6c, 0x65, 0x70, 0x6f, 0x6e, 0x4f, 0x72, 0x74, 0x75, 0x12, 0x1f, 0x0a, 0x0b, 0x61, 0x6c, 0x61,
+	0x6d, 0x61, 0x74, 0x5f, 0x77, 0x61, 0x6c, 0x69, 0x18, 0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
+	0x61, 0x6c, 0x61, 0x6d, 0x61, 0x74, 0x57, 0x61, 0x6c, 0x69, 0x12, 0x21, 0x0a, 0x0c, 0x74, 0x65,
+	0x6c, 0x65, 0x70, 0x6f, 0x6e, 0x5f, 0x77, 0x61, 0x6c, 0x69, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0b, 0x74, 0x65, 0x6c, 0x65, 0x70, 0x6f, 0x6e, 0x57, 0x61, 0x6c, 0x69, 0x12, 0x1d, 0x0a,
+	0x0a, 0x66, 0x6f, 0x74, 0x6f, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x0b, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x09, 0x66, 0x6f, 0x74, 0x6f, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12, 0x24, 0x0a, 0x05,
+	0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x73, 0x65,
+	0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x05, 0x73, 0x69, 0x73,
+	0x77, 0x61, 0x22, 0x5a, 0x0a, 0x12, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x69, 0x73, 0x77,
+	0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65,
+	0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63,
+	0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x24, 0x0a, 0x05, 0x73, 0x69, 0x73, 0x77,
+	0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
+	0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x22, 0x47,
+	0x0a, 0x13, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12,
+	0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52,
+	0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x99, 0x01, 0x0a, 0x18, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x42, 0x61, 0x6e, 0x79, 0x61, 0x6b, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61,
+	0x6e, 0x61, 0x6d, 0x65, 0x12, 0x24, 0x0a, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x02, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x69,
+	0x73, 0x77, 0x61, 0x52, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x12, 0x37, 0x0a, 0x09, 0x63, 0x6f,
+	0x6e, 0x66, 0x6c, 0x69, 0x63, 0x74, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e,
+	0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x6c, 0x69, 0x63, 0x74,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x09, 0x63, 0x6f, 0x6e, 0x66, 0x6c, 0x69,
+	0x63, 0x74, 0x73, 0x22, 0x4d, 0x0a, 0x19, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x61, 0x6e,
+	0x79, 0x61, 0x6b, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74,
+	0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74,
+	0x75, 0x73, 0x22, 0x5f, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e,
+	0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d,
+	0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x05, 0x52, 0x04, 0x70, 0x61, 0x67, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x70, 0x65, 0x72,
+	0x70, 0x61, 0x67, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x07, 0x70, 0x65, 0x72, 0x70,
+	0x61, 0x67, 0x65, 0x22, 0x41, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2d, 0x0a, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61,
+	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68,
+	0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x50, 0x65, 0x6c, 0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70, 0x52,
+	0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x22, 0x9c, 0x01, 0x0a, 0x12, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a,
+	0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x24, 0x0a,
+	0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x73,
+	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x05, 0x73, 0x69,
+	0x73, 0x77, 0x61, 0x12, 0x40, 0x0a, 0x0f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x5f, 0x70, 0x65, 0x6c,
+	0x65, 0x6e, 0x67, 0x6b, 0x61, 0x70, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x73,
+	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53, 0x69, 0x73, 0x77, 0x61, 0x50, 0x65, 0x6c, 0x65,
+	0x6e, 0x67, 0x6b, 0x61, 0x70, 0x52, 0x0e, 0x73, 0x69, 0x73, 0x77, 0x61, 0x50, 0x65, 0x6c, 0x65,
+	0x6e, 0x67, 0x6b, 0x61, 0x70, 0x22, 0x47, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53,
+	0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07,
+	0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d,
+	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x4f,
+	0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61,
+	0x6e, 0x61, 0x6d, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x73, 0x69, 0x73, 0x77, 0x61, 0x5f, 0x69, 0x64,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x69, 0x73, 0x77, 0x61, 0x49, 0x64, 0x22,
+	0x47, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+	0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08,
+	0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x93, 0x01, 0x0a, 0x12, 0x53, 0x65, 0x61,
+	0x72, 0x63, 0x68, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12,
+	0x19, 0x0a, 0x08, 0x6e, 0x6d, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x07, 0x6e, 0x6d, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12, 0x2d, 0x0a, 0x10, 0x70, 0x65,
+	0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x5f, 0x69, 0x64, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x0e, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x44,
+	0x69, 0x64, 0x69, 0x6b, 0x49, 0x64, 0x88, 0x01, 0x01, 0x42, 0x13, 0x0a, 0x11, 0x5f, 0x70, 0x65,
+	0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x5f, 0x69, 0x64, 0x22, 0x3b,
+	0x0a, 0x13, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x53, 0x69, 0x73, 0x77, 0x61, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x24, 0x0a, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x53,
+	0x69, 0x73, 0x77, 0x61, 0x52, 0x05, 0x73, 0x69, 0x73, 0x77, 0x61, 0x22, 0xac, 0x01, 0x0a, 0x18,
+	0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x44, 0x61, 0x74, 0x61, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61,
+	0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x75, 0x70, 0x6c, 0x6f,
+	0x61, 0x64, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x75,
+	0x70, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x79, 0x70, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68,
+	0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73,
+	0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x65, 0x6d,
+	0x65, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
+	0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x66, 0x69,
+	0x6c, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x66, 0x69, 0x6c, 0x65, 0x12, 0x1a,
+	0x0a, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x50, 0x0a, 0x19, 0x55, 0x70,
+	0x6c, 0x6f, 0x61, 0x64, 0x44, 0x61, 0x74, 0x61, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
+	0x65, 0x12, 0x19, 0x0a, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x5f, 0x75, 0x72, 0x6c, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x66, 0x69, 0x6c, 0x65, 0x55, 0x72, 0x6c, 0x22, 0x7d, 0x0a, 0x1a,
+	0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x44, 0x61, 0x74, 0x61, 0x53, 0x65, 0x6b, 0x6f,
+	0x6c, 0x61, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x23, 0x0a, 0x0d, 0x64, 0x6f,
+	0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0c, 0x64, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x12,
+	0x1a, 0x0a, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x4d, 0x0a, 0x1b, 0x44,
+	0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x44, 0x61, 0x74, 0x61, 0x53, 0x65, 0x6b, 0x6f, 0x6c,
+	0x61, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x66, 0x69,
+	0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x66, 0x69,
+	0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x66, 0x69, 0x6c, 0x65, 0x22, 0xa9, 0x02, 0x0a, 0x06, 0x4d,
+	0x61, 0x70, 0x65, 0x6c, 0x31, 0x12, 0x20, 0x0a, 0x0c, 0x69, 0x64, 0x5f, 0x6d, 0x61, 0x70, 0x5f,
+	0x6d, 0x61, 0x70, 0x65, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0a, 0x69, 0x64, 0x4d,
+	0x61, 0x70, 0x4d, 0x61, 0x70, 0x65, 0x6c, 0x12, 0x2a, 0x0a, 0x11, 0x6d, 0x61, 0x74, 0x61, 0x5f,
+	0x70, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0f, 0x6d, 0x61, 0x74, 0x61, 0x50, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61,
+	0x6e, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x6e, 0x6d, 0x5f, 0x6c, 0x6f, 0x6b, 0x61, 0x6c, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e, 0x6d, 0x4c, 0x6f, 0x6b, 0x61, 0x6c, 0x12, 0x27,
+	0x0a, 0x0f, 0x61, 0x72, 0x65, 0x61, 0x5f, 0x6b, 0x6f, 0x6d, 0x70, 0x65, 0x74, 0x65, 0x6e, 0x73,
+	0x69, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x61, 0x72, 0x65, 0x61, 0x4b, 0x6f, 0x6d,
+	0x70, 0x65, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x12, 0x17, 0x0a, 0x07, 0x6b, 0x6c, 0x70, 0x5f, 0x6d,
+	0x70, 0x6c, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6b, 0x6c, 0x70, 0x4d, 0x70, 0x6c,
+	0x12, 0x21, 0x0a, 0x0c, 0x6b, 0x75, 0x72, 0x69, 0x6b, 0x75, 0x6c, 0x75, 0x6d, 0x5f, 0x69, 0x64,
+	0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x6b, 0x75, 0x72, 0x69, 0x6b, 0x75, 0x6c, 0x75,
+	0x6d, 0x49, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x75, 0x72, 0x75, 0x74, 0x5f, 0x72, 0x61, 0x70, 0x6f,
+	0x72, 0x18, 0x07, 0x20, 0x01, 0x28, 0x05, 0x52, 0x09, 0x75, 0x72, 0x75, 0x74, 0x52, 0x61, 0x70,
+	0x6f, 0x72, 0x12, 0x32, 0x0a, 0x15, 0x74, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74, 0x5f, 0x70, 0x65,
+	0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x08, 0x20, 0x01, 0x28,
+	0x05, 0x52, 0x13, 0x74, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x64,
+	0x69, 0x6b, 0x61, 0x6e, 0x49, 0x64, 0x22, 0x90, 0x02, 0x0a, 0x05, 0x4d, 0x61, 0x70, 0x65, 0x6c,
+	0x12, 0x2a, 0x0a, 0x11, 0x6d, 0x61, 0x74, 0x61, 0x5f, 0x70, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72,
+	0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0f, 0x6d, 0x61, 0x74,
+	0x61, 0x50, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04,
+	0x6e, 0x61, 0x6d, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x61,
+	0x12, 0x27, 0x0a, 0x0f, 0x70, 0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x5f, 0x73, 0x65, 0x6b, 0x6f,
+	0x6c, 0x61, 0x68, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x70, 0x69, 0x6c, 0x69, 0x68,
+	0x61, 0x6e, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x12, 0x21, 0x0a, 0x0c, 0x70, 0x69, 0x6c,
+	0x69, 0x68, 0x61, 0x6e, 0x5f, 0x62, 0x75, 0x6b, 0x75, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x0b, 0x70, 0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x42, 0x75, 0x6b, 0x75, 0x12, 0x31, 0x0a, 0x14,
+	0x70, 0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x5f, 0x6b, 0x65, 0x70, 0x65, 0x6e, 0x67, 0x61, 0x77,
+	0x61, 0x73, 0x61, 0x6e, 0x18, 0x05, 0x20, 0x01, 0x28, 0x05, 0x52, 0x13, 0x70, 0x69, 0x6c, 0x69,
+	0x68, 0x61, 0x6e, 0x4b, 0x65, 0x70, 0x65, 0x6e, 0x67, 0x61, 0x77, 0x61, 0x73, 0x61, 0x6e, 0x12,
+	0x29, 0x0a, 0x10, 0x70, 0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x5f, 0x65, 0x76, 0x61, 0x6c, 0x75,
+	0x61, 0x73, 0x69, 0x18, 0x06, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0f, 0x70, 0x69, 0x6c, 0x69, 0x68,
+	0x61, 0x6e, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x73, 0x69, 0x12, 0x1d, 0x0a, 0x0a, 0x6a, 0x75,
+	0x72, 0x75, 0x73, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09,
+	0x6a, 0x75, 0x72, 0x75, 0x73, 0x61, 0x6e, 0x49, 0x64, 0x22, 0xd3, 0x04, 0x0a, 0x0a, 0x4e, 0x69,
+	0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x12, 0x24, 0x0a, 0x0e, 0x69, 0x64, 0x5f, 0x6e,
+	0x69, 0x6c, 0x61, 0x69, 0x5f, 0x61, 0x6b, 0x68, 0x69, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0c, 0x69, 0x64, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x12, 0x2a,
+	0x0a, 0x11, 0x61, 0x6e, 0x67, 0x67, 0x6f, 0x74, 0x61, 0x5f, 0x72, 0x6f, 0x6d, 0x62, 0x65, 0x6c,
+	0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0f, 0x61, 0x6e, 0x67, 0x67, 0x6f,
+	0x74, 0x61, 0x52, 0x6f, 0x6d, 0x62, 0x65, 0x6c, 0x49, 0x64, 0x12, 0x2a, 0x0a, 0x11, 0x6d, 0x61,
 	0x74, 0x61, 0x5f, 0x70, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18,
-	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0f, 0x6d, 0x61, 0x74, 0x61, 0x50, 0x65, 0x6c, 0x61, 0x6a,
-	0x61, 0x72, 0x61, 0x6e, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x6e, 0x6d, 0x5f, 0x6c, 0x6f, 0x6b,
-	0x61, 0x6c, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e, 0x6d, 0x4c, 0x6f, 0x6b, 0x61,
-	0x6c, 0x12, 0x27, 0x0a, 0x0f, 0x61, 0x72, 0x65, 0x61, 0x5f, 0x6b, 0x6f, 0x6d, 0x70, 0x65, 0x74,
-	0x65, 0x6e, 0x73, 0x69, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x61, 0x72, 0x65, 0x61,
-	0x4b, 0x6f, 0x6d, 0x70, 0x65, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x12, 0x17, 0x0a, 0x07, 0x6b, 0x6c,
-	0x70, 0x5f, 0x6d, 0x70, 0x6c, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6b, 0x6c, 0x70,
-	0x4d, 0x70, 0x6c, 0x12, 0x21, 0x0a, 0x0c, 0x6b, 0x75, 0x72, 0x69, 0x6b, 0x75, 0x6c, 0x75, 0x6d,
-	0x5f, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x6b, 0x75, 0x72, 0x69, 0x6b,
-	0x75, 0x6c, 0x75, 0x6d, 0x49, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x75, 0x72, 0x75, 0x74, 0x5f, 0x72,
-	0x61, 0x70, 0x6f, 0x72, 0x18, 0x07, 0x20, 0x01, 0x28, 0x05, 0x52, 0x09, 0x75, 0x72, 0x75, 0x74,
-	0x52, 0x61, 0x70, 0x6f, 0x72, 0x12, 0x32, 0x0a, 0x15, 0x74, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74,
-	0x5f, 0x70, 0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x08,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x13, 0x74, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74, 0x50, 0x65, 0x6e,
-	0x64, 0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e, 0x49, 0x64, 0x22, 0x90, 0x02, 0x0a, 0x05, 0x4d, 0x61,
-	0x70, 0x65, 0x6c, 0x12, 0x2a, 0x0a, 0x11, 0x6d, 0x61, 0x74, 0x61, 0x5f, 0x70, 0x65, 0x6c, 0x61,
-	0x6a, 0x61, 0x72, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0f,
-	0x6d, 0x61, 0x74, 0x61, 0x50, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x49, 0x64, 0x12,
-	0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e,
-	0x61, 0x6d, 0x61, 0x12, 0x27, 0x0a, 0x0f, 0x70, 0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x5f, 0x73,
-	0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x70, 0x69,
-	0x6c, 0x69, 0x68, 0x61, 0x6e, 0x53, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x12, 0x21, 0x0a, 0x0c,
-	0x70, 0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x5f, 0x62, 0x75, 0x6b, 0x75, 0x18, 0x04, 0x20, 0x01,
-	0x28, 0x05, 0x52, 0x0b, 0x70, 0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x42, 0x75, 0x6b, 0x75, 0x12,
-	0x31, 0x0a, 0x14, 0x70, 0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x5f, 0x6b, 0x65, 0x70, 0x65, 0x6e,
-	0x67, 0x61, 0x77, 0x61, 0x73, 0x61, 0x6e, 0x18, 0x05, 0x20, 0x01, 0x28, 0x05, 0x52, 0x13, 0x70,
-	0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x4b, 0x65, 0x70, 0x65, 0x6e, 0x67, 0x61, 0x77, 0x61, 0x73,
-	0x61, 0x6e, 0x12, 0x29, 0x0a, 0x10, 0x70, 0x69, 0x6c, 0x69, 0x68, 0x61, 0x6e, 0x5f, 0x65, 0x76,
-	0x61, 0x6c, 0x75, 0x61, 0x73, 0x69, 0x18, 0x06, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0f, 0x70, 0x69,
-	0x6c, 0x69, 0x68, 0x61, 0x6e, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x73, 0x69, 0x12, 0x1d, 0x0a,
-	0x0a, 0x6a, 0x75, 0x72, 0x75, 0x73, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x07, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x09, 0x6a, 0x75, 0x72, 0x75, 0x73, 0x61, 0x6e, 0x49, 0x64, 0x22, 0xd3, 0x04, 0x0a,
-	0x0a, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x12, 0x24, 0x0a, 0x0e, 0x69,
-	0x64, 0x5f, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x5f, 0x61, 0x6b, 0x68, 0x69, 0x72, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x0c, 0x69, 0x64, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69,
-	0x72, 0x12, 0x2a, 0x0a, 0x11, 0x61, 0x6e, 0x67, 0x67, 0x6f, 0x74, 0x61, 0x5f, 0x72, 0x6f, 0x6d,
-	0x62, 0x65, 0x6c, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0f, 0x61, 0x6e,
-	0x67, 0x67, 0x6f, 0x74, 0x61, 0x52, 0x6f, 0x6d, 0x62, 0x65, 0x6c, 0x49, 0x64, 0x12, 0x2a, 0x0a,
-	0x11, 0x6d, 0x61, 0x74, 0x61, 0x5f, 0x70, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x5f,
-	0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x0f, 0x6d, 0x61, 0x74, 0x61, 0x50, 0x65,
-	0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x65, 0x6d,
-	0x65, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
-	0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x49, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x6e, 0x69,
-	0x6c, 0x61, 0x69, 0x5f, 0x70, 0x65, 0x6e, 0x67, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09,
-	0x6e, 0x69, 0x6c, 0x61, 0x69, 0x50, 0x65, 0x6e, 0x67, 0x12, 0x23, 0x0a, 0x0d, 0x70, 0x72, 0x65,
-	0x64, 0x69, 0x6b, 0x61, 0x74, 0x5f, 0x70, 0x65, 0x6e, 0x67, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0c, 0x70, 0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x50, 0x65, 0x6e, 0x67, 0x12, 0x1b,
-	0x0a, 0x09, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x5f, 0x6b, 0x65, 0x74, 0x18, 0x07, 0x20, 0x01, 0x28,
-	0x0d, 0x52, 0x08, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x4b, 0x65, 0x74, 0x12, 0x21, 0x0a, 0x0c, 0x70,
-	0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x5f, 0x6b, 0x65, 0x74, 0x18, 0x08, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0b, 0x70, 0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x4b, 0x65, 0x74, 0x12, 0x1b,
-	0x0a, 0x09, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x5f, 0x73, 0x69, 0x6b, 0x18, 0x09, 0x20, 0x01, 0x28,
-	0x0d, 0x52, 0x08, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x53, 0x69, 0x6b, 0x12, 0x21, 0x0a, 0x0c, 0x70,
-	0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x5f, 0x73, 0x69, 0x6b, 0x18, 0x0a, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0b, 0x70, 0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x53, 0x69, 0x6b, 0x12, 0x21,
-	0x0a, 0x0c, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x5f, 0x73, 0x69, 0x6b, 0x73, 0x6f, 0x73, 0x18, 0x0b,
-	0x20, 0x01, 0x28, 0x0d, 0x52, 0x0b, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x53, 0x69, 0x6b, 0x73, 0x6f,
-	0x73, 0x12, 0x27, 0x0a, 0x0f, 0x70, 0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x5f, 0x73, 0x69,
-	0x6b, 0x73, 0x6f, 0x73, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x72, 0x65, 0x64,
-	0x69, 0x6b, 0x61, 0x74, 0x53, 0x69, 0x6b, 0x73, 0x6f, 0x73, 0x12, 0x28, 0x0a, 0x10, 0x70, 0x65,
-	0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x5f, 0x69, 0x64, 0x18, 0x0d,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x44, 0x69, 0x64,
-	0x69, 0x6b, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x69, 0x64, 0x5f, 0x6d, 0x69, 0x6e, 0x61, 0x74,
-	0x18, 0x0e, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x69, 0x64, 0x4d, 0x69, 0x6e, 0x61, 0x74, 0x12,
-	0x1a, 0x0a, 0x08, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x18, 0x0f, 0x20, 0x01, 0x28,
-	0x0d, 0x52, 0x08, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x12, 0x35, 0x0a, 0x0e, 0x6d,
-	0x61, 0x74, 0x61, 0x5f, 0x70, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x18, 0x10, 0x20,
-	0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x4d, 0x61,
-	0x70, 0x65, 0x6c, 0x52, 0x0d, 0x6d, 0x61, 0x74, 0x61, 0x50, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72,
-	0x61, 0x6e, 0x22, 0xf5, 0x01, 0x0a, 0x0a, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x53, 0x69, 0x73, 0x77,
-	0x61, 0x12, 0x28, 0x0a, 0x10, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64,
-	0x69, 0x6b, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x65, 0x73,
-	0x65, 0x72, 0x74, 0x61, 0x44, 0x69, 0x64, 0x69, 0x6b, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x6e,
-	0x6d, 0x5f, 0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e,
-	0x6d, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12, 0x30, 0x0a, 0x14, 0x72, 0x6f, 0x6d, 0x62, 0x6f, 0x6e,
-	0x67, 0x61, 0x6e, 0x5f, 0x62, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x12, 0x72, 0x6f, 0x6d, 0x62, 0x6f, 0x6e, 0x67, 0x61, 0x6e, 0x42,
-	0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x6e, 0x6d, 0x5f, 0x6b,
-	0x65, 0x6c, 0x61, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e, 0x6d, 0x4b, 0x65,
-	0x6c, 0x61, 0x73, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x5f,
-	0x69, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74,
-	0x65, 0x72, 0x49, 0x64, 0x12, 0x34, 0x0a, 0x0b, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x5f, 0x61, 0x6b,
+	0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x0f, 0x6d, 0x61, 0x74, 0x61, 0x50, 0x65, 0x6c, 0x61, 0x6a,
+	0x61, 0x72, 0x61, 0x6e, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74,
+	0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x65, 0x6d,
+	0x65, 0x73, 0x74, 0x65, 0x72, 0x49, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x6e, 0x69, 0x6c, 0x61, 0x69,
+	0x5f, 0x70, 0x65, 0x6e, 0x67, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x6e, 0x69, 0x6c,
+	0x61, 0x69, 0x50, 0x65, 0x6e, 0x67, 0x12, 0x23, 0x0a, 0x0d, 0x70, 0x72, 0x65, 0x64, 0x69, 0x6b,
+	0x61, 0x74, 0x5f, 0x70, 0x65, 0x6e, 0x67, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x70,
+	0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x50, 0x65, 0x6e, 0x67, 0x12, 0x1b, 0x0a, 0x09, 0x6e,
+	0x69, 0x6c, 0x61, 0x69, 0x5f, 0x6b, 0x65, 0x74, 0x18, 0x07, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x08,
+	0x6e, 0x69, 0x6c, 0x61, 0x69, 0x4b, 0x65, 0x74, 0x12, 0x21, 0x0a, 0x0c, 0x70, 0x72, 0x65, 0x64,
+	0x69, 0x6b, 0x61, 0x74, 0x5f, 0x6b, 0x65, 0x74, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+	0x70, 0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x4b, 0x65, 0x74, 0x12, 0x1b, 0x0a, 0x09, 0x6e,
+	0x69, 0x6c, 0x61, 0x69, 0x5f, 0x73, 0x69, 0x6b, 0x18, 0x09, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x08,
+	0x6e, 0x69, 0x6c, 0x61, 0x69, 0x53, 0x69, 0x6b, 0x12, 0x21, 0x0a, 0x0c, 0x70, 0x72, 0x65, 0x64,
+	0x69, 0x6b, 0x61, 0x74, 0x5f, 0x73, 0x69, 0x6b, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+	0x70, 0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x53, 0x69, 0x6b, 0x12, 0x21, 0x0a, 0x0c, 0x6e,
+	0x69, 0x6c, 0x61, 0x69, 0x5f, 0x73, 0x69, 0x6b, 0x73, 0x6f, 0x73, 0x18, 0x0b, 0x20, 0x01, 0x28,
+	0x0d, 0x52, 0x0b, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x53, 0x69, 0x6b, 0x73, 0x6f, 0x73, 0x12, 0x27,
+	0x0a, 0x0f, 0x70, 0x72, 0x65, 0x64, 0x69, 0x6b, 0x61, 0x74, 0x5f, 0x73, 0x69, 0x6b, 0x73, 0x6f,
+	0x73, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x72, 0x65, 0x64, 0x69, 0x6b, 0x61,
+	0x74, 0x53, 0x69, 0x6b, 0x73, 0x6f, 0x73, 0x12, 0x28, 0x0a, 0x10, 0x70, 0x65, 0x73, 0x65, 0x72,
+	0x74, 0x61, 0x5f, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x5f, 0x69, 0x64, 0x18, 0x0d, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0e, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x44, 0x69, 0x64, 0x69, 0x6b, 0x49,
+	0x64, 0x12, 0x19, 0x0a, 0x08, 0x69, 0x64, 0x5f, 0x6d, 0x69, 0x6e, 0x61, 0x74, 0x18, 0x0e, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x69, 0x64, 0x4d, 0x69, 0x6e, 0x61, 0x74, 0x12, 0x1a, 0x0a, 0x08,
+	0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x18, 0x0f, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x08,
+	0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x12, 0x35, 0x0a, 0x0e, 0x6d, 0x61, 0x74, 0x61,
+	0x5f, 0x70, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x18, 0x10, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x0e, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x4d, 0x61, 0x70, 0x65, 0x6c,
+	0x52, 0x0d, 0x6d, 0x61, 0x74, 0x61, 0x50, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x22,
+	0x88, 0x02, 0x0a, 0x0a, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x53, 0x69, 0x73, 0x77, 0x61, 0x12, 0x28,
+	0x0a, 0x10, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x5f,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74,
+	0x61, 0x44, 0x69, 0x64, 0x69, 0x6b, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x6e, 0x6d, 0x5f, 0x73,
+	0x69, 0x73, 0x77, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e, 0x6d, 0x53, 0x69,
+	0x73, 0x77, 0x61, 0x12, 0x30, 0x0a, 0x14, 0x72, 0x6f, 0x6d, 0x62, 0x6f, 0x6e, 0x67, 0x61, 0x6e,
+	0x5f, 0x62, 0x65, 0x6c, 0x61, 0x6a, 0x61, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x12, 0x72, 0x6f, 0x6d, 0x62, 0x6f, 0x6e, 0x67, 0x61, 0x6e, 0x42, 0x65, 0x6c, 0x61,
+	0x6a, 0x61, 0x72, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x6e, 0x6d, 0x5f, 0x6b, 0x65, 0x6c, 0x61,
+	0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e, 0x6d, 0x4b, 0x65, 0x6c, 0x61, 0x73,
+	0x12, 0x32, 0x0a, 0x15, 0x74, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74, 0x5f, 0x70, 0x65, 0x6e, 0x64,
+	0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x13, 0x74, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b,
+	0x61, 0x6e, 0x49, 0x64, 0x12, 0x34, 0x0a, 0x0b, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x5f, 0x61, 0x6b,
 	0x68, 0x69, 0x72, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x73, 0x65, 0x6b, 0x6f,
 	0x6c, 0x61, 0x68, 0x2e, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x52, 0x0a,
 	0x6e, 0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x22, 0x6f, 0x0a, 0x17, 0x43, 0x72,
@@ -11883,19 +11936,20 @@ var file_sekolah_proto_rawDesc = []byte{
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61,
 	0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
 	0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x7d, 0x0a, 0x14, 0x47, 0x65, 0x74,
-	0x4e, 0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d,
-	0x65, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72,
-	0x49, 0x64, 0x12, 0x24, 0x0a, 0x0e, 0x69, 0x64, 0x5f, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x5f, 0x61,
-	0x6b, 0x68, 0x69, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x69, 0x64, 0x4e, 0x69,
-	0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x22, 0x42, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x4e,
-	0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x12, 0x29, 0x0a, 0x05, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
-	0x32, 0x13, 0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x4e, 0x69, 0x6c, 0x61, 0x69,
-	0x41, 0x6b, 0x68, 0x69, 0x72, 0x52, 0x05, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x22, 0x8a, 0x01, 0x0a,
+	0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x81, 0x01, 0x0a, 0x14, 0x47, 0x65,
+	0x74, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61,
+	0x6d, 0x65, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69,
+	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65,
+	0x72, 0x49, 0x64, 0x12, 0x28, 0x0a, 0x10, 0x70, 0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x5f, 0x64,
+	0x69, 0x64, 0x69, 0x6b, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70,
+	0x65, 0x73, 0x65, 0x72, 0x74, 0x61, 0x44, 0x69, 0x64, 0x69, 0x6b, 0x49, 0x64, 0x22, 0x4d, 0x0a,
+	0x15, 0x47, 0x65, 0x74, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69, 0x72, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x34, 0x0a, 0x0b, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x5f,
+	0x73, 0x69, 0x73, 0x77, 0x61, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x73, 0x65,
+	0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x53, 0x69, 0x73, 0x77, 0x61,
+	0x52, 0x0a, 0x6e, 0x69, 0x6c, 0x61, 0x69, 0x53, 0x69, 0x73, 0x77, 0x61, 0x22, 0x8a, 0x01, 0x0a,
 	0x17, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4e, 0x69, 0x6c, 0x61, 0x69, 0x41, 0x6b, 0x68, 0x69,
 	0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x63, 0x68, 0x65,
 	0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x73, 0x63,
@@ -12700,7 +12754,7 @@ var file_sekolah_proto_rawDesc = []byte{
 	0x11, 0x54, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b,
 	0x61, 0x6e, 0x12, 0x32, 0x0a, 0x15, 0x74, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74, 0x5f, 0x70, 0x65,
 	0x6e, 0x64, 0x69, 0x64, 0x69, 0x6b, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x0d, 0x52, 0x13, 0x74, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x64,
+	0x05, 0x52, 0x13, 0x74, 0x69, 0x6e, 0x67, 0x6b, 0x61, 0x74, 0x50, 0x65, 0x6e, 0x64, 0x69, 0x64,
 	0x69, 0x6b, 0x61, 0x6e, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6b, 0x6f, 0x64, 0x65, 0x18, 0x02,
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6b, 0x6f, 0x64, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61,
 	0x6d, 0x61, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x61, 0x12, 0x32,
@@ -12937,7 +12991,7 @@ var file_sekolah_proto_rawDesc = []byte{
 	0x2f, 0x7b, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x6e, 0x61, 0x6d, 0x65, 0x7d, 0x2f, 0x74, 0x61,
 	0x68, 0x75, 0x6e, 0x2d, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x2f, 0x64, 0x65, 0x6c, 0x65, 0x74,
 	0x65, 0x2f, 0x7b, 0x74, 0x61, 0x68, 0x75, 0x6e, 0x5f, 0x61, 0x6a, 0x61, 0x72, 0x61, 0x6e, 0x5f,
-	0x69, 0x64, 0x7d, 0x32, 0xd5, 0x03, 0x0a, 0x0f, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72,
+	0x69, 0x64, 0x7d, 0x32, 0xc5, 0x04, 0x0a, 0x0f, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72,
 	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x78, 0x0a, 0x0e, 0x43, 0x72, 0x65, 0x61, 0x74,
 	0x65, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x12, 0x1e, 0x2e, 0x73, 0x65, 0x6b, 0x6f,
 	0x6c, 0x61, 0x68, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74,
@@ -12952,7 +13006,14 @@ var file_sekolah_proto_rawDesc = []byte{
 	0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x65, 0x6d, 0x65, 0x73,
 	0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x1b, 0x82, 0xd3, 0xe4,
 	0x93, 0x02, 0x15, 0x12, 0x13, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x2f, 0x73, 0x73, 0x2f,
-	0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x12, 0x71, 0x0a, 0x0e, 0x55, 0x70, 0x64, 0x61,
+	0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x12, 0x6e, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x43,
+	0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x12, 0x0e,
+	0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x23,
+	0x2e, 0x73, 0x65, 0x6b, 0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x75, 0x72, 0x72,
+	0x65, 0x6e, 0x74, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x23, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1d, 0x12, 0x1b, 0x2f, 0x61, 0x70,
+	0x69, 0x2f, 0x76, 0x31, 0x2f, 0x73, 0x73, 0x2f, 0x73, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72,
+	0x2f, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x12, 0x71, 0x0a, 0x0e, 0x55, 0x70, 0x64, 0x61,
 	0x74, 0x65, 0x53, 0x65, 0x6d, 0x65, 0x73, 0x74, 0x65, 0x72, 0x12, 0x1e, 0x2e, 0x73, 0x65, 0x6b,
 	0x6f, 0x6c, 0x61, 0x68, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6d, 0x65, 0x73,
 	0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x73, 0x65, 0x6b,
@@ -13584,7 +13645,7 @@ func file_sekolah_proto_rawDescGZIP() []byte {
 	return file_sekolah_proto_rawDescData
 }
 
-var file_sekolah_proto_msgTypes = make([]protoimpl.MessageInfo, 191)
+var file_sekolah_proto_msgTypes = make([]protoimpl.MessageInfo, 192)
 var file_sekolah_proto_goTypes = []any{
 	(*TahunAjaran)(nil),                      // 0: sekolah.TahunAjaran
 	(*CreateTahunAjaranRequest)(nil),         // 1: sekolah.CreateTahunAjaranRequest
@@ -13600,183 +13661,184 @@ var file_sekolah_proto_goTypes = []any{
 	(*CreateSemesterResponse)(nil),           // 11: sekolah.CreateSemesterResponse
 	(*GetSemesterRequest)(nil),               // 12: sekolah.GetSemesterRequest
 	(*GetSemesterResponse)(nil),              // 13: sekolah.GetSemesterResponse
-	(*UpdateSemesterRequest)(nil),            // 14: sekolah.UpdateSemesterRequest
-	(*UpdateSemesterResponse)(nil),           // 15: sekolah.UpdateSemesterResponse
-	(*DeleteSemesterRequest)(nil),            // 16: sekolah.DeleteSemesterRequest
-	(*DeleteSemesterResponse)(nil),           // 17: sekolah.DeleteSemesterResponse
-	(*Sekolah)(nil),                          // 18: sekolah.Sekolah
-	(*SekolahDapo)(nil),                      // 19: sekolah.SekolahDapo
-	(*TabelSekolahRequest)(nil),              // 20: sekolah.TabelSekolahRequest
-	(*TabelSekolahResponse)(nil),             // 21: sekolah.TabelSekolahResponse
-	(*SchoolRequest)(nil),                    // 22: sekolah.SchoolRequest
-	(*SchoolResponse)(nil),                   // 23: sekolah.SchoolResponse
-	(*SekolahTabelTenantRequest)(nil),        // 24: sekolah.SekolahTabelTenantRequest
-	(*SekolahTabelTenantResponse)(nil),       // 25: sekolah.SekolahTabelTenantResponse
-	(*CreateSekolahRequest)(nil),             // 26: sekolah.CreateSekolahRequest
-	(*CreateSekolahResponse)(nil),            // 27: sekolah.CreateSekolahResponse
-	(*GetSekolahRequest)(nil),                // 28: sekolah.GetSekolahRequest
-	(*GetSekolahResponse)(nil),               // 29: sekolah.GetSekolahResponse
-	(*UpdateSekolahRequest)(nil),             // 30: sekolah.UpdateSekolahRequest
-	(*UpdateSekolahResponse)(nil),            // 31: sekolah.UpdateSekolahResponse
-	(*Siswa)(nil),                            // 32: sekolah.Siswa
-	(*SiswaPelengkap)(nil),                   // 33: sekolah.SiswaPelengkap
-	(*CreateSiswaRequest)(nil),               // 34: sekolah.CreateSiswaRequest
-	(*CreateSiswaResponse)(nil),              // 35: sekolah.CreateSiswaResponse
-	(*CreateBanyakSiswaRequest)(nil),         // 36: sekolah.CreateBanyakSiswaRequest
-	(*CreateBanyakSiswaResponse)(nil),        // 37: sekolah.CreateBanyakSiswaResponse
-	(*GetSiswaRequest)(nil),                  // 38: sekolah.GetSiswaRequest
-	(*GetSiswaResponse)(nil),                 // 39: sekolah.GetSiswaResponse
-	(*UpdateSiswaRequest)(nil),               // 40: sekolah.UpdateSiswaRequest
-	(*UpdateSiswaResponse)(nil),              // 41: sekolah.UpdateSiswaResponse
-	(*DeleteSiswaRequest)(nil),               // 42: sekolah.DeleteSiswaRequest
-	(*DeleteSiswaResponse)(nil),              // 43: sekolah.DeleteSiswaResponse
-	(*SearchSiswaRequest)(nil),               // 44: sekolah.SearchSiswaRequest
-	(*SearchSiswaResponse)(nil),              // 45: sekolah.SearchSiswaResponse
-	(*UploadDataSekolahRequest)(nil),         // 46: sekolah.UploadDataSekolahRequest
-	(*UploadDataSekolahResponse)(nil),        // 47: sekolah.UploadDataSekolahResponse
-	(*DownloadDataSekolahRequest)(nil),       // 48: sekolah.DownloadDataSekolahRequest
-	(*DownloadDataSekolahResponse)(nil),      // 49: sekolah.DownloadDataSekolahResponse
-	(*Mapel1)(nil),                           // 50: sekolah.Mapel1
-	(*Mapel)(nil),                            // 51: sekolah.Mapel
-	(*NilaiAkhir)(nil),                       // 52: sekolah.NilaiAkhir
-	(*NilaiSiswa)(nil),                       // 53: sekolah.NilaiSiswa
-	(*CreateNilaiAkhirRequest)(nil),          // 54: sekolah.CreateNilaiAkhirRequest
-	(*CreateNilaiAkhirResponse)(nil),         // 55: sekolah.CreateNilaiAkhirResponse
-	(*GetNilaiAkhirRequest)(nil),             // 56: sekolah.GetNilaiAkhirRequest
-	(*GetNilaiAkhirResponse)(nil),            // 57: sekolah.GetNilaiAkhirResponse
-	(*UpdateNilaiAkhirRequest)(nil),          // 58: sekolah.UpdateNilaiAkhirRequest
-	(*UpdateNilaiAkhirResponse)(nil),         // 59: sekolah.UpdateNilaiAkhirResponse
-	(*DeleteNilaiAkhirRequest)(nil),          // 60: sekolah.DeleteNilaiAkhirRequest
-	(*DeleteNilaiAkhirResponse)(nil),         // 61: sekolah.DeleteNilaiAkhirResponse
-	(*Kelas)(nil),                            // 62: sekolah.Kelas
-	(*CreateKelasRequest)(nil),               // 63: sekolah.CreateKelasRequest
-	(*CreateKelasResponse)(nil),              // 64: sekolah.CreateKelasResponse
-	(*CreateBanyakKelasRequest)(nil),         // 65: sekolah.CreateBanyakKelasRequest
-	(*CreateBanyakKelasResponse)(nil),        // 66: sekolah.CreateBanyakKelasResponse
-	(*GetKelasRequest)(nil),                  // 67: sekolah.GetKelasRequest
-	(*GetKelasResponse)(nil),                 // 68: sekolah.GetKelasResponse
-	(*UpdateKelasRequest)(nil),               // 69: sekolah.UpdateKelasRequest
-	(*UpdateKelasResponse)(nil),              // 70: sekolah.UpdateKelasResponse
-	(*DeleteKelasRequest)(nil),               // 71: sekolah.DeleteKelasRequest
-	(*DeleteKelasResponse)(nil),              // 72: sekolah.DeleteKelasResponse
-	(*ImportDapodikRombelRequest)(nil),       // 73: sekolah.ImportDapodikRombelRequest
-	(*ImportDapodikRombelResponse)(nil),      // 74: sekolah.ImportDapodikRombelResponse
-	(*AnggotaKelas)(nil),                     // 75: sekolah.AnggotaKelas
-	(*CreateAnggotaKelasRequest)(nil),        // 76: sekolah.CreateAnggotaKelasRequest
-	(*CreateAnggotaKelasResponse)(nil),       // 77: sekolah.CreateAnggotaKelasResponse
-	(*CreateBanyakAnggotaKelasRequest)(nil),  // 78: sekolah.CreateBanyakAnggotaKelasRequest
-	(*CreateBanyakAnggotaKelasResponse)(nil), // 79: sekolah.CreateBanyakAnggotaKelasResponse
-	(*GetAnggotaKelasRequest)(nil),           // 80: sekolah.GetAnggotaKelasRequest
-	(*GetAnggotaKelasResponse)(nil),          // 81: sekolah.GetAnggotaKelasResponse
-	(*UpdateAnggotaKelasRequest)(nil),        // 82: sekolah.UpdateAnggotaKelasRequest
-	(*UpdateAnggotaKelasResponse)(nil),       // 83: sekolah.UpdateAnggotaKelasResponse
-	(*DeleteAnggotaKelasRequest)(nil),        // 84: sekolah.DeleteAnggotaKelasRequest
-	(*DeleteAnggotaKelasResponse)(nil),       // 85: sekolah.DeleteAnggotaKelasResponse
-	(*SearchAnggotaKelasRequest)(nil),        // 86: sekolah.SearchAnggotaKelasRequest
-	(*SearchAnggotaKelasResponse)(nil),       // 87: sekolah.SearchAnggotaKelasResponse
-	(*FilterAnggotaKelasRequest)(nil),        // 88: sekolah.FilterAnggotaKelasRequest
-	(*FilterAnggotaKelasResponse)(nil),       // 89: sekolah.FilterAnggotaKelasResponse
-	(*ConflictRow)(nil),                      // 90: sekolah.ConflictRow
-	(*ConflictResponse)(nil),                 // 91: sekolah.ConflictResponse
-	(*PTK)(nil),                              // 92: sekolah.PTK
-	(*CreatePTKRequest)(nil),                 // 93: sekolah.CreatePTKRequest
-	(*CreatePTKResponse)(nil),                // 94: sekolah.CreatePTKResponse
-	(*GetPTKRequest)(nil),                    // 95: sekolah.GetPTKRequest
-	(*GetPTKResponse)(nil),                   // 96: sekolah.GetPTKResponse
-	(*UpdatePTKRequest)(nil),                 // 97: sekolah.UpdatePTKRequest
-	(*UpdatePTKResponse)(nil),                // 98: sekolah.UpdatePTKResponse
-	(*DeletePTKRequest)(nil),                 // 99: sekolah.DeletePTKRequest
-	(*DeletePTKResponse)(nil),                // 100: sekolah.DeletePTKResponse
-	(*PTKTerdaftar)(nil),                     // 101: sekolah.PTKTerdaftar
-	(*CreatePTKTerdaftarRequest)(nil),        // 102: sekolah.CreatePTKTerdaftarRequest
-	(*CreatePTKTerdaftarResponse)(nil),       // 103: sekolah.CreatePTKTerdaftarResponse
-	(*CreateBanyakPTKTerdaftarRequest)(nil),  // 104: sekolah.CreateBanyakPTKTerdaftarRequest
-	(*CreateBanyakPTKTerdaftarResponse)(nil), // 105: sekolah.CreateBanyakPTKTerdaftarResponse
-	(*GetPTKTerdaftarRequest)(nil),           // 106: sekolah.GetPTKTerdaftarRequest
-	(*GetPTKTerdaftarResponse)(nil),          // 107: sekolah.GetPTKTerdaftarResponse
-	(*UpdatePTKTerdaftarRequest)(nil),        // 108: sekolah.UpdatePTKTerdaftarRequest
-	(*UpdatePTKTerdaftarResponse)(nil),       // 109: sekolah.UpdatePTKTerdaftarResponse
-	(*DeletePTKTerdaftarRequest)(nil),        // 110: sekolah.DeletePTKTerdaftarRequest
-	(*DeletePTKTerdaftarResponse)(nil),       // 111: sekolah.DeletePTKTerdaftarResponse
-	(*Kenaikan)(nil),                         // 112: sekolah.Kenaikan
-	(*CreateKenaikanRequest)(nil),            // 113: sekolah.CreateKenaikanRequest
-	(*CreateKenaikanResponse)(nil),           // 114: sekolah.CreateKenaikanResponse
-	(*GetKenaikanRequest)(nil),               // 115: sekolah.GetKenaikanRequest
-	(*GetKenaikanResponse)(nil),              // 116: sekolah.GetKenaikanResponse
-	(*FilterKenaikanRequest)(nil),            // 117: sekolah.FilterKenaikanRequest
-	(*FilterKenaikanResponse)(nil),           // 118: sekolah.FilterKenaikanResponse
-	(*UpdateKenaikanRequest)(nil),            // 119: sekolah.UpdateKenaikanRequest
-	(*UpdateKenaikanResponse)(nil),           // 120: sekolah.UpdateKenaikanResponse
-	(*DeleteKenaikanRequest)(nil),            // 121: sekolah.DeleteKenaikanRequest
-	(*DeleteKenaikanResponse)(nil),           // 122: sekolah.DeleteKenaikanResponse
-	(*UploadKenaikanRequest)(nil),            // 123: sekolah.UploadKenaikanRequest
-	(*UploadKenaikanResponse)(nil),           // 124: sekolah.UploadKenaikanResponse
-	(*Ijazah)(nil),                           // 125: sekolah.Ijazah
-	(*CreateIjazahRequest)(nil),              // 126: sekolah.CreateIjazahRequest
-	(*CreateIjazahResponse)(nil),             // 127: sekolah.CreateIjazahResponse
-	(*CreateBanyakIjazahRequest)(nil),        // 128: sekolah.CreateBanyakIjazahRequest
-	(*CreateBanyakIjazahResponse)(nil),       // 129: sekolah.CreateBanyakIjazahResponse
-	(*GetIjazahRequest)(nil),                 // 130: sekolah.GetIjazahRequest
-	(*GetIjazahResponse)(nil),                // 131: sekolah.GetIjazahResponse
-	(*GetProsesIjazahRequest)(nil),           // 132: sekolah.GetProsesIjazahRequest
-	(*GetProsesIjazahResponse)(nil),          // 133: sekolah.GetProsesIjazahResponse
-	(*UpdateIjazahRequest)(nil),              // 134: sekolah.UpdateIjazahRequest
-	(*UpdateIjazahResponse)(nil),             // 135: sekolah.UpdateIjazahResponse
-	(*DeleteIjazahRequest)(nil),              // 136: sekolah.DeleteIjazahRequest
-	(*DeleteIjazahResponse)(nil),             // 137: sekolah.DeleteIjazahResponse
-	(*UploadIjazahRequest)(nil),              // 138: sekolah.UploadIjazahRequest
-	(*UploadIjazahResponse)(nil),             // 139: sekolah.UploadIjazahResponse
-	(*TranskripNilai)(nil),                   // 140: sekolah.TranskripNilai
-	(*CreateTranskripNilaiRequest)(nil),      // 141: sekolah.CreateTranskripNilaiRequest
-	(*CreateTranskripNilaiResponse)(nil),     // 142: sekolah.CreateTranskripNilaiResponse
-	(*GetTranskripNilaiRequest)(nil),         // 143: sekolah.GetTranskripNilaiRequest
-	(*GetTranskripNilaiResponse)(nil),        // 144: sekolah.GetTranskripNilaiResponse
-	(*UpdateTranskripNilaiRequest)(nil),      // 145: sekolah.UpdateTranskripNilaiRequest
-	(*UpdateTranskripNilaiResponse)(nil),     // 146: sekolah.UpdateTranskripNilaiResponse
-	(*DeleteTranskripNilaiRequest)(nil),      // 147: sekolah.DeleteTranskripNilaiRequest
-	(*DeleteTranskripNilaiResponse)(nil),     // 148: sekolah.DeleteTranskripNilaiResponse
-	(*UploadTranskripNilaiRequest)(nil),      // 149: sekolah.UploadTranskripNilaiRequest
-	(*UploadTranskripNilaiResponse)(nil),     // 150: sekolah.UploadTranskripNilaiResponse
-	(*DownloadSekolahRequest)(nil),           // 151: sekolah.DownloadSekolahRequest
-	(*DownloadSekolahResponse)(nil),          // 152: sekolah.DownloadSekolahResponse
-	(*GetCountSiswaRequest)(nil),             // 153: sekolah.GetCountSiswaRequest
-	(*GetCountSiswaResponse)(nil),            // 154: sekolah.GetCountSiswaResponse
-	(*GetCountGuruRequest)(nil),              // 155: sekolah.GetCountGuruRequest
-	(*GetCountGuruResponse)(nil),             // 156: sekolah.GetCountGuruResponse
-	(*GetCountKelasRequest)(nil),             // 157: sekolah.GetCountKelasRequest
-	(*GetCountKelasResponse)(nil),            // 158: sekolah.GetCountKelasResponse
-	(*InfoKelas)(nil),                        // 159: sekolah.InfoKelas
-	(*GetInfoKelasRequest)(nil),              // 160: sekolah.GetInfoKelasRequest
-	(*GetInfoKelasResponse)(nil),             // 161: sekolah.GetInfoKelasResponse
-	(*Empty)(nil),                            // 162: sekolah.Empty
-	(*BentukPendidikan)(nil),                 // 163: sekolah.BentukPendidikan
-	(*Jenjang)(nil),                          // 164: sekolah.Jenjang
-	(*TingkatPendidikan)(nil),                // 165: sekolah.TingkatPendidikan
-	(*StatusKepemilikan)(nil),                // 166: sekolah.StatusKepemilikan
-	(*Jurusan)(nil),                          // 167: sekolah.Jurusan
-	(*Kurikulum)(nil),                        // 168: sekolah.Kurikulum
-	(*GetBentukPendidikanResponse)(nil),      // 169: sekolah.GetBentukPendidikanResponse
-	(*GetJenjangResponse)(nil),               // 170: sekolah.GetJenjangResponse
-	(*GetTingkatPendidikanRequest)(nil),      // 171: sekolah.GetTingkatPendidikanRequest
-	(*GetTingkatPendidikanResponse)(nil),     // 172: sekolah.GetTingkatPendidikanResponse
-	(*GetStatusKepemilikanResponse)(nil),     // 173: sekolah.GetStatusKepemilikanResponse
-	(*GetJurusanRequest)(nil),                // 174: sekolah.GetJurusanRequest
-	(*GetJurusanResponse)(nil),               // 175: sekolah.GetJurusanResponse
-	(*GetKurikulumRequest)(nil),              // 176: sekolah.GetKurikulumRequest
-	(*GetKurikulumResponse)(nil),             // 177: sekolah.GetKurikulumResponse
-	(*GetMapelRequest)(nil),                  // 178: sekolah.GetMapelRequest
-	(*GetMapelResponse)(nil),                 // 179: sekolah.GetMapelResponse
-	(*Pembelajaran)(nil),                     // 180: sekolah.Pembelajaran
-	(*CreatePembelajaranRequest)(nil),        // 181: sekolah.CreatePembelajaranRequest
-	(*CreatePembelajaranResponse)(nil),       // 182: sekolah.CreatePembelajaranResponse
-	(*CreateBanyakPembelajaranRequest)(nil),  // 183: sekolah.CreateBanyakPembelajaranRequest
-	(*CreateBanyakPembelajaranResponse)(nil), // 184: sekolah.CreateBanyakPembelajaranResponse
-	(*GetPembelajaranRequest)(nil),           // 185: sekolah.GetPembelajaranRequest
-	(*GetPembelajaranResponse)(nil),          // 186: sekolah.GetPembelajaranResponse
-	(*UpdatePembelajaranRequest)(nil),        // 187: sekolah.UpdatePembelajaranRequest
-	(*UpdatePembelajaranResponse)(nil),       // 188: sekolah.UpdatePembelajaranResponse
-	(*DeletePembelajaranRequest)(nil),        // 189: sekolah.DeletePembelajaranRequest
-	(*DeletePembelajaranResponse)(nil),       // 190: sekolah.DeletePembelajaranResponse
+	(*GetCurrentSemesterResponse)(nil),       // 14: sekolah.GetCurrentSemesterResponse
+	(*UpdateSemesterRequest)(nil),            // 15: sekolah.UpdateSemesterRequest
+	(*UpdateSemesterResponse)(nil),           // 16: sekolah.UpdateSemesterResponse
+	(*DeleteSemesterRequest)(nil),            // 17: sekolah.DeleteSemesterRequest
+	(*DeleteSemesterResponse)(nil),           // 18: sekolah.DeleteSemesterResponse
+	(*Sekolah)(nil),                          // 19: sekolah.Sekolah
+	(*SekolahDapo)(nil),                      // 20: sekolah.SekolahDapo
+	(*TabelSekolahRequest)(nil),              // 21: sekolah.TabelSekolahRequest
+	(*TabelSekolahResponse)(nil),             // 22: sekolah.TabelSekolahResponse
+	(*SchoolRequest)(nil),                    // 23: sekolah.SchoolRequest
+	(*SchoolResponse)(nil),                   // 24: sekolah.SchoolResponse
+	(*SekolahTabelTenantRequest)(nil),        // 25: sekolah.SekolahTabelTenantRequest
+	(*SekolahTabelTenantResponse)(nil),       // 26: sekolah.SekolahTabelTenantResponse
+	(*CreateSekolahRequest)(nil),             // 27: sekolah.CreateSekolahRequest
+	(*CreateSekolahResponse)(nil),            // 28: sekolah.CreateSekolahResponse
+	(*GetSekolahRequest)(nil),                // 29: sekolah.GetSekolahRequest
+	(*GetSekolahResponse)(nil),               // 30: sekolah.GetSekolahResponse
+	(*UpdateSekolahRequest)(nil),             // 31: sekolah.UpdateSekolahRequest
+	(*UpdateSekolahResponse)(nil),            // 32: sekolah.UpdateSekolahResponse
+	(*Siswa)(nil),                            // 33: sekolah.Siswa
+	(*SiswaPelengkap)(nil),                   // 34: sekolah.SiswaPelengkap
+	(*CreateSiswaRequest)(nil),               // 35: sekolah.CreateSiswaRequest
+	(*CreateSiswaResponse)(nil),              // 36: sekolah.CreateSiswaResponse
+	(*CreateBanyakSiswaRequest)(nil),         // 37: sekolah.CreateBanyakSiswaRequest
+	(*CreateBanyakSiswaResponse)(nil),        // 38: sekolah.CreateBanyakSiswaResponse
+	(*GetSiswaRequest)(nil),                  // 39: sekolah.GetSiswaRequest
+	(*GetSiswaResponse)(nil),                 // 40: sekolah.GetSiswaResponse
+	(*UpdateSiswaRequest)(nil),               // 41: sekolah.UpdateSiswaRequest
+	(*UpdateSiswaResponse)(nil),              // 42: sekolah.UpdateSiswaResponse
+	(*DeleteSiswaRequest)(nil),               // 43: sekolah.DeleteSiswaRequest
+	(*DeleteSiswaResponse)(nil),              // 44: sekolah.DeleteSiswaResponse
+	(*SearchSiswaRequest)(nil),               // 45: sekolah.SearchSiswaRequest
+	(*SearchSiswaResponse)(nil),              // 46: sekolah.SearchSiswaResponse
+	(*UploadDataSekolahRequest)(nil),         // 47: sekolah.UploadDataSekolahRequest
+	(*UploadDataSekolahResponse)(nil),        // 48: sekolah.UploadDataSekolahResponse
+	(*DownloadDataSekolahRequest)(nil),       // 49: sekolah.DownloadDataSekolahRequest
+	(*DownloadDataSekolahResponse)(nil),      // 50: sekolah.DownloadDataSekolahResponse
+	(*Mapel1)(nil),                           // 51: sekolah.Mapel1
+	(*Mapel)(nil),                            // 52: sekolah.Mapel
+	(*NilaiAkhir)(nil),                       // 53: sekolah.NilaiAkhir
+	(*NilaiSiswa)(nil),                       // 54: sekolah.NilaiSiswa
+	(*CreateNilaiAkhirRequest)(nil),          // 55: sekolah.CreateNilaiAkhirRequest
+	(*CreateNilaiAkhirResponse)(nil),         // 56: sekolah.CreateNilaiAkhirResponse
+	(*GetNilaiAkhirRequest)(nil),             // 57: sekolah.GetNilaiAkhirRequest
+	(*GetNilaiAkhirResponse)(nil),            // 58: sekolah.GetNilaiAkhirResponse
+	(*UpdateNilaiAkhirRequest)(nil),          // 59: sekolah.UpdateNilaiAkhirRequest
+	(*UpdateNilaiAkhirResponse)(nil),         // 60: sekolah.UpdateNilaiAkhirResponse
+	(*DeleteNilaiAkhirRequest)(nil),          // 61: sekolah.DeleteNilaiAkhirRequest
+	(*DeleteNilaiAkhirResponse)(nil),         // 62: sekolah.DeleteNilaiAkhirResponse
+	(*Kelas)(nil),                            // 63: sekolah.Kelas
+	(*CreateKelasRequest)(nil),               // 64: sekolah.CreateKelasRequest
+	(*CreateKelasResponse)(nil),              // 65: sekolah.CreateKelasResponse
+	(*CreateBanyakKelasRequest)(nil),         // 66: sekolah.CreateBanyakKelasRequest
+	(*CreateBanyakKelasResponse)(nil),        // 67: sekolah.CreateBanyakKelasResponse
+	(*GetKelasRequest)(nil),                  // 68: sekolah.GetKelasRequest
+	(*GetKelasResponse)(nil),                 // 69: sekolah.GetKelasResponse
+	(*UpdateKelasRequest)(nil),               // 70: sekolah.UpdateKelasRequest
+	(*UpdateKelasResponse)(nil),              // 71: sekolah.UpdateKelasResponse
+	(*DeleteKelasRequest)(nil),               // 72: sekolah.DeleteKelasRequest
+	(*DeleteKelasResponse)(nil),              // 73: sekolah.DeleteKelasResponse
+	(*ImportDapodikRombelRequest)(nil),       // 74: sekolah.ImportDapodikRombelRequest
+	(*ImportDapodikRombelResponse)(nil),      // 75: sekolah.ImportDapodikRombelResponse
+	(*AnggotaKelas)(nil),                     // 76: sekolah.AnggotaKelas
+	(*CreateAnggotaKelasRequest)(nil),        // 77: sekolah.CreateAnggotaKelasRequest
+	(*CreateAnggotaKelasResponse)(nil),       // 78: sekolah.CreateAnggotaKelasResponse
+	(*CreateBanyakAnggotaKelasRequest)(nil),  // 79: sekolah.CreateBanyakAnggotaKelasRequest
+	(*CreateBanyakAnggotaKelasResponse)(nil), // 80: sekolah.CreateBanyakAnggotaKelasResponse
+	(*GetAnggotaKelasRequest)(nil),           // 81: sekolah.GetAnggotaKelasRequest
+	(*GetAnggotaKelasResponse)(nil),          // 82: sekolah.GetAnggotaKelasResponse
+	(*UpdateAnggotaKelasRequest)(nil),        // 83: sekolah.UpdateAnggotaKelasRequest
+	(*UpdateAnggotaKelasResponse)(nil),       // 84: sekolah.UpdateAnggotaKelasResponse
+	(*DeleteAnggotaKelasRequest)(nil),        // 85: sekolah.DeleteAnggotaKelasRequest
+	(*DeleteAnggotaKelasResponse)(nil),       // 86: sekolah.DeleteAnggotaKelasResponse
+	(*SearchAnggotaKelasRequest)(nil),        // 87: sekolah.SearchAnggotaKelasRequest
+	(*SearchAnggotaKelasResponse)(nil),       // 88: sekolah.SearchAnggotaKelasResponse
+	(*FilterAnggotaKelasRequest)(nil),        // 89: sekolah.FilterAnggotaKelasRequest
+	(*FilterAnggotaKelasResponse)(nil),       // 90: sekolah.FilterAnggotaKelasResponse
+	(*ConflictRow)(nil),                      // 91: sekolah.ConflictRow
+	(*ConflictResponse)(nil),                 // 92: sekolah.ConflictResponse
+	(*PTK)(nil),                              // 93: sekolah.PTK
+	(*CreatePTKRequest)(nil),                 // 94: sekolah.CreatePTKRequest
+	(*CreatePTKResponse)(nil),                // 95: sekolah.CreatePTKResponse
+	(*GetPTKRequest)(nil),                    // 96: sekolah.GetPTKRequest
+	(*GetPTKResponse)(nil),                   // 97: sekolah.GetPTKResponse
+	(*UpdatePTKRequest)(nil),                 // 98: sekolah.UpdatePTKRequest
+	(*UpdatePTKResponse)(nil),                // 99: sekolah.UpdatePTKResponse
+	(*DeletePTKRequest)(nil),                 // 100: sekolah.DeletePTKRequest
+	(*DeletePTKResponse)(nil),                // 101: sekolah.DeletePTKResponse
+	(*PTKTerdaftar)(nil),                     // 102: sekolah.PTKTerdaftar
+	(*CreatePTKTerdaftarRequest)(nil),        // 103: sekolah.CreatePTKTerdaftarRequest
+	(*CreatePTKTerdaftarResponse)(nil),       // 104: sekolah.CreatePTKTerdaftarResponse
+	(*CreateBanyakPTKTerdaftarRequest)(nil),  // 105: sekolah.CreateBanyakPTKTerdaftarRequest
+	(*CreateBanyakPTKTerdaftarResponse)(nil), // 106: sekolah.CreateBanyakPTKTerdaftarResponse
+	(*GetPTKTerdaftarRequest)(nil),           // 107: sekolah.GetPTKTerdaftarRequest
+	(*GetPTKTerdaftarResponse)(nil),          // 108: sekolah.GetPTKTerdaftarResponse
+	(*UpdatePTKTerdaftarRequest)(nil),        // 109: sekolah.UpdatePTKTerdaftarRequest
+	(*UpdatePTKTerdaftarResponse)(nil),       // 110: sekolah.UpdatePTKTerdaftarResponse
+	(*DeletePTKTerdaftarRequest)(nil),        // 111: sekolah.DeletePTKTerdaftarRequest
+	(*DeletePTKTerdaftarResponse)(nil),       // 112: sekolah.DeletePTKTerdaftarResponse
+	(*Kenaikan)(nil),                         // 113: sekolah.Kenaikan
+	(*CreateKenaikanRequest)(nil),            // 114: sekolah.CreateKenaikanRequest
+	(*CreateKenaikanResponse)(nil),           // 115: sekolah.CreateKenaikanResponse
+	(*GetKenaikanRequest)(nil),               // 116: sekolah.GetKenaikanRequest
+	(*GetKenaikanResponse)(nil),              // 117: sekolah.GetKenaikanResponse
+	(*FilterKenaikanRequest)(nil),            // 118: sekolah.FilterKenaikanRequest
+	(*FilterKenaikanResponse)(nil),           // 119: sekolah.FilterKenaikanResponse
+	(*UpdateKenaikanRequest)(nil),            // 120: sekolah.UpdateKenaikanRequest
+	(*UpdateKenaikanResponse)(nil),           // 121: sekolah.UpdateKenaikanResponse
+	(*DeleteKenaikanRequest)(nil),            // 122: sekolah.DeleteKenaikanRequest
+	(*DeleteKenaikanResponse)(nil),           // 123: sekolah.DeleteKenaikanResponse
+	(*UploadKenaikanRequest)(nil),            // 124: sekolah.UploadKenaikanRequest
+	(*UploadKenaikanResponse)(nil),           // 125: sekolah.UploadKenaikanResponse
+	(*Ijazah)(nil),                           // 126: sekolah.Ijazah
+	(*CreateIjazahRequest)(nil),              // 127: sekolah.CreateIjazahRequest
+	(*CreateIjazahResponse)(nil),             // 128: sekolah.CreateIjazahResponse
+	(*CreateBanyakIjazahRequest)(nil),        // 129: sekolah.CreateBanyakIjazahRequest
+	(*CreateBanyakIjazahResponse)(nil),       // 130: sekolah.CreateBanyakIjazahResponse
+	(*GetIjazahRequest)(nil),                 // 131: sekolah.GetIjazahRequest
+	(*GetIjazahResponse)(nil),                // 132: sekolah.GetIjazahResponse
+	(*GetProsesIjazahRequest)(nil),           // 133: sekolah.GetProsesIjazahRequest
+	(*GetProsesIjazahResponse)(nil),          // 134: sekolah.GetProsesIjazahResponse
+	(*UpdateIjazahRequest)(nil),              // 135: sekolah.UpdateIjazahRequest
+	(*UpdateIjazahResponse)(nil),             // 136: sekolah.UpdateIjazahResponse
+	(*DeleteIjazahRequest)(nil),              // 137: sekolah.DeleteIjazahRequest
+	(*DeleteIjazahResponse)(nil),             // 138: sekolah.DeleteIjazahResponse
+	(*UploadIjazahRequest)(nil),              // 139: sekolah.UploadIjazahRequest
+	(*UploadIjazahResponse)(nil),             // 140: sekolah.UploadIjazahResponse
+	(*TranskripNilai)(nil),                   // 141: sekolah.TranskripNilai
+	(*CreateTranskripNilaiRequest)(nil),      // 142: sekolah.CreateTranskripNilaiRequest
+	(*CreateTranskripNilaiResponse)(nil),     // 143: sekolah.CreateTranskripNilaiResponse
+	(*GetTranskripNilaiRequest)(nil),         // 144: sekolah.GetTranskripNilaiRequest
+	(*GetTranskripNilaiResponse)(nil),        // 145: sekolah.GetTranskripNilaiResponse
+	(*UpdateTranskripNilaiRequest)(nil),      // 146: sekolah.UpdateTranskripNilaiRequest
+	(*UpdateTranskripNilaiResponse)(nil),     // 147: sekolah.UpdateTranskripNilaiResponse
+	(*DeleteTranskripNilaiRequest)(nil),      // 148: sekolah.DeleteTranskripNilaiRequest
+	(*DeleteTranskripNilaiResponse)(nil),     // 149: sekolah.DeleteTranskripNilaiResponse
+	(*UploadTranskripNilaiRequest)(nil),      // 150: sekolah.UploadTranskripNilaiRequest
+	(*UploadTranskripNilaiResponse)(nil),     // 151: sekolah.UploadTranskripNilaiResponse
+	(*DownloadSekolahRequest)(nil),           // 152: sekolah.DownloadSekolahRequest
+	(*DownloadSekolahResponse)(nil),          // 153: sekolah.DownloadSekolahResponse
+	(*GetCountSiswaRequest)(nil),             // 154: sekolah.GetCountSiswaRequest
+	(*GetCountSiswaResponse)(nil),            // 155: sekolah.GetCountSiswaResponse
+	(*GetCountGuruRequest)(nil),              // 156: sekolah.GetCountGuruRequest
+	(*GetCountGuruResponse)(nil),             // 157: sekolah.GetCountGuruResponse
+	(*GetCountKelasRequest)(nil),             // 158: sekolah.GetCountKelasRequest
+	(*GetCountKelasResponse)(nil),            // 159: sekolah.GetCountKelasResponse
+	(*InfoKelas)(nil),                        // 160: sekolah.InfoKelas
+	(*GetInfoKelasRequest)(nil),              // 161: sekolah.GetInfoKelasRequest
+	(*GetInfoKelasResponse)(nil),             // 162: sekolah.GetInfoKelasResponse
+	(*Empty)(nil),                            // 163: sekolah.Empty
+	(*BentukPendidikan)(nil),                 // 164: sekolah.BentukPendidikan
+	(*Jenjang)(nil),                          // 165: sekolah.Jenjang
+	(*TingkatPendidikan)(nil),                // 166: sekolah.TingkatPendidikan
+	(*StatusKepemilikan)(nil),                // 167: sekolah.StatusKepemilikan
+	(*Jurusan)(nil),                          // 168: sekolah.Jurusan
+	(*Kurikulum)(nil),                        // 169: sekolah.Kurikulum
+	(*GetBentukPendidikanResponse)(nil),      // 170: sekolah.GetBentukPendidikanResponse
+	(*GetJenjangResponse)(nil),               // 171: sekolah.GetJenjangResponse
+	(*GetTingkatPendidikanRequest)(nil),      // 172: sekolah.GetTingkatPendidikanRequest
+	(*GetTingkatPendidikanResponse)(nil),     // 173: sekolah.GetTingkatPendidikanResponse
+	(*GetStatusKepemilikanResponse)(nil),     // 174: sekolah.GetStatusKepemilikanResponse
+	(*GetJurusanRequest)(nil),                // 175: sekolah.GetJurusanRequest
+	(*GetJurusanResponse)(nil),               // 176: sekolah.GetJurusanResponse
+	(*GetKurikulumRequest)(nil),              // 177: sekolah.GetKurikulumRequest
+	(*GetKurikulumResponse)(nil),             // 178: sekolah.GetKurikulumResponse
+	(*GetMapelRequest)(nil),                  // 179: sekolah.GetMapelRequest
+	(*GetMapelResponse)(nil),                 // 180: sekolah.GetMapelResponse
+	(*Pembelajaran)(nil),                     // 181: sekolah.Pembelajaran
+	(*CreatePembelajaranRequest)(nil),        // 182: sekolah.CreatePembelajaranRequest
+	(*CreatePembelajaranResponse)(nil),       // 183: sekolah.CreatePembelajaranResponse
+	(*CreateBanyakPembelajaranRequest)(nil),  // 184: sekolah.CreateBanyakPembelajaranRequest
+	(*CreateBanyakPembelajaranResponse)(nil), // 185: sekolah.CreateBanyakPembelajaranResponse
+	(*GetPembelajaranRequest)(nil),           // 186: sekolah.GetPembelajaranRequest
+	(*GetPembelajaranResponse)(nil),          // 187: sekolah.GetPembelajaranResponse
+	(*UpdatePembelajaranRequest)(nil),        // 188: sekolah.UpdatePembelajaranRequest
+	(*UpdatePembelajaranResponse)(nil),       // 189: sekolah.UpdatePembelajaranResponse
+	(*DeletePembelajaranRequest)(nil),        // 190: sekolah.DeletePembelajaranRequest
+	(*DeletePembelajaranResponse)(nil),       // 191: sekolah.DeletePembelajaranResponse
 }
 var file_sekolah_proto_depIdxs = []int32{
 	0,   // 0: sekolah.CreateTahunAjaranRequest.tahun_ajaran:type_name -> sekolah.TahunAjaran
@@ -13784,259 +13846,262 @@ var file_sekolah_proto_depIdxs = []int32{
 	0,   // 2: sekolah.UpdateTahunAjaranRequest.tahun_ajaran:type_name -> sekolah.TahunAjaran
 	9,   // 3: sekolah.CreateSemesterRequest.semester:type_name -> sekolah.Semester
 	9,   // 4: sekolah.GetSemesterResponse.semester:type_name -> sekolah.Semester
-	9,   // 5: sekolah.UpdateSemesterRequest.semester:type_name -> sekolah.Semester
-	18,  // 6: sekolah.TabelSekolahRequest.sekolah:type_name -> sekolah.Sekolah
-	19,  // 7: sekolah.CreateSekolahRequest.sekolah:type_name -> sekolah.SekolahDapo
-	19,  // 8: sekolah.GetSekolahResponse.sekolah:type_name -> sekolah.SekolahDapo
-	19,  // 9: sekolah.UpdateSekolahRequest.sekolah:type_name -> sekolah.SekolahDapo
-	32,  // 10: sekolah.SiswaPelengkap.siswa:type_name -> sekolah.Siswa
-	32,  // 11: sekolah.CreateSiswaRequest.siswa:type_name -> sekolah.Siswa
-	32,  // 12: sekolah.CreateBanyakSiswaRequest.siswa:type_name -> sekolah.Siswa
-	91,  // 13: sekolah.CreateBanyakSiswaRequest.conflicts:type_name -> sekolah.ConflictResponse
-	33,  // 14: sekolah.GetSiswaResponse.siswa:type_name -> sekolah.SiswaPelengkap
-	32,  // 15: sekolah.UpdateSiswaRequest.siswa:type_name -> sekolah.Siswa
-	33,  // 16: sekolah.UpdateSiswaRequest.siswa_pelengkap:type_name -> sekolah.SiswaPelengkap
-	32,  // 17: sekolah.SearchSiswaResponse.siswa:type_name -> sekolah.Siswa
-	51,  // 18: sekolah.NilaiAkhir.mata_pelajaran:type_name -> sekolah.Mapel
-	52,  // 19: sekolah.NilaiSiswa.nilai_akhir:type_name -> sekolah.NilaiAkhir
-	52,  // 20: sekolah.CreateNilaiAkhirRequest.nilai_akhir:type_name -> sekolah.NilaiAkhir
-	52,  // 21: sekolah.GetNilaiAkhirResponse.nilai:type_name -> sekolah.NilaiAkhir
-	52,  // 22: sekolah.UpdateNilaiAkhirRequest.nilai:type_name -> sekolah.NilaiAkhir
-	75,  // 23: sekolah.Kelas.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	180, // 24: sekolah.Kelas.pembelajaran:type_name -> sekolah.Pembelajaran
-	92,  // 25: sekolah.Kelas.ptk:type_name -> sekolah.PTK
-	167, // 26: sekolah.Kelas.jurusan:type_name -> sekolah.Jurusan
-	168, // 27: sekolah.Kelas.kurikulum:type_name -> sekolah.Kurikulum
-	165, // 28: sekolah.Kelas.tingkat_pendidikan:type_name -> sekolah.TingkatPendidikan
-	62,  // 29: sekolah.CreateKelasRequest.kelas:type_name -> sekolah.Kelas
-	75,  // 30: sekolah.CreateKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	62,  // 31: sekolah.CreateBanyakKelasRequest.kelas:type_name -> sekolah.Kelas
-	91,  // 32: sekolah.CreateBanyakKelasResponse.conflicts:type_name -> sekolah.ConflictResponse
-	62,  // 33: sekolah.GetKelasResponse.kelas:type_name -> sekolah.Kelas
-	62,  // 34: sekolah.UpdateKelasRequest.kelas:type_name -> sekolah.Kelas
-	75,  // 35: sekolah.UpdateKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	62,  // 36: sekolah.ImportDapodikRombelRequest.kelas:type_name -> sekolah.Kelas
-	91,  // 37: sekolah.ImportDapodikRombelResponse.conflicts:type_name -> sekolah.ConflictResponse
-	52,  // 38: sekolah.AnggotaKelas.nilai:type_name -> sekolah.NilaiAkhir
-	32,  // 39: sekolah.AnggotaKelas.peserta_didik:type_name -> sekolah.Siswa
-	62,  // 40: sekolah.AnggotaKelas.rombongan_belajar:type_name -> sekolah.Kelas
-	75,  // 41: sekolah.CreateAnggotaKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	62,  // 42: sekolah.CreateAnggotaKelasRequest.kelas:type_name -> sekolah.Kelas
-	75,  // 43: sekolah.CreateBanyakAnggotaKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	75,  // 44: sekolah.GetAnggotaKelasResponse.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	75,  // 45: sekolah.UpdateAnggotaKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	75,  // 46: sekolah.SearchAnggotaKelasResponse.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	75,  // 47: sekolah.FilterAnggotaKelasResponse.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	90,  // 48: sekolah.ConflictResponse.conflicts:type_name -> sekolah.ConflictRow
-	92,  // 49: sekolah.CreatePTKRequest.PTK:type_name -> sekolah.PTK
-	91,  // 50: sekolah.CreatePTKResponse.conflicts:type_name -> sekolah.ConflictResponse
-	92,  // 51: sekolah.GetPTKResponse.PTK:type_name -> sekolah.PTK
-	92,  // 52: sekolah.UpdatePTKRequest.PTK:type_name -> sekolah.PTK
-	92,  // 53: sekolah.PTKTerdaftar.ptk:type_name -> sekolah.PTK
-	101, // 54: sekolah.CreatePTKTerdaftarRequest.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
-	91,  // 55: sekolah.CreatePTKTerdaftarResponse.conflicts:type_name -> sekolah.ConflictResponse
-	101, // 56: sekolah.CreateBanyakPTKTerdaftarRequest.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
-	91,  // 57: sekolah.CreateBanyakPTKTerdaftarResponse.conflicts:type_name -> sekolah.ConflictResponse
-	101, // 58: sekolah.GetPTKTerdaftarResponse.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
-	101, // 59: sekolah.UpdatePTKTerdaftarRequest.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
-	112, // 60: sekolah.CreateKenaikanRequest.kenaikan:type_name -> sekolah.Kenaikan
-	75,  // 61: sekolah.GetKenaikanResponse.anggotaKelas:type_name -> sekolah.AnggotaKelas
-	32,  // 62: sekolah.GetKenaikanResponse.siswa:type_name -> sekolah.Siswa
-	75,  // 63: sekolah.FilterKenaikanResponse.anggotaKelas:type_name -> sekolah.AnggotaKelas
-	32,  // 64: sekolah.FilterKenaikanResponse.siswa:type_name -> sekolah.Siswa
-	112, // 65: sekolah.UpdateKenaikanRequest.kenaikan:type_name -> sekolah.Kenaikan
-	112, // 66: sekolah.DeleteKenaikanRequest.kenaikan:type_name -> sekolah.Kenaikan
-	112, // 67: sekolah.UploadKenaikanRequest.kenaikan:type_name -> sekolah.Kenaikan
-	125, // 68: sekolah.CreateIjazahRequest.ijazah:type_name -> sekolah.Ijazah
-	125, // 69: sekolah.CreateBanyakIjazahRequest.ijazah:type_name -> sekolah.Ijazah
-	125, // 70: sekolah.GetIjazahResponse.ijazah:type_name -> sekolah.Ijazah
-	75,  // 71: sekolah.GetProsesIjazahResponse.anggota_kelas:type_name -> sekolah.AnggotaKelas
-	125, // 72: sekolah.UpdateIjazahRequest.ijazah:type_name -> sekolah.Ijazah
-	140, // 73: sekolah.CreateTranskripNilaiRequest.transkrip_nilai:type_name -> sekolah.TranskripNilai
-	140, // 74: sekolah.GetTranskripNilaiResponse.transkrip_nilai:type_name -> sekolah.TranskripNilai
-	140, // 75: sekolah.UpdateTranskripNilaiRequest.transkrip_nilai:type_name -> sekolah.TranskripNilai
-	159, // 76: sekolah.GetInfoKelasResponse.info_kelas:type_name -> sekolah.InfoKelas
-	163, // 77: sekolah.GetBentukPendidikanResponse.bentuk_pendidikan:type_name -> sekolah.BentukPendidikan
-	164, // 78: sekolah.GetJenjangResponse.jenjang:type_name -> sekolah.Jenjang
-	165, // 79: sekolah.GetTingkatPendidikanResponse.tingkat_pendidikan:type_name -> sekolah.TingkatPendidikan
-	166, // 80: sekolah.GetStatusKepemilikanResponse.status_kepemilikan:type_name -> sekolah.StatusKepemilikan
-	167, // 81: sekolah.GetJurusanResponse.jurusan:type_name -> sekolah.Jurusan
-	168, // 82: sekolah.GetKurikulumResponse.kurikulum:type_name -> sekolah.Kurikulum
-	51,  // 83: sekolah.GetMapelResponse.mapel:type_name -> sekolah.Mapel
-	101, // 84: sekolah.Pembelajaran.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
-	180, // 85: sekolah.CreatePembelajaranRequest.pembelajaran:type_name -> sekolah.Pembelajaran
-	180, // 86: sekolah.CreateBanyakPembelajaranRequest.pembelajaran:type_name -> sekolah.Pembelajaran
-	180, // 87: sekolah.GetPembelajaranResponse.pembelajaran:type_name -> sekolah.Pembelajaran
-	180, // 88: sekolah.UpdatePembelajaranRequest.pembelajaran:type_name -> sekolah.Pembelajaran
-	1,   // 89: sekolah.TahunAjaranService.CreateTahunAjaran:input_type -> sekolah.CreateTahunAjaranRequest
-	3,   // 90: sekolah.TahunAjaranService.GetTahunAjaran:input_type -> sekolah.GetTahunAjaranRequest
-	5,   // 91: sekolah.TahunAjaranService.UpdateTahunAjaran:input_type -> sekolah.UpdateTahunAjaranRequest
-	7,   // 92: sekolah.TahunAjaranService.DeleteTahunAjaran:input_type -> sekolah.DeleteTahunAjaranRequest
-	10,  // 93: sekolah.SemesterService.CreateSemester:input_type -> sekolah.CreateSemesterRequest
-	12,  // 94: sekolah.SemesterService.GetSemester:input_type -> sekolah.GetSemesterRequest
-	14,  // 95: sekolah.SemesterService.UpdateSemester:input_type -> sekolah.UpdateSemesterRequest
-	16,  // 96: sekolah.SemesterService.DeleteSemester:input_type -> sekolah.DeleteSemesterRequest
-	22,  // 97: sekolah.SekolahService.GetSchoolInfo:input_type -> sekolah.SchoolRequest
-	20,  // 98: sekolah.SekolahService.RegistrasiSekolah:input_type -> sekolah.TabelSekolahRequest
-	24,  // 99: sekolah.SekolahService.GetSekolahTabelTenant:input_type -> sekolah.SekolahTabelTenantRequest
-	26,  // 100: sekolah.SekolahService.CreateSekolah:input_type -> sekolah.CreateSekolahRequest
-	28,  // 101: sekolah.SekolahService.GetSekolah:input_type -> sekolah.GetSekolahRequest
-	30,  // 102: sekolah.SekolahService.UpdateSekolah:input_type -> sekolah.UpdateSekolahRequest
-	34,  // 103: sekolah.SiswaService.CreateSiswa:input_type -> sekolah.CreateSiswaRequest
-	36,  // 104: sekolah.SiswaService.CreateBanyakSiswa:input_type -> sekolah.CreateBanyakSiswaRequest
-	38,  // 105: sekolah.SiswaService.GetSiswa:input_type -> sekolah.GetSiswaRequest
-	40,  // 106: sekolah.SiswaService.UpdateSiswa:input_type -> sekolah.UpdateSiswaRequest
-	42,  // 107: sekolah.SiswaService.DeleteSiswa:input_type -> sekolah.DeleteSiswaRequest
-	44,  // 108: sekolah.SiswaService.SearchSiswa:input_type -> sekolah.SearchSiswaRequest
-	46,  // 109: sekolah.UploadDataSekolahService.UploadDataSekolah:input_type -> sekolah.UploadDataSekolahRequest
-	48,  // 110: sekolah.UploadDataSekolahService.DownloadDataSekolah:input_type -> sekolah.DownloadDataSekolahRequest
-	54,  // 111: sekolah.NilaiAkhirService.CreateNilaiAkhir:input_type -> sekolah.CreateNilaiAkhirRequest
-	56,  // 112: sekolah.NilaiAkhirService.GetNilaiAkhir:input_type -> sekolah.GetNilaiAkhirRequest
-	58,  // 113: sekolah.NilaiAkhirService.UpdateNilaiAkhir:input_type -> sekolah.UpdateNilaiAkhirRequest
-	60,  // 114: sekolah.NilaiAkhirService.DeleteNilaiAkhir:input_type -> sekolah.DeleteNilaiAkhirRequest
-	63,  // 115: sekolah.KelasService.CreateKelas:input_type -> sekolah.CreateKelasRequest
-	65,  // 116: sekolah.KelasService.CreateBanyakKelas:input_type -> sekolah.CreateBanyakKelasRequest
-	67,  // 117: sekolah.KelasService.GetKelas:input_type -> sekolah.GetKelasRequest
-	69,  // 118: sekolah.KelasService.UpdateKelas:input_type -> sekolah.UpdateKelasRequest
-	71,  // 119: sekolah.KelasService.DeleteKelas:input_type -> sekolah.DeleteKelasRequest
-	73,  // 120: sekolah.KelasService.ImportDapodikRombel:input_type -> sekolah.ImportDapodikRombelRequest
-	76,  // 121: sekolah.AnggotaKelasService.CreateAnggotaKelas:input_type -> sekolah.CreateAnggotaKelasRequest
-	78,  // 122: sekolah.AnggotaKelasService.CreateBanyakAnggotaKelas:input_type -> sekolah.CreateBanyakAnggotaKelasRequest
-	80,  // 123: sekolah.AnggotaKelasService.GetAnggotaKelas:input_type -> sekolah.GetAnggotaKelasRequest
-	82,  // 124: sekolah.AnggotaKelasService.UpdateAnggotaKelas:input_type -> sekolah.UpdateAnggotaKelasRequest
-	84,  // 125: sekolah.AnggotaKelasService.DeleteAnggotaKelas:input_type -> sekolah.DeleteAnggotaKelasRequest
-	86,  // 126: sekolah.AnggotaKelasService.SearchAnggotaKelas:input_type -> sekolah.SearchAnggotaKelasRequest
-	88,  // 127: sekolah.AnggotaKelasService.FilterAnggotaKelas:input_type -> sekolah.FilterAnggotaKelasRequest
-	93,  // 128: sekolah.PTKService.CreatePTK:input_type -> sekolah.CreatePTKRequest
-	95,  // 129: sekolah.PTKService.GetPTK:input_type -> sekolah.GetPTKRequest
-	97,  // 130: sekolah.PTKService.UpdatePTK:input_type -> sekolah.UpdatePTKRequest
-	99,  // 131: sekolah.PTKService.DeletePTK:input_type -> sekolah.DeletePTKRequest
-	102, // 132: sekolah.PTKTerdaftarService.CreatePTKTerdaftar:input_type -> sekolah.CreatePTKTerdaftarRequest
-	104, // 133: sekolah.PTKTerdaftarService.CreateBanyakPTKTerdaftar:input_type -> sekolah.CreateBanyakPTKTerdaftarRequest
-	106, // 134: sekolah.PTKTerdaftarService.GetPTKTerdaftar:input_type -> sekolah.GetPTKTerdaftarRequest
-	108, // 135: sekolah.PTKTerdaftarService.UpdatePTKTerdaftar:input_type -> sekolah.UpdatePTKTerdaftarRequest
-	110, // 136: sekolah.PTKTerdaftarService.DeletePTKTerdaftar:input_type -> sekolah.DeletePTKTerdaftarRequest
-	113, // 137: sekolah.KenaikanService.CreateKenaikan:input_type -> sekolah.CreateKenaikanRequest
-	115, // 138: sekolah.KenaikanService.GetKenaikan:input_type -> sekolah.GetKenaikanRequest
-	117, // 139: sekolah.KenaikanService.FilterKenaikan:input_type -> sekolah.FilterKenaikanRequest
-	119, // 140: sekolah.KenaikanService.UpdateKenaikan:input_type -> sekolah.UpdateKenaikanRequest
-	121, // 141: sekolah.KenaikanService.DeleteKenaikan:input_type -> sekolah.DeleteKenaikanRequest
-	123, // 142: sekolah.KenaikanService.UploadKenaikan:input_type -> sekolah.UploadKenaikanRequest
-	126, // 143: sekolah.IjazahService.CreateIjazah:input_type -> sekolah.CreateIjazahRequest
-	130, // 144: sekolah.IjazahService.GetIjazah:input_type -> sekolah.GetIjazahRequest
-	132, // 145: sekolah.IjazahService.GetProsesIjazah:input_type -> sekolah.GetProsesIjazahRequest
-	134, // 146: sekolah.IjazahService.UpdateIjazah:input_type -> sekolah.UpdateIjazahRequest
-	136, // 147: sekolah.IjazahService.DeleteIjazah:input_type -> sekolah.DeleteIjazahRequest
-	138, // 148: sekolah.IjazahService.UploadIjazah:input_type -> sekolah.UploadIjazahRequest
-	141, // 149: sekolah.TranskripNilaiService.CreateTranskripNilai:input_type -> sekolah.CreateTranskripNilaiRequest
-	143, // 150: sekolah.TranskripNilaiService.GetTranskripNilai:input_type -> sekolah.GetTranskripNilaiRequest
-	145, // 151: sekolah.TranskripNilaiService.UpdateTranskripNilai:input_type -> sekolah.UpdateTranskripNilaiRequest
-	147, // 152: sekolah.TranskripNilaiService.DeleteTranskripNilai:input_type -> sekolah.DeleteTranskripNilaiRequest
-	149, // 153: sekolah.TranskripNilaiService.UploadITranskripNilai:input_type -> sekolah.UploadTranskripNilaiRequest
-	151, // 154: sekolah.DownloadService.DownloadSekolahService:input_type -> sekolah.DownloadSekolahRequest
-	153, // 155: sekolah.DashboardService.GetCountSiswa:input_type -> sekolah.GetCountSiswaRequest
-	155, // 156: sekolah.DashboardService.GetCountGuru:input_type -> sekolah.GetCountGuruRequest
-	157, // 157: sekolah.DashboardService.GetCountKelas:input_type -> sekolah.GetCountKelasRequest
-	160, // 158: sekolah.DashboardService.GetInfoKelas:input_type -> sekolah.GetInfoKelasRequest
-	162, // 159: sekolah.ReferensiService.GetBentukPendidikan:input_type -> sekolah.Empty
-	162, // 160: sekolah.ReferensiService.GetJenjang:input_type -> sekolah.Empty
-	171, // 161: sekolah.ReferensiService.GetTingkatPendidikan:input_type -> sekolah.GetTingkatPendidikanRequest
-	162, // 162: sekolah.ReferensiService.GetStatusKepemilikan:input_type -> sekolah.Empty
-	174, // 163: sekolah.ReferensiService.GetJurusan:input_type -> sekolah.GetJurusanRequest
-	176, // 164: sekolah.ReferensiService.GetKurikulum:input_type -> sekolah.GetKurikulumRequest
-	178, // 165: sekolah.ReferensiService.GetMapel:input_type -> sekolah.GetMapelRequest
-	181, // 166: sekolah.PembelajaranService.CreatePembelajaran:input_type -> sekolah.CreatePembelajaranRequest
-	183, // 167: sekolah.PembelajaranService.CreateBanyakPembelajaran:input_type -> sekolah.CreateBanyakPembelajaranRequest
-	185, // 168: sekolah.PembelajaranService.GetPembelajaran:input_type -> sekolah.GetPembelajaranRequest
-	187, // 169: sekolah.PembelajaranService.UpdatePembelajaran:input_type -> sekolah.UpdatePembelajaranRequest
-	189, // 170: sekolah.PembelajaranService.DeletePembelajaran:input_type -> sekolah.DeletePembelajaranRequest
-	2,   // 171: sekolah.TahunAjaranService.CreateTahunAjaran:output_type -> sekolah.CreateTahunAjaranResponse
-	4,   // 172: sekolah.TahunAjaranService.GetTahunAjaran:output_type -> sekolah.GetTahunAjaranResponse
-	6,   // 173: sekolah.TahunAjaranService.UpdateTahunAjaran:output_type -> sekolah.UpdateTahunAjaranResponse
-	8,   // 174: sekolah.TahunAjaranService.DeleteTahunAjaran:output_type -> sekolah.DeleteTahunAjaranResponse
-	11,  // 175: sekolah.SemesterService.CreateSemester:output_type -> sekolah.CreateSemesterResponse
-	13,  // 176: sekolah.SemesterService.GetSemester:output_type -> sekolah.GetSemesterResponse
-	15,  // 177: sekolah.SemesterService.UpdateSemester:output_type -> sekolah.UpdateSemesterResponse
-	17,  // 178: sekolah.SemesterService.DeleteSemester:output_type -> sekolah.DeleteSemesterResponse
-	23,  // 179: sekolah.SekolahService.GetSchoolInfo:output_type -> sekolah.SchoolResponse
-	21,  // 180: sekolah.SekolahService.RegistrasiSekolah:output_type -> sekolah.TabelSekolahResponse
-	25,  // 181: sekolah.SekolahService.GetSekolahTabelTenant:output_type -> sekolah.SekolahTabelTenantResponse
-	27,  // 182: sekolah.SekolahService.CreateSekolah:output_type -> sekolah.CreateSekolahResponse
-	29,  // 183: sekolah.SekolahService.GetSekolah:output_type -> sekolah.GetSekolahResponse
-	31,  // 184: sekolah.SekolahService.UpdateSekolah:output_type -> sekolah.UpdateSekolahResponse
-	35,  // 185: sekolah.SiswaService.CreateSiswa:output_type -> sekolah.CreateSiswaResponse
-	37,  // 186: sekolah.SiswaService.CreateBanyakSiswa:output_type -> sekolah.CreateBanyakSiswaResponse
-	39,  // 187: sekolah.SiswaService.GetSiswa:output_type -> sekolah.GetSiswaResponse
-	41,  // 188: sekolah.SiswaService.UpdateSiswa:output_type -> sekolah.UpdateSiswaResponse
-	43,  // 189: sekolah.SiswaService.DeleteSiswa:output_type -> sekolah.DeleteSiswaResponse
-	45,  // 190: sekolah.SiswaService.SearchSiswa:output_type -> sekolah.SearchSiswaResponse
-	47,  // 191: sekolah.UploadDataSekolahService.UploadDataSekolah:output_type -> sekolah.UploadDataSekolahResponse
-	49,  // 192: sekolah.UploadDataSekolahService.DownloadDataSekolah:output_type -> sekolah.DownloadDataSekolahResponse
-	55,  // 193: sekolah.NilaiAkhirService.CreateNilaiAkhir:output_type -> sekolah.CreateNilaiAkhirResponse
-	57,  // 194: sekolah.NilaiAkhirService.GetNilaiAkhir:output_type -> sekolah.GetNilaiAkhirResponse
-	59,  // 195: sekolah.NilaiAkhirService.UpdateNilaiAkhir:output_type -> sekolah.UpdateNilaiAkhirResponse
-	61,  // 196: sekolah.NilaiAkhirService.DeleteNilaiAkhir:output_type -> sekolah.DeleteNilaiAkhirResponse
-	64,  // 197: sekolah.KelasService.CreateKelas:output_type -> sekolah.CreateKelasResponse
-	66,  // 198: sekolah.KelasService.CreateBanyakKelas:output_type -> sekolah.CreateBanyakKelasResponse
-	68,  // 199: sekolah.KelasService.GetKelas:output_type -> sekolah.GetKelasResponse
-	70,  // 200: sekolah.KelasService.UpdateKelas:output_type -> sekolah.UpdateKelasResponse
-	72,  // 201: sekolah.KelasService.DeleteKelas:output_type -> sekolah.DeleteKelasResponse
-	74,  // 202: sekolah.KelasService.ImportDapodikRombel:output_type -> sekolah.ImportDapodikRombelResponse
-	77,  // 203: sekolah.AnggotaKelasService.CreateAnggotaKelas:output_type -> sekolah.CreateAnggotaKelasResponse
-	79,  // 204: sekolah.AnggotaKelasService.CreateBanyakAnggotaKelas:output_type -> sekolah.CreateBanyakAnggotaKelasResponse
-	81,  // 205: sekolah.AnggotaKelasService.GetAnggotaKelas:output_type -> sekolah.GetAnggotaKelasResponse
-	83,  // 206: sekolah.AnggotaKelasService.UpdateAnggotaKelas:output_type -> sekolah.UpdateAnggotaKelasResponse
-	85,  // 207: sekolah.AnggotaKelasService.DeleteAnggotaKelas:output_type -> sekolah.DeleteAnggotaKelasResponse
-	87,  // 208: sekolah.AnggotaKelasService.SearchAnggotaKelas:output_type -> sekolah.SearchAnggotaKelasResponse
-	89,  // 209: sekolah.AnggotaKelasService.FilterAnggotaKelas:output_type -> sekolah.FilterAnggotaKelasResponse
-	94,  // 210: sekolah.PTKService.CreatePTK:output_type -> sekolah.CreatePTKResponse
-	96,  // 211: sekolah.PTKService.GetPTK:output_type -> sekolah.GetPTKResponse
-	98,  // 212: sekolah.PTKService.UpdatePTK:output_type -> sekolah.UpdatePTKResponse
-	100, // 213: sekolah.PTKService.DeletePTK:output_type -> sekolah.DeletePTKResponse
-	103, // 214: sekolah.PTKTerdaftarService.CreatePTKTerdaftar:output_type -> sekolah.CreatePTKTerdaftarResponse
-	105, // 215: sekolah.PTKTerdaftarService.CreateBanyakPTKTerdaftar:output_type -> sekolah.CreateBanyakPTKTerdaftarResponse
-	107, // 216: sekolah.PTKTerdaftarService.GetPTKTerdaftar:output_type -> sekolah.GetPTKTerdaftarResponse
-	109, // 217: sekolah.PTKTerdaftarService.UpdatePTKTerdaftar:output_type -> sekolah.UpdatePTKTerdaftarResponse
-	111, // 218: sekolah.PTKTerdaftarService.DeletePTKTerdaftar:output_type -> sekolah.DeletePTKTerdaftarResponse
-	114, // 219: sekolah.KenaikanService.CreateKenaikan:output_type -> sekolah.CreateKenaikanResponse
-	116, // 220: sekolah.KenaikanService.GetKenaikan:output_type -> sekolah.GetKenaikanResponse
-	118, // 221: sekolah.KenaikanService.FilterKenaikan:output_type -> sekolah.FilterKenaikanResponse
-	120, // 222: sekolah.KenaikanService.UpdateKenaikan:output_type -> sekolah.UpdateKenaikanResponse
-	122, // 223: sekolah.KenaikanService.DeleteKenaikan:output_type -> sekolah.DeleteKenaikanResponse
-	124, // 224: sekolah.KenaikanService.UploadKenaikan:output_type -> sekolah.UploadKenaikanResponse
-	127, // 225: sekolah.IjazahService.CreateIjazah:output_type -> sekolah.CreateIjazahResponse
-	131, // 226: sekolah.IjazahService.GetIjazah:output_type -> sekolah.GetIjazahResponse
-	133, // 227: sekolah.IjazahService.GetProsesIjazah:output_type -> sekolah.GetProsesIjazahResponse
-	135, // 228: sekolah.IjazahService.UpdateIjazah:output_type -> sekolah.UpdateIjazahResponse
-	137, // 229: sekolah.IjazahService.DeleteIjazah:output_type -> sekolah.DeleteIjazahResponse
-	139, // 230: sekolah.IjazahService.UploadIjazah:output_type -> sekolah.UploadIjazahResponse
-	142, // 231: sekolah.TranskripNilaiService.CreateTranskripNilai:output_type -> sekolah.CreateTranskripNilaiResponse
-	144, // 232: sekolah.TranskripNilaiService.GetTranskripNilai:output_type -> sekolah.GetTranskripNilaiResponse
-	146, // 233: sekolah.TranskripNilaiService.UpdateTranskripNilai:output_type -> sekolah.UpdateTranskripNilaiResponse
-	148, // 234: sekolah.TranskripNilaiService.DeleteTranskripNilai:output_type -> sekolah.DeleteTranskripNilaiResponse
-	150, // 235: sekolah.TranskripNilaiService.UploadITranskripNilai:output_type -> sekolah.UploadTranskripNilaiResponse
-	152, // 236: sekolah.DownloadService.DownloadSekolahService:output_type -> sekolah.DownloadSekolahResponse
-	154, // 237: sekolah.DashboardService.GetCountSiswa:output_type -> sekolah.GetCountSiswaResponse
-	156, // 238: sekolah.DashboardService.GetCountGuru:output_type -> sekolah.GetCountGuruResponse
-	158, // 239: sekolah.DashboardService.GetCountKelas:output_type -> sekolah.GetCountKelasResponse
-	161, // 240: sekolah.DashboardService.GetInfoKelas:output_type -> sekolah.GetInfoKelasResponse
-	169, // 241: sekolah.ReferensiService.GetBentukPendidikan:output_type -> sekolah.GetBentukPendidikanResponse
-	170, // 242: sekolah.ReferensiService.GetJenjang:output_type -> sekolah.GetJenjangResponse
-	172, // 243: sekolah.ReferensiService.GetTingkatPendidikan:output_type -> sekolah.GetTingkatPendidikanResponse
-	173, // 244: sekolah.ReferensiService.GetStatusKepemilikan:output_type -> sekolah.GetStatusKepemilikanResponse
-	175, // 245: sekolah.ReferensiService.GetJurusan:output_type -> sekolah.GetJurusanResponse
-	177, // 246: sekolah.ReferensiService.GetKurikulum:output_type -> sekolah.GetKurikulumResponse
-	179, // 247: sekolah.ReferensiService.GetMapel:output_type -> sekolah.GetMapelResponse
-	182, // 248: sekolah.PembelajaranService.CreatePembelajaran:output_type -> sekolah.CreatePembelajaranResponse
-	184, // 249: sekolah.PembelajaranService.CreateBanyakPembelajaran:output_type -> sekolah.CreateBanyakPembelajaranResponse
-	186, // 250: sekolah.PembelajaranService.GetPembelajaran:output_type -> sekolah.GetPembelajaranResponse
-	188, // 251: sekolah.PembelajaranService.UpdatePembelajaran:output_type -> sekolah.UpdatePembelajaranResponse
-	190, // 252: sekolah.PembelajaranService.DeletePembelajaran:output_type -> sekolah.DeletePembelajaranResponse
-	171, // [171:253] is the sub-list for method output_type
-	89,  // [89:171] is the sub-list for method input_type
-	89,  // [89:89] is the sub-list for extension type_name
-	89,  // [89:89] is the sub-list for extension extendee
-	0,   // [0:89] is the sub-list for field type_name
+	9,   // 5: sekolah.GetCurrentSemesterResponse.semester:type_name -> sekolah.Semester
+	9,   // 6: sekolah.UpdateSemesterRequest.semester:type_name -> sekolah.Semester
+	19,  // 7: sekolah.TabelSekolahRequest.sekolah:type_name -> sekolah.Sekolah
+	20,  // 8: sekolah.CreateSekolahRequest.sekolah:type_name -> sekolah.SekolahDapo
+	20,  // 9: sekolah.GetSekolahResponse.sekolah:type_name -> sekolah.SekolahDapo
+	20,  // 10: sekolah.UpdateSekolahRequest.sekolah:type_name -> sekolah.SekolahDapo
+	33,  // 11: sekolah.SiswaPelengkap.siswa:type_name -> sekolah.Siswa
+	33,  // 12: sekolah.CreateSiswaRequest.siswa:type_name -> sekolah.Siswa
+	33,  // 13: sekolah.CreateBanyakSiswaRequest.siswa:type_name -> sekolah.Siswa
+	92,  // 14: sekolah.CreateBanyakSiswaRequest.conflicts:type_name -> sekolah.ConflictResponse
+	34,  // 15: sekolah.GetSiswaResponse.siswa:type_name -> sekolah.SiswaPelengkap
+	33,  // 16: sekolah.UpdateSiswaRequest.siswa:type_name -> sekolah.Siswa
+	34,  // 17: sekolah.UpdateSiswaRequest.siswa_pelengkap:type_name -> sekolah.SiswaPelengkap
+	33,  // 18: sekolah.SearchSiswaResponse.siswa:type_name -> sekolah.Siswa
+	52,  // 19: sekolah.NilaiAkhir.mata_pelajaran:type_name -> sekolah.Mapel
+	53,  // 20: sekolah.NilaiSiswa.nilai_akhir:type_name -> sekolah.NilaiAkhir
+	53,  // 21: sekolah.CreateNilaiAkhirRequest.nilai_akhir:type_name -> sekolah.NilaiAkhir
+	54,  // 22: sekolah.GetNilaiAkhirResponse.nilai_siswa:type_name -> sekolah.NilaiSiswa
+	53,  // 23: sekolah.UpdateNilaiAkhirRequest.nilai:type_name -> sekolah.NilaiAkhir
+	76,  // 24: sekolah.Kelas.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	181, // 25: sekolah.Kelas.pembelajaran:type_name -> sekolah.Pembelajaran
+	93,  // 26: sekolah.Kelas.ptk:type_name -> sekolah.PTK
+	168, // 27: sekolah.Kelas.jurusan:type_name -> sekolah.Jurusan
+	169, // 28: sekolah.Kelas.kurikulum:type_name -> sekolah.Kurikulum
+	166, // 29: sekolah.Kelas.tingkat_pendidikan:type_name -> sekolah.TingkatPendidikan
+	63,  // 30: sekolah.CreateKelasRequest.kelas:type_name -> sekolah.Kelas
+	76,  // 31: sekolah.CreateKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	63,  // 32: sekolah.CreateBanyakKelasRequest.kelas:type_name -> sekolah.Kelas
+	92,  // 33: sekolah.CreateBanyakKelasResponse.conflicts:type_name -> sekolah.ConflictResponse
+	63,  // 34: sekolah.GetKelasResponse.kelas:type_name -> sekolah.Kelas
+	63,  // 35: sekolah.UpdateKelasRequest.kelas:type_name -> sekolah.Kelas
+	76,  // 36: sekolah.UpdateKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	63,  // 37: sekolah.ImportDapodikRombelRequest.kelas:type_name -> sekolah.Kelas
+	92,  // 38: sekolah.ImportDapodikRombelResponse.conflicts:type_name -> sekolah.ConflictResponse
+	53,  // 39: sekolah.AnggotaKelas.nilai:type_name -> sekolah.NilaiAkhir
+	33,  // 40: sekolah.AnggotaKelas.peserta_didik:type_name -> sekolah.Siswa
+	63,  // 41: sekolah.AnggotaKelas.rombongan_belajar:type_name -> sekolah.Kelas
+	76,  // 42: sekolah.CreateAnggotaKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	63,  // 43: sekolah.CreateAnggotaKelasRequest.kelas:type_name -> sekolah.Kelas
+	76,  // 44: sekolah.CreateBanyakAnggotaKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	76,  // 45: sekolah.GetAnggotaKelasResponse.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	76,  // 46: sekolah.UpdateAnggotaKelasRequest.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	76,  // 47: sekolah.SearchAnggotaKelasResponse.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	76,  // 48: sekolah.FilterAnggotaKelasResponse.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	91,  // 49: sekolah.ConflictResponse.conflicts:type_name -> sekolah.ConflictRow
+	93,  // 50: sekolah.CreatePTKRequest.PTK:type_name -> sekolah.PTK
+	92,  // 51: sekolah.CreatePTKResponse.conflicts:type_name -> sekolah.ConflictResponse
+	93,  // 52: sekolah.GetPTKResponse.PTK:type_name -> sekolah.PTK
+	93,  // 53: sekolah.UpdatePTKRequest.PTK:type_name -> sekolah.PTK
+	93,  // 54: sekolah.PTKTerdaftar.ptk:type_name -> sekolah.PTK
+	102, // 55: sekolah.CreatePTKTerdaftarRequest.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
+	92,  // 56: sekolah.CreatePTKTerdaftarResponse.conflicts:type_name -> sekolah.ConflictResponse
+	102, // 57: sekolah.CreateBanyakPTKTerdaftarRequest.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
+	92,  // 58: sekolah.CreateBanyakPTKTerdaftarResponse.conflicts:type_name -> sekolah.ConflictResponse
+	102, // 59: sekolah.GetPTKTerdaftarResponse.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
+	102, // 60: sekolah.UpdatePTKTerdaftarRequest.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
+	113, // 61: sekolah.CreateKenaikanRequest.kenaikan:type_name -> sekolah.Kenaikan
+	76,  // 62: sekolah.GetKenaikanResponse.anggotaKelas:type_name -> sekolah.AnggotaKelas
+	33,  // 63: sekolah.GetKenaikanResponse.siswa:type_name -> sekolah.Siswa
+	76,  // 64: sekolah.FilterKenaikanResponse.anggotaKelas:type_name -> sekolah.AnggotaKelas
+	33,  // 65: sekolah.FilterKenaikanResponse.siswa:type_name -> sekolah.Siswa
+	113, // 66: sekolah.UpdateKenaikanRequest.kenaikan:type_name -> sekolah.Kenaikan
+	113, // 67: sekolah.DeleteKenaikanRequest.kenaikan:type_name -> sekolah.Kenaikan
+	113, // 68: sekolah.UploadKenaikanRequest.kenaikan:type_name -> sekolah.Kenaikan
+	126, // 69: sekolah.CreateIjazahRequest.ijazah:type_name -> sekolah.Ijazah
+	126, // 70: sekolah.CreateBanyakIjazahRequest.ijazah:type_name -> sekolah.Ijazah
+	126, // 71: sekolah.GetIjazahResponse.ijazah:type_name -> sekolah.Ijazah
+	76,  // 72: sekolah.GetProsesIjazahResponse.anggota_kelas:type_name -> sekolah.AnggotaKelas
+	126, // 73: sekolah.UpdateIjazahRequest.ijazah:type_name -> sekolah.Ijazah
+	141, // 74: sekolah.CreateTranskripNilaiRequest.transkrip_nilai:type_name -> sekolah.TranskripNilai
+	141, // 75: sekolah.GetTranskripNilaiResponse.transkrip_nilai:type_name -> sekolah.TranskripNilai
+	141, // 76: sekolah.UpdateTranskripNilaiRequest.transkrip_nilai:type_name -> sekolah.TranskripNilai
+	160, // 77: sekolah.GetInfoKelasResponse.info_kelas:type_name -> sekolah.InfoKelas
+	164, // 78: sekolah.GetBentukPendidikanResponse.bentuk_pendidikan:type_name -> sekolah.BentukPendidikan
+	165, // 79: sekolah.GetJenjangResponse.jenjang:type_name -> sekolah.Jenjang
+	166, // 80: sekolah.GetTingkatPendidikanResponse.tingkat_pendidikan:type_name -> sekolah.TingkatPendidikan
+	167, // 81: sekolah.GetStatusKepemilikanResponse.status_kepemilikan:type_name -> sekolah.StatusKepemilikan
+	168, // 82: sekolah.GetJurusanResponse.jurusan:type_name -> sekolah.Jurusan
+	169, // 83: sekolah.GetKurikulumResponse.kurikulum:type_name -> sekolah.Kurikulum
+	52,  // 84: sekolah.GetMapelResponse.mapel:type_name -> sekolah.Mapel
+	102, // 85: sekolah.Pembelajaran.ptk_terdaftar:type_name -> sekolah.PTKTerdaftar
+	181, // 86: sekolah.CreatePembelajaranRequest.pembelajaran:type_name -> sekolah.Pembelajaran
+	181, // 87: sekolah.CreateBanyakPembelajaranRequest.pembelajaran:type_name -> sekolah.Pembelajaran
+	181, // 88: sekolah.GetPembelajaranResponse.pembelajaran:type_name -> sekolah.Pembelajaran
+	181, // 89: sekolah.UpdatePembelajaranRequest.pembelajaran:type_name -> sekolah.Pembelajaran
+	1,   // 90: sekolah.TahunAjaranService.CreateTahunAjaran:input_type -> sekolah.CreateTahunAjaranRequest
+	3,   // 91: sekolah.TahunAjaranService.GetTahunAjaran:input_type -> sekolah.GetTahunAjaranRequest
+	5,   // 92: sekolah.TahunAjaranService.UpdateTahunAjaran:input_type -> sekolah.UpdateTahunAjaranRequest
+	7,   // 93: sekolah.TahunAjaranService.DeleteTahunAjaran:input_type -> sekolah.DeleteTahunAjaranRequest
+	10,  // 94: sekolah.SemesterService.CreateSemester:input_type -> sekolah.CreateSemesterRequest
+	12,  // 95: sekolah.SemesterService.GetSemester:input_type -> sekolah.GetSemesterRequest
+	163, // 96: sekolah.SemesterService.GetCurrentSemester:input_type -> sekolah.Empty
+	15,  // 97: sekolah.SemesterService.UpdateSemester:input_type -> sekolah.UpdateSemesterRequest
+	17,  // 98: sekolah.SemesterService.DeleteSemester:input_type -> sekolah.DeleteSemesterRequest
+	23,  // 99: sekolah.SekolahService.GetSchoolInfo:input_type -> sekolah.SchoolRequest
+	21,  // 100: sekolah.SekolahService.RegistrasiSekolah:input_type -> sekolah.TabelSekolahRequest
+	25,  // 101: sekolah.SekolahService.GetSekolahTabelTenant:input_type -> sekolah.SekolahTabelTenantRequest
+	27,  // 102: sekolah.SekolahService.CreateSekolah:input_type -> sekolah.CreateSekolahRequest
+	29,  // 103: sekolah.SekolahService.GetSekolah:input_type -> sekolah.GetSekolahRequest
+	31,  // 104: sekolah.SekolahService.UpdateSekolah:input_type -> sekolah.UpdateSekolahRequest
+	35,  // 105: sekolah.SiswaService.CreateSiswa:input_type -> sekolah.CreateSiswaRequest
+	37,  // 106: sekolah.SiswaService.CreateBanyakSiswa:input_type -> sekolah.CreateBanyakSiswaRequest
+	39,  // 107: sekolah.SiswaService.GetSiswa:input_type -> sekolah.GetSiswaRequest
+	41,  // 108: sekolah.SiswaService.UpdateSiswa:input_type -> sekolah.UpdateSiswaRequest
+	43,  // 109: sekolah.SiswaService.DeleteSiswa:input_type -> sekolah.DeleteSiswaRequest
+	45,  // 110: sekolah.SiswaService.SearchSiswa:input_type -> sekolah.SearchSiswaRequest
+	47,  // 111: sekolah.UploadDataSekolahService.UploadDataSekolah:input_type -> sekolah.UploadDataSekolahRequest
+	49,  // 112: sekolah.UploadDataSekolahService.DownloadDataSekolah:input_type -> sekolah.DownloadDataSekolahRequest
+	55,  // 113: sekolah.NilaiAkhirService.CreateNilaiAkhir:input_type -> sekolah.CreateNilaiAkhirRequest
+	57,  // 114: sekolah.NilaiAkhirService.GetNilaiAkhir:input_type -> sekolah.GetNilaiAkhirRequest
+	59,  // 115: sekolah.NilaiAkhirService.UpdateNilaiAkhir:input_type -> sekolah.UpdateNilaiAkhirRequest
+	61,  // 116: sekolah.NilaiAkhirService.DeleteNilaiAkhir:input_type -> sekolah.DeleteNilaiAkhirRequest
+	64,  // 117: sekolah.KelasService.CreateKelas:input_type -> sekolah.CreateKelasRequest
+	66,  // 118: sekolah.KelasService.CreateBanyakKelas:input_type -> sekolah.CreateBanyakKelasRequest
+	68,  // 119: sekolah.KelasService.GetKelas:input_type -> sekolah.GetKelasRequest
+	70,  // 120: sekolah.KelasService.UpdateKelas:input_type -> sekolah.UpdateKelasRequest
+	72,  // 121: sekolah.KelasService.DeleteKelas:input_type -> sekolah.DeleteKelasRequest
+	74,  // 122: sekolah.KelasService.ImportDapodikRombel:input_type -> sekolah.ImportDapodikRombelRequest
+	77,  // 123: sekolah.AnggotaKelasService.CreateAnggotaKelas:input_type -> sekolah.CreateAnggotaKelasRequest
+	79,  // 124: sekolah.AnggotaKelasService.CreateBanyakAnggotaKelas:input_type -> sekolah.CreateBanyakAnggotaKelasRequest
+	81,  // 125: sekolah.AnggotaKelasService.GetAnggotaKelas:input_type -> sekolah.GetAnggotaKelasRequest
+	83,  // 126: sekolah.AnggotaKelasService.UpdateAnggotaKelas:input_type -> sekolah.UpdateAnggotaKelasRequest
+	85,  // 127: sekolah.AnggotaKelasService.DeleteAnggotaKelas:input_type -> sekolah.DeleteAnggotaKelasRequest
+	87,  // 128: sekolah.AnggotaKelasService.SearchAnggotaKelas:input_type -> sekolah.SearchAnggotaKelasRequest
+	89,  // 129: sekolah.AnggotaKelasService.FilterAnggotaKelas:input_type -> sekolah.FilterAnggotaKelasRequest
+	94,  // 130: sekolah.PTKService.CreatePTK:input_type -> sekolah.CreatePTKRequest
+	96,  // 131: sekolah.PTKService.GetPTK:input_type -> sekolah.GetPTKRequest
+	98,  // 132: sekolah.PTKService.UpdatePTK:input_type -> sekolah.UpdatePTKRequest
+	100, // 133: sekolah.PTKService.DeletePTK:input_type -> sekolah.DeletePTKRequest
+	103, // 134: sekolah.PTKTerdaftarService.CreatePTKTerdaftar:input_type -> sekolah.CreatePTKTerdaftarRequest
+	105, // 135: sekolah.PTKTerdaftarService.CreateBanyakPTKTerdaftar:input_type -> sekolah.CreateBanyakPTKTerdaftarRequest
+	107, // 136: sekolah.PTKTerdaftarService.GetPTKTerdaftar:input_type -> sekolah.GetPTKTerdaftarRequest
+	109, // 137: sekolah.PTKTerdaftarService.UpdatePTKTerdaftar:input_type -> sekolah.UpdatePTKTerdaftarRequest
+	111, // 138: sekolah.PTKTerdaftarService.DeletePTKTerdaftar:input_type -> sekolah.DeletePTKTerdaftarRequest
+	114, // 139: sekolah.KenaikanService.CreateKenaikan:input_type -> sekolah.CreateKenaikanRequest
+	116, // 140: sekolah.KenaikanService.GetKenaikan:input_type -> sekolah.GetKenaikanRequest
+	118, // 141: sekolah.KenaikanService.FilterKenaikan:input_type -> sekolah.FilterKenaikanRequest
+	120, // 142: sekolah.KenaikanService.UpdateKenaikan:input_type -> sekolah.UpdateKenaikanRequest
+	122, // 143: sekolah.KenaikanService.DeleteKenaikan:input_type -> sekolah.DeleteKenaikanRequest
+	124, // 144: sekolah.KenaikanService.UploadKenaikan:input_type -> sekolah.UploadKenaikanRequest
+	127, // 145: sekolah.IjazahService.CreateIjazah:input_type -> sekolah.CreateIjazahRequest
+	131, // 146: sekolah.IjazahService.GetIjazah:input_type -> sekolah.GetIjazahRequest
+	133, // 147: sekolah.IjazahService.GetProsesIjazah:input_type -> sekolah.GetProsesIjazahRequest
+	135, // 148: sekolah.IjazahService.UpdateIjazah:input_type -> sekolah.UpdateIjazahRequest
+	137, // 149: sekolah.IjazahService.DeleteIjazah:input_type -> sekolah.DeleteIjazahRequest
+	139, // 150: sekolah.IjazahService.UploadIjazah:input_type -> sekolah.UploadIjazahRequest
+	142, // 151: sekolah.TranskripNilaiService.CreateTranskripNilai:input_type -> sekolah.CreateTranskripNilaiRequest
+	144, // 152: sekolah.TranskripNilaiService.GetTranskripNilai:input_type -> sekolah.GetTranskripNilaiRequest
+	146, // 153: sekolah.TranskripNilaiService.UpdateTranskripNilai:input_type -> sekolah.UpdateTranskripNilaiRequest
+	148, // 154: sekolah.TranskripNilaiService.DeleteTranskripNilai:input_type -> sekolah.DeleteTranskripNilaiRequest
+	150, // 155: sekolah.TranskripNilaiService.UploadITranskripNilai:input_type -> sekolah.UploadTranskripNilaiRequest
+	152, // 156: sekolah.DownloadService.DownloadSekolahService:input_type -> sekolah.DownloadSekolahRequest
+	154, // 157: sekolah.DashboardService.GetCountSiswa:input_type -> sekolah.GetCountSiswaRequest
+	156, // 158: sekolah.DashboardService.GetCountGuru:input_type -> sekolah.GetCountGuruRequest
+	158, // 159: sekolah.DashboardService.GetCountKelas:input_type -> sekolah.GetCountKelasRequest
+	161, // 160: sekolah.DashboardService.GetInfoKelas:input_type -> sekolah.GetInfoKelasRequest
+	163, // 161: sekolah.ReferensiService.GetBentukPendidikan:input_type -> sekolah.Empty
+	163, // 162: sekolah.ReferensiService.GetJenjang:input_type -> sekolah.Empty
+	172, // 163: sekolah.ReferensiService.GetTingkatPendidikan:input_type -> sekolah.GetTingkatPendidikanRequest
+	163, // 164: sekolah.ReferensiService.GetStatusKepemilikan:input_type -> sekolah.Empty
+	175, // 165: sekolah.ReferensiService.GetJurusan:input_type -> sekolah.GetJurusanRequest
+	177, // 166: sekolah.ReferensiService.GetKurikulum:input_type -> sekolah.GetKurikulumRequest
+	179, // 167: sekolah.ReferensiService.GetMapel:input_type -> sekolah.GetMapelRequest
+	182, // 168: sekolah.PembelajaranService.CreatePembelajaran:input_type -> sekolah.CreatePembelajaranRequest
+	184, // 169: sekolah.PembelajaranService.CreateBanyakPembelajaran:input_type -> sekolah.CreateBanyakPembelajaranRequest
+	186, // 170: sekolah.PembelajaranService.GetPembelajaran:input_type -> sekolah.GetPembelajaranRequest
+	188, // 171: sekolah.PembelajaranService.UpdatePembelajaran:input_type -> sekolah.UpdatePembelajaranRequest
+	190, // 172: sekolah.PembelajaranService.DeletePembelajaran:input_type -> sekolah.DeletePembelajaranRequest
+	2,   // 173: sekolah.TahunAjaranService.CreateTahunAjaran:output_type -> sekolah.CreateTahunAjaranResponse
+	4,   // 174: sekolah.TahunAjaranService.GetTahunAjaran:output_type -> sekolah.GetTahunAjaranResponse
+	6,   // 175: sekolah.TahunAjaranService.UpdateTahunAjaran:output_type -> sekolah.UpdateTahunAjaranResponse
+	8,   // 176: sekolah.TahunAjaranService.DeleteTahunAjaran:output_type -> sekolah.DeleteTahunAjaranResponse
+	11,  // 177: sekolah.SemesterService.CreateSemester:output_type -> sekolah.CreateSemesterResponse
+	13,  // 178: sekolah.SemesterService.GetSemester:output_type -> sekolah.GetSemesterResponse
+	14,  // 179: sekolah.SemesterService.GetCurrentSemester:output_type -> sekolah.GetCurrentSemesterResponse
+	16,  // 180: sekolah.SemesterService.UpdateSemester:output_type -> sekolah.UpdateSemesterResponse
+	18,  // 181: sekolah.SemesterService.DeleteSemester:output_type -> sekolah.DeleteSemesterResponse
+	24,  // 182: sekolah.SekolahService.GetSchoolInfo:output_type -> sekolah.SchoolResponse
+	22,  // 183: sekolah.SekolahService.RegistrasiSekolah:output_type -> sekolah.TabelSekolahResponse
+	26,  // 184: sekolah.SekolahService.GetSekolahTabelTenant:output_type -> sekolah.SekolahTabelTenantResponse
+	28,  // 185: sekolah.SekolahService.CreateSekolah:output_type -> sekolah.CreateSekolahResponse
+	30,  // 186: sekolah.SekolahService.GetSekolah:output_type -> sekolah.GetSekolahResponse
+	32,  // 187: sekolah.SekolahService.UpdateSekolah:output_type -> sekolah.UpdateSekolahResponse
+	36,  // 188: sekolah.SiswaService.CreateSiswa:output_type -> sekolah.CreateSiswaResponse
+	38,  // 189: sekolah.SiswaService.CreateBanyakSiswa:output_type -> sekolah.CreateBanyakSiswaResponse
+	40,  // 190: sekolah.SiswaService.GetSiswa:output_type -> sekolah.GetSiswaResponse
+	42,  // 191: sekolah.SiswaService.UpdateSiswa:output_type -> sekolah.UpdateSiswaResponse
+	44,  // 192: sekolah.SiswaService.DeleteSiswa:output_type -> sekolah.DeleteSiswaResponse
+	46,  // 193: sekolah.SiswaService.SearchSiswa:output_type -> sekolah.SearchSiswaResponse
+	48,  // 194: sekolah.UploadDataSekolahService.UploadDataSekolah:output_type -> sekolah.UploadDataSekolahResponse
+	50,  // 195: sekolah.UploadDataSekolahService.DownloadDataSekolah:output_type -> sekolah.DownloadDataSekolahResponse
+	56,  // 196: sekolah.NilaiAkhirService.CreateNilaiAkhir:output_type -> sekolah.CreateNilaiAkhirResponse
+	58,  // 197: sekolah.NilaiAkhirService.GetNilaiAkhir:output_type -> sekolah.GetNilaiAkhirResponse
+	60,  // 198: sekolah.NilaiAkhirService.UpdateNilaiAkhir:output_type -> sekolah.UpdateNilaiAkhirResponse
+	62,  // 199: sekolah.NilaiAkhirService.DeleteNilaiAkhir:output_type -> sekolah.DeleteNilaiAkhirResponse
+	65,  // 200: sekolah.KelasService.CreateKelas:output_type -> sekolah.CreateKelasResponse
+	67,  // 201: sekolah.KelasService.CreateBanyakKelas:output_type -> sekolah.CreateBanyakKelasResponse
+	69,  // 202: sekolah.KelasService.GetKelas:output_type -> sekolah.GetKelasResponse
+	71,  // 203: sekolah.KelasService.UpdateKelas:output_type -> sekolah.UpdateKelasResponse
+	73,  // 204: sekolah.KelasService.DeleteKelas:output_type -> sekolah.DeleteKelasResponse
+	75,  // 205: sekolah.KelasService.ImportDapodikRombel:output_type -> sekolah.ImportDapodikRombelResponse
+	78,  // 206: sekolah.AnggotaKelasService.CreateAnggotaKelas:output_type -> sekolah.CreateAnggotaKelasResponse
+	80,  // 207: sekolah.AnggotaKelasService.CreateBanyakAnggotaKelas:output_type -> sekolah.CreateBanyakAnggotaKelasResponse
+	82,  // 208: sekolah.AnggotaKelasService.GetAnggotaKelas:output_type -> sekolah.GetAnggotaKelasResponse
+	84,  // 209: sekolah.AnggotaKelasService.UpdateAnggotaKelas:output_type -> sekolah.UpdateAnggotaKelasResponse
+	86,  // 210: sekolah.AnggotaKelasService.DeleteAnggotaKelas:output_type -> sekolah.DeleteAnggotaKelasResponse
+	88,  // 211: sekolah.AnggotaKelasService.SearchAnggotaKelas:output_type -> sekolah.SearchAnggotaKelasResponse
+	90,  // 212: sekolah.AnggotaKelasService.FilterAnggotaKelas:output_type -> sekolah.FilterAnggotaKelasResponse
+	95,  // 213: sekolah.PTKService.CreatePTK:output_type -> sekolah.CreatePTKResponse
+	97,  // 214: sekolah.PTKService.GetPTK:output_type -> sekolah.GetPTKResponse
+	99,  // 215: sekolah.PTKService.UpdatePTK:output_type -> sekolah.UpdatePTKResponse
+	101, // 216: sekolah.PTKService.DeletePTK:output_type -> sekolah.DeletePTKResponse
+	104, // 217: sekolah.PTKTerdaftarService.CreatePTKTerdaftar:output_type -> sekolah.CreatePTKTerdaftarResponse
+	106, // 218: sekolah.PTKTerdaftarService.CreateBanyakPTKTerdaftar:output_type -> sekolah.CreateBanyakPTKTerdaftarResponse
+	108, // 219: sekolah.PTKTerdaftarService.GetPTKTerdaftar:output_type -> sekolah.GetPTKTerdaftarResponse
+	110, // 220: sekolah.PTKTerdaftarService.UpdatePTKTerdaftar:output_type -> sekolah.UpdatePTKTerdaftarResponse
+	112, // 221: sekolah.PTKTerdaftarService.DeletePTKTerdaftar:output_type -> sekolah.DeletePTKTerdaftarResponse
+	115, // 222: sekolah.KenaikanService.CreateKenaikan:output_type -> sekolah.CreateKenaikanResponse
+	117, // 223: sekolah.KenaikanService.GetKenaikan:output_type -> sekolah.GetKenaikanResponse
+	119, // 224: sekolah.KenaikanService.FilterKenaikan:output_type -> sekolah.FilterKenaikanResponse
+	121, // 225: sekolah.KenaikanService.UpdateKenaikan:output_type -> sekolah.UpdateKenaikanResponse
+	123, // 226: sekolah.KenaikanService.DeleteKenaikan:output_type -> sekolah.DeleteKenaikanResponse
+	125, // 227: sekolah.KenaikanService.UploadKenaikan:output_type -> sekolah.UploadKenaikanResponse
+	128, // 228: sekolah.IjazahService.CreateIjazah:output_type -> sekolah.CreateIjazahResponse
+	132, // 229: sekolah.IjazahService.GetIjazah:output_type -> sekolah.GetIjazahResponse
+	134, // 230: sekolah.IjazahService.GetProsesIjazah:output_type -> sekolah.GetProsesIjazahResponse
+	136, // 231: sekolah.IjazahService.UpdateIjazah:output_type -> sekolah.UpdateIjazahResponse
+	138, // 232: sekolah.IjazahService.DeleteIjazah:output_type -> sekolah.DeleteIjazahResponse
+	140, // 233: sekolah.IjazahService.UploadIjazah:output_type -> sekolah.UploadIjazahResponse
+	143, // 234: sekolah.TranskripNilaiService.CreateTranskripNilai:output_type -> sekolah.CreateTranskripNilaiResponse
+	145, // 235: sekolah.TranskripNilaiService.GetTranskripNilai:output_type -> sekolah.GetTranskripNilaiResponse
+	147, // 236: sekolah.TranskripNilaiService.UpdateTranskripNilai:output_type -> sekolah.UpdateTranskripNilaiResponse
+	149, // 237: sekolah.TranskripNilaiService.DeleteTranskripNilai:output_type -> sekolah.DeleteTranskripNilaiResponse
+	151, // 238: sekolah.TranskripNilaiService.UploadITranskripNilai:output_type -> sekolah.UploadTranskripNilaiResponse
+	153, // 239: sekolah.DownloadService.DownloadSekolahService:output_type -> sekolah.DownloadSekolahResponse
+	155, // 240: sekolah.DashboardService.GetCountSiswa:output_type -> sekolah.GetCountSiswaResponse
+	157, // 241: sekolah.DashboardService.GetCountGuru:output_type -> sekolah.GetCountGuruResponse
+	159, // 242: sekolah.DashboardService.GetCountKelas:output_type -> sekolah.GetCountKelasResponse
+	162, // 243: sekolah.DashboardService.GetInfoKelas:output_type -> sekolah.GetInfoKelasResponse
+	170, // 244: sekolah.ReferensiService.GetBentukPendidikan:output_type -> sekolah.GetBentukPendidikanResponse
+	171, // 245: sekolah.ReferensiService.GetJenjang:output_type -> sekolah.GetJenjangResponse
+	173, // 246: sekolah.ReferensiService.GetTingkatPendidikan:output_type -> sekolah.GetTingkatPendidikanResponse
+	174, // 247: sekolah.ReferensiService.GetStatusKepemilikan:output_type -> sekolah.GetStatusKepemilikanResponse
+	176, // 248: sekolah.ReferensiService.GetJurusan:output_type -> sekolah.GetJurusanResponse
+	178, // 249: sekolah.ReferensiService.GetKurikulum:output_type -> sekolah.GetKurikulumResponse
+	180, // 250: sekolah.ReferensiService.GetMapel:output_type -> sekolah.GetMapelResponse
+	183, // 251: sekolah.PembelajaranService.CreatePembelajaran:output_type -> sekolah.CreatePembelajaranResponse
+	185, // 252: sekolah.PembelajaranService.CreateBanyakPembelajaran:output_type -> sekolah.CreateBanyakPembelajaranResponse
+	187, // 253: sekolah.PembelajaranService.GetPembelajaran:output_type -> sekolah.GetPembelajaranResponse
+	189, // 254: sekolah.PembelajaranService.UpdatePembelajaran:output_type -> sekolah.UpdatePembelajaranResponse
+	191, // 255: sekolah.PembelajaranService.DeletePembelajaran:output_type -> sekolah.DeletePembelajaranResponse
+	173, // [173:256] is the sub-list for method output_type
+	90,  // [90:173] is the sub-list for method input_type
+	90,  // [90:90] is the sub-list for extension type_name
+	90,  // [90:90] is the sub-list for extension extendee
+	0,   // [0:90] is the sub-list for field type_name
 }
 
 func init() { file_sekolah_proto_init() }
@@ -14044,19 +14109,19 @@ func file_sekolah_proto_init() {
 	if File_sekolah_proto != nil {
 		return
 	}
-	file_sekolah_proto_msgTypes[44].OneofWrappers = []any{}
-	file_sekolah_proto_msgTypes[62].OneofWrappers = []any{}
-	file_sekolah_proto_msgTypes[67].OneofWrappers = []any{}
-	file_sekolah_proto_msgTypes[86].OneofWrappers = []any{}
-	file_sekolah_proto_msgTypes[95].OneofWrappers = []any{}
-	file_sekolah_proto_msgTypes[185].OneofWrappers = []any{}
+	file_sekolah_proto_msgTypes[45].OneofWrappers = []any{}
+	file_sekolah_proto_msgTypes[63].OneofWrappers = []any{}
+	file_sekolah_proto_msgTypes[68].OneofWrappers = []any{}
+	file_sekolah_proto_msgTypes[87].OneofWrappers = []any{}
+	file_sekolah_proto_msgTypes[96].OneofWrappers = []any{}
+	file_sekolah_proto_msgTypes[186].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_sekolah_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   191,
+			NumMessages:   192,
 			NumExtensions: 0,
 			NumServices:   17,
 		},

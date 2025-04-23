@@ -245,10 +245,11 @@ var TahunAjaranService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	SemesterService_CreateSemester_FullMethodName = "/sekolah.SemesterService/CreateSemester"
-	SemesterService_GetSemester_FullMethodName    = "/sekolah.SemesterService/GetSemester"
-	SemesterService_UpdateSemester_FullMethodName = "/sekolah.SemesterService/UpdateSemester"
-	SemesterService_DeleteSemester_FullMethodName = "/sekolah.SemesterService/DeleteSemester"
+	SemesterService_CreateSemester_FullMethodName     = "/sekolah.SemesterService/CreateSemester"
+	SemesterService_GetSemester_FullMethodName        = "/sekolah.SemesterService/GetSemester"
+	SemesterService_GetCurrentSemester_FullMethodName = "/sekolah.SemesterService/GetCurrentSemester"
+	SemesterService_UpdateSemester_FullMethodName     = "/sekolah.SemesterService/UpdateSemester"
+	SemesterService_DeleteSemester_FullMethodName     = "/sekolah.SemesterService/DeleteSemester"
 )
 
 // SemesterServiceClient is the client API for SemesterService service.
@@ -258,6 +259,7 @@ type SemesterServiceClient interface {
 	// CRUD for Semester
 	CreateSemester(ctx context.Context, in *CreateSemesterRequest, opts ...grpc.CallOption) (*CreateSemesterResponse, error)
 	GetSemester(ctx context.Context, in *GetSemesterRequest, opts ...grpc.CallOption) (*GetSemesterResponse, error)
+	GetCurrentSemester(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCurrentSemesterResponse, error)
 	UpdateSemester(ctx context.Context, in *UpdateSemesterRequest, opts ...grpc.CallOption) (*UpdateSemesterResponse, error)
 	DeleteSemester(ctx context.Context, in *DeleteSemesterRequest, opts ...grpc.CallOption) (*DeleteSemesterResponse, error)
 }
@@ -284,6 +286,16 @@ func (c *semesterServiceClient) GetSemester(ctx context.Context, in *GetSemester
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetSemesterResponse)
 	err := c.cc.Invoke(ctx, SemesterService_GetSemester_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *semesterServiceClient) GetCurrentSemester(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetCurrentSemesterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCurrentSemesterResponse)
+	err := c.cc.Invoke(ctx, SemesterService_GetCurrentSemester_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -317,6 +329,7 @@ type SemesterServiceServer interface {
 	// CRUD for Semester
 	CreateSemester(context.Context, *CreateSemesterRequest) (*CreateSemesterResponse, error)
 	GetSemester(context.Context, *GetSemesterRequest) (*GetSemesterResponse, error)
+	GetCurrentSemester(context.Context, *Empty) (*GetCurrentSemesterResponse, error)
 	UpdateSemester(context.Context, *UpdateSemesterRequest) (*UpdateSemesterResponse, error)
 	DeleteSemester(context.Context, *DeleteSemesterRequest) (*DeleteSemesterResponse, error)
 	mustEmbedUnimplementedSemesterServiceServer()
@@ -334,6 +347,9 @@ func (UnimplementedSemesterServiceServer) CreateSemester(context.Context, *Creat
 }
 func (UnimplementedSemesterServiceServer) GetSemester(context.Context, *GetSemesterRequest) (*GetSemesterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSemester not implemented")
+}
+func (UnimplementedSemesterServiceServer) GetCurrentSemester(context.Context, *Empty) (*GetCurrentSemesterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentSemester not implemented")
 }
 func (UnimplementedSemesterServiceServer) UpdateSemester(context.Context, *UpdateSemesterRequest) (*UpdateSemesterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSemester not implemented")
@@ -398,6 +414,24 @@ func _SemesterService_GetSemester_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SemesterService_GetCurrentSemester_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SemesterServiceServer).GetCurrentSemester(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SemesterService_GetCurrentSemester_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SemesterServiceServer).GetCurrentSemester(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SemesterService_UpdateSemester_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateSemesterRequest)
 	if err := dec(in); err != nil {
@@ -448,6 +482,10 @@ var SemesterService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSemester",
 			Handler:    _SemesterService_GetSemester_Handler,
+		},
+		{
+			MethodName: "GetCurrentSemester",
+			Handler:    _SemesterService_GetCurrentSemester_Handler,
 		},
 		{
 			MethodName: "UpdateSemester",
