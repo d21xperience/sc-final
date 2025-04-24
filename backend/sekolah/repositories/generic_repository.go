@@ -366,37 +366,43 @@ func (r *GenericRepository[T]) FindWithRelations(
 	schemaName string,
 	joins []string,
 	preloads []string,
-	conditions map[string]interface{},
+	exactConditions map[string]interface{},
+	customConditions []struct {
+		Query string
+		Args  []interface{}
+	},
 	groupByColumns []string,
 ) ([]T, error) {
 	var results []T
 	tx := r.db.WithContext(ctx)
 
-	// Set Schema (Multi-Tenant)
 	if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", schemaName)).Error; err != nil {
 		return nil, fmt.Errorf("failed to set schema: %w", err)
 	}
 
-	// Tambahkan DISTINCT untuk menghindari duplikasi
 	tx = tx.Distinct()
 
-	// Tambahkan Joins jika ada (untuk hubungan complex)
 	for _, join := range joins {
 		tx = tx.Joins(join)
 	}
 
-	// Tambahkan Preload untuk relasi One-To-One, One-To-Many, dan Many-To-Many
 	for _, preload := range preloads {
 		tx = tx.Preload(preload)
 	}
 
-	// Tambahkan GROUP BY jika diperlukan
 	if len(groupByColumns) > 0 {
 		tx = tx.Group(strings.Join(groupByColumns, ", "))
 	}
 
-	// Eksekusi Query dengan kondisi
-	if err := tx.Where(conditions).Find(&results).Error; err != nil {
+	if len(exactConditions) > 0 {
+		tx = tx.Where(exactConditions)
+	}
+
+	for _, cond := range customConditions {
+		tx = tx.Where(cond.Query, cond.Args...)
+	}
+
+	if err := tx.Find(&results).Error; err != nil {
 		return nil, err
 	}
 

@@ -73,7 +73,7 @@
                                     :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
                             </template>
                         </Column> -->
-                        <Column field="pesertaDidik.nmSiswa" header="Nama" sortable></Column>
+                        <Column field="nmSiswa" header="Nama" sortable></Column>
                         <Column field="pesertaDidik.jenisKelamin" header="JK"></Column>
                         <Column field="pesertaDidik.nisn" header="NISN"></Column>
                         <Column field="pesertaDidik.nis" header="NIS" sortable></Column>
@@ -84,11 +84,8 @@
                                 {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
                             </template>
                         </Column>
-                        <!-- <Column field="tingkat" header="Tingkat" sortable>
-                            <template #body="slotProps">
-                                {{ slotProps.data.rombonganBelajar.tingkatPendidikanId }}
-                            </template>
-                        </Column> -->
+                        <Column field="rombonganBelajar.tingkatPendidikanId" header="Tingkat"></Column>
+
                         <Column field="rombonganBelajar.nmKelas" header="Rombel" sortable></Column>
                     </DataTable>
 
@@ -210,7 +207,7 @@ onMounted(async () => {
     siswa.value = store.getters["sekolahService/getSiswaAktif"]
     // console.log(siswa.value)
     if (!siswa.value) {
-        siswa.value = fetchSiswa()
+        siswa.value = fetchSiswaAktif()
     }
     // console.log(jurusanOptions.value)
 });
@@ -329,10 +326,10 @@ const siswa = ref([]);
 import { useSekolahService } from '@/composables/useSekolahService'
 const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
 const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
-const { fetchSiswa } = useSekolahService(schemaname, selectedSemester)
+const { fetchSiswaAktif } = useSekolahService(schemaname, selectedSemester)
 // ================================
 watch(selectedSemester, async (e, b) => {
-    siswa.value = await fetchSiswa()
+    siswa.value = await fetchSiswaAktif()
 })
 // ========IMPORT DATA========
 import DialogImport from '@/components/DialogImport.vue'
@@ -366,7 +363,7 @@ const { formatterDateID } = useUtils()
 const tingkatPendidikanOptions = computed(() => {
     const unique = new Map()
     siswa.value.forEach(item => {
-        console.log(item)
+        // console.log(item)
         const { tingkatPendidikanId, tingkatPendidikan } = item.rombonganBelajar
         if (tingkatPendidikan && !unique.has(tingkatPendidikanId)) {
             unique.set(tingkatPendidikanId, {

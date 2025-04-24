@@ -310,6 +310,56 @@ function mapSemesterToLokal(semesterCode, tingkatPendidikan, semesterAktif) {
     const found = allSemester.find(s => s.kode === semesterCode);
     return found ? found.semesterLokal : null;
 }
+function formatNilaiAkhir(nilaiAkhir, semesterAktifId, tingkatPendidikanId) {
+    // Hitung tahun masuk berdasarkan semester aktif dan tingkat
+    const tahunAktif = parseInt(semesterAktifId.slice(0, 4));
+    const smtAktifKe = parseInt(semesterAktifId.slice(4));
+    const tahunMasuk = tahunAktif - (tingkatPendidikanId - 10) - (smtAktifKe === 2 ? 0 : 1);
+
+    // Buat mapping semesterId => semester lokal (1-6)
+    const semesterMap = {};
+    for (let i = 0; i < 6; i++) {
+        const tahun = tahunMasuk + Math.floor(i / 2);
+        const semester = (i % 2) + 1;
+        semesterMap[`${tahun}${semester}`] = i + 1;
+    }
+
+    // Map pelajaran per semester
+    const map = {};
+
+    for (const nilai of nilaiAkhir) {
+        const pelajaran = nilai.mataPelajaran?.nama || "Tidak diketahui";
+        const semesterLokal = semesterMap[nilai.semesterId];
+        if (!semesterLokal) continue;
+
+        if (!map[pelajaran]) {
+            map[pelajaran] = {
+                mataPelajaran: pelajaran,
+                semester1: null,
+                semester2: null,
+                semester3: null,
+                semester4: null,
+                semester5: null,
+                semester6: null
+            };
+        }
+
+        map[pelajaran][`semester${semesterLokal}`] = nilai.nilaiPeng;
+    }
+
+    // Isi kekosongan semester yang tidak ada nilai
+    for (const pel in map) {
+        for (let i = 1; i <= 6; i++) {
+            const key = `semester${i}`;
+            if (!Object.hasOwn(map[pel], key)) {
+                map[pel][key] = null;
+            }
+        }
+    }
+
+    return Object.values(map);
+}
+
 
 </script>
 <template>
@@ -368,17 +418,18 @@ function mapSemesterToLokal(semesterCode, tingkatPendidikan, semesterAktif) {
                                     @click="confirmdeleteMapel(data)" /> -->
                         </template>
                     </Column>
-                    <template #expansion="slotProps">
+                    <template #expansion="slotProps" >
                         <div class="p-4">
-                            <DataTable :value="slotProps.data.nilaiAkhir">
-                                {{ slotProps.data }}
-                                <Column field="mataPelajaran.nama" header="Mata pelajaran"></Column>
-                                <Column field="" header="Semester 1"></Column>
-                                <Column field="" header="Semester 2"></Column>
-                                <Column field="" header="Semester 3"></Column>
-                                <Column field="" header="Semester 4"></Column>
-                                <Column field="" header="Semester 5"></Column>
-                                <Column field="" header="Semester 6"></Column>
+                            <DataTable
+                                :value="formatNilaiAkhir(slotProps.data.nilaiAkhir, '20222', slotProps.data.tingkatPendidikanId)" >
+                                <Column field="mataPelajaran" header="Mata Pelajaran" class="text-slate-500"/>
+                                <Column field="semester1" header="Semester 1" />
+                                <Column field="semester2" header="Semester 2" />
+                                <Column field="semester3" header="Semester 3" />
+                                <Column field="semester4" header="Semester 4" />
+                                <Column field="semester5" header="Semester 5" />
+                                <Column field="semester6" header="Semester 6" />
+                                <template #empty> <p class="text-xl flex justify-center font-bold text-red-500">Nilai tidak ditemukan.</p> </template>
                             </DataTable>
                         </div>
                     </template>

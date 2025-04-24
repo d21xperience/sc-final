@@ -3,6 +3,13 @@
     <!-- <div class=""> -->
     <div class="">
         <div class="my-2">
+            <Toolbar>  
+                <template #end>
+                    <Button label="Tambah user" icon="pi pi-plus" severity="help" @click="exportCSV($event)"
+                        class="mr-2" />
+                    <Button label="Generate Otomatis" icon="pi pi-users" severity="info" @click="exportCSV($event)" />
+                </template>
+            </Toolbar>
             <Toolbar>
                 <template #start>
                     <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
@@ -11,8 +18,7 @@
                         :disabled="!dataLulusan || !dataLulusan.length" />
                     <Button icon="pi pi-key" severity="success" class="mr-2" @click="confirmDeleteSelected"
                         :disabled="!dataLulusan || !dataLulusan.length" />
-                    <Button icon="pi pi-download" severity="warn" class="mr-2" @click="confirmDeleteSelected"
-                         />
+                    <Button icon="pi pi-download" severity="warn" class="mr-2" @click="confirmDeleteSelected" />
                 </template>
                 <template #end>
 
@@ -35,17 +41,17 @@
                 </template>
             </Toolbar>
         </div>
-        <DataTable ref="dt" v-model:selection="dataLulusan" stripedRows size="small" :value="products" dataKey="id"
-            :paginator="true" :rows="5" :filters="filters"
+        <DataTable ref="dt" v-model:selection="dataLulusan" stripedRows size="small" :value="users" dataKey="id"
+            :paginator="true" :rows="10" :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            :rowsPerPageOptions="[5, 10, 25]"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Users" class="">
+            :rowsPerPageOptions="[10, 25]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Users"
+            class="">
             <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-            <Column field="name" header="Username" sortable></Column>
-            <Column field="name" header="Nama user" sortable></Column>
+            <Column field="nmSiswa" header="Username" sortable></Column>
+            <!-- <Column field="name" header="Nama user" sortable></Column>
             <Column field="code" header="Login terakhir"></Column>
             <Column field="code" header="Online" sortable></Column>
-            <Column field="code" header="Status" sortable></Column>
+            <Column field="code" header="Status" sortable></Column> -->
             <!-- <Column field="inventoryStatus" header="Status" sortable>
                 <template #body="slotProps">
                     <Tag :value="slotProps.data.inventoryStatus"
@@ -144,7 +150,9 @@ import Toolbar from 'primevue/toolbar';
 import ColumnGroup from 'primevue/columngroup';   // optional
 import Row from 'primevue/row';                   // optional
 
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
+import { useStore } from "vuex";
+const store = useStore();
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
@@ -153,16 +161,27 @@ import InputIcon from 'primevue/inputicon';
 import RadioButton from 'primevue/radiobutton';
 import DataLulusanService from '@/service/ProductService.js';
 
+// ================================
+// composable
+// ================================
+import { useSekolahService } from '@/composables/useSekolahService'
+const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
+const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
+const { fetchSiswaAktif } = useSekolahService(schemaname, selectedSemester)
+watch(selectedSemester, async (newVal) => {
+    console.log(newVal)
+    console.log("watch")
+    users.value = await fetchSiswaAktif()
+})
+
+// ================================
 
 
-onMounted(() => {
-    DataLulusanService.getProducts().then((data) => (products.value = data));
-});
 
 const dataConnected = ref(true)
 const toast = useToast();
 const dt = ref();
-const products = ref();
+const users = ref();
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
@@ -313,4 +332,11 @@ const handleFetchError = (error) => {
 
 // status siswa naik atau lulus
 const dialogStatus = ref(false)
+onMounted(() => {
+    users.value = store.getters["sekolahService/getSiswaAktif"]
+    if (!users.value) {
+        users.value = fetchSiswaAktif()
+    }
+    // DataLulusanService.getProducts().then((data) => (products.value = data));
+});
 </script>

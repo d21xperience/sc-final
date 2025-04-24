@@ -29,22 +29,38 @@ service AuthService {
         get: "/api/v1/user/{id}"
     };
   }
+	rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse) {
+		option (google.api.http) = {
+			put: "/api/v1/user/reset"
+			body: "*"
+		};
+	}
+  	rpc CreateUsers (CreateUsersRequest) returns (CreateUsersResponse) {
+		option (google.api.http) = {
+			post: "/api/v1/users/create"
+			body: "*"
+		};
+	}
+	rpc GetUsers (GetUsersRequest) returns (GetUsersResponse) {
+		option (google.api.http) = {
+			get: "/api/v1/users/get"
+		};
+	}
 }
 
 // Struktur Sekolah
 message Sekolah {
   uint32 sekolah_id =1  [json_name = "sekolah_id"];
-  string sekolah_id_enkrip = 2  [json_name = "sekolah_id_enkrip"];
-  string kecamatan = 3;
-  string kabupaten = 4;
-  string propinsi = 5;
-  string kode_kecamatan = 6 [json_name = "kode_kecamatan"];
-  string kode_kab = 7 [json_name = "kode_kab"];
-  string kode_prop = 8 [json_name = "kode_prop"];
-  string nama_sekolah = 9 [json_name = "nama_sekolah"];
-  string npsn = 10;
-  string alamat_jalan = 11 [json_name = "alamat_jalan"];
-  string status = 12;
+  string nama_sekolah = 2 [json_name = "nama_sekolah"];
+  string npsn = 3;
+  string alamat_jalan = 4 [json_name = "alamat_jalan"];
+  string sekolah_id_enkrip = 5  [json_name = "sekolah_id_enkrip"];
+  string kecamatan = 6;
+  string kabupaten = 7;
+  string propinsi = 8;
+  string kode_kecamatan = 9 [json_name = "kode_kecamatan"];
+  string kode_kab = 10 [json_name = "kode_kab"];
+  string kode_prop = 11 [json_name = "kode_prop"];
 }
 
 // Struktur User
@@ -55,8 +71,15 @@ message User {
   string email = 4;
   string role = 5;
   uint32 sekolah_id=6;
+  string last_login = 7;
 }
 
+message NewUser {
+  User user = 1;
+  Sekolah sekolah = 2;
+  string email = 3;
+  UserProfile user_profile = 4;
+}
 // Request untuk Register
 message RegisterRequest {
   Sekolah sekolah = 1;
@@ -101,6 +124,26 @@ message GetUserByIDResponse {
   string name = 2;
   string email = 3;
 }
+message ResetPasswordRequest{
+	User user = 1;
+}
+message ResetPasswordResponse {
+	string message = 1;
+}
+message CreateUsersRequest {
+	repeated NewUser users = 1;
+}
+message CreateUsersResponse {
+	string message = 1;
+}
+message GetUsersRequest {
+	uint32 sekolah_id = 1;
+  string role = 2;
+}
+message GetUsersResponse {
+	repeated User users = 1;
+}
+
 // ================================================================
 // Service untuk mengambil data user
 

@@ -105,7 +105,8 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 		"JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = tabel_anggotakelas.rombongan_belajar_id",
 		"JOIN tabel_ptk ON tabel_ptk.ptk_id = tabel_kelas.ptk_id",
 	}
-	preloads := []string{"PesertaDidik", "RombonganBelajar", "RombonganBelajar.PTK", "NilaiAkhir", "NilaiAkhir.MataPelajaran"}
+	// preloads := []string{"PesertaDidik", "RombonganBelajar", "RombonganBelajar.PTK", "NilaiAkhir", "NilaiAkhir.MataPelajaran"}
+	preloads := []string{"PesertaDidik", "RombonganBelajar", "RombonganBelajar.PTK"}
 
 	orderBy := []string{"tabel_kelas.nm_kelas ASC", "tabel_siswa.nm_siswa ASC"} // Hindari duplikasi
 	anggotaRombelModel, err := s.repoRombelAnggota.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
@@ -114,13 +115,24 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 	}
 
 	NilaiAkhirList := utils.ConvertModelsToPB(anggotaRombelModel, func(item models.RombelAnggota) *pb.NilaiSiswa {
+		nilaiAkhir, err := s.repo.FindWithRelations(ctx, schemaName, nil, []string{"MataPelajaran"}, map[string]any{"peserta_didik_id": item.PesertaDidikId.String()}, []struct {
+			Query string
+			Args  []interface{}
+		}{
+			{"semester_id <= ?", []interface{}{item.SemesterId}},
+			// {"created_at BETWEEN ? AND ?", []interface{}{startDate, endDate}},
+		}, nil)
+		if err != nil {
+			return nil
+		}
+
 		return &pb.NilaiSiswa{
 			PesertaDidikId:      item.PesertaDidikId.String(),
 			NmSiswa:             item.PesertaDidik.NmSiswa,
 			RombonganBelajarId:  item.AnggotaRombelId.String(),
 			NmKelas:             item.RombonganBelajar.NmKelas,
 			TingkatPendidikanId: item.RombonganBelajar.TingkatPendidikanId,
-			NilaiAkhir: utils.ConvertModelsToPB(item.NilaiAkhir, func(item models.NilaiAkhir) *pb.NilaiAkhir {
+			NilaiAkhir: utils.ConvertModelsToPB(nilaiAkhir, func(item models.NilaiAkhir) *pb.NilaiAkhir {
 				return &pb.NilaiAkhir{
 					IdNilaiAkhir:    item.IdNilaiAkhir.String(),
 					NilaiPeng:       utils.PointerToUint32(item.NilaiPeng),

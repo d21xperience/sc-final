@@ -3,10 +3,11 @@ import "./assets/main.css";
 import { createApp } from "vue";
 import App from "./App.vue";
 import PrimeVue from "primevue/config";
-import Aura from '@primeuix/themes/aura';
+import Aura from "@primeuix/themes/aura";
 import ToastService from "primevue/toastservice";
 import DialogService from "primevue/dialogservice";
-import Tooltip from 'primevue/tooltip';
+import Tooltip from "primevue/tooltip";
+import Ripple from "primevue/ripple";
 import { VueRecaptchaPlugin } from "vue-recaptcha";
 import { library } from "@fortawesome/fontawesome-svg-core";
 // import { faPhone } from "@fortawesome/free-solid-svg-icons";
@@ -24,10 +25,12 @@ app.use(PrimeVue, {
   theme: {
     preset: Aura,
   },
+  ripple: true,
 });
 app.use(ToastService);
 app.use(DialogService);
-app.directive('tooltip', Tooltip);
+app.directive("tooltip", Tooltip);
+app.directive("ripple", Ripple);
 // app.use(VueRecaptchaPlugin, {
 //   v3SiteKey: "6LfuuYgqAAAAAOPnPbRKpJM3DWOyEy2rJagWTb0V",
 // });
