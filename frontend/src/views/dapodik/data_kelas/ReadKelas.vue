@@ -18,6 +18,15 @@
                                             @click="confirmDeleteSelected"
                                             :disabled="!selectedKelas || !selectedKelas.length"
                                             v-tooltip.bottom="'Hapus data'" />
+                                        <div v-show="selectedSemester.semester === 2">
+
+                                            <Button label="Lulus" severity="help" class="mr-2 text-sm"
+                                                @click="dialogStatus = true" :disabled="!isLulus"
+                                                v-tooltip.bottom="'Luluskan siswa'" />
+                                            <Button label="Naik" severity="success" class="mr-2 text-sm"
+                                                @click="openNew" :disabled="!isNaik"
+                                                v-tooltip.bottom="'Naikan siswa'" />
+                                        </div>
                                     </template>
                                     <template #end>
                                         <!-- <Button label="Import" icon="pi pi-download" severity="warn"
@@ -65,12 +74,6 @@
                     :rowsPerPageOptions="[10, 20, 30]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} kelas" class="mt-2">
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                    <!-- <Column field="name" header="Foto">
-                        <template #body="slotProps">
-                            <Image :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                                :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
-                        </template>
-                    </Column> -->
                     <Column field="nmKelas" header="Nama Kelas"></Column>
                     <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
                     <Column field="kurikulum.namaKurikulum" header="Kurikulum"></Column>
@@ -87,22 +90,6 @@
                                 @click="dialogAnggotaRombel(slotProps.data)" />
                         </template>
                     </Column>
-                    <!--<Column field="name" header="JK"></Column> -->
-                    <!-- <Column field="name" header="Tpt.Lahir"></Column>
-                    <Column field="name" header="Tgl.Lahir"></Column>
-                    <Column field="name" header="Agama"></Column>
-                    <Column field="category" header="Ayah"></Column>
-                    <Column field="category" header="Ibu"></Column> -->
-                    <!-- <Column field="category" header="Pekerjaan Ayah"></Column>
-                    <Column field="category" header="Pekerjaan Ibu"></Column> -->
-                    <!-- <Column field="category" header="Alamat"></Column> -->
-
-                    <!-- <Column field="inventoryStatus" header="Status" sortable>
-                        <template #body="slotProps">
-                            <Tag :value="slotProps.data.inventoryStatus"
-                                :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                        </template>
-                    </Column> -->
                 </DataTable>
 
             </div>
@@ -170,7 +157,7 @@ watch(selectedSemester, (e, b) => {
 })
 onMounted(() => {
     // console.log("onMounted")
-    
+
     fetchK()
     // getParamDialogImport()
 });
@@ -250,4 +237,37 @@ const dialogAnggotaRombel = (d) => {
     console.log(d)
 }
 const bentukPendidikan = ref("smk")
+
+const isLulus = ref(false)
+const isNaik = ref(false)
+const selectedKelasLulus = ref()
+const selectedKelasNaik = ref()
+watch(selectedKelas, (item) => {
+    const adaKelas12 = selectedKelas.value.some(item => item.tingkatPendidikanId === 12);
+
+    if (adaKelas12) {
+        // console.log("Ada kelas dengan tingkat pendidikan 12");
+
+        selectedKelasLulus.value = item
+    } else {
+        selectedKelasNaik.value = item
+        // console.log("Tidak ada kelas tingkat 12");
+    }
+});
+
+watch(selectedKelasLulus, () => {
+    if (!selectedKelasLulus.value || selectedKelasLulus.value.length === 0) {
+        isLulus.value = false
+    } else {
+        isLulus.value = true
+    }
+})
+watch(selectedKelasNaik, () => {
+    if (!selectedKelasNaik.value || selectedKelasNaik.value.length === 0) {
+        isNaik.value = false
+    } else {
+        isNaik.value = true
+    }
+})
+
 </script>

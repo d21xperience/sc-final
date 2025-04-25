@@ -3955,7 +3955,7 @@ func RegisterKenaikanServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/CreateKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan/create"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/CreateKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3975,7 +3975,7 @@ func RegisterKenaikanServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/GetKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/GetKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3995,7 +3995,7 @@ func RegisterKenaikanServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/FilterKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan/filter"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/FilterKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan/filter"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4015,7 +4015,7 @@ func RegisterKenaikanServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/UpdateKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/UpdateKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -4035,7 +4035,7 @@ func RegisterKenaikanServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/DeleteKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/sekolah.KenaikanService/DeleteKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -6095,7 +6095,7 @@ func RegisterKenaikanServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/CreateKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan/create"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/CreateKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -6112,7 +6112,7 @@ func RegisterKenaikanServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/GetKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/GetKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -6129,7 +6129,7 @@ func RegisterKenaikanServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/FilterKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan/filter"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/FilterKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan/filter"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -6146,7 +6146,7 @@ func RegisterKenaikanServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/UpdateKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/UpdateKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -6163,7 +6163,7 @@ func RegisterKenaikanServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/DeleteKenaikan", runtime.WithHTTPPathPattern("/api/v1/kenaikan"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/sekolah.KenaikanService/DeleteKenaikan", runtime.WithHTTPPathPattern("/api/v1/ss/kenaikan"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -6197,11 +6197,11 @@ func RegisterKenaikanServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 }
 
 var (
-	pattern_KenaikanService_CreateKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "kenaikan", "create"}, ""))
-	pattern_KenaikanService_GetKenaikan_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "kenaikan"}, ""))
-	pattern_KenaikanService_FilterKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "kenaikan", "filter"}, ""))
-	pattern_KenaikanService_UpdateKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "kenaikan"}, ""))
-	pattern_KenaikanService_DeleteKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "kenaikan"}, ""))
+	pattern_KenaikanService_CreateKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "kenaikan", "create"}, ""))
+	pattern_KenaikanService_GetKenaikan_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "kenaikan"}, ""))
+	pattern_KenaikanService_FilterKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "ss", "kenaikan", "filter"}, ""))
+	pattern_KenaikanService_UpdateKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "kenaikan"}, ""))
+	pattern_KenaikanService_DeleteKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "ss", "kenaikan"}, ""))
 	pattern_KenaikanService_UploadKenaikan_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "it", "kenaikan", "upload"}, ""))
 )
 

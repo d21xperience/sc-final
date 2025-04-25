@@ -292,7 +292,7 @@ func (s *RombelAnggotaService) SearchAnggotaKelas(ctx context.Context, req *pb.S
 	if pesertaDidikId != "" {
 		// mod, err := s.repo.FindByID(ctx, pesertaDidikId, schemaName, "peserta_didik_id")
 		conditions["tabel_anggotakelas.peserta_didik_id"] = pesertaDidikId
-		mod, err := s.repo.FindWithRelations(ctx, schemaName, joins, preloads, conditions, nil, nil)
+		mod, err := s.repo.FindWithRelations(ctx, schemaName, joins, preloads, conditions, nil, nil, nil)
 		if err != nil {
 			// 2. Jika ada error (selain not found), kembalikan error
 			if !errors.Is(err, gorm.ErrRecordNotFound) {

@@ -42,18 +42,18 @@ type PesertaDidikPelengkap struct {
 	PesertaDidik     PesertaDidik `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
 }
 
-type TabelKenaikan struct {
-	KdKenaikan      uuid.UUID  `gorm:"type:uuid;primaryKey;column:kd_kenaikan"`
-	SemesterId      string     `gorm:"type:char(5);not null;column:semester_id"`
-	AnggotaRombelId uuid.UUID  `gorm:"type:uuid;not null;column:anggota_rombel_id"`
-	PesertaDidikId  *uuid.UUID `gorm:"type:uuid;column:peserta_didik_id"`
-	Kenaikan        *int       `gorm:"type:numeric(3,0);column:kenaikan"`
-	Tingkat         *int       `gorm:"type:numeric(3,0);column:tingkat"`
+type Kenaikan struct {
+	KdKenaikan      uuid.UUID `gorm:"type:uuid;primaryKey;column:kd_kenaikan"`
+	SemesterId      string    `gorm:"type:char(5);not null;column:semester_id"`
+	AnggotaRombelId uuid.UUID `gorm:"type:uuid;not null;column:anggota_rombel_id"`
+	PesertaDidikId  uuid.UUID `gorm:"type:uuid;column:peserta_didik_id"`
+	Kenaikan        int32     `gorm:"type:numeric(3,0);column:kenaikan"`
+	Tingkat         int32     `gorm:"type:numeric(3,0);column:tingkat"`
 
 	// Relasi
-	Semester      Semester      `gorm:"foreignKey:SemesterId;references:SemesterId"`
 	AnggotaRombel RombelAnggota `gorm:"foreignKey:AnggotaRombelId;references:AnggotaRombelId"`
-	PesertaDidik  PesertaDidik  `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
+	// Semester      Semester      `gorm:"foreignKey:SemesterId;references:SemesterId"`
+	// PesertaDidik  PesertaDidik  `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
 }
 
 func (PesertaDidik) TableName() string {
@@ -62,6 +62,6 @@ func (PesertaDidik) TableName() string {
 func (PesertaDidikPelengkap) TableName() string {
 	return "tabel_siswa_pelengkap"
 }
-func (TabelKenaikan) TableName() string {
+func (Kenaikan) TableName() string {
 	return "tabel_kenaikan"
 }

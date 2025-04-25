@@ -12,12 +12,12 @@ func main() {
 	cfg := config.LoadConfig()
 
 	// sendPtk(cfg, 2020, 2021)
-	// sendSiswa(cfg, 2020, 2021)
-	sendRombel(cfg, 2020, 2023)
+	// sendSiswa(cfg, 2020, 2024)
+	sendRombel(cfg, 2020, 2024)
 }
 
 func sendSekolah(cfg *config.AppConfig, tahunBerapa, keBerapa uint16) {
-	for year := 2022; year <= 2022; year++ {
+	for year := tahunBerapa; year <= keBerapa; year++ {
 		for semester := 1; semester <= 1; semester++ {
 			semesterID := fmt.Sprintf("%d%d", year, semester)
 
@@ -34,7 +34,7 @@ func sendSekolah(cfg *config.AppConfig, tahunBerapa, keBerapa uint16) {
 }
 
 func sendPtk(cfg *config.AppConfig, tahunBerapa, keBerapa uint16) {
-	for year := 2022; year <= 2022; year++ {
+	for year := tahunBerapa; year <= keBerapa; year++ {
 		// for semester := 1; semester <= 2; semester++ {
 		semesterID := fmt.Sprintf("%d", year)
 

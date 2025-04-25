@@ -2,98 +2,95 @@
 
     <div class="">
         <div class="card">
-            <div v-if="dataConnected">
-                <div class="w-full my-2 container">
-                    <div class=" ">
-                        <div class="mb-2">
-                            <Toolbar>
-                                <template #start>
-                                    <!-- <Button icon="pi pi-plus" severity="success" class="mr-2 text-lg" @click="openNew"
-                                        v-tooltip.bottom="'Tambah siswa'" /> -->
-                                    <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
-                                        :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2"
-                                        class="mr-2" v-tooltip.bottom="'Edit siswa'" />
-                                    <Button icon="pi pi-trash" severity="danger" class="mr-2 text-lg"
-                                        @click="confirmDeleteSelected" :disabled="!dataLulusan || !dataLulusan.length"
-                                        v-tooltip.bottom="'Hapus siswa'" />
-                                    <Button label="Lulus" severity="help" class="mr-2 text-sm"
-                                        @click="dialogStatus = true" :disabled="!dataLulusan || !dataLulusan.length"
-                                        v-tooltip.bottom="'Luluskan siswa'" />
-                                    <Button label="Naik" severity="success" class="mr-2 text-sm" @click="openNew"
-                                        :disabled="!dataLulusan || !dataLulusan.length"
-                                        v-tooltip.bottom="'Naikan siswa'" />
-                                </template>
-                                <template #end>
-                                    <Button label="Import" icon="pi pi-download" severity="warn"
-                                        @click="dialogImport = true" class="mr-2 text-sm"
-                                        v-tooltip.bottom="'Import siswa'" />
-                                    <Button label="Export" icon="pi pi-upload" severity="help"
-                                        @click="exportCSV($event)" class="mr-2 text-sm" />
-                                    <!-- <Button label="Proses" icon="pi pi-send" severity="info"
-                                            @click="exportCSV($event)" /> -->
-                                </template>
-
-                            </Toolbar>
-                        </div>
-
+            <div class="w-full my-2 container">
+                <div class=" ">
+                    <div class="mb-2">
                         <Toolbar>
                             <template #start>
-                                <div class="flex flex-wrap gap-2 items-center justify-between">
-                                    <div class="flex">
-                                        <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
-                                            optionLabel="label" placeholder="Tingkat" class="w-full md:w-56 mr-2" />
-                                        <Select v-model="selectedJurusan" :options="jurusanOptions" optionLabel="label"
-                                            placeholder="Rombel" class="mr-2" />
-                                    </div>
-                                </div>
+                                <!-- <Button icon="pi pi-plus" severity="success" class="mr-2 text-lg" @click="openNew"
+                                        v-tooltip.bottom="'Tambah siswa'" /> -->
+                                <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
+                                    :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2"
+                                    class="mr-2" v-tooltip.bottom="'Edit siswa'" />
+                                <Button icon="pi pi-trash" severity="danger" class="mr-2 text-lg"
+                                    @click="confirmDeleteSelected" :disabled="!dataLulusan || !dataLulusan.length"
+                                    v-tooltip.bottom="'Hapus siswa'" />
+                                <!-- <div v-show="selectedSemester.semester === 2">
+
+                                    <Button label="Lulus" severity="help" class="mr-2 text-sm"
+                                        @click="dialogStatus = true" :disabled="!isLulus"
+                                        v-tooltip.bottom="'Luluskan siswa'" />
+                                    <Button label="Naik" severity="success" class="mr-2 text-sm" @click="openNew"
+                                        :disabled="!isNaik" v-tooltip.bottom="'Naikan siswa'" />
+                                </div> -->
                             </template>
                             <template #end>
-                                <IconField>
-                                    <InputIcon>
-                                        <i class="pi pi-search" />
-                                    </InputIcon>
-                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
-                                </IconField>
+                                <Button label="Import" icon="pi pi-download" severity="warn"
+                                    @click="dialogImport = true" class="mr-2 text-sm"
+                                    v-tooltip.bottom="'Import siswa'" />
+                                <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
+                                    class="mr-2 text-sm" />
+                                <!-- <Button label="Proses" icon="pi pi-send" severity="info"
+                                            @click="exportCSV($event)" /> -->
                             </template>
+
                         </Toolbar>
                     </div>
 
+                    <Toolbar>
+                        <template #start>
+                            <div class="flex flex-wrap gap-2 items-center justify-between">
+                                <div class="flex">
+                                    <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
+                                        optionLabel="label" placeholder="Tingkat" class="w-full md:w-56 mr-2" />
+                                    <Select v-model="selectedJurusan" :options="jurusanOptions" optionLabel="label"
+                                        placeholder="Rombel" class="mr-2" />
+                                </div>
+                            </div>
+                        </template>
+                        <template #end>
+                            <IconField>
+                                <InputIcon>
+                                    <i class="pi pi-search" />
+                                </InputIcon>
+                                <InputText v-model="filters['global'].value" placeholder="Search..." />
+                            </IconField>
+                        </template>
+                    </Toolbar>
+                </div>
 
-                    <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa"
-                        scrollable scrollHeight="450px" dataKey="anggotaRombelId" :paginator="true" :rows="10"
-                        :filters="filters"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        :rowsPerPageOptions="[10, 20, 50]"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} siswa">
-                        <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                        <!-- <Column field="name" header="Foto">
+
+                <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa" scrollable
+                    scrollHeight="450px" dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    :rowsPerPageOptions="[10, 20, 50]"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} siswa">
+                    <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
+                    <!-- <Column field="name" header="Foto">
                             <template #body="slotProps">
                                 <Image
                                     :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
                                     :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
                             </template>
                         </Column> -->
-                        <Column field="nmSiswa" header="Nama" sortable></Column>
-                        <Column field="pesertaDidik.jenisKelamin" header="JK"></Column>
-                        <Column field="pesertaDidik.nisn" header="NISN"></Column>
-                        <Column field="pesertaDidik.nis" header="NIS" sortable></Column>
-                        <Column field="pesertaDidik.agama" header="Agama"></Column>
-                        <Column field="pesertaDidik.tempatLahir" header="Tpt Lahir"></Column>
-                        <Column field="pesertaDidik.tanggalLahir" header="Tgl Lahir">
-                            <template #body="slotProps">
-                                {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
-                            </template>
-                        </Column>
-                        <Column field="rombonganBelajar.tingkatPendidikanId" header="Tingkat"></Column>
+                    <Column field="nmSiswa" header="Nama" sortable></Column>
+                    <Column field="pesertaDidik.jenisKelamin" header="JK"></Column>
+                    <Column field="pesertaDidik.nisn" header="NISN"></Column>
+                    <Column field="pesertaDidik.nis" header="NIS" sortable></Column>
+                    <Column field="pesertaDidik.agama" header="Agama"></Column>
+                    <Column field="pesertaDidik.tempatLahir" header="Tpt Lahir"></Column>
+                    <Column field="pesertaDidik.tanggalLahir" header="Tgl Lahir">
+                        <template #body="slotProps">
+                            {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
+                        </template>
+                    </Column>
+                    <Column field="rombonganBelajar.tingkatPendidikanId" header="Tingkat"></Column>
 
-                        <Column field="rombonganBelajar.nmKelas" header="Rombel" sortable></Column>
-                    </DataTable>
+                    <Column field="rombonganBelajar.nmKelas" header="Rombel" sortable></Column>
+                </DataTable>
 
-                </div>
             </div>
-            <div v-else>
-                <EmptyData @profileFetched="handleProfileFetched" @fetchError="handleFetchError" />
-            </div>
+
         </div>
 
 
@@ -391,4 +388,8 @@ const jurusanOptions = computed(() => {
             value: item.rombonganBelajar.namaJurusanSp
         }));
 });
+
+// lulus
+const isLulus = ref(false)
+const isNaik = ref(false)
 </script>

@@ -652,16 +652,17 @@ const actions = {
   // ==================================
   async fetchProsesIjazah({ commit }, payload) {
     try {
-      const response = await api.get(`ss/proses-ijazah`, {
+      const response = await api.get(`ss/kenaikan`, {
         params: {
           schemaname: payload.schemaname,
           semester_id: payload.semester_id,
+          tipe_kenaikan: payload.tipe_kenaikan,
         },
       });
-      // console.log(response.data);
+      console.log(response.data);
       return response.data; // Mengembalikan data sekolah
     } catch (error) {
-      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
       console.error("Gagal mendaftarkan siswa baru:", error);
       return null;
     } finally {

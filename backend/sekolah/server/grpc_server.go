@@ -60,6 +60,11 @@ func RunGRPCServer() *grpc.Server {
 	// REGISTER PEMBELAJARAN SERVICE
 	pembelajaranService := services.NewPembelajaranServiceServer()
 	pb.RegisterPembelajaranServiceServer(grpcServer, pembelajaranService)
+
+	// REGISTER KENAIKAN SERVICE
+	kenaikanService := services.NewKenaikanServiceServer()
+	pb.RegisterKenaikanServiceServer(grpcServer, kenaikanService)
+
 	// REGISTER PEMBELAJARAN SERVICE
 	ijazahService := services.NewIjazahServiceServer()
 	pb.RegisterIjazahServiceServer(grpcServer, ijazahService)

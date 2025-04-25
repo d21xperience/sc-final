@@ -372,36 +372,49 @@ func (r *GenericRepository[T]) FindWithRelations(
 		Args  []interface{}
 	},
 	groupByColumns []string,
+	orderBy []string,
 ) ([]T, error) {
 	var results []T
 	tx := r.db.WithContext(ctx)
 
+	// Set schema ke schemaName
 	if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", schemaName)).Error; err != nil {
 		return nil, fmt.Errorf("failed to set schema: %w", err)
 	}
 
-	tx = tx.Distinct()
+	// Hapus tx.Distinct() → tidak digunakan
 
+	// Join relasi jika ada
 	for _, join := range joins {
 		tx = tx.Joins(join)
 	}
 
+	// Preload relasi jika ada
 	for _, preload := range preloads {
 		tx = tx.Preload(preload)
 	}
 
+	// GROUP BY jika ada
 	if len(groupByColumns) > 0 {
 		tx = tx.Group(strings.Join(groupByColumns, ", "))
 	}
 
+	// ORDER BY jika ada
+	if len(orderBy) > 0 {
+		tx = tx.Order(strings.Join(orderBy, ", "))
+	}
+
+	// Kondisi exact
 	if len(exactConditions) > 0 {
 		tx = tx.Where(exactConditions)
 	}
 
+	// Kondisi custom
 	for _, cond := range customConditions {
 		tx = tx.Where(cond.Query, cond.Args...)
 	}
 
+	// Eksekusi query
 	if err := tx.Find(&results).Error; err != nil {
 		return nil, err
 	}

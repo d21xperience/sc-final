@@ -121,7 +121,7 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 		}{
 			{"semester_id <= ?", []interface{}{item.SemesterId}},
 			// {"created_at BETWEEN ? AND ?", []interface{}{startDate, endDate}},
-		}, nil)
+		}, nil, nil)
 		if err != nil {
 			return nil
 		}

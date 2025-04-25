@@ -80,12 +80,12 @@
                         :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
                 </template>
             </Column> -->
-            <Column field="pesertaDidik.nmSiswa" header="Nama" sortable></Column>
-            <Column field="pesertaDidik.jenisKelamin" header="JK"></Column>
-            <Column field="pesertaDidik.nis" header="NIS"></Column>
-            <Column field="pesertaDidik.nisn" header="NISN"></Column>
-            <Column field="rombonganBelajar.nmKelas" header="Rombel"></Column>
-            <Column field="pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
+            <Column field="anggotaKelas.nmSiswa" header="Nama" sortable></Column>
+            <!-- <Column field="anggotaKelas.jenisKelamin" header="JK"></Column> -->
+            <!-- <Column field="pesertaDidik.nis" header="NIS"></Column> -->
+            <!-- <Column field="pesertaDidik.nisn" header="NISN"></Column> -->
+            <Column field="anggotaKelas.nmKelas" header="Rombel"></Column>
+            <!-- <Column field="pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
             <Column field="" header="Tgl. Lahir">
                 <template #body="slotProps">
                     {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
@@ -102,7 +102,7 @@
             </Column>
             <Column field="jk" header="No.Ijazah">
 
-            </Column>
+            </Column> -->
             <!-- Jika SMK/MAK Program Keahlian & Kompetensi Keahlian akan muncul-->
             <!-- <div v-if="['smk', 'mak'].includes(bentukPendidikan)">
                 <Column field="jk" header="Prog.Keahlian">
@@ -191,15 +191,16 @@ watch(selectedTahunAjaran, async () => {
     try {
         let payload = {
             schemaname: schemaname.value,
-            semester_id: selectedTahunAjaran.value.value
+            semester_id: selectedTahunAjaran.value.value,
+            tipe_kenaikan: 12
         }
         const results = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
         if (results) {
             // console.log(results.anggotaKelas)
-            siswa.value = results.anggotaKelas
+            siswa.value = results.kenaikan
         }
     } catch (error) {
-
+        console.log(error)
     }
 })
 

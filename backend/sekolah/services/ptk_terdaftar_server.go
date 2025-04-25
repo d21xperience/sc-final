@@ -156,11 +156,21 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 
 	conditions := map[string]interface{}{
 		"tabel_ptk_terdaftar.tahun_ajaran_id": req.GetTahunAjaranId(),
-		"tabel_ptk.jenis_ptk_id":              4,
 	}
 	orderBy := []string{"nama ASC"}
+	exactConditions := []struct {
+		Query string
+		Args  []interface{}
+	}{
+		{"jenis_ptk_id != ?", []any{9}},
+		{"jenis_ptk_id != ?", []any{11}},
+		{"jenis_ptk_id != ?", []any{42}},
+		{"jenis_ptk_id != ?", []any{44}},
+		// {"created_at BETWEEN ? AND ?", []interface{}{startDate, endDate}},
+	}
 	// groupByColumns := []string{"tabel_ptk_terdaftar.ptk_terdaftar_id"} // Hindari duplikasi
-	PTKTerdaftarModel, err := s.repo.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
+	// PTKTerdaftarModel, err := s.repo.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
+	PTKTerdaftarModel, err := s.repo.FindWithRelations(ctx, schemaName, joins, preloads, conditions, exactConditions, nil, orderBy)
 	if err != nil {
 		return nil, err
 	}

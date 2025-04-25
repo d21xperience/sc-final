@@ -69,6 +69,10 @@ func RunHTTPGateway(ctx context.Context, mux *runtime.ServeMux, grpcServerEndpoi
 	if err != nil {
 		log.Fatalf("Failed to register gRPC Pembelajaran Service Gateway: %v", err)
 	}
+	err = pb.RegisterKenaikanServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC Kenaikan Service Gateway: %v", err)
+	}
 	err = pb.RegisterIjazahServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 	if err != nil {
 		log.Fatalf("Failed to register gRPC Ijazah Service Gateway: %v", err)
