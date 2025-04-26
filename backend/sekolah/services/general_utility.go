@@ -299,7 +299,7 @@ func templateNilaiAkhir(ctx context.Context, db *gorm.DB, f *excelize.File, para
 		"semester_id": param.semesterId,
 	}
 	groupByColumns := []string{"tabel_anggotakelas.anggota_rombel_id"} // Hindari duplikasi
-	anggotaKelasModel, err := repoAnggotaKelas.FindWithPreloadAndJoins(ctx, param.schemaname, joins, preloads, conditions, groupByColumns, nil)
+	anggotaKelasModel, err := repoAnggotaKelas.FindWithPreloadAndJoins(ctx, param.schemaname, joins, preloads, conditions, groupByColumns, nil, false)
 	if err != nil {
 		return err
 	}
@@ -326,7 +326,7 @@ func templateIjazah(ctx context.Context, db *gorm.DB, f *excelize.File, param Pa
 		"semester_id": param.semesterId,
 	}
 	groupByColumns := []string{"tabel_anggotakelas.anggota_rombel_id"} // Hindari duplikasi
-	anggotaKelasModel, err := repoAnggotaKelas.FindWithPreloadAndJoins(ctx, param.schemaname, joins, preloads, conditions, groupByColumns, nil)
+	anggotaKelasModel, err := repoAnggotaKelas.FindWithPreloadAndJoins(ctx, param.schemaname, joins, preloads, conditions, groupByColumns, nil, false)
 	if err != nil {
 		return err
 	}

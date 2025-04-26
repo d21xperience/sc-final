@@ -26,6 +26,7 @@ type RombonganBelajar struct {
 	// Foreign Key ke Tingkat Pendidikan
 	TingkatPendidikan TingkatPendidikan `gorm:"foreignKey:TingkatPendidikanId;references:TingkatPendidikanID"`
 	Pembelajaran      []Pembelajaran
+	AnggotaKelas      []RombelAnggota
 }
 
 type RombelAnggota struct {

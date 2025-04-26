@@ -41,10 +41,11 @@
                         <template #start>
                             <div class="flex flex-wrap gap-2 items-center justify-between">
                                 <div class="flex">
-                                    <Select v-model="selectedTingkat" :options="tingkatPendidikanOptions"
-                                        optionLabel="label" placeholder="Tingkat" class="w-full md:w-56 mr-2" />
-                                    <Select v-model="selectedJurusan" :options="jurusanOptions" optionLabel="label"
-                                        placeholder="Rombel" class="mr-2" />
+                                    <Select v-model="filters['tingkatPendidikanId'].value"
+                                        :options="tingkatPendidikanOptions" optionLabel="nama" optionValue="kode"
+                                        placeholder="Tingkat" class="w-full md:w-56 mr-2" checkmark show-clear />
+                                    <!-- <Select v-model="selectedJurusan" :options="jurusanOptions" optionLabel="label"
+                                        placeholder="Rombel" class="mr-2" /> -->
                                 </div>
                             </div>
                         </template>
@@ -60,33 +61,30 @@
                 </div>
 
 
-                <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa" scrollable
-                    scrollHeight="450px" dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
+                <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows :value="siswa" scrollable
+                    scrollHeight="450px" dataKey="pesertaDidikId" :paginator="true" :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[10, 20, 50]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} siswa">
+                    <template #empty>
+                        <p class="text-xl flex justify-center font-bold text-red-500">Nilai tidak ditemukan.</p>
+                    </template>
+                    
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                    <!-- <Column field="name" header="Foto">
-                            <template #body="slotProps">
-                                <Image
-                                    :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                                    :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
-                            </template>
-                        </Column> -->
                     <Column field="nmSiswa" header="Nama" sortable></Column>
-                    <Column field="pesertaDidik.jenisKelamin" header="JK"></Column>
-                    <Column field="pesertaDidik.nisn" header="NISN"></Column>
-                    <Column field="pesertaDidik.nis" header="NIS" sortable></Column>
-                    <Column field="pesertaDidik.agama" header="Agama"></Column>
-                    <Column field="pesertaDidik.tempatLahir" header="Tpt Lahir"></Column>
-                    <Column field="pesertaDidik.tanggalLahir" header="Tgl Lahir">
+                    <Column field="jenisKelamin" header="JK"></Column>
+                    <Column field="nisn" header="NISN"></Column>
+                    <Column field="nis" header="NIS" sortable></Column>
+                    <Column field="agama" header="Agama"></Column>
+                    <Column field="tempatLahir" header="Tpt Lahir"></Column>
+                    <Column field="tanggalLahir" header="Tgl Lahir">
                         <template #body="slotProps">
-                            {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
+                            {{ formatterDateID(slotProps.data.tanggalLahir) }}
                         </template>
                     </Column>
-                    <Column field="rombonganBelajar.tingkatPendidikanId" header="Tingkat"></Column>
+                    <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
+                    <Column field="nmKelas" header="Rombel" sortable></Column>
 
-                    <Column field="rombonganBelajar.nmKelas" header="Rombel" sortable></Column>
                 </DataTable>
 
             </div>
@@ -206,6 +204,7 @@ onMounted(async () => {
     if (!siswa.value) {
         siswa.value = fetchSiswaAktif()
     }
+    tingkatPendidikanOptions.value = await fetchTingkat()
     // console.log(jurusanOptions.value)
 });
 import DialogLoading from "@/components/DialogLoading.vue";
@@ -223,6 +222,7 @@ const product = ref({});
 const dataLulusan = ref();
 const filters = ref({
     'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'tingkatPendidikanId': { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 const submitted = ref(false);
 
@@ -297,17 +297,6 @@ const deletedataLulusan = () => {
 
 
 import Select from 'primevue/select';
-import EmptyData from '@/components/EmptyData.vue';
-// Fungsi yang menangkap event emit dari child
-const handleProfileFetched = (data) => {
-    dataConnected.value = data;
-    console.log("Data sekolah diterima di parent:", data);
-};
-
-const handleFetchError = (error) => {
-    dataConnected.value = data;
-    console.error("Error diterima di parent:", error);
-};
 
 // status siswa naik atau lulus
 const dialogStatus = ref(false)
@@ -323,7 +312,7 @@ const siswa = ref([]);
 import { useSekolahService } from '@/composables/useSekolahService'
 const selectedSemester = computed(() => store.getters["sekolahService/getSelectedSemester"])
 const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
-const { fetchSiswaAktif } = useSekolahService(schemaname, selectedSemester)
+const { fetchSiswaAktif, fetchTingkat } = useSekolahService(schemaname, selectedSemester)
 // ================================
 watch(selectedSemester, async (e, b) => {
     siswa.value = await fetchSiswaAktif()
@@ -357,37 +346,25 @@ const cancelImport = () => {
 
 import { useUtils } from '@/composables/useUtils'
 const { formatterDateID } = useUtils()
-const tingkatPendidikanOptions = computed(() => {
-    const unique = new Map()
-    siswa.value.forEach(item => {
-        // console.log(item)
-        const { tingkatPendidikanId, tingkatPendidikan } = item.rombonganBelajar
-        if (tingkatPendidikan && !unique.has(tingkatPendidikanId)) {
-            unique.set(tingkatPendidikanId, {
-                label: tingkatPendidikan.nama,
-                value: tingkatPendidikanId
-            })
-        }
-    })
-    return Array.from(unique.values())
-})
+
+const tingkatPendidikanOptions = ref([]) // return Array.from(unique.values())
 const selectedTingkat = ref();
 const selectedJurusan = ref();
-const jurusanOptions = computed(() => {
-    const unique = new Set();
-    return siswa.value
-        .filter(item => {
-            if (!unique.has(item.rombonganBelajar.namaJurusanSp)) {
-                unique.add(item.rombonganBelajar.namaJurusanSp);
-                return true;
-            }
-            return false;
-        })
-        .map(item => ({
-            label: item.rombonganBelajar.namaJurusanSp,
-            value: item.rombonganBelajar.namaJurusanSp
-        }));
-});
+// const jurusanOptions = computed(() => {
+//     const unique = new Set();
+//     return siswa.value
+//         .filter(item => {
+//             if (!unique.has(item.rombonganBelajar.namaJurusanSp)) {
+//                 unique.add(item.rombonganBelajar.namaJurusanSp);
+//                 return true;
+//             }
+//             return false;
+//         })
+//         .map(item => ({
+//             label: item.rombonganBelajar.namaJurusanSp,
+//             value: item.rombonganBelajar.namaJurusanSp
+//         }));
+// });
 
 // lulus
 const isLulus = ref(false)

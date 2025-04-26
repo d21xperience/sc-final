@@ -162,11 +162,11 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 		fmt.Sprintf("JOIN ref.kurikulum ON %s.tabel_kelas.kurikulum_id = ref.kurikulum.kurikulum_id", schemaName),
 		fmt.Sprintf("JOIN ref.tingkat_pendidikan ON %s.tabel_kelas.tingkat_pendidikan_id = ref.tingkat_pendidikan.tingkat_pendidikan_id", schemaName),
 	}
-	preloads := []string{"PTK", "Jurusan", "Kurikulum", "TingkatPendidikan", "Pembelajaran", "Pembelajaran.PTKTerdaftar", "Pembelajaran.PTKTerdaftar.PTK"}
+	preloads := []string{"PTK", "Jurusan", "Kurikulum", "TingkatPendidikan", "AnggotaKelas", "Pembelajaran", "Pembelajaran.PTKTerdaftar", "Pembelajaran.PTKTerdaftar.PTK"}
 
 	groupBy := []string{"tabel_kelas.rombongan_belajar_id"} // Hindari duplikasi
 	orderBy := []string{"tabel_kelas.nm_kelas"}             // Hindari duplikasi
-	rombelModel, err = s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupBy, orderBy)
+	rombelModel, err = s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupBy, orderBy, false)
 	if err != nil {
 		return nil, err
 	}
@@ -188,6 +188,13 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 			NamaJurusanSp:       kelas.NamaJurusanSp,
 			// JurusanSpId:         jurusanSPId.(*string),
 			KurikulumId: kelas.KurikulumId,
+			AnggotaKelas: utils.ConvertPBToModels(utils.SliceToPointer(kelas.AnggotaKelas), func(item *models.RombelAnggota) *pb.AnggotaKelas {
+				return &pb.AnggotaKelas{
+					AnggotaRombelId: item.AnggotaRombelId.String(),
+					PesertaDidikId:  item.PesertaDidikId.String(),
+					SemesterId:      item.SemesterId,
+				}
+			}),
 			Ptk: &pb.PTK{
 				PtkId:             kelas.PTK.PtkID.String(),
 				Nama:              kelas.PTK.Nama,

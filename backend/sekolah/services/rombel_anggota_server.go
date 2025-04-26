@@ -178,72 +178,31 @@ func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetA
 	preloads := []string{"PesertaDidik", "RombonganBelajar", "RombonganBelajar.PTK", "NilaiAkhir", "NilaiAkhir.MataPelajaran"}
 
 	orderBy := []string{"tabel_kelas.nm_kelas ASC", "tabel_siswa.nm_siswa ASC"} // Hindari duplikasi
-	anggotaRombelModel, err := s.repo.FindWithPreloadAndJoinsOrigin(ctx, schemaName, joins, preloads, conditions, orderBy)
+	anggotaRombelModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, nil, orderBy, false)
 	if err != nil {
 		return nil, err
 	}
 
-	banyakAnggotaKelasList := utils.ConvertModelsToPB(anggotaRombelModel, func(anggota models.RombelAnggota) *pb.AnggotaKelas {
+	banyakAnggotaKelasList := utils.ConvertModelsToPB(anggotaRombelModel, func(anggota models.RombelAnggota) *pb.AnggotaKelas1 {
 
-		return &pb.AnggotaKelas{
-			RombonganBelajarId: anggota.RombonganBelajarId.String(),
-			AnggotaRombelId:    anggota.AnggotaRombelId.String(),
-			PesertaDidikId:     anggota.PesertaDidikId.String(),
-			SemesterId:         anggota.SemesterId,
-			NmSiswa:            anggota.PesertaDidik.NmSiswa,
-			PesertaDidik: &pb.Siswa{
-				PesertaDidikId: anggota.PesertaDidikId.String(),
-				Nis:            anggota.PesertaDidik.Nis,
-				Nisn:           anggota.PesertaDidik.Nisn,
-				NmSiswa:        anggota.PesertaDidik.NmSiswa,
-				TempatLahir:    anggota.PesertaDidik.TempatLahir,
-				TanggalLahir:   anggota.PesertaDidik.TanggalLahir.Format("2006-01-02"),
-				JenisKelamin:   anggota.PesertaDidik.JenisKelamin,
-				Agama:          anggota.PesertaDidik.Agama,
-				AlamatSiswa:    utils.SafeString(anggota.PesertaDidik.AlamatSiswa),
-				TeleponSiswa:   anggota.PesertaDidik.TeleponSiswa,
-				// DiterimaTanggal: utils.SafeString(anggota.PesertaDidik.DiterimaTanggal),
-				NmAyah:        anggota.PesertaDidik.NmAyah,
-				NmIbu:         anggota.PesertaDidik.NmIbu,
-				PekerjaanAyah: anggota.PesertaDidik.PekerjaanAyah,
-				PekerjaanIbu:  anggota.PesertaDidik.PekerjaanIbu,
-			},
-			WaliKelas: anggota.RombonganBelajar.PTK.Nama,
-			PtkId:     anggota.RombonganBelajar.PtkID.String(),
-			NmKelas:   anggota.RombonganBelajar.NmKelas,
-
-			RombonganBelajar: &pb.Kelas{
-				NmKelas:             anggota.RombonganBelajar.NmKelas,
-				PtkId:               anggota.RombonganBelajar.PtkID.String(),
-				TingkatPendidikanId: anggota.RombonganBelajar.TingkatPendidikanId,
-				JurusanId:           anggota.RombonganBelajar.JurusanId,
-				NamaJurusanSp:       anggota.RombonganBelajar.NamaJurusanSp,
-				JenisRombel:         anggota.RombonganBelajar.JenisRombel,
-				KurikulumId:         anggota.RombonganBelajar.KurikulumId,
-				Ptk: &pb.PTK{
-					Nama:              anggota.RombonganBelajar.PTK.Nama,
-					Nip:               utils.SafeString(anggota.RombonganBelajar.PTK.NIP),
-					JenisPtkId:        anggota.RombonganBelajar.PTK.JenisPtkID,
-					JenisKelamin:      anggota.RombonganBelajar.PTK.JenisKelamin,
-					TempatLahir:       anggota.RombonganBelajar.PTK.TempatLahir,
-					StatusKeaktifanId: anggota.RombonganBelajar.PTK.StatusKeaktifanID,
-					TanggalLahir:      anggota.RombonganBelajar.PTK.TanggalLahir.Format("2006-01-02"),
-					Nuptk:             utils.SafeString(anggota.RombonganBelajar.PTK.NUPTK),
-					AlamatJalan:       anggota.RombonganBelajar.PTK.AlamatJalan,
-				},
-			},
-			Nilai: utils.ConvertModelsToPB(anggota.NilaiAkhir, func(item models.NilaiAkhir) *pb.NilaiAkhir {
-				return &pb.NilaiAkhir{
-					IdNilaiAkhir:    item.IdNilaiAkhir.String(),
-					NilaiPeng:       utils.PointerToUint32(item.NilaiPeng),
-					MataPelajaranId: utils.PointerToUint32(item.MataPelajaranId),
-					SemesterId:      item.SemesterId,
-					Semester:        utils.PointerToUint32(item.Semester),
-					MataPelajaran: &pb.Mapel{
-						Nama: item.MataPelajaran.Nama,
-					},
-				}
-			}),
+		return &pb.AnggotaKelas1{
+			// SemesterId:         anggota.SemesterId,
+			RombonganBelajarId:  anggota.RombonganBelajarId.String(),
+			NmKelas:             anggota.RombonganBelajar.NmKelas,
+			AnggotaRombelId:     anggota.AnggotaRombelId.String(),
+			TingkatPendidikanId: anggota.RombonganBelajar.TingkatPendidikanId,
+			WaliKelas:           anggota.RombonganBelajar.PTK.Nama,
+			PesertaDidikId:      anggota.PesertaDidikId.String(),
+			NmSiswa:             anggota.PesertaDidik.NmSiswa,
+			Nis:                 anggota.PesertaDidik.Nis,
+			Nisn:                anggota.PesertaDidik.Nisn,
+			Nik:                 utils.SafeString(anggota.PesertaDidik.Nik),
+			TempatLahir:         anggota.PesertaDidik.TempatLahir,
+			TanggalLahir:        anggota.PesertaDidik.TanggalLahir.Format("2006-01-02"),
+			JenisKelamin:        anggota.PesertaDidik.JenisKelamin,
+			NmIbu:               anggota.PesertaDidik.NmIbu,
+			Agama:               anggota.PesertaDidik.Agama,
+			// PtkId:              anggota.RombonganBelajar.PtkID.String(),
 		}
 	})
 	return &pb.GetAnggotaKelasResponse{

@@ -13,15 +13,6 @@ import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
 const toast = useToast();
 
-
-
-import Textarea from 'primevue/textarea';
-
-import FileUpload from 'primevue/fileupload';
-
-import InputMask from 'primevue/inputmask';
-
-import Card from 'primevue/card';
 import router from '@/router';
 
 

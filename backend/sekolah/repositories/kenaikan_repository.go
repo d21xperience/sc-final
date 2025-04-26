@@ -7,5 +7,5 @@ import (
 )
 
 func NewKenaikanRepository(db *gorm.DB) *GenericRepository[models.Kenaikan] {
-	return NewGenericRepository[models.Kenaikan](db, "tabel_Kenaikan")
+	return NewGenericRepository[models.Kenaikan](db, "tabel_kenaikan")
 }

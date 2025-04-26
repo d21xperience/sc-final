@@ -295,37 +295,42 @@ func (r *GenericRepository[T]) FindWithPreloadAndJoins(
 	conditions map[string]interface{},
 	groupByColumns []string,
 	orderBy []string,
+	useDistinct bool, // NEW
 ) ([]T, error) {
 	var results []T
 	tx := r.db.WithContext(ctx)
 
-	// Set Schema (Multi-Tenant)
+	// Set Schema
 	if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", schemaName)).Error; err != nil {
 		return nil, fmt.Errorf("failed to set schema: %w", err)
 	}
 
-	// Tambahkan DISTINCT untuk menghindari duplikasi
-	tx = tx.Distinct()
+	// Optional DISTINCT
+	if useDistinct {
+		tx = tx.Distinct()
+	}
 
-	// Tambahkan Joins jika ada
+	// JOINs
 	for _, join := range joins {
 		tx = tx.Joins(join)
 	}
 
-	// Tambahkan Preload untuk relasi One-To-Many
+	// Preloads
 	for _, preload := range preloads {
 		tx = tx.Preload(preload)
 	}
 
-	// Tambahkan GROUP BY jika diperlukan
+	// GROUP BY
 	if len(groupByColumns) > 0 {
 		tx = tx.Group(strings.Join(groupByColumns, ", "))
 	}
-	// Tambahkan ORDER BY jika ada
+
+	// ORDER BY
 	if len(orderBy) > 0 {
-		tx = tx.Order(strings.Join(orderBy, ", ")) // Gabungkan semua kolom ORDER BY
+		tx = tx.Order(strings.Join(orderBy, ", "))
 	}
-	// Eksekusi Query dengan kondisi
+
+	// WHERE
 	if err := tx.Where(conditions).Find(&results).Error; err != nil {
 		return nil, err
 	}

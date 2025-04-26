@@ -408,9 +408,6 @@ function formatNilaiAkhir(nilaiAkhir, semesterAktifId, tingkatPendidikanId) {
                     <Column field="nmSiswa" header="Name"></Column>
                     <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
                     <Column field="nmKelas" header="Nama Kelas"></Column>
-                    <!-- <Column field="jurusan.namaJurusan" header="Jurusan" sortable></Column> -->
-                    <!-- <Column field="waliKelas" header="Wali Kelas"></Column> -->
-                    <!-- <Column field="ptk.nama" header="Jml.Mapel"></Column> -->
                     <Column field="" header="Edit">
                         <template #body="{ data }">
                             <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editMapel(data)" />

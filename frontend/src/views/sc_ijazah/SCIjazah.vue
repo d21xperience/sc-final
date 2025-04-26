@@ -81,12 +81,12 @@
                 </template>
             </Column> -->
             <Column field="anggotaKelas.nmSiswa" header="Nama" sortable></Column>
-            <!-- <Column field="anggotaKelas.jenisKelamin" header="JK"></Column> -->
-            <!-- <Column field="pesertaDidik.nis" header="NIS"></Column> -->
-            <!-- <Column field="pesertaDidik.nisn" header="NISN"></Column> -->
+            <Column field="anggotaKelas.pesertaDidik.jenisKelamin" header="JK"></Column>
+            <Column field="anggotaKelas.pesertaDidik.nis" header="NIS"></Column>
+            <Column field="anggotaKelas.pesertaDidik.nisn" header="NISN"></Column>
             <Column field="anggotaKelas.nmKelas" header="Rombel"></Column>
-            <!-- <Column field="pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
-            <Column field="" header="Tgl. Lahir">
+            <Column field="anggotaKelas.pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
+            <!-- <Column field="" header="Tgl. Lahir">
                 <template #body="slotProps">
                     {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
                 </template>
@@ -100,9 +100,9 @@
             </Column>
             <Column field="jk" header="Tgl. Terbit">
             </Column>
-            <Column field="jk" header="No.Ijazah">
+            <Column field="jk" header="No.Ijazah"> 
 
-            </Column> -->
+            </Column>-->
             <!-- Jika SMK/MAK Program Keahlian & Kompetensi Keahlian akan muncul-->
             <!-- <div v-if="['smk', 'mak'].includes(bentukPendidikan)">
                 <Column field="jk" header="Prog.Keahlian">

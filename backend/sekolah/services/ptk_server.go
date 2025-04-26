@@ -101,7 +101,7 @@ func (s *PTKServiceServer) GetPTK(ctx context.Context, req *pb.GetPTKRequest) (*
 		conditions["ptk_id"] = ptkId
 	}
 	// log.Print(conditions)
-	anggotaPTKModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, nil, nil, conditions, nil, []string{"tabel_ptk.nama"})
+	anggotaPTKModel, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, nil, nil, conditions, nil, []string{"tabel_ptk.nama"}, false)
 	if err != nil {
 		return nil, err
 	}

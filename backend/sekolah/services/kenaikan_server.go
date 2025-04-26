@@ -34,42 +34,43 @@ func (s *KenaikanServiceServer) CreateKenaikan(ctx context.Context, req *pb.Crea
 	// Debugging: Cek nilai request yang diterima
 	// log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"Schemaname", "Kenaikan"}
+	requiredFields := []string{"Schemaname", "AnggotaKelas"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
 	schemaName := req.GetSchemaname()
-	Kenaikan := req.GetKenaikan()
-
-	KenaikanModel := utils.ConvertPBToModels(Kenaikan, func(item *pb.Kenaikan) *models.Kenaikan {
+	anggotaKelas := req.GetAnggotaKelas()
+	// anggotaKelas := s.repo.FindAll()
+	KenaikanModel := utils.ConvertPBToModels(anggotaKelas, func(item *pb.AnggotaKelas) *models.Kenaikan {
 		return &models.Kenaikan{
 			KdKenaikan:      uuid.New(),
 			SemesterId:      item.SemesterId,
 			AnggotaRombelId: utils.StringToUUID(item.AnggotaRombelId),
 			PesertaDidikId:  utils.StringToUUID(item.PesertaDidikId),
-			Kenaikan:        item.Kenaikan,
-			Tingkat:         item.Tingkat,
+			Kenaikan:        req.Kenaikan,
+			Tingkat:         req.Tingkat,
 		}
 	})
 	// simpan ke tabel_kenaikan
-	conflicts1, err := s.repo.SaveManyWithConflictCheck(ctx, schemaName, KenaikanModel, "kdKenaikan", "peserta_didik_id", 100, nil)
+	err = s.repo.SaveMany(ctx, schemaName, KenaikanModel, 100)
+	// conflicts1, err := s.repo.SaveManyWithConflictCheck(ctx, schemaName, KenaikanModel, "kdKenaikan", "peserta_didik_id", 100, []string{"peserta_didik_id"})
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "insert failed: %v", err)
 	}
 
-	conflictProto2 := repositories.ConvertConflictsToProto(conflicts1, "kdKenaikan", "PesertaDidikId")
+	// conflictProto2 := repositories.ConvertConflictsToProto(conflicts1, "kdKenaikan", "PesertaDidikId")
 	// conflictProto2 = append(conflictProto2, conflictProto...)
-	fmt.Print(conflictProto2)
+	// fmt.Print(conflictProto2)
 	return &pb.CreateKenaikanResponse{
 		Message: "Kenaikan berhasil ditambahkan",
 		Status:  true,
-		Conflicts: &pb.ConflictResponse{
-			Message:       "Sebagian data berhasil disimpan",
-			Conflicts:     conflictProto2,
-			TotalConflict: int32(len(conflictProto2)),
-		},
+		// Conflicts: &pb.ConflictResponse{
+		// 	Message:       "Sebagian data berhasil disimpan",
+		// 	Conflicts:     conflictProto2,
+		// 	TotalConflict: int32(len(conflictProto2)),
+		// },
 	}, nil
 }
 

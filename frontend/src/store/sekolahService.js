@@ -687,6 +687,20 @@ const actions = {
       // commit("SET_LOADING", false);
     }
   },
+  async createKenaikan({ commit }, payload) {
+    try {
+      const response = await api.post(`ss/kenaikan/create`, payload);
+      // commit("SET_TABELNILAIAKHIR", response.data?.nilaiSiswa);
+
+      console.log(response.data);
+    } catch (error) {
+      // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal nilai siswa:", error);
+      return null;
+    } finally {
+      // commit("SET_LOADING", false);
+    }
+  },
 };
 
 const getters = {

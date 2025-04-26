@@ -152,6 +152,21 @@ export function useSekolahService(schemaname, selectedSemester) {
     //     siswa.value.push(item)
     // });
   };
+
+  const fetchTingkat = async () => {
+    // const res = await store.getters["sekolahService/getRefTingkat"]
+    const payload = {
+      jenjang_pendidikan_id: await store.getters["sekolahService/getSekolah"]
+        ?.jenjangPendidikanId, //sekolah.value?.jenjangPendidikanId
+    };
+    const response = await store.dispatch(
+      "sekolahService/fetchTingkatPendidikan",
+      payload
+    );
+    // console.log(response);
+
+    return response;
+  };
   return {
     fetchGuru,
     guruList,
@@ -163,5 +178,6 @@ export function useSekolahService(schemaname, selectedSemester) {
     fetchSemester,
     fetchSiswaAktif,
     fetchNilaiSiswa,
+    fetchTingkat,
   };
 }

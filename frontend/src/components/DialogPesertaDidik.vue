@@ -149,12 +149,6 @@ import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-import Rating from 'primevue/rating';
-import Tag from 'primevue/tag';
-import Textarea from 'primevue/textarea';
-import Select from 'primevue/select';
-import RadioButton from 'primevue/radiobutton';
-import InputNumber from 'primevue/inputnumber';
 
 
 
