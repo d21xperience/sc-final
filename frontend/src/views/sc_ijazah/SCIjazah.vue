@@ -9,7 +9,7 @@
                     <h3 class="text-slate-500 md:text-base text-sm">Tahun Lulus</h3>
                     <div>
                         <Select v-model="selectedTahunAjaran" :options="tahunAjaranOptions" optionLabel="label"
-                            placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" />
+                            optionValue="value" placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" />
 
                     </div>
                 </div>
@@ -80,12 +80,16 @@
                         :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
                 </template>
             </Column> -->
-            <Column field="anggotaKelas.nmSiswa" header="Nama" sortable></Column>
-            <Column field="anggotaKelas.pesertaDidik.jenisKelamin" header="JK"></Column>
+            <Column field="anggotaKelas.nmKelas" header="Kelas"></Column>
             <Column field="anggotaKelas.pesertaDidik.nis" header="NIS"></Column>
             <Column field="anggotaKelas.pesertaDidik.nisn" header="NISN"></Column>
-            <Column field="anggotaKelas.nmKelas" header="Rombel"></Column>
+            <Column field="anggotaKelas.nmSiswa" header="Nama" sortable></Column>
+            <Column field="anggotaKelas.pesertaDidik.jenisKelamin" header="JK"></Column>
             <Column field="anggotaKelas.pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
+            <Column field="anggotaKelas.pesertaDidik.nmAyah" header="Nama Wali"></Column>
+            <Column field="" header="Status"></Column>
+            <Column field="" header="No. Ijazah"></Column>
+            <Column field="" header="File Ijazah"></Column>
             <!-- <Column field="" header="Tgl. Lahir">
                 <template #body="slotProps">
                     {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
@@ -179,9 +183,13 @@ const fetchSemester = async () => {
         }
         tahunAjaranOptions.value = getTahunAjaran(semester.value)
         // Ambil tahun ajaran terbaru berdasarkan tahun terbesar
-        selectedTahunAjaran.value = tahunAjaranOptions.value.reduce((latest, current) =>
-            current.tahunAjaranId > latest.tahunAjaranId ? current : latest
-        );
+        selectedTahunAjaran.value = `${store.getters["sekolahService/getSelectedSemester"]?.tahunAjaranId}2`
+        // console.log(selectedTahunAjaran.value)
+        if (!selectedTahunAjaran) {
+            selectedTahunAjaran.value = tahunAjaranOptions.value.reduce((latest, current) =>
+                current.tahunAjaranId > latest.tahunAjaranId ? current : latest
+            );
+        }
     } catch (error) {
         console.log(error)
     }
@@ -191,14 +199,16 @@ watch(selectedTahunAjaran, async () => {
     try {
         let payload = {
             schemaname: schemaname.value,
-            semester_id: selectedTahunAjaran.value.value,
-            tipe_kenaikan: 12
+            semester_id: selectedTahunAjaran.value,
+            tipe_kenaikan: 14
         }
         const results = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
         if (results) {
             // console.log(results.anggotaKelas)
             siswa.value = results.kenaikan
         }
+        // store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedTahunAjaran.value)
+
     } catch (error) {
         console.log(error)
     }
@@ -230,11 +240,11 @@ const transcript = ref({
 });
 const contract = null;
 
-watch(selectedSiswa, (newVal) => {
-    if (newVal.length === 1) {
-        degreeData.value = { ...newVal[0].pesertaDidik }; // Salin object pertama
-    }
-});
+// watch(selectedSiswa, (newVal) => {
+//     if (newVal.length === 1) {
+//         degreeData.value = { ...newVal[0].pesertaDidik }; // Salin object pertama
+//     }
+// });
 
 
 

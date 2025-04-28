@@ -11,6 +11,16 @@ const api = axios.create({
 });
 
 const state = {
+  // tabelKelas: JSON.parse(localStorage.getItem("tabelKelas")) || null,
+  tabelKelas: (() => {
+    try {
+      const data = localStorage.getItem("tabelKelas");
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      console.error("Gagal parse tabelKelas dari localStorage", e);
+      return [];
+    }
+  })(),
   loading: false,
   error: null,
   tabelTenant: JSON.parse(localStorage.getItem("tabelTenant")) || null,
@@ -28,7 +38,7 @@ const state = {
   tabelAnggotaKelas:
     JSON.parse(localStorage.getItem("tabelAnggotaKelas")) || [],
   tabelMapel: JSON.parse(localStorage.getItem("tabelMapel")) || null,
-  tabelKelas: JSON.parse(localStorage.getItem("tabelKelas")) || null,
+
   tabelNilaiakhir: JSON.parse(localStorage.getItem("tabelNilaiakhir")) || null,
 };
 
@@ -134,8 +144,12 @@ const actions = {
           kelas_id: payload.kelas_id,
         },
       });
-      commit("SET_TABELKELAS", response.data.kelas);
-      return response.data.kelas; // Mengembalikan data sekolah
+      const data = {
+        semesterId: payload.semester_id,
+        kelas: response.data.kelas,
+      };
+      commit("SET_TABELKELAS", data.kelas);
+      return data; // Mengembalikan data sekolah
     } catch (error) {
       console.error("Gagal mengambil data rombel:", error);
       return null;
@@ -704,6 +718,9 @@ const actions = {
 };
 
 const getters = {
+  getKelas: (state) => (semesterId) => {
+    return state.tabelKelas.filter((kelas) => kelas.semesterId === semesterId);
+  },
   isLoading: (state) => state.loading,
   getError: (state) => state.error,
   getTabeltenant: (state) => state.tabelTenant,
@@ -717,7 +734,7 @@ const getters = {
   getTabelAnggotaKelas: (state) => state.tabelAnggotaKelas,
   getSiswaAktif: (state) => state.tabelSiswaAktif,
   getMapel: (state) => state.tabelMapel,
-  getKelas: (state) => state.tabelKelas,
+
   getNilaiSiswa: (state) => state.tabelNilaiakhir,
 };
 

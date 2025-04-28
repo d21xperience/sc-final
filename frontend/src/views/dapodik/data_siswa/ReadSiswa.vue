@@ -5,6 +5,7 @@
             <div class="w-full my-2 container">
                 <div class=" ">
                     <div class="mb-2">
+                        <h2 class="text-xl mb-2">Data Siswa</h2>
                         <Toolbar>
                             <template #start>
                                 <!-- <Button icon="pi pi-plus" severity="success" class="mr-2 text-lg" @click="openNew"
@@ -69,7 +70,7 @@
                     <template #empty>
                         <p class="text-xl flex justify-center font-bold text-red-500">Nilai tidak ditemukan.</p>
                     </template>
-                    
+
                     <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
                     <Column field="nmSiswa" header="Nama" sortable></Column>
                     <Column field="jenisKelamin" header="JK"></Column>
@@ -199,11 +200,11 @@ import InputIcon from 'primevue/inputicon';
 onMounted(async () => {
     //semester.value = store.getters["sekolahService/getSemester"]
     // schemaname.value = store.getters["sekolahService/getTabeltenant"].schemaname
-    siswa.value = store.getters["sekolahService/getSiswaAktif"]
+    // siswa.value = store.getters["sekolahService/getSiswaAktif"]
     // console.log(siswa.value)
-    if (!siswa.value) {
-        siswa.value = fetchSiswaAktif()
-    }
+    // if (!siswa.value) {
+    siswa.value = await fetchSiswaAktif()
+    // }
     tingkatPendidikanOptions.value = await fetchTingkat()
     // console.log(jurusanOptions.value)
 });

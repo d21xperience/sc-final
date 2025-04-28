@@ -84,7 +84,7 @@ const menuItems = ref([
         ]
     },
     {
-        label: 'Data Dapodik',
+        label: 'Master Dapodik',
         icon: 'pi pi-tag',
         items: [
 
@@ -152,70 +152,76 @@ const menuItems = ref([
 
         ]
     },
+
     {
-        label: 'IPFS',
-        icon: 'pi pi-desktop',
+        label: 'Seting',
+        icon: 'pi pi-cog',
+        // command: () => {
+        //     router.push({ name: 'setingBlockchain' })
+        // }
         items: [
             {
-                label: 'Seting',
-                icon: 'pi pi-cog',
-                command: () => {
-                    router.push({ name: 'setingBlockchain' })
-                }
-            },
-            {
-                label: 'URI Ijazah',
-                icon: 'pi pi-file',
-                command: () => {
-                    router.push({ name: 'ipfsIjazah' })
-                }
-            },
-            {
-                label: 'Transaksi',
-                icon: 'pi pi-chart-line',
-                command: () => {
-                    router.push({ name: 'scIjazah' })
-                }
-            },
+                label: 'Blockchain',
+                icon: 'pi pi-ethereum',
+                items: [
+                    {
+                        label: 'Seting',
+                        icon: 'pi pi-cog',
+                        command: () => {
+                            router.push({ name: 'setingBlockchain' })
+                        }
+                    },
+                    // {
+                    //     label: 'Daftar Jaringan',
+                    //     icon: 'pi pi-cloud',
+                    //     command: () => {
+                    //         router.push({ name: 'listBCNetwork' })
+                    //     }
+                    // },
 
+
+
+
+
+                ]
+            },
+            {
+                label: 'IPFS',
+                icon: 'pi pi-desktop',
+                items: [
+                    {
+                        label: 'Seting',
+                        icon: 'pi pi-cog',
+                        command: () => {
+                            router.push({ name: 'setingBlockchain' })
+                        }
+                    },
+                    // {
+                    //     label: 'URI Ijazah',
+                    //     icon: 'pi pi-file',
+                    //     command: () => {
+                    //         router.push({ name: 'ipfsIjazah' })
+                    //     }
+                    // },
+
+
+                ]
+            },
         ]
     },
     {
-        label: 'Blockchain',
-        icon: 'pi pi-ethereum',
-        items: [
-            {
-                label: 'Seting',
-                icon: 'pi pi-cog',
-                command: () => {
-                    router.push({ name: 'setingBlockchain' })
-                }
-            },
-            // {
-            //     label: 'Daftar Jaringan',
-            //     icon: 'pi pi-cloud',
-            //     command: () => {
-            //         router.push({ name: 'listBCNetwork' })
-            //     }
-            // },
-
-            {
-                label: 'SC-Ijazah',
-                icon: 'pi pi-file',
-                command: () => {
-                    router.push({ name: 'scIjazah' })
-                }
-            },
-
-            {
-                label: 'Transaksi',
-                icon: 'pi pi-chart-line',
-                command: () => {
-                    router.push({ name: 'daftarTrx' })
-                }
-            },
-
-        ]
+        label: 'SC-Ijazah',
+        icon: 'pi pi-file',
+        command: () => {
+            router.push({ name: 'scIjazah' })
+        }
+    },
+    {
+        label: 'Transaksi',
+        icon: 'pi pi-chart-line',
+        command: () => {
+            router.push({ name: 'daftarTrx' })
+        }
     },
     {
         label: 'Sign Out',

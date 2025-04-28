@@ -64,8 +64,9 @@ export function useSekolahService(schemaname, selectedSemester) {
         "sekolahService/fetchRombel",
         payload
       );
-      kelasList.value = response;
-      return response;
+      // console.log(response);
+      kelasList.value = response.kelas;
+      return response.kelas;
     } catch (error) {
       console.error("Gagal mengambil data kelas:", error);
     }

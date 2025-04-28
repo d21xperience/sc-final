@@ -206,7 +206,8 @@ const cancelImport = () => {
 
 const onRowExpand = (event) => {
     toast.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.nmKelas, life: 3000 });
-    // Ambil data mapel untuk kelas tertentu
+    // Ambil data nilai akhir
+    
     // console.log(event)
 };
 const onRowCollapse = (event) => {
@@ -291,30 +292,18 @@ const simpanKeDatabase = () => {
     // localStorage.setItem("unsavedPembelajaran", JSON.stringify(pembelajaran.value));
 }
 
-// Menentukan semester berdasarkan tingkat pendidikan
-function mapSemesterToLokal(semesterCode, tingkatPendidikan, semesterAktif) {
-    const currentIndex = (tingkatPendidikan - 10) * 2 + (semesterAktif - 1);
 
-    // Buat semua semester dari awal (semester 1 = 10 ganjil)
-    const allSemester = [];
-    for (let i = 0; i < 6; i++) {
-        const tahun = 2021 + Math.floor(i / 2); // ubah sesuai tahun ajaran awal sekolah
-        const sem = (i % 2) + 1;
-        allSemester.push({
-            kode: `${tahun}${sem}`, // misal 20221, 20222, dst
-            semesterLokal: i + 1
-        });
-    }
-
-    // Cari semester lokal yang sesuai
-    const found = allSemester.find(s => s.kode === semesterCode);
-    return found ? found.semesterLokal : null;
-}
-function formatNilaiAkhir(nilaiAkhir, semesterAktifId, tingkatPendidikanId) {
+function formatNilaiAkhir(nilaiAkhir, tingkatPendidikanId) {
+    const semesterAktifId = selectedSemester.value?.semesterId
+    // console.log(semesterAktifId)
     // Hitung tahun masuk berdasarkan semester aktif dan tingkat
     const tahunAktif = parseInt(semesterAktifId.slice(0, 4));
+    console.log(tahunAktif)
     const smtAktifKe = parseInt(semesterAktifId.slice(4));
-    const tahunMasuk = tahunAktif - (tingkatPendidikanId - 10) - (smtAktifKe === 2 ? 0 : 1);
+    console.log(smtAktifKe)
+console.log (smtAktifKe === 2 ? 0 : 1)
+    const tahunMasuk = tahunAktif - (tingkatPendidikanId - 10) //- (smtAktifKe === 2 ? 0 : 1);
+    console.log(tahunMasuk)
 
     // Buat mapping semesterId => semester lokal (1-6)
     const semesterMap = {};
@@ -368,6 +357,7 @@ function formatNilaiAkhir(nilaiAkhir, semesterAktifId, tingkatPendidikanId) {
         <div class="card">
             <div class="w-full my-2 container">
                 <div>
+                    <h2 class="text-xl mb-2">Data Nilai</h2>
                     <Toolbar>
                         <!-- <template #start>
                                 <div class="flex flex-wrap gap-2 items-center justify-between">
@@ -418,7 +408,7 @@ function formatNilaiAkhir(nilaiAkhir, semesterAktifId, tingkatPendidikanId) {
                     <template #expansion="slotProps" >
                         <div class="p-4">
                             <DataTable
-                                :value="formatNilaiAkhir(slotProps.data.nilaiAkhir, '20222', slotProps.data.tingkatPendidikanId)" >
+                                :value="formatNilaiAkhir(slotProps.data.nilaiAkhir, slotProps.data.tingkatPendidikanId)" >
                                 <Column field="mataPelajaran" header="Mata Pelajaran" class="text-slate-500"/>
                                 <Column field="semester1" header="Semester 1" />
                                 <Column field="semester2" header="Semester 2" />

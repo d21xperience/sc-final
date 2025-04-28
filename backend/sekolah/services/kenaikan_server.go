@@ -92,7 +92,7 @@ func (s *KenaikanServiceServer) GetKenaikan(ctx context.Context, req *pb.GetKena
 	// joins := []string{
 	// 	"JOIN tabel_ptk ON tabel_ptk.ptk_id = tabel_ptk_terdaftar.ptk_id",
 	// }
-	preloads := []string{"AnggotaRombel", "AnggotaRombel.PesertaDidik", "AnggotaRombel.RombonganBelajar"}
+	preloads := []string{"AnggotaRombel", "AnggotaRombel.PesertaDidik", "AnggotaRombel.RombonganBelajar", "AnggotaRombel.NilaiAkhir"}
 
 	conditions := map[string]interface{}{
 		"tabel_kenaikan.semester_id": req.GetSemesterId(),
@@ -127,10 +127,17 @@ func (s *KenaikanServiceServer) GetKenaikan(ctx context.Context, req *pb.GetKena
 				NmSiswa: item.AnggotaRombel.PesertaDidik.NmSiswa,
 				NmKelas: item.AnggotaRombel.RombonganBelajar.NmKelas,
 				PesertaDidik: &pb.Siswa{
-					TempatLahir: item.AnggotaRombel.PesertaDidik.TempatLahir,
-					Nis:         item.AnggotaRombel.PesertaDidik.Nis,
-					Nisn:        item.AnggotaRombel.PesertaDidik.Nisn,
+					TempatLahir:  item.AnggotaRombel.PesertaDidik.TempatLahir,
+					TanggalLahir: item.AnggotaRombel.PesertaDidik.TanggalLahir.Format("2016-02-01"),
+					Nis:          item.AnggotaRombel.PesertaDidik.Nis,
+					Nisn:         item.AnggotaRombel.PesertaDidik.Nisn,
+					JenisKelamin: item.AnggotaRombel.PesertaDidik.JenisKelamin,
 				},
+				Nilai: utils.ConvertModelsToPB(item.AnggotaRombel.NilaiAkhir, func(nilai models.NilaiAkhir) *pb.NilaiAkhir {
+					return &pb.NilaiAkhir{
+						IdNilaiAkhir: nilai.IdNilaiAkhir.String(),
+					}
+				}),
 			},
 		}
 	})

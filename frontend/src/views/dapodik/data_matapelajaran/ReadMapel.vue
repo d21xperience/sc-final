@@ -15,8 +15,6 @@ import Toolbar from 'primevue/toolbar';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import InputText from 'primevue/inputtext';
-import IconField from 'primevue/iconfield';
-import InputIcon from 'primevue/inputicon';
 // =============UJI FITUR FOTO========================
 // import Image from 'primevue/image';
 // =====================================
@@ -63,31 +61,25 @@ const fetchMapel = async () => {
         console.log(error)
     }
 }
-// const fetchKelas = async () => {
-//     try {
-//         const payload = {
-//             schemaname: schemaname.value,
-//             semester_id: selectedSemester.value?.semesterId,
-//             // kelas_id: kelasId
-//         }
-//         const response = await store.dispatch("sekolahService/fetchRombel", payload);
 
-//         return response
-//     } catch (error) {
-//         console.error("Gagal mengambil data kelas:", error);
-//     }
-// };
 // ==============================
-const dataRombel = ref([])
+const kelasList = ref([])
 onMounted(async () => {
-    dataRombel.value = store.getters["sekolahService/getKelas"]
-    console.log(dataRombel.value)
-    if (!dataRombel.value || dataRombel.value.length === 0) {
-        console.log("cek")
-        dataRombel.value = await fetchKelas()
-
-    }
+    await fetchK()
 });
+const fetchK = async () => {
+    try {
+        const res = store.getters["sekolahService/getKelas"](selectedSemester.value?.semesterId)
+        if (!res || res.length === 0) {
+            // console.log("fetch to backend!")
+            kelasList.value = await fetchKelas()
+        } else {
+            kelasList.value = res
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 // ================================
 // composable
 // ================================
@@ -97,8 +89,8 @@ const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]
 const { fetchKelas } = useSekolahService(schemaname, selectedSemester)
 // ================================
 watch(selectedSemester, async (newVal, oldVal) => {
-    console.log(newVal)
-    dataRombel.value = await fetchKelas()
+    // console.log(newVal)
+    kelasList.value = await fetchKelas()
 })
 import DialogLoading from "@/components/DialogLoading.vue";
 
@@ -227,7 +219,7 @@ const onRowCollapse = (event) => {
     toast.add({ severity: 'success', summary: 'Product Collapsed', detail: event.data.nmKelas, life: 3000 });
 };
 const expandAll = () => {
-    expandedRows.value = dataRombel.value.reduce((acc, p) => (acc[p.rombonganBelajarId] = true) && acc, {});
+    expandedRows.value = kelasList.value.reduce((acc, p) => (acc[p.rombonganBelajarId] = true) && acc, {});
 };
 const collapseAll = () => {
     expandedRows.value = null;
@@ -310,7 +302,8 @@ const simpanKeDatabase = () => {
     <div class="">
         <div class="card">
             <div class="w-full my-2 container">
-                <DataTable ref="dt" v-model:expandedRows="expandedRows" stripedRows size="small" :value="dataRombel"
+                <h2 class="text-xl mb-2">Data Mapel</h2>
+                <DataTable ref="dt" v-model:expandedRows="expandedRows" stripedRows size="small" :value="kelasList"
                     @rowExpand="onRowExpand" @rowCollapse="onRowCollapse" dataKey="rombonganBelajarId" :paginator="true"
                     :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"

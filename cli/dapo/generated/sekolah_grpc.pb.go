@@ -1246,6 +1246,7 @@ const (
 	NilaiAkhirService_GetNilaiAkhir_FullMethodName    = "/sekolah.NilaiAkhirService/GetNilaiAkhir"
 	NilaiAkhirService_UpdateNilaiAkhir_FullMethodName = "/sekolah.NilaiAkhirService/UpdateNilaiAkhir"
 	NilaiAkhirService_DeleteNilaiAkhir_FullMethodName = "/sekolah.NilaiAkhirService/DeleteNilaiAkhir"
+	NilaiAkhirService_SearchNilaiAkhir_FullMethodName = "/sekolah.NilaiAkhirService/SearchNilaiAkhir"
 )
 
 // NilaiAkhirServiceClient is the client API for NilaiAkhirService service.
@@ -1259,6 +1260,7 @@ type NilaiAkhirServiceClient interface {
 	GetNilaiAkhir(ctx context.Context, in *GetNilaiAkhirRequest, opts ...grpc.CallOption) (*GetNilaiAkhirResponse, error)
 	UpdateNilaiAkhir(ctx context.Context, in *UpdateNilaiAkhirRequest, opts ...grpc.CallOption) (*UpdateNilaiAkhirResponse, error)
 	DeleteNilaiAkhir(ctx context.Context, in *DeleteNilaiAkhirRequest, opts ...grpc.CallOption) (*DeleteNilaiAkhirResponse, error)
+	SearchNilaiAkhir(ctx context.Context, in *SearchNilaiAkhirRequest, opts ...grpc.CallOption) (*SearchNilaiAkhirResponse, error)
 }
 
 type nilaiAkhirServiceClient struct {
@@ -1309,6 +1311,16 @@ func (c *nilaiAkhirServiceClient) DeleteNilaiAkhir(ctx context.Context, in *Dele
 	return out, nil
 }
 
+func (c *nilaiAkhirServiceClient) SearchNilaiAkhir(ctx context.Context, in *SearchNilaiAkhirRequest, opts ...grpc.CallOption) (*SearchNilaiAkhirResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchNilaiAkhirResponse)
+	err := c.cc.Invoke(ctx, NilaiAkhirService_SearchNilaiAkhir_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NilaiAkhirServiceServer is the server API for NilaiAkhirService service.
 // All implementations must embed UnimplementedNilaiAkhirServiceServer
 // for forward compatibility.
@@ -1320,6 +1332,7 @@ type NilaiAkhirServiceServer interface {
 	GetNilaiAkhir(context.Context, *GetNilaiAkhirRequest) (*GetNilaiAkhirResponse, error)
 	UpdateNilaiAkhir(context.Context, *UpdateNilaiAkhirRequest) (*UpdateNilaiAkhirResponse, error)
 	DeleteNilaiAkhir(context.Context, *DeleteNilaiAkhirRequest) (*DeleteNilaiAkhirResponse, error)
+	SearchNilaiAkhir(context.Context, *SearchNilaiAkhirRequest) (*SearchNilaiAkhirResponse, error)
 	mustEmbedUnimplementedNilaiAkhirServiceServer()
 }
 
@@ -1341,6 +1354,9 @@ func (UnimplementedNilaiAkhirServiceServer) UpdateNilaiAkhir(context.Context, *U
 }
 func (UnimplementedNilaiAkhirServiceServer) DeleteNilaiAkhir(context.Context, *DeleteNilaiAkhirRequest) (*DeleteNilaiAkhirResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteNilaiAkhir not implemented")
+}
+func (UnimplementedNilaiAkhirServiceServer) SearchNilaiAkhir(context.Context, *SearchNilaiAkhirRequest) (*SearchNilaiAkhirResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchNilaiAkhir not implemented")
 }
 func (UnimplementedNilaiAkhirServiceServer) mustEmbedUnimplementedNilaiAkhirServiceServer() {}
 func (UnimplementedNilaiAkhirServiceServer) testEmbeddedByValue()                           {}
@@ -1435,6 +1451,24 @@ func _NilaiAkhirService_DeleteNilaiAkhir_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NilaiAkhirService_SearchNilaiAkhir_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchNilaiAkhirRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NilaiAkhirServiceServer).SearchNilaiAkhir(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NilaiAkhirService_SearchNilaiAkhir_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NilaiAkhirServiceServer).SearchNilaiAkhir(ctx, req.(*SearchNilaiAkhirRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NilaiAkhirService_ServiceDesc is the grpc.ServiceDesc for NilaiAkhirService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1457,6 +1491,10 @@ var NilaiAkhirService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteNilaiAkhir",
 			Handler:    _NilaiAkhirService_DeleteNilaiAkhir_Handler,
+		},
+		{
+			MethodName: "SearchNilaiAkhir",
+			Handler:    _NilaiAkhirService_SearchNilaiAkhir_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

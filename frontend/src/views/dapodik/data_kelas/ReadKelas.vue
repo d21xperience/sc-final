@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-
+            <!-- <Skeleton class="mb-2" borderRadius="16px"></Skeleton> -->
             <DataTable ref="dt" v-model:selection="selectedKelas" stripedRows size="small" :value="kelasList" scrollable
                 scrollHeight="400px" dataKey="rombonganBelajarId" :paginator="true" :rows="10" :filters="filters"
                 tableStyle="min-width: 50rem"
@@ -56,8 +56,22 @@
                 :rowsPerPageOptions="[10, 20, 30]"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} kelas" class="mt-2">
                 <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-                <Column field="nmKelas" header="Nama Kelas"></Column>
-                <Column field="tingkatPendidikanId" header="Tingkat" sortable></Column>
+                <Column field="nmKelas" header="Nama Kelas">
+                    <template #loading>
+                        <div class="flex items-center"
+                            :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
+                            <Skeleton width="40%" height="1rem" />
+                        </div>
+                    </template>
+                </Column>
+                <Column field="tingkatPendidikanId" header="Tingkat" sortable>
+                    <template #loading>
+                        <div class="flex items-center"
+                            :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
+                            <Skeleton width="40%" height="1rem" />
+                        </div>
+                    </template>
+                </Column>
                 <Column field="kurikulum.namaKurikulum" header="Kurikulum"></Column>
                 <!-- Jika SMK/MAK Program Keahlian & Kompetensi Keahlian akan muncul-->
                 <div v-if="['smk', 'mak'].includes(bentukPendidikan)">
@@ -122,6 +136,8 @@ import Select from 'primevue/select';
 import DialogLoading from '@/components/DialogLoading.vue';
 import router from '@/router';
 
+import Skeleton from 'primevue/skeleton';
+
 // ================================
 // composable
 // ================================
@@ -137,9 +153,9 @@ const isLoading = ref(false)
 const tingkatPendidikanOptions = ref()
 
 watch(selectedSemester, async (e, b) => {
-    isLoading.value = true
+    // isLoading.value = true
     kelasList.value = await fetchKelas()
-    isLoading.value = false
+    // isLoading.value = false
 })
 onMounted(async () => {
     await fetchK()
@@ -148,12 +164,10 @@ onMounted(async () => {
 });
 
 const fetchK = async () => {
-    // Loading
-    isLoading.value = true
     try {
-        const res = store.getters["sekolahService/getKelas"]
-        if (!res) {
-            console.log("fetch to backend!")
+        const res = store.getters["sekolahService/getKelas"](selectedSemester.value?.semesterId)
+        if (!res || res.length === 0) {
+            // console.log("fetch to backend!")
             kelasList.value = await fetchKelas()
         } else {
             kelasList.value = res
@@ -161,8 +175,6 @@ const fetchK = async () => {
     } catch (error) {
         console.log(error)
     }
-
-    isLoading.value = false
 }
 
 const toast = useToast();

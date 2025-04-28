@@ -82,7 +82,7 @@ func (s *NilaiAkhirServiceServer) CreateNilaiAkhir(ctx context.Context, req *pb.
 // **GetNilai akhir**
 func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.GetNilaiAkhirRequest) (*pb.GetNilaiAkhirResponse, error) {
 	// Debugging: Cek nilai request yang diterima
-	log.Printf("Received Sekolah data request: %+v\n", req)
+	// log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
 	requiredFields := []string{"Schemaname", "SemesterId"}
 	// Validasi request
@@ -115,16 +115,16 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 	}
 
 	NilaiAkhirList := utils.ConvertModelsToPB(anggotaRombelModel, func(item models.RombelAnggota) *pb.NilaiSiswa {
-		nilaiAkhir, err := s.repo.FindWithRelations(ctx, schemaName, nil, []string{"MataPelajaran"}, map[string]any{"peserta_didik_id": item.PesertaDidikId.String()}, []struct {
-			Query string
-			Args  []interface{}
-		}{
-			{"semester_id <= ?", []interface{}{item.SemesterId}},
-			// {"created_at BETWEEN ? AND ?", []interface{}{startDate, endDate}},
-		}, nil, nil)
-		if err != nil {
-			return nil
-		}
+		// nilaiAkhir, err := s.repo.FindWithRelations(ctx, schemaName, nil, []string{"MataPelajaran"}, map[string]any{"peserta_didik_id": item.PesertaDidikId.String()}, []struct {
+		// 	Query string
+		// 	Args  []interface{}
+		// }{
+		// 	{"semester_id <= ?", []interface{}{item.SemesterId}},
+		// 	// {"created_at BETWEEN ? AND ?", []interface{}{startDate, endDate}},
+		// }, nil, nil)
+		// if err != nil {
+		// 	return nil
+		// }
 
 		return &pb.NilaiSiswa{
 			PesertaDidikId:      item.PesertaDidikId.String(),
@@ -132,18 +132,18 @@ func (s *NilaiAkhirServiceServer) GetNilaiAkhir(ctx context.Context, req *pb.Get
 			RombonganBelajarId:  item.AnggotaRombelId.String(),
 			NmKelas:             item.RombonganBelajar.NmKelas,
 			TingkatPendidikanId: item.RombonganBelajar.TingkatPendidikanId,
-			NilaiAkhir: utils.ConvertModelsToPB(nilaiAkhir, func(item models.NilaiAkhir) *pb.NilaiAkhir {
-				return &pb.NilaiAkhir{
-					IdNilaiAkhir:    item.IdNilaiAkhir.String(),
-					NilaiPeng:       utils.PointerToUint32(item.NilaiPeng),
-					MataPelajaranId: utils.PointerToUint32(item.MataPelajaranId),
-					SemesterId:      item.SemesterId,
-					Semester:        utils.PointerToUint32(item.Semester),
-					MataPelajaran: &pb.Mapel{
-						Nama: item.MataPelajaran.Nama,
-					},
-				}
-			}),
+			// NilaiAkhir: utils.ConvertModelsToPB(nilaiAkhir, func(item models.NilaiAkhir) *pb.NilaiAkhir {
+			// 	return &pb.NilaiAkhir{
+			// 		IdNilaiAkhir:    item.IdNilaiAkhir.String(),
+			// 		NilaiPeng:       utils.PointerToUint32(item.NilaiPeng),
+			// 		MataPelajaranId: utils.PointerToUint32(item.MataPelajaranId),
+			// 		SemesterId:      item.SemesterId,
+			// 		Semester:        utils.PointerToUint32(item.Semester),
+			// 		MataPelajaran: &pb.Mapel{
+			// 			Nama: item.MataPelajaran.Nama,
+			// 		},
+			// 	}
+			// }),
 		}
 	})
 	return &pb.GetNilaiAkhirResponse{

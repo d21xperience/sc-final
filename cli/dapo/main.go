@@ -13,7 +13,7 @@ func main() {
 
 	// sendPtk(cfg, 2020, 2021)
 	// sendSiswa(cfg, 2020, 2024)
-	sendRombel(cfg, 2020, 2024)
+	sendRombel(cfg, 2021, 2021)
 }
 
 func sendSekolah(cfg *config.AppConfig, tahunBerapa, keBerapa uint16) {
@@ -52,7 +52,7 @@ func sendPtk(cfg *config.AppConfig, tahunBerapa, keBerapa uint16) {
 
 func sendRombel(cfg *config.AppConfig, tahunBerapa, keBerapa uint16) {
 	for year := tahunBerapa; year <= keBerapa; year++ {
-		for semester := 1; semester <= 2; semester++ {
+		for semester := 2; semester <= 2; semester++ {
 			semesterID := fmt.Sprintf("%d%d", year, semester)
 
 			err := usecase.ProcessRombel(cfg, semesterID)
