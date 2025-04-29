@@ -687,16 +687,16 @@ const actions = {
   },
   async fetchProsesIjazah({ commit }, payload) {
     try {
-      const response = await api.get(`ss/ijazah`, {
+      const response = await api.get(`ss/proses-ijazah`, {
         params: {
           schemaname: payload.schemaname,
           semester_id: payload.tahun_ajaran_id,
           ijazah_id: payload.ijazah_id,
         },
       });
-      return response.data; // Mengembalikan data sekolah
+      return response.data.anggotaKelas; // Mengembalikan data sekolah
     } catch (error) {
-      throw error
+      throw error;
     } finally {
       commit("SET_LOADING", false);
     }

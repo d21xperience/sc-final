@@ -29,7 +29,7 @@ type Ijazah struct {
 	CreatedAt                   time.Time
 	UpdatedAt                   time.Time
 	DeletedAt                   gorm.DeletedAt `gorm:"index"`
-	
+
 	// NPSN                        string         `gorm:"type:varchar(15);not null"`
 	// AsalSekolah                 string    `gorm:"type:varchar(200);not null"`
 	// KabupatenKota               string    `gorm:"type:varchar(100);not null"`
@@ -39,6 +39,7 @@ type Ijazah struct {
 	// TanggalLahir                string    `gorm:"type:date;not null"`
 	// Relasi
 	PesertaDidik PesertaDidik `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
+	// RombonganBelajar RombonganBelajar `gorm:"foreignKey:RombonganBelajarId;references:RombonganBelajarId"`
 	// NilaiUjianSekolah NIlaiRerataAkhir
 }
 

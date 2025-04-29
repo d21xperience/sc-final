@@ -150,13 +150,12 @@ func (s *IjazahServiceServer) GetProsesIjazah(ctx context.Context, req *pb.GetPr
 	// Cek apakah harus mengambil semua data atau data spesifik berdasarkan SemesterId
 	// kelasId := req.GetKelasId()
 	semesterId := req.GetSemesterId()
-	var rombelAnggota []models.RombelAnggota
+	var rombelAnggota []models.Ijazah
 	var conditions = map[string]any{
-		"tabel_anggotakelas.status_keaktifan": 1,
-		"tabel_anggotakelas.semester_id":      semesterId,
+		"ijazah.tahun_ajaran_id": semesterId,
 	}
 	if req.GetPesertaDidikId() != "" {
-		conditions["tabel_anggotakelas.peserta_didik_id"] = req.GetPesertaDidikId()
+		conditions["ijazah.peserta_didik_id"] = req.GetPesertaDidikId()
 	}
 
 	joins := []string{
@@ -166,24 +165,28 @@ func (s *IjazahServiceServer) GetProsesIjazah(ctx context.Context, req *pb.GetPr
 		// fmt.Sprintf("JOIN ref.kurikulum ON %s.tabel_kelas.kurikulum_id = ref.kurikulum.kurikulum_id", schemaName),
 		// fmt.Sprintf("JOIN ref.tingkat_pendidikan ON %s.tabel_kelas.tingkat_pendidikan_id = ref.tingkat_pendidikan.tingkat_pendidikan_id", schemaName),
 	}
-	preloads := []string{"PesertaDidik", "RombonganBelajar"}
+	preloads := []string{"PesertaDidik"}
 
 	groupByColumns := []string{} // Hindari duplikasi
-	rombelAnggota, err = s.repoAnggotaKelas.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns, nil, false)
+	rombelAnggota, err = s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns, nil, false)
 	if err != nil {
 		return nil, err
 	}
 
-	banyakKelasList := utils.ConvertModelsToPB(rombelAnggota, func(kelas models.RombelAnggota) *pb.AnggotaKelas {
+	banyakKelasList := utils.ConvertModelsToPB(rombelAnggota, func(kelas models.Ijazah) *pb.Ijazah {
 		// jmlhAnggota, err := s.repoRombelAnggota.CountRows(ctx, schemaName, "rombongan_belajar_id", kelas.RombonganBelajarId.String())
 		if err != nil {
 			return nil
 		}
-		return &pb.AnggotaKelas{
-			RombonganBelajarId: kelas.RombonganBelajarId.String(),
-			SemesterId:         kelas.SemesterId,
+		return &pb.Ijazah{
+
 			// PesertaDidikId:     kelas.PesertaDidikId.String(),
 			AnggotaRombelId: kelas.AnggotaRombelId.String(),
+			NamaOrtuWali:    kelas.PesertaDidik.NmAyah,
+			ProgramKeahlian: kelas.ProgramKeahlian,
+			// RombonganBelajar: &pb.Kelas{
+			// 	NmKelas: kelas.RombonganBelajar.NmKelas,
+			// },
 			PesertaDidik: &pb.Siswa{
 				PesertaDidikId: kelas.PesertaDidik.PesertaDidikId,
 				NmSiswa:        kelas.PesertaDidik.NmSiswa,
@@ -195,9 +198,9 @@ func (s *IjazahServiceServer) GetProsesIjazah(ctx context.Context, req *pb.GetPr
 				TanggalLahir:   kelas.PesertaDidik.TanggalLahir.String(),
 				Agama:          kelas.PesertaDidik.Agama,
 			},
-			RombonganBelajar: &pb.Kelas{
-				NmKelas: kelas.RombonganBelajar.NmKelas,
-			},
+			// RombonganBelajar: &pb.Kelas{
+			// 	NmKelas: kelas.RombonganBelajar.NmKelas,
+			// },
 		}
 	})
 	return &pb.GetProsesIjazahResponse{

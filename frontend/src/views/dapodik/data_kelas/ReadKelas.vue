@@ -266,7 +266,7 @@ const luluskan = async () => {
         // console.log(payload)
         // isLoading.value = true
 
-        const res = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
+        const res = await store.dispatch("sekolahService/createProsesIjazah", payload)
         console.log(res)
         if (res) {
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Data Ijazah berhasil ditambahkan', life: 3000 });

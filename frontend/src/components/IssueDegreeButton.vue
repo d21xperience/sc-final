@@ -41,43 +41,139 @@ const generateDegreeHash = (data) => {
 };
 
 // Fungsi submit
+// const handleSubmit = async () => {
+//     isLoading.value = true;
+//     try {
+//         if (!contract.value) await loadContract();
+
+//         // 1. Buat hash ijazah
+//         const degreeHash = generateDegreeHash(props.degreeData);
+//         const issueDate = Math.floor(Date.now() / 1000); // timestamp
+//         // Validasi dan konversi array transcript
+//         let subjects = props.transcript.subjects;
+//         let grades = props.transcript.grades;
+
+//         // Jika bentuknya string, parsing dulu
+//         if (typeof subjects === 'string') {
+//             subjects = JSON.parse(subjects);
+//         }
+//         if (typeof grades === 'string') {
+//             grades = JSON.parse(grades);
+//         }
+
+//         // Pastikan grades berbentuk array number
+//         grades = grades.map(n => parseInt(n));
+
+//         // Validasi panjang array sama
+//         if (subjects.length !== grades.length) {
+//             throw new Error("Jumlah mata pelajaran dan nilai tidak sama.");
+//         }
+
+//         // 2. Estimasi gas (opsional, bisa dilewatkan jika tidak diperlukan)
+//         // const gasEstimate = await contract.value.issueDegree.estimateGas(
+//         //     degreeHash,
+//         //     props.sekolah,
+//         //     issueDate,
+//         //     props.ipfsUrl,
+//         //     props.transcript.subjects,
+//         //     props.transcript.grades
+//         // );
+//         const gasEstimate = await contract.value.issueDegree.estimateGas(
+//             degreeHash,
+//             props.sekolah,
+//             issueDate,
+//             props.ipfsUrl,
+//             subjects,
+//             grades
+//         );
+
+
+
+
+
+//         const proceed = confirm(`Biaya gas kira-kira: ${ethers.formatUnits(gasEstimate, 'gwei')} Gwei. Lanjutkan?`);
+//         if (!proceed) return;
+
+//         // 3. Kirim transaksi
+//         // const tx = await contract.value.issueDegree(
+//         //     degreeHash,
+//         //     props.sekolah,
+//         //     issueDate,
+//         //     props.ipfsUrl,
+//         //     props.transcript.subjects,
+//         //     props.transcript.grades
+//         // );
+//         const tx = await contract.value.issueDegree(
+//             degreeHash,
+//             props.sekolah,
+//             issueDate,
+//             props.ipfsUrl,
+//             subjects,
+//             grades
+//         );
+
+//         await tx.wait(); // tunggu konfirmasi
+
+//         alert("Ijazah berhasil diverifikasi di blockchain!");
+//         // await saveToBackend(tx.hash, degreeHash);
+
+//     } catch (err) {
+//         console.error(err);
+//         alert(`Gagal memproses: ${err.message}`);
+//     } finally {
+//         isLoading.value = false;
+//     }
+// };
+
 const handleSubmit = async () => {
     isLoading.value = true;
     try {
+        console.log("props.transcript:", props.transcript);
+        console.log("subjects:", props.transcript?.subjects);
+        console.log("grades:", props.transcript?.grades);
+
         if (!contract.value) await loadContract();
 
-        // 1. Buat hash ijazah
         const degreeHash = generateDegreeHash(props.degreeData);
-        const issueDate = Math.floor(Date.now() / 1000); // timestamp
+        const issueDate = Math.floor(Date.now() / 1000);
 
-        // 2. Estimasi gas (opsional, bisa dilewatkan jika tidak diperlukan)
+        // Validasi & parsing subjects dan grades
+        let subjects = props.transcript?.subjects;
+        let grades = props.transcript?.grades;
+
+        if (!Array.isArray(subjects) || !Array.isArray(grades)) {
+            throw new Error("Data transcript tidak valid. Pastikan subjects dan grades berupa array.");
+        }
+
+        grades = grades.map((n) => parseInt(n));
+
+        if (subjects.length !== grades.length) {
+            throw new Error("Jumlah mata pelajaran dan nilai tidak cocok.");
+        }
+
         const gasEstimate = await contract.value.issueDegree.estimateGas(
             degreeHash,
             props.sekolah,
             issueDate,
             props.ipfsUrl,
-            props.transcript.subjects,
-            props.transcript.grades
+            subjects,
+            grades
         );
 
         const proceed = confirm(`Biaya gas kira-kira: ${ethers.formatUnits(gasEstimate, 'gwei')} Gwei. Lanjutkan?`);
         if (!proceed) return;
 
-        // 3. Kirim transaksi
         const tx = await contract.value.issueDegree(
             degreeHash,
             props.sekolah,
             issueDate,
             props.ipfsUrl,
-            props.transcript.subjects,
-            props.transcript.grades
+            subjects,
+            grades
         );
 
-        await tx.wait(); // tunggu konfirmasi
-
+        await tx.wait();
         alert("Ijazah berhasil diverifikasi di blockchain!");
-        // await saveToBackend(tx.hash, degreeHash);
-
     } catch (err) {
         console.error(err);
         alert(`Gagal memproses: ${err.message}`);
@@ -85,7 +181,6 @@ const handleSubmit = async () => {
         isLoading.value = false;
     }
 };
-
 
 // const contract = ref(null);
 
@@ -121,7 +216,7 @@ const saveToBackend = async (txHash, degreeHash) => {
     try {
         const payload = {
             schemaname: await store.getters["sekolahService/getSchemaname"]?.schemaname
-            
+
         }
     } catch (error) {
         console.log(error)

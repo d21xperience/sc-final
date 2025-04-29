@@ -36,10 +36,10 @@
                         <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
                             class="mr-2" />
                         <!-- <Button label="Proses" icon="pi pi-send" severity="info" @click="exportCSV($event)" /> -->
-                        <!-- <IssueDegreeButton :degreeData="degreeData" :sekolah="sekolah" :ipfsUrl="ipfsUrl"
+                        <IssueDegreeButton :degreeData="degreeData" :sekolah="sekolah" :ipfsUrl="ipfsUrl"
                             :transcript="transcript" :contract="contract" class="bg-blue-600 p-3 rounded-lg text-white"
                             :disabled="!selectedSiswa"
-                            :class="{ 'bg-slate-500': !selectedSiswa || selectedSiswa.length === 0 || selectedSiswa.length > 2 }" /> -->
+                            :class="{ 'bg-slate-500': !selectedSiswa || selectedSiswa.length === 0 || selectedSiswa.length > 2 }" />
                     </template>
 
                 </Toolbar>
@@ -72,15 +72,15 @@
             :rowsPerPageOptions="[10, 20, 50]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
             <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-            <Column field="anggotaKelas.nmKelas" header="Kelas"></Column>
-            <Column field="anggotaKelas.pesertaDidik.nis" header="NIS"></Column>
-            <Column field="anggotaKelas.pesertaDidik.nisn" header="NISN"></Column>
-            <Column field="anggotaKelas.nmSiswa" header="Nama" sortable></Column>
-            <Column field="anggotaKelas.pesertaDidik.jenisKelamin" header="JK"></Column>
-            <Column field="anggotaKelas.pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
-            <Column field="anggotaKelas.pesertaDidik.nmAyah" header="Nama Wali"></Column>
-            <Column field="" header="CID Ijazah"></Column>
-            <Column field="" header="No. Ijazah"></Column>
+            <!-- <Column field="anggotaKelas.nmKelas" header="Kelas"></Column> -->
+            <Column field="pesertaDidik.nis" header="NIS"></Column>
+            <Column field="pesertaDidik.nisn" header="NISN"></Column>
+            <Column field="pesertaDidik.nmSiswa" header="Nama" sortable></Column>
+            <Column field="pesertaDidik.jenisKelamin" header="JK"></Column>
+            <Column field="pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
+            <Column field="pesertaDidik.nmAyah" header="Nama Wali"></Column>
+            <Column field="cidUrl" header="CID Ijazah"></Column>
+            <Column field="nomorIjazah" header="No. Ijazah"></Column>
             <Column field="" header="Status">
                 <template #body>
                     belum terkirim
@@ -147,44 +147,21 @@ const selectedTahunAjaran = computed(() => {
 })
 const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
 
-// ================================
-// const fetchSemester = async () => {
-//     try {
-//         semester.value = await store.getters["sekolahService/getSemester"]
-//         if (!semester.value) {
-//             semester.value = await store.dispatch("sekolahService/fetchSemester")
-//         }
-//         tahunAjaranOptions.value = getTahunAjaran(semester.value)
-//         // Ambil tahun ajaran terbaru berdasarkan tahun terbesar
-//         selectedTahunAjaran.value = `${store.getters["sekolahService/getSelectedSemester"]?.tahunAjaranId}2`
-//         // console.log(selectedTahunAjaran.value)
-//         if (!selectedTahunAjaran) {
-//             selectedTahunAjaran.value = tahunAjaranOptions.value.reduce((latest, current) =>
-//                 current.tahunAjaranId > latest.tahunAjaranId ? current : latest
-//             );
-//         }
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-// watch(selectedTahunAjaran, async () => {
-//     // Panggil data untuk mengumpulkan siswa
-//     selectedSiswa.value = []
-//     await fetchSiswaLulus()
-// })
-
 const fetchSiswaLulus = async () => {
     try {
         let payload = {
             schemaname: await store.getters["sekolahService/getTabeltenant"]?.schemaname,
             tahun_ajaran_id: 2023//`${selectedTahunAjaran.value}`, 
         }
-        console.log("fetchSiswaLulus",payload)
+        // console.log("fetchSiswaLulus", payload)
         const results = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
-        if (results) {
-            // console.log(results.anggotaKelas)
-            siswa.value = results.kenaikan
-        }
+        // console.log(results)
+        siswa.value = results
+
+        // if (results) {
+        //     // console.log(results.anggotaKelas)
+        //     siswa.value = results.kenaikan
+        // }
         // store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedTahunAjaran.value)
 
     } catch (error) {
@@ -196,15 +173,20 @@ const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
 // ==================================
-
+const scData = ref({
+    degreeData: null,
+    sekolah: null,
+    ipfsUrl: null,
+    transcript: null
+})
 const dataLulusan = ref();
 // const selectedJurusan = ref();
 import { ethers } from 'ethers';
 import DialogIjazah from '@/components/DialogIjazah.vue';
 // Dummy data (bisa kamu ambil dari API atau input form)
 const degreeData = ref({
-    nama: "Andi Wijaya",
-    nisn: "1234567890",
+    nama: "",
+    nisn: "",
     nik: "3211142109820004",
     tahun_lulus: 2024,
     major: "Rekayasa Perangkat Lunak"
@@ -213,16 +195,30 @@ const sekolah = ref("SMK PASUNDAN JATINANGOR");
 
 const ipfsUrl = ref("https://ipfs.io/ipfs/Qm...examplehash");
 const transcript = ref({
-    mapel: ["Matematika", "Pemrograman", "Basis Data"],
-    nilai: [85, 90, 88]
+    subjects: ["Matematika", "Pemrograman", "Basis Data"],
+    grades: [85, 90, 88]
 });
 const contract = null;
 
-// watch(selectedSiswa, (newVal) => {
-//     if (newVal.length === 1) {
-//         degreeData.value = { ...newVal[0].pesertaDidik }; // Salin object pertama
-//     }
-// });
+watch(selectedSiswa, (newVal) => {
+    if (newVal.length === 1) {
+        console.log(newVal[0].pesertaDidik.nmSiswa)
+        degreeData.value.nama = newVal[0].pesertaDidik.nmSiswa
+        degreeData.value.nisn = newVal[0].pesertaDidik.nisn
+        degreeData.value.tahun_lulus = 2023
+        // scData.value.degreeData = { ...newVal[0].pesertaDidik }; // Salin object pertama
+        // scData.value.degreeData = {
+        //     nama: newVal.value.pesertaDidik.nmSiswa,
+        //     nisn: newVal.value.pesertaDidik.nisn,
+        //     tahun_lulus: 2023,
+        //     nik: "",
+        //     major: newVal.value.programKeahlian
+        // }
+        // scData.value.transcript = transcript.value
+        // scData.value.sekolah = sekolah.value
+        // scData.value.ipfsUrl = ipfsUrl
+    }
+});
 
 
 
