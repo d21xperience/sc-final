@@ -154,6 +154,9 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 	if req.KelasId != "" {
 		conditions["tabel_kelas.rombongan_belajar_id"] = req.KelasId
 	}
+	if req.TingkatPendidikanId != 0 {
+		conditions["tabel_kelas.tingkat_pendidikan_id"] = req.TingkatPendidikanId
+	}
 
 	joins := []string{
 		"JOIN tabel_ptk ON tabel_kelas.ptk_id = tabel_ptk.ptk_id",
@@ -162,7 +165,7 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 		fmt.Sprintf("JOIN ref.kurikulum ON %s.tabel_kelas.kurikulum_id = ref.kurikulum.kurikulum_id", schemaName),
 		fmt.Sprintf("JOIN ref.tingkat_pendidikan ON %s.tabel_kelas.tingkat_pendidikan_id = ref.tingkat_pendidikan.tingkat_pendidikan_id", schemaName),
 	}
-	preloads := []string{"PTK", "Jurusan", "Kurikulum", "TingkatPendidikan", "AnggotaKelas", "Pembelajaran", "Pembelajaran.PTKTerdaftar", "Pembelajaran.PTKTerdaftar.PTK"}
+	preloads := []string{"PTK", "Jurusan", "Kurikulum", "TingkatPendidikan", "AnggotaKelas", "AnggotaKelas.PesertaDidik", "Pembelajaran", "Pembelajaran.PTKTerdaftar", "Pembelajaran.PTKTerdaftar.PTK"}
 
 	groupBy := []string{"tabel_kelas.rombongan_belajar_id"} // Hindari duplikasi
 	orderBy := []string{"tabel_kelas.nm_kelas"}             // Hindari duplikasi
@@ -186,13 +189,32 @@ func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequ
 			TingkatPendidikanId: kelas.TingkatPendidikanId,
 			JenisRombel:         kelas.JenisRombel,
 			NamaJurusanSp:       kelas.NamaJurusanSp,
-			// JurusanSpId:         jurusanSPId.(*string),
-			KurikulumId: kelas.KurikulumId,
+			KurikulumId:         kelas.KurikulumId,
 			AnggotaKelas: utils.ConvertPBToModels(utils.SliceToPointer(kelas.AnggotaKelas), func(item *models.RombelAnggota) *pb.AnggotaKelas {
 				return &pb.AnggotaKelas{
-					AnggotaRombelId: item.AnggotaRombelId.String(),
-					PesertaDidikId:  item.PesertaDidikId.String(),
-					SemesterId:      item.SemesterId,
+					AnggotaRombelId:    item.AnggotaRombelId.String(),
+					PesertaDidikId:     item.PesertaDidikId.String(),
+					SemesterId:         item.SemesterId,
+					RombonganBelajarId: item.RombonganBelajarId.String(),
+					// NmKelas:            item.RombonganBelajar.NmKelas,
+
+					PesertaDidik: &pb.Siswa{
+						Nis:           item.PesertaDidik.Nis,
+						Nisn:          item.PesertaDidik.Nisn,
+						NmSiswa:       item.PesertaDidik.NmSiswa,
+						TempatLahir:   item.PesertaDidik.TempatLahir,
+						TanggalLahir:  item.PesertaDidik.TanggalLahir.Format("2006-01-02"),
+						JenisKelamin:  item.PesertaDidik.JenisKelamin,
+						Agama:         item.PesertaDidik.Agama,
+						AlamatSiswa:   utils.SafeString(item.PesertaDidik.AlamatSiswa),
+						TeleponSiswa:  item.PesertaDidik.TeleponSiswa,
+						NmAyah:        item.PesertaDidik.NmAyah,
+						NmIbu:         item.PesertaDidik.NmIbu,
+						PekerjaanAyah: item.PesertaDidik.PekerjaanAyah,
+						PekerjaanIbu:  item.PesertaDidik.PekerjaanIbu,
+						NmWali:        utils.SafeString(item.PesertaDidik.NmWali),
+						PekerjaanWali: utils.SafeString(item.PesertaDidik.PekerjaanWali),
+					},
 				}
 			}),
 			Ptk: &pb.PTK{

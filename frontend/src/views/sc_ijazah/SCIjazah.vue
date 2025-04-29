@@ -5,25 +5,25 @@
         <div class=" ">
             <div class="flex flex-wrap justify-between items-center mb-2">
                 <h4 class="font-bold text-xl md:text-2xl">Data Ijazah</h4>
-                <div class="md:flex md:items-center md:space-x-2">
+                <!-- <div class="md:flex md:items-center md:space-x-2">
                     <h3 class="text-slate-500 md:text-base text-sm">Tahun Lulus</h3>
                     <div>
                         <Select v-model="selectedTahunAjaran" :options="tahunAjaranOptions" optionLabel="label"
                             optionValue="value" placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" />
 
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="mb-2">
                 <Toolbar>
                     <template #start>
-                        <Button icon="pi pi-plus" severity="success" class="mr-2" @click="visible = true"
-                            v-tooltip.bottom="'Tambah data'" />
-                        <Button icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
-                            :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2" class="mr-2"
+                        <!-- <Button icon="pi pi-plus" severity="success" class="mr-2" @click="visible = true"
+                            v-tooltip.bottom="'Tambah data'" /> -->
+                        <Button icon="pi pi-pencil" severity="warn" @click="visible = true"
+                            :disabled="!selectedSiswa || !selectedSiswa.length || selectedSiswa.length > 1" class="mr-2"
                             v-tooltip.bottom="'Edit data'" />
                         <Button icon="pi pi-trash" severity="danger" class="mr-2" @click="confirmDeleteSelected"
-                            :disabled="!dataLulusan || !dataLulusan.length" />
+                            :disabled="!selectedSiswa || !selectedSiswa.length" />
 
                         <!-- <Button label="Lulus" severity="warn" class="mr-2" @click="dialogStatus = true"
                                             :disabled="!dataLulusan || !dataLulusan.length" />
@@ -66,20 +66,12 @@
                 </template>
             </Toolbar>
         </div>
-        <!-- </div> -->
-        <!-- </div> -->
-        <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa"
-            dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
+        <DataTable ref="dt" v-model:selection="selectedSiswa" stripedRows size="small" :value="siswa" scrollable
+            scrollHeight="29rem" dataKey="anggotaRombelId" :paginator="true" :rows="10" :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[10, 20, 50]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
             <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-            <!-- <Column field="name" header="File Ijazah">
-                <template #body="slotProps">
-                    <Image :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                        :alt="slotProps.data.image" preview image-class="w-16 h-16 rounded-full" />
-                </template>
-            </Column> -->
             <Column field="anggotaKelas.nmKelas" header="Kelas"></Column>
             <Column field="anggotaKelas.pesertaDidik.nis" header="NIS"></Column>
             <Column field="anggotaKelas.pesertaDidik.nisn" header="NISN"></Column>
@@ -87,46 +79,30 @@
             <Column field="anggotaKelas.pesertaDidik.jenisKelamin" header="JK"></Column>
             <Column field="anggotaKelas.pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
             <Column field="anggotaKelas.pesertaDidik.nmAyah" header="Nama Wali"></Column>
-            <Column field="" header="Status"></Column>
+            <Column field="" header="CID Ijazah"></Column>
             <Column field="" header="No. Ijazah"></Column>
-            <Column field="" header="File Ijazah"></Column>
-            <!-- <Column field="" header="Tgl. Lahir">
-                <template #body="slotProps">
-                    {{ formatterDateID(slotProps.data.pesertaDidik.tanggalLahir) }}
+            <Column field="" header="Status">
+                <template #body>
+                    belum terkirim
+                </template>
+            </Column>
+            <Column field="" header="Kelengkapan">
+                <template #body="{ data: siswaRow }">
+                    <div class="card flex flex-col items-center gap-6">
+                        <p class="text-sm text-red-500">Belum lengkap</p>
+                        <!-- <FileUpload mode="basic" customUpload auto accept="image/*" chooseLabel="Pilih File"
+                            @select="(e) => onFileSelect(e, siswaRow)" @uploader="(e) => onFileUpload(e, siswaRow)"
+                            class="p-button-outlined" />
+                        <img v-if="siswaRow.preview" :src="siswaRow.preview" alt="Image"
+                            class="shadow-md rounded-xl w-full sm:w-64" style="filter: grayscale(100%)" /> -->
+                    </div>
                 </template>
 
             </Column>
-            <Column field="jk" header="Nama Ortu/Wali"></Column>
-            <Column field="jk" header="Sekolah Asal">
-                <template #body="slotProps">
-                    {{ "SMK Pasundan Jatinangor" }}
-                </template>
-            </Column>
-            <Column field="jk" header="Tgl. Terbit">
-            </Column>
-            <Column field="jk" header="No.Ijazah"> 
-
-            </Column>-->
-            <!-- Jika SMK/MAK Program Keahlian & Kompetensi Keahlian akan muncul-->
-            <!-- <div v-if="['smk', 'mak'].includes(bentukPendidikan)">
-                <Column field="jk" header="Prog.Keahlian">
-                    <template #body="slotProps">
-                        {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                    </template>
-                </Column>
-                <Column field="jk" header="Komp.Keahlian">
-                    <template #body="slotProps">
-                        {{ slotProps.data.pesertaDidik.jenisKelamin }}
-                    </template>
-                </Column>
-            </div> -->
-
         </DataTable>
-        <Dialog v-model:visible="visible" modal header="Tambah data ijazah">
-            <IssueDegreeForm />
-
+        <Dialog v-model:visible="visible" modal header="Data ijazah" :style="{ width: '100rem', height: '100rem' }">
+            <DialogIjazah />
         </Dialog>
-
     </div>
 </template>
 
@@ -134,20 +110,16 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import { useStore } from "vuex";
 const store = useStore();
+
+import FileUpload from 'primevue/fileupload';
+
 import AddIjazah from './AddIjazah.vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Image from 'primevue/image';
 
 import Button from 'primevue/button';
-import Select from 'primevue/select';
-
-
-
-
-
 import Dialog from 'primevue/dialog';
-
 import Toolbar from 'primevue/toolbar';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
@@ -169,33 +141,36 @@ const filters = ref({
 });
 
 // ================================
-const semester = ref()
-const selectedTahunAjaran = ref()
+const selectedTahunAjaran = computed(() => store.getters["sekolahService/getSelectedTahunAjaran"])
 const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
 
 // ================================
-const tahunAjaranOptions = ref()
-const fetchSemester = async () => {
-    try {
-        semester.value = await store.getters["sekolahService/getSemester"]
-        if (!semester.value) {
-            semester.value = await store.dispatch("sekolahService/fetchSemester")
-        }
-        tahunAjaranOptions.value = getTahunAjaran(semester.value)
-        // Ambil tahun ajaran terbaru berdasarkan tahun terbesar
-        selectedTahunAjaran.value = `${store.getters["sekolahService/getSelectedSemester"]?.tahunAjaranId}2`
-        // console.log(selectedTahunAjaran.value)
-        if (!selectedTahunAjaran) {
-            selectedTahunAjaran.value = tahunAjaranOptions.value.reduce((latest, current) =>
-                current.tahunAjaranId > latest.tahunAjaranId ? current : latest
-            );
-        }
-    } catch (error) {
-        console.log(error)
-    }
-}
+// const fetchSemester = async () => {
+//     try {
+//         semester.value = await store.getters["sekolahService/getSemester"]
+//         if (!semester.value) {
+//             semester.value = await store.dispatch("sekolahService/fetchSemester")
+//         }
+//         tahunAjaranOptions.value = getTahunAjaran(semester.value)
+//         // Ambil tahun ajaran terbaru berdasarkan tahun terbesar
+//         selectedTahunAjaran.value = `${store.getters["sekolahService/getSelectedSemester"]?.tahunAjaranId}2`
+//         // console.log(selectedTahunAjaran.value)
+//         if (!selectedTahunAjaran) {
+//             selectedTahunAjaran.value = tahunAjaranOptions.value.reduce((latest, current) =>
+//                 current.tahunAjaranId > latest.tahunAjaranId ? current : latest
+//             );
+//         }
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 watch(selectedTahunAjaran, async () => {
     // Panggil data untuk mengumpulkan siswa
+    selectedSiswa.value = []
+    await fetchSiswaLulus()
+})
+
+const fetchSiswaLulus = async () => {
     try {
         let payload = {
             schemaname: schemaname.value,
@@ -212,8 +187,7 @@ watch(selectedTahunAjaran, async () => {
     } catch (error) {
         console.log(error)
     }
-})
-
+}
 // ==================================
 const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
@@ -223,6 +197,7 @@ const confirmDeleteSelected = () => {
 const dataLulusan = ref();
 // const selectedJurusan = ref();
 import { ethers } from 'ethers';
+import DialogIjazah from '@/components/DialogIjazah.vue';
 // Dummy data (bisa kamu ambil dari API atau input form)
 const degreeData = ref({
     nama: "Andi Wijaya",
@@ -250,26 +225,30 @@ const contract = null;
 
 
 onMounted(async () => {
+    await fetchSiswaLulus()
     // await initContract();
-    await fetchSemester()
+    // await fetchSemester()
 });
 // ==================================
-const getTahunAjaran = (semesterArray) => {
-    const unique = new Set();
-    // console.log(semesterArray)
-    return semesterArray
-        .filter(item => {
-            if (!unique.has(item.tahunAjaranId)) {
-                unique.add(item.tahunAjaranId);
-                return true;
-            }
-            return false;
-        })
-        .map(item => ({
-            label: item.tahunAjaranId,
-            value: item.tahunAjaranId + "2"
-        }));
-};
+// watch(selectedTahunAjaran, async () => {
+//     // Panggil data untuk mengumpulkan siswa
+//     try {
+//         let payload = {
+//             schemaname: schemaname.value,
+//             semester_id: selectedTahunAjaran.value,
+//             tipe_kenaikan: 14
+//         }
+//         const results = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
+//         if (results) {
+//             // console.log(results.anggotaKelas)
+//             siswa.value = results.kenaikan
+//         }
+//         // store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedTahunAjaran.value)
+
+//     } catch (error) {
+//         console.log(error)
+//     }
+// })
 // const initContract = async () => {
 //     try {
 //         if (window.ethereum) {
@@ -285,4 +264,20 @@ const getTahunAjaran = (semesterArray) => {
 //         console.error('Gagal memuat kontrak:', error);
 //     }
 // };
+
+const src = ref(null);
+
+const onFileSelect = (event, siswaRow) => {
+    const file = event.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            siswaRow.preview = e.target.result; // Set ke row-nya!
+        };
+        reader.readAsDataURL(file);
+    }
+};
+const editSelectedSiswa = () => {
+
+}
 </script>

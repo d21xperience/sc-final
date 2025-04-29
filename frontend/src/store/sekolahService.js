@@ -40,6 +40,9 @@ const state = {
   tabelMapel: JSON.parse(localStorage.getItem("tabelMapel")) || null,
 
   tabelNilaiakhir: JSON.parse(localStorage.getItem("tabelNilaiakhir")) || null,
+  tabelTahunAjaran: JSON.parse(localStorage.getItem("tabelTahunAjaran")) || [],
+  selectedTahunAjaran:
+    JSON.parse(localStorage.getItem("selectedTahunAjaran")) || [],
 };
 
 const mutations = {
@@ -73,12 +76,9 @@ const mutations = {
     state.tabelPTKTerdaftar = value;
     localStorage.setItem("tabelPTKTerdaftar", JSON.stringify(value));
   },
-  SET_TABELTINGKATPENDIDIKAN(state, tabelTingkatPendidikan) {
-    state.tabelTingkatPendidikan = tabelTingkatPendidikan;
-    localStorage.setItem(
-      "tabelTingkatPendidikan",
-      JSON.stringify(tabelTingkatPendidikan)
-    );
+  SET_TABELTINGKATPENDIDIKAN(state, value) {
+    state.tabelTingkatPendidikan = value;
+    localStorage.setItem("tabelTingkatPendidikan", JSON.stringify(value));
   },
   SET_TABELKURIKULUM(state, tabelKurikulum) {
     state.tabelKurikulum = tabelKurikulum;
@@ -103,6 +103,14 @@ const mutations = {
   SET_TABELNILAIAKHIR(state, value) {
     state.tabelNilaiakhir = value;
     localStorage.setItem("tabelNilaiakhir", JSON.stringify(value));
+  },
+  SET_TABELTAHUNAJARAN(state, value) {
+    state.tabelTahunAjaran = value;
+    localStorage.setItem("tabelTahunAjaran", JSON.stringify(value));
+  },
+  SET_SELECTEDTAHUNAJARAN(state, value) {
+    state.selectedTahunAjaran = value;
+    localStorage.setItem("selectedTahunAjaran", JSON.stringify(value));
   },
 };
 
@@ -142,6 +150,7 @@ const actions = {
         params: {
           semester_id: payload.semester_id,
           kelas_id: payload.kelas_id,
+          tingkat_pendidikan_id: payload.tingkat_pendidikan_id,
         },
       });
       const data = {
@@ -486,6 +495,7 @@ const actions = {
           jenjang_pendidikan_id: payload.jenjang_pendidikan_id,
         },
       });
+      commit("SET_TABELTINGKATPENDIDIKAN", response.data.tingkatPendidikan);
       return response.data.tingkatPendidikan;
     } catch (error) {
       // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
@@ -664,16 +674,32 @@ const actions = {
   // ==================================
   // IJAZAH SERVICE
   // ==================================
+  async createProsesIjazah({ commit }, payload) {
+    try {
+      // console.log(payload);
+      // return;
+      const response = await api.post(`ss/ijazah/create`, payload);
+      // console.log(response.data);
+      return response.data; // Mengembalikan data sekolah
+    } catch (error) {
+      // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
+      console.error("Gagal mendaftarkan siswa baru:", error);
+      return null;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
   async fetchProsesIjazah({ commit }, payload) {
     try {
-      const response = await api.get(`ss/kenaikan`, {
+      const response = await api.get(`ss/ijazah/create`, {
         params: {
           schemaname: payload.schemaname,
-          semester_id: payload.semester_id,
-          tipe_kenaikan: payload.tipe_kenaikan,
+          tahun_ajaran_id: payload.tahun_ajaran_id,
+          blockexplorer_url: payload.blockexplorer_url,
+          anggota_kelas: payload.anggota_kelas,
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
       return response.data; // Mengembalikan data sekolah
     } catch (error) {
       // commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
@@ -725,17 +751,18 @@ const getters = {
   getError: (state) => state.error,
   getTabeltenant: (state) => state.tabelTenant,
   getSemester: (state) => state.tabelSemester,
+  getSelectedSemester: (state) => state.selectedSemester,
   getSekolah: (state) => state.tabelSekolah,
   getKurikulum: (state) => state.tabelKurikulum,
   getGuru: (state) => state.tabelGuru,
   getPTKTerdaftar: (state) => state.tabelPTKTerdaftar,
-  getSelectedSemester: (state) => state.selectedSemester,
   getTingkatPendidikan: (state) => state.tabelTingkatPendidikan,
   getTabelAnggotaKelas: (state) => state.tabelAnggotaKelas,
   getSiswaAktif: (state) => state.tabelSiswaAktif,
   getMapel: (state) => state.tabelMapel,
-
   getNilaiSiswa: (state) => state.tabelNilaiakhir,
+  getTahunAjaran: (state) => state.tabelTahunAjaran,
+  getSelectedTahunAjaran: (state) => state.selectedTahunAjaran,
 };
 
 export default {

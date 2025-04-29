@@ -50,7 +50,7 @@ export function useSekolahService(schemaname, selectedSemester) {
     }
   };
 
-  const fetchKelas = async (kelasId = null) => {
+  const fetchKelas = async (kelasId = null, tingkatPendidikanId = null) => {
     try {
       const payload = {
         schemaname: schemaname.value,
@@ -59,6 +59,9 @@ export function useSekolahService(schemaname, selectedSemester) {
 
       if (kelasId) {
         payload.kelas_id = kelasId;
+      }
+      if (tingkatPendidikanId) {
+        payload.tingkat_pendidikan_id = tingkatPendidikanId;
       }
       const response = await store.dispatch(
         "sekolahService/fetchRombel",
@@ -155,18 +158,25 @@ export function useSekolahService(schemaname, selectedSemester) {
   };
 
   const fetchTingkat = async () => {
-    // const res = await store.getters["sekolahService/getRefTingkat"]
-    const payload = {
-      jenjang_pendidikan_id: await store.getters["sekolahService/getSekolah"]
-        ?.jenjangPendidikanId, //sekolah.value?.jenjangPendidikanId
-    };
-    const response = await store.dispatch(
-      "sekolahService/fetchTingkatPendidikan",
-      payload
-    );
-    // console.log(response);
+    try {
+      let response = await store.getters["sekolahService/getRefTingkat"];
+      if (!response) {
+        const payload = {
+          jenjang_pendidikan_id: await store.getters[
+            "sekolahService/getSekolah"
+          ]?.jenjangPendidikanId, //sekolah.value?.jenjangPendidikanId
+        };
+        response = await store.dispatch(
+          "sekolahService/fetchTingkatPendidikan",
+          payload
+        );
+        return response;
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
-    return response;
+    // console.log(response);
   };
   return {
     fetchGuru,

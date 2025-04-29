@@ -9,9 +9,12 @@
                         <span v-if="platformsActivate">{{ platformsActivate?.name ?? "Pilih Platform" }}</span>
                         <i class="ml-2 pi pi-angle-up "></i></button>
                 </div>
-                <div v-show="platformsActivate?.name" class="flex items-center">
-                    <button class="bg-red-400 py-2 px-3 rounded-full hover:opacity-70 flex items-center gap-2"
-                        @click="platformDiactive"><i class="pi pi-times"></i> Disconect</button>
+                <div class="md:flex md:items-center md:space-x-2">
+                    <h3 class="text-slate-500 md:text-base text-sm">Tahun Lulus</h3>
+                    <div>
+                        <Select v-model="selectedTahunAjaran" :options="tahunAjaranOptions" optionLabel="label"
+                            optionValue="value" placeholder="Tahun Pelajaran" class="w-full md:w-52 mr-2" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,6 +46,7 @@ import { computed, ref, watch, onMounted } from 'vue';
 
 // Dialog
 import Dialog from 'primevue/dialog';
+import Select from 'primevue/select';
 
 const platformsActivate = ref({})
 const platforms = ref(null)
@@ -115,9 +119,61 @@ const platformDiactive = async () => {
     platformsActivate.value = {};
     selectedPlatform.value = '';
 }
-onMounted(() => {
-    fetchPlatforms()
+onMounted(async () => {
+    await fetchPlatforms()
+    await fetchSemester()
 });
+const semester = ref()
+const selectedTahunAjaran = ref()
+const tahunAjaranOptions = ref()
+const fetchSemester = async () => {
+    try {
+        let cek = await store.getters["sekolahService/getTahunAjaran"]
+        if (!cek || cek.length === 0) {
+            semester.value = await store.getters["sekolahService/getSemester"]
+            if (!semester.value) {
+                semester.value = await store.dispatch("sekolahService/fetchSemester")
+            }
+            cek = getTahunAjaran(semester.value)
+        }
+        tahunAjaranOptions.value = cek
+        store.commit("sekolahService/SET_TABELTAHUNAJARAN", cek)
+
+        // Ambil tahun ajaran terbaru berdasarkan tahun terbesar
+        selectedTahunAjaran.value = store.getters["sekolahService/getSelectedTahunAjaran"]
+        // console.log(selectedTahunAjaran.value)
+        if (!selectedTahunAjaran) {
+            selectedTahunAjaran.value = tahunAjaranOptions.value.reduce((latest, current) =>
+                current.tahunAjaranId > latest.tahunAjaranId ? current : latest
+            );
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+const getTahunAjaran = (semesterArray) => {
+    const unique = new Set();
+    // console.log(semesterArray)
+    return semesterArray
+        .filter(item => {
+            if (!unique.has(item.tahunAjaranId)) {
+                unique.add(item.tahunAjaranId);
+                return true;
+            }
+            return false;
+        })
+        .map(item => ({
+            label: item.tahunAjaranId,
+            value: item.tahunAjaranId + "2"
+        }));
+};
+
+watch(selectedTahunAjaran, (val) => {
+    // tetapkan tahun ajaran yang dipilih
+    store.commit("sekolahService/SET_SELECTEDTAHUNAJARAN", val)
+})
 
 </script>
 

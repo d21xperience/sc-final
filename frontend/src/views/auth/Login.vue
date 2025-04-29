@@ -151,7 +151,7 @@ const onFormSubmit = async ({ valid, values }) => {
                     <!-- login SSO -->
                     <!-- <p class="text-center text-sm">---------------- Atau ----------------</p> -->
                     <hr class="!my-1 border-gray-400" />
-                    <div class="space-x-8 flex justify-center">
+                    <!-- <div class="space-x-8 flex justify-center">
                         <button type="button" class="border-none outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" width="30px" class="inline" viewBox="0 0 512 512">
                                 <path fill="#fbbd00"
@@ -183,7 +183,7 @@ const onFormSubmit = async ({ valid, values }) => {
                                     data-original="#010002"></path>
                             </svg>
                         </button>
-                    </div>
+                    </div> -->
 
 
 

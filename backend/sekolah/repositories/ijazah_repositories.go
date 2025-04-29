@@ -7,5 +7,5 @@ import (
 )
 
 func NewIjazahRepository(db *gorm.DB) *GenericRepository[models.Ijazah] {
-	return NewGenericRepository[models.Ijazah](db, "tabel_anggotakelas")
+	return NewGenericRepository[models.Ijazah](db, "ijazah")
 }

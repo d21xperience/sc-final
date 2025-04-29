@@ -188,14 +188,14 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 				Agama:        siswa.PesertaDidik.Agama,
 				AlamatSiswa:  utils.SafeString(siswa.PesertaDidik.AlamatSiswa),
 				TeleponSiswa: siswa.PesertaDidik.TeleponSiswa,
-				// DiterimaTanggal: utils.TimeToString(*siswa.PesertaDidik.DiterimaTanggal, "2006-01-02"),
-				// DiterimaTanggal: utils.SafeString(*siswa.PesertaDidik.DiterimaTanggal),
 				NmAyah:        siswa.PesertaDidik.NmAyah,
 				NmIbu:         siswa.PesertaDidik.NmIbu,
 				PekerjaanAyah: siswa.PesertaDidik.PekerjaanAyah,
 				PekerjaanIbu:  siswa.PesertaDidik.PekerjaanIbu,
 				NmWali:        utils.SafeString(siswa.PesertaDidik.NmWali),
 				PekerjaanWali: utils.SafeString(siswa.PesertaDidik.PekerjaanWali),
+				// DiterimaTanggal: utils.TimeToString(*siswa.PesertaDidik.DiterimaTanggal, "2006-01-02"),
+				// DiterimaTanggal: utils.SafeString(*siswa.PesertaDidik.DiterimaTanggal),
 			},
 		}
 	})

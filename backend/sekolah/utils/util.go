@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"math/rand"
 	"reflect"
 	"strconv"
 	"time"
@@ -257,4 +258,11 @@ func SliceToPointer[T any](input []T) []*T {
 		output[i] = &val
 	}
 	return output
+}
+
+// GenerateNomorIjazah generates a random ijazah number based on NPSN and year
+func GenerateNomorIjazah(npsn string, tahun int) string {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	randomNumber := r.Intn(1000000) // random 6 digit
+	return fmt.Sprintf("%s/%d/%06d", npsn, tahun, randomNumber)
 }
