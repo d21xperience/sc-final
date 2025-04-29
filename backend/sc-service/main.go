@@ -2,7 +2,6 @@ package main
 
 import (
 	"sc-service/config"
-	"sc-service/models"
 	"sc-service/server"
 )
 
@@ -11,7 +10,7 @@ func main() {
 	cfg := config.LoadConfig()
 	// Inisialisasi database
 	config.InitDatabase(cfg)
-	config.DB.AutoMigrate(&models.SchemaLog{}, &models.SekolahTenant{})
+	// config.DB.AutoMigrate(&models.SchemaLog{}, &models.SekolahTenant{})
 
 	// err := models.Migrate(config.DB)
 	// if err != nil {

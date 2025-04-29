@@ -35,9 +35,6 @@ const (
 	BlockchainService_GetGasPrice_FullMethodName               = "/sc_service.BlockchainService/GetGasPrice"
 	BlockchainService_GetNonce_FullMethodName                  = "/sc_service.BlockchainService/GetNonce"
 	BlockchainService_GetTransactionStatus_FullMethodName      = "/sc_service.BlockchainService/GetTransactionStatus"
-	BlockchainService_CreateIjazahBlockchain_FullMethodName    = "/sc_service.BlockchainService/CreateIjazahBlockchain"
-	BlockchainService_GetIjazahBlockchain_FullMethodName       = "/sc_service.BlockchainService/GetIjazahBlockchain"
-	BlockchainService_SearchIjazahBlockchain_FullMethodName    = "/sc_service.BlockchainService/SearchIjazahBlockchain"
 )
 
 // BlockchainServiceClient is the client API for BlockchainService service.
@@ -73,12 +70,6 @@ type BlockchainServiceClient interface {
 	GetGasPrice(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetGasPriceResponse, error)
 	GetNonce(ctx context.Context, in *GetNonceRequest, opts ...grpc.CallOption) (*GetNonceResponse, error)
 	GetTransactionStatus(ctx context.Context, in *GetTransactionStatusRequest, opts ...grpc.CallOption) (*GetTransactionStatusResponse, error)
-	// =========================================
-	// IJAZAH BLOCKCHAIN
-	// =========================================
-	CreateIjazahBlockchain(ctx context.Context, in *CreateIjazahBlockchainRequest, opts ...grpc.CallOption) (*CreateIjazahBlockchainResponse, error)
-	GetIjazahBlockchain(ctx context.Context, in *GetIjazahBlockchainRequest, opts ...grpc.CallOption) (*GetIjazahBlockchainResponse, error)
-	SearchIjazahBlockchain(ctx context.Context, in *SearchIjazahBlockchainRequest, opts ...grpc.CallOption) (*SearchIjazahBlockchainResponse, error)
 }
 
 type blockchainServiceClient struct {
@@ -249,36 +240,6 @@ func (c *blockchainServiceClient) GetTransactionStatus(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *blockchainServiceClient) CreateIjazahBlockchain(ctx context.Context, in *CreateIjazahBlockchainRequest, opts ...grpc.CallOption) (*CreateIjazahBlockchainResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateIjazahBlockchainResponse)
-	err := c.cc.Invoke(ctx, BlockchainService_CreateIjazahBlockchain_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *blockchainServiceClient) GetIjazahBlockchain(ctx context.Context, in *GetIjazahBlockchainRequest, opts ...grpc.CallOption) (*GetIjazahBlockchainResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetIjazahBlockchainResponse)
-	err := c.cc.Invoke(ctx, BlockchainService_GetIjazahBlockchain_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *blockchainServiceClient) SearchIjazahBlockchain(ctx context.Context, in *SearchIjazahBlockchainRequest, opts ...grpc.CallOption) (*SearchIjazahBlockchainResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SearchIjazahBlockchainResponse)
-	err := c.cc.Invoke(ctx, BlockchainService_SearchIjazahBlockchain_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // BlockchainServiceServer is the server API for BlockchainService service.
 // All implementations must embed UnimplementedBlockchainServiceServer
 // for forward compatibility.
@@ -312,12 +273,6 @@ type BlockchainServiceServer interface {
 	GetGasPrice(context.Context, *Empty) (*GetGasPriceResponse, error)
 	GetNonce(context.Context, *GetNonceRequest) (*GetNonceResponse, error)
 	GetTransactionStatus(context.Context, *GetTransactionStatusRequest) (*GetTransactionStatusResponse, error)
-	// =========================================
-	// IJAZAH BLOCKCHAIN
-	// =========================================
-	CreateIjazahBlockchain(context.Context, *CreateIjazahBlockchainRequest) (*CreateIjazahBlockchainResponse, error)
-	GetIjazahBlockchain(context.Context, *GetIjazahBlockchainRequest) (*GetIjazahBlockchainResponse, error)
-	SearchIjazahBlockchain(context.Context, *SearchIjazahBlockchainRequest) (*SearchIjazahBlockchainResponse, error)
 	mustEmbedUnimplementedBlockchainServiceServer()
 }
 
@@ -375,15 +330,6 @@ func (UnimplementedBlockchainServiceServer) GetNonce(context.Context, *GetNonceR
 }
 func (UnimplementedBlockchainServiceServer) GetTransactionStatus(context.Context, *GetTransactionStatusRequest) (*GetTransactionStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionStatus not implemented")
-}
-func (UnimplementedBlockchainServiceServer) CreateIjazahBlockchain(context.Context, *CreateIjazahBlockchainRequest) (*CreateIjazahBlockchainResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateIjazahBlockchain not implemented")
-}
-func (UnimplementedBlockchainServiceServer) GetIjazahBlockchain(context.Context, *GetIjazahBlockchainRequest) (*GetIjazahBlockchainResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetIjazahBlockchain not implemented")
-}
-func (UnimplementedBlockchainServiceServer) SearchIjazahBlockchain(context.Context, *SearchIjazahBlockchainRequest) (*SearchIjazahBlockchainResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchIjazahBlockchain not implemented")
 }
 func (UnimplementedBlockchainServiceServer) mustEmbedUnimplementedBlockchainServiceServer() {}
 func (UnimplementedBlockchainServiceServer) testEmbeddedByValue()                           {}
@@ -694,60 +640,6 @@ func _BlockchainService_GetTransactionStatus_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlockchainService_CreateIjazahBlockchain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateIjazahBlockchainRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BlockchainServiceServer).CreateIjazahBlockchain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: BlockchainService_CreateIjazahBlockchain_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).CreateIjazahBlockchain(ctx, req.(*CreateIjazahBlockchainRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _BlockchainService_GetIjazahBlockchain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetIjazahBlockchainRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BlockchainServiceServer).GetIjazahBlockchain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: BlockchainService_GetIjazahBlockchain_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).GetIjazahBlockchain(ctx, req.(*GetIjazahBlockchainRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _BlockchainService_SearchIjazahBlockchain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchIjazahBlockchainRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BlockchainServiceServer).SearchIjazahBlockchain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: BlockchainService_SearchIjazahBlockchain_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlockchainServiceServer).SearchIjazahBlockchain(ctx, req.(*SearchIjazahBlockchainRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // BlockchainService_ServiceDesc is the grpc.ServiceDesc for BlockchainService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -818,18 +710,6 @@ var BlockchainService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTransactionStatus",
 			Handler:    _BlockchainService_GetTransactionStatus_Handler,
-		},
-		{
-			MethodName: "CreateIjazahBlockchain",
-			Handler:    _BlockchainService_CreateIjazahBlockchain_Handler,
-		},
-		{
-			MethodName: "GetIjazahBlockchain",
-			Handler:    _BlockchainService_GetIjazahBlockchain_Handler,
-		},
-		{
-			MethodName: "SearchIjazahBlockchain",
-			Handler:    _BlockchainService_SearchIjazahBlockchain_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1606,6 +1486,190 @@ var BCPlatformService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetBCPlatform",
 			Handler:    _BCPlatformService_SetBCPlatform_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "sc.proto",
+}
+
+const (
+	TransaksiService_CreateIjazahBlockchain_FullMethodName = "/sc_service.TransaksiService/CreateIjazahBlockchain"
+	TransaksiService_GetIjazahBlockchain_FullMethodName    = "/sc_service.TransaksiService/GetIjazahBlockchain"
+	TransaksiService_SearchIjazahBlockchain_FullMethodName = "/sc_service.TransaksiService/SearchIjazahBlockchain"
+)
+
+// TransaksiServiceClient is the client API for TransaksiService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type TransaksiServiceClient interface {
+	// =========================================
+	// IJAZAH BLOCKCHAIN
+	// =========================================
+	CreateIjazahBlockchain(ctx context.Context, in *CreateIjazahBlockchainRequest, opts ...grpc.CallOption) (*CreateIjazahBlockchainResponse, error)
+	GetIjazahBlockchain(ctx context.Context, in *GetIjazahBlockchainRequest, opts ...grpc.CallOption) (*GetIjazahBlockchainResponse, error)
+	SearchIjazahBlockchain(ctx context.Context, in *SearchIjazahBlockchainRequest, opts ...grpc.CallOption) (*SearchIjazahBlockchainResponse, error)
+}
+
+type transaksiServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewTransaksiServiceClient(cc grpc.ClientConnInterface) TransaksiServiceClient {
+	return &transaksiServiceClient{cc}
+}
+
+func (c *transaksiServiceClient) CreateIjazahBlockchain(ctx context.Context, in *CreateIjazahBlockchainRequest, opts ...grpc.CallOption) (*CreateIjazahBlockchainResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateIjazahBlockchainResponse)
+	err := c.cc.Invoke(ctx, TransaksiService_CreateIjazahBlockchain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transaksiServiceClient) GetIjazahBlockchain(ctx context.Context, in *GetIjazahBlockchainRequest, opts ...grpc.CallOption) (*GetIjazahBlockchainResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetIjazahBlockchainResponse)
+	err := c.cc.Invoke(ctx, TransaksiService_GetIjazahBlockchain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transaksiServiceClient) SearchIjazahBlockchain(ctx context.Context, in *SearchIjazahBlockchainRequest, opts ...grpc.CallOption) (*SearchIjazahBlockchainResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchIjazahBlockchainResponse)
+	err := c.cc.Invoke(ctx, TransaksiService_SearchIjazahBlockchain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TransaksiServiceServer is the server API for TransaksiService service.
+// All implementations must embed UnimplementedTransaksiServiceServer
+// for forward compatibility.
+type TransaksiServiceServer interface {
+	// =========================================
+	// IJAZAH BLOCKCHAIN
+	// =========================================
+	CreateIjazahBlockchain(context.Context, *CreateIjazahBlockchainRequest) (*CreateIjazahBlockchainResponse, error)
+	GetIjazahBlockchain(context.Context, *GetIjazahBlockchainRequest) (*GetIjazahBlockchainResponse, error)
+	SearchIjazahBlockchain(context.Context, *SearchIjazahBlockchainRequest) (*SearchIjazahBlockchainResponse, error)
+	mustEmbedUnimplementedTransaksiServiceServer()
+}
+
+// UnimplementedTransaksiServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedTransaksiServiceServer struct{}
+
+func (UnimplementedTransaksiServiceServer) CreateIjazahBlockchain(context.Context, *CreateIjazahBlockchainRequest) (*CreateIjazahBlockchainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateIjazahBlockchain not implemented")
+}
+func (UnimplementedTransaksiServiceServer) GetIjazahBlockchain(context.Context, *GetIjazahBlockchainRequest) (*GetIjazahBlockchainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetIjazahBlockchain not implemented")
+}
+func (UnimplementedTransaksiServiceServer) SearchIjazahBlockchain(context.Context, *SearchIjazahBlockchainRequest) (*SearchIjazahBlockchainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchIjazahBlockchain not implemented")
+}
+func (UnimplementedTransaksiServiceServer) mustEmbedUnimplementedTransaksiServiceServer() {}
+func (UnimplementedTransaksiServiceServer) testEmbeddedByValue()                          {}
+
+// UnsafeTransaksiServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TransaksiServiceServer will
+// result in compilation errors.
+type UnsafeTransaksiServiceServer interface {
+	mustEmbedUnimplementedTransaksiServiceServer()
+}
+
+func RegisterTransaksiServiceServer(s grpc.ServiceRegistrar, srv TransaksiServiceServer) {
+	// If the following call pancis, it indicates UnimplementedTransaksiServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&TransaksiService_ServiceDesc, srv)
+}
+
+func _TransaksiService_CreateIjazahBlockchain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateIjazahBlockchainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransaksiServiceServer).CreateIjazahBlockchain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TransaksiService_CreateIjazahBlockchain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransaksiServiceServer).CreateIjazahBlockchain(ctx, req.(*CreateIjazahBlockchainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TransaksiService_GetIjazahBlockchain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetIjazahBlockchainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransaksiServiceServer).GetIjazahBlockchain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TransaksiService_GetIjazahBlockchain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransaksiServiceServer).GetIjazahBlockchain(ctx, req.(*GetIjazahBlockchainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TransaksiService_SearchIjazahBlockchain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchIjazahBlockchainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransaksiServiceServer).SearchIjazahBlockchain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TransaksiService_SearchIjazahBlockchain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransaksiServiceServer).SearchIjazahBlockchain(ctx, req.(*SearchIjazahBlockchainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// TransaksiService_ServiceDesc is the grpc.ServiceDesc for TransaksiService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var TransaksiService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sc_service.TransaksiService",
+	HandlerType: (*TransaksiServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateIjazahBlockchain",
+			Handler:    _TransaksiService_CreateIjazahBlockchain_Handler,
+		},
+		{
+			MethodName: "GetIjazahBlockchain",
+			Handler:    _TransaksiService_GetIjazahBlockchain_Handler,
+		},
+		{
+			MethodName: "SearchIjazahBlockchain",
+			Handler:    _TransaksiService_SearchIjazahBlockchain_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

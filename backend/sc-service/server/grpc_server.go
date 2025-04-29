@@ -25,6 +25,8 @@ func RunGRPCServer() *grpc.Server {
 	pb.RegisterTenantServiceServer(grpcServer, tenantServiceServer)
 	bcPlatformServiceServer := services.NewBCPlatformServiceServer()
 	pb.RegisterBCPlatformServiceServer(grpcServer, bcPlatformServiceServer)
+	transaksiServiceServer := services.NewTransaksiService()
+	pb.RegisterTransaksiServiceServer(grpcServer, transaksiServiceServer)
 
 	return grpcServer
 }

@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Certificate struct {
 	CertificateID   uint      `gorm:"primaryKey" json:"certificate_id"`
@@ -27,4 +31,51 @@ type Verification struct {
 	VerificationDate time.Time `gorm:"autoCreateTime" json:"verification_date"`
 	Result           bool      `json:"result"`
 	Remarks          string    `gorm:"type:text" json:"remarks"`
+}
+
+type IjazahBc struct {
+	ID                          string    `gorm:"primaryKey;type:uuid"` // atau varchar sesuai kebutuhan
+	PesertaDidikID              uuid.UUID `gorm:"not null"`
+	Nama                        string
+	NIS                         string
+	NISN                        string
+	NPSN                        string
+	NomorIjazah                 string
+	TempatLahir                 string
+	TanggalLahir                *time.Time
+	NamaOrtuwali                string
+	PaketKeahlian               string
+	KabupatenKota               string
+	Provinsi                    string
+	ProgramKeahlian             string
+	SekolahPenyelenggaraUjianUS string
+	SekolahPenyelenggaraUjianUN string
+	AsalSekolah                 string
+	TempatIjazah                string
+	TanggalIjazah               *time.Time
+	CreatedAt                   time.Time
+	UpdatedAt                   time.Time
+}
+
+func (IjazahBc) TableName() string {
+	return "ijazah_bc"
+}
+
+type DegreeData struct {
+	ID             uint     `gorm:"primaryKey;autoIncrement"`
+	IjazahID       string   `gorm:"not null"`
+	Ijazah         IjazahBc `gorm:"foreignKey:IjazahID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	DegreeHash     string
+	TxHash         string
+	IpfsURL        string
+	BcType         string
+	LinkBcExplorer string
+	SekolahId      uuid.UUID
+	TahunAjaranId  int32
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+}
+
+func (DegreeData) TableName() string {
+	return "degree_data"
 }

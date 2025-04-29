@@ -40,143 +40,104 @@ const generateDegreeHash = (data) => {
     return keccak256(toUtf8Bytes(stringified)); // ethers v6
 };
 
-// Fungsi submit
-// const handleSubmit = async () => {
-//     isLoading.value = true;
-//     try {
-//         if (!contract.value) await loadContract();
-
-//         // 1. Buat hash ijazah
-//         const degreeHash = generateDegreeHash(props.degreeData);
-//         const issueDate = Math.floor(Date.now() / 1000); // timestamp
-//         // Validasi dan konversi array transcript
-//         let subjects = props.transcript.subjects;
-//         let grades = props.transcript.grades;
-
-//         // Jika bentuknya string, parsing dulu
-//         if (typeof subjects === 'string') {
-//             subjects = JSON.parse(subjects);
-//         }
-//         if (typeof grades === 'string') {
-//             grades = JSON.parse(grades);
-//         }
-
-//         // Pastikan grades berbentuk array number
-//         grades = grades.map(n => parseInt(n));
-
-//         // Validasi panjang array sama
-//         if (subjects.length !== grades.length) {
-//             throw new Error("Jumlah mata pelajaran dan nilai tidak sama.");
-//         }
-
-//         // 2. Estimasi gas (opsional, bisa dilewatkan jika tidak diperlukan)
-//         // const gasEstimate = await contract.value.issueDegree.estimateGas(
-//         //     degreeHash,
-//         //     props.sekolah,
-//         //     issueDate,
-//         //     props.ipfsUrl,
-//         //     props.transcript.subjects,
-//         //     props.transcript.grades
-//         // );
-//         const gasEstimate = await contract.value.issueDegree.estimateGas(
-//             degreeHash,
-//             props.sekolah,
-//             issueDate,
-//             props.ipfsUrl,
-//             subjects,
-//             grades
-//         );
-
-
-
-
-
-//         const proceed = confirm(`Biaya gas kira-kira: ${ethers.formatUnits(gasEstimate, 'gwei')} Gwei. Lanjutkan?`);
-//         if (!proceed) return;
-
-//         // 3. Kirim transaksi
-//         // const tx = await contract.value.issueDegree(
-//         //     degreeHash,
-//         //     props.sekolah,
-//         //     issueDate,
-//         //     props.ipfsUrl,
-//         //     props.transcript.subjects,
-//         //     props.transcript.grades
-//         // );
-//         const tx = await contract.value.issueDegree(
-//             degreeHash,
-//             props.sekolah,
-//             issueDate,
-//             props.ipfsUrl,
-//             subjects,
-//             grades
-//         );
-
-//         await tx.wait(); // tunggu konfirmasi
-
-//         alert("Ijazah berhasil diverifikasi di blockchain!");
-//         // await saveToBackend(tx.hash, degreeHash);
-
-//     } catch (err) {
-//         console.error(err);
-//         alert(`Gagal memproses: ${err.message}`);
-//     } finally {
-//         isLoading.value = false;
-//     }
-// };
 
 const handleSubmit = async () => {
     isLoading.value = true;
     try {
-        console.log("props.transcript:", props.transcript);
-        console.log("subjects:", props.transcript?.subjects);
-        console.log("grades:", props.transcript?.grades);
+        // console.log("props.transcript:", props.transcript);
+        // console.log("subjects:", props.transcript?.subjects);
+        // console.log("grades:", props.transcript?.grades);
 
-        if (!contract.value) await loadContract();
+        // if (!contract.value) await loadContract();
 
-        const degreeHash = generateDegreeHash(props.degreeData);
-        const issueDate = Math.floor(Date.now() / 1000);
+        // const degreeHash = generateDegreeHash(props.degreeData);
+        // const issueDate = Math.floor(Date.now() / 1000);
 
-        // Validasi & parsing subjects dan grades
-        let subjects = props.transcript?.subjects;
-        let grades = props.transcript?.grades;
+        // // Validasi & parsing subjects dan grades
+        // let subjects = props.transcript?.subjects;
+        // let grades = props.transcript?.grades;
 
-        if (!Array.isArray(subjects) || !Array.isArray(grades)) {
-            throw new Error("Data transcript tidak valid. Pastikan subjects dan grades berupa array.");
-        }
+        // if (!Array.isArray(subjects) || !Array.isArray(grades)) {
+        //     throw new Error("Data transcript tidak valid. Pastikan subjects dan grades berupa array.");
+        // }
 
-        grades = grades.map((n) => parseInt(n));
+        // grades = grades.map((n) => parseInt(n));
 
-        if (subjects.length !== grades.length) {
-            throw new Error("Jumlah mata pelajaran dan nilai tidak cocok.");
-        }
+        // if (subjects.length !== grades.length) {
+        //     throw new Error("Jumlah mata pelajaran dan nilai tidak cocok.");
+        // }
 
-        const gasEstimate = await contract.value.issueDegree.estimateGas(
-            degreeHash,
-            props.sekolah,
-            issueDate,
-            props.ipfsUrl,
-            subjects,
-            grades
-        );
+        // const gasEstimate = await contract.value.issueDegree.estimateGas(
+        //     degreeHash,
+        //     props.sekolah,
+        //     issueDate,
+        //     props.ipfsUrl,
+        //     subjects,
+        //     grades
+        // );
 
-        const proceed = confirm(`Biaya gas kira-kira: ${ethers.formatUnits(gasEstimate, 'gwei')} Gwei. Lanjutkan?`);
-        if (!proceed) return;
+        // const proceed = confirm(`Biaya gas kira-kira: ${ethers.formatUnits(gasEstimate, 'gwei')} Gwei. Lanjutkan?`);
+        // if (!proceed) return;
 
-        const tx = await contract.value.issueDegree(
-            degreeHash,
-            props.sekolah,
-            issueDate,
-            props.ipfsUrl,
-            subjects,
-            grades
-        );
+        // const tx = await contract.value.issueDegree(
+        //     degreeHash,
+        //     props.sekolah,
+        //     issueDate,
+        //     props.ipfsUrl,
+        //     subjects,
+        //     grades
+        // );
 
-        await tx.wait();
+        // await tx.wait();
         alert("Ijazah berhasil diverifikasi di blockchain!");
+        saveToBackend("tx.hash", "degreeHash")
     } catch (err) {
         console.error(err);
         alert(`Gagal memproses: ${err.message}`);
+    } finally {
+        isLoading.value = false;
+    }
+};
+const handleBatchSubmit = async () => {
+    isLoading.value = true;
+    try {
+        if (!contract.value) await loadContract();
+
+        for (const student of studentsData) {
+            // Buat degreeHash dari data (hash dari ipfs + sekolah + waktu sekarang)
+            const degreeHash = generateDegreeHash(student); // pastikan fungsi ini konsisten
+
+            const issueDate = Math.floor(Date.now() / 1000);
+
+            // Validasi input
+            if (
+                !Array.isArray(student.subjects) ||
+                !Array.isArray(student.grades) ||
+                student.subjects.length !== student.grades.length
+            ) {
+                console.warn("Data tidak valid:", student);
+                continue; // Skip data tidak valid
+            }
+
+            console.log("Mengirim untuk:", student.sekolah, degreeHash);
+
+            const tx = await contract.value.issueDegree(
+                degreeHash,
+                student.sekolah,
+                issueDate,
+                student.ipfsUrl,
+                student.subjects,
+                student.grades
+            );
+
+            await tx.wait(); // Tunggu satu per satu
+            console.log("Sukses simpan:", degreeHash);
+        }
+
+        alert("Semua data siswa berhasil dikirim ke smart contract.");
+    } catch (err) {
+        console.error("Gagal:", err);
+        alert(`Terjadi error: ${err.message}`);
     } finally {
         isLoading.value = false;
     }
@@ -202,22 +163,29 @@ onMounted(async () => {
 });
 // 🗄️ Simpan ke backend
 const saveToBackend = async (txHash, degreeHash) => {
-    // await fetch('/api/degrees', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({
-    //         txHash,
-    //         degreeHash,
-    //         degreeData: props.degreeData,
-    //         sekolah: props.sekolah,
-    //         ipfsUrl: props.ipfsUrl
-    //     })
-    // });
     try {
-        const payload = {
-            schemaname: await store.getters["sekolahService/getSchemaname"]?.schemaname
-
+        console.log(props.degreeData)
+        let degreData = {
+            degree_hash: degreeHash,
+            tx_hash: txHash,
+            ipfs_url: props.ipfsUrl,
+            bc_type: "Ethereum",
+            link_bc_explorer: "http://localhost:26000",
+            tahun_ajaran_id: props.degreeData?.tahun_lulus,
+            ijazah: {
+                nama: props.degreeData?.nama,
+                nisn: props.degreeData?.nisn,
+                program_keahlian: props.degreeData?.major
+            },
         }
+
+        const payload = {
+            degree_data: [degreData]
+        }
+        console.log(payload)
+        // return
+        const response = await store.dispatch("scService/createIjazahBC", payload)
+        console.log(response)
     } catch (error) {
         console.log(error)
     }

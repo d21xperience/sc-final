@@ -243,20 +243,39 @@ const actions = {
     }
   },
   async createIjazahBC({ commit }, payload) {
-    // commit("SET_LOADING", true);
-    // commit("SET_ERROR", null);
-    // console.log("Payload yang dikirim:", JSON.stringify(payload, null, 2));
-
     try {
-      const response = await api.post(`/sc/ijazah-bc/create`, payload);
-      // commit("SET_BCNETWORK", response.data);
-      return response.data; // Mengembalikan data sekolah
+      const response = await api.post(
+        `/sc/ijazah-bc/create`,
+        JSON.stringify(payload)
+      );
+      return response.data;
     } catch (error) {
-      commit("SET_ERROR", error.response?.data || "Terjadi kesalahan");
-      console.error("Gagal membuat akun:", error);
-      return null;
-    } finally {
-      commit("SET_LOADING", false);
+      throw error;
+    }
+  },
+  async fetchIjazahBC({ commit }, payload) {
+    try {
+      const response = await api.get(`/sc/ijazah-bc`, {
+        params: {
+          sekolah_id: payload.sekolah_id,
+          tahun_ajaran_id: payload.tahun_ajaran_id,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async searchIjazahBC({ commit }, payload) {
+    try {
+      const response = await api.get(`/sc/ijazah-bc/search`, {
+        params: {
+          nisn: payload.nisn,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   },
   // ================================

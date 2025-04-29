@@ -35,4 +35,8 @@ func RunHTTPGateway(ctx context.Context, mux *runtime.ServeMux, grpcServerEndpoi
 	if err != nil {
 		log.Fatalf("Failed to register BCPlatform on HTTP gateway: %v", err)
 	}
+	err = pb.RegisterTransaksiServiceHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
+	if err != nil {
+		log.Fatalf("Failed to register Transaksi on HTTP gateway: %v", err)
+	}
 }
