@@ -98,7 +98,9 @@ const actions = {
         throw new Error(response.data.message || "Login gagal");
       }
     } catch (error) {
+      console.log(error.response)
       let errorMessage = error.response.data.message;
+
       // let errorMessage = "";
       // console.log(error)
       // if (error.response) {

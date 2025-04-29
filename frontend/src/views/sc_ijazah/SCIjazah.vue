@@ -36,10 +36,10 @@
                         <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
                             class="mr-2" />
                         <!-- <Button label="Proses" icon="pi pi-send" severity="info" @click="exportCSV($event)" /> -->
-                        <IssueDegreeButton :degreeData="degreeData" :sekolah="sekolah" :ipfsUrl="ipfsUrl"
+                        <!-- <IssueDegreeButton :degreeData="degreeData" :sekolah="sekolah" :ipfsUrl="ipfsUrl"
                             :transcript="transcript" :contract="contract" class="bg-blue-600 p-3 rounded-lg text-white"
                             :disabled="!selectedSiswa"
-                            :class="{ 'bg-slate-500': !selectedSiswa || selectedSiswa.length === 0 || selectedSiswa.length > 2 }" />
+                            :class="{ 'bg-slate-500': !selectedSiswa || selectedSiswa.length === 0 || selectedSiswa.length > 2 }" /> -->
                     </template>
 
                 </Toolbar>
@@ -141,7 +141,10 @@ const filters = ref({
 });
 
 // ================================
-const selectedTahunAjaran = computed(() => store.getters["sekolahService/getSelectedTahunAjaran"])
+const selectedTahunAjaran = computed(() => {
+    fetchSiswaLulus()
+    return store.getters["sekolahService/getSelectedTahunAjaran"]
+})
 const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
 
 // ================================
@@ -164,19 +167,19 @@ const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]
 //         console.log(error)
 //     }
 // }
-watch(selectedTahunAjaran, async () => {
-    // Panggil data untuk mengumpulkan siswa
-    selectedSiswa.value = []
-    await fetchSiswaLulus()
-})
+// watch(selectedTahunAjaran, async () => {
+//     // Panggil data untuk mengumpulkan siswa
+//     selectedSiswa.value = []
+//     await fetchSiswaLulus()
+// })
 
 const fetchSiswaLulus = async () => {
     try {
         let payload = {
-            schemaname: schemaname.value,
-            semester_id: selectedTahunAjaran.value,
-            tipe_kenaikan: 14
+            schemaname: await store.getters["sekolahService/getTabeltenant"]?.schemaname,
+            tahun_ajaran_id: 2023//`${selectedTahunAjaran.value}`, 
         }
+        console.log("fetchSiswaLulus",payload)
         const results = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
         if (results) {
             // console.log(results.anggotaKelas)

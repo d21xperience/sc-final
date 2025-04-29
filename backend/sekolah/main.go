@@ -2,6 +2,7 @@ package main
 
 import (
 	"sekolah/config"
+	"sekolah/models"
 	"sekolah/server"
 )
 
@@ -11,7 +12,7 @@ func main() {
 	// Inisialisasi database
 	config.InitDatabase(cfg)
 	// Migrasi model
-	// config.DB.AutoMigrate(&models.SekolahTabelTenant{}, &models.SchemaLog{})
+	config.DB.AutoMigrate(&models.SekolahTabelTenant{}, &models.SchemaLog{})
 	server.StartServer()
 
 }

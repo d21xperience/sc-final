@@ -172,6 +172,7 @@ const getTahunAjaran = (semesterArray) => {
 
 watch(selectedTahunAjaran, (val) => {
     // tetapkan tahun ajaran yang dipilih
+    console.log(val)
     store.commit("sekolahService/SET_SELECTEDTAHUNAJARAN", val)
 })
 

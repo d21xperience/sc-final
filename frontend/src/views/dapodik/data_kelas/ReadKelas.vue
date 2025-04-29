@@ -266,14 +266,15 @@ const luluskan = async () => {
         // console.log(payload)
         // isLoading.value = true
 
-        const res = await store.dispatch("sekolahService/createProsesIjazah", payload)
-        if (!res) {
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Data Ijazah ditambahkan', life: 3000 });
+        const res = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
+        console.log(res)
+        if (res) {
+            toast.add({ severity: 'success', summary: 'Successful', detail: 'Data Ijazah berhasil ditambahkan', life: 3000 });
+            selectedKelas.value = []
         }
-
     } catch (error) {
-        toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal menambahkan data', life: 3000 });
 
+        toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal menambahkan data', life: 3000 });
 
     }
     // isLoading.value = false
