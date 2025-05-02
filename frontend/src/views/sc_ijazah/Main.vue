@@ -72,26 +72,27 @@ const setPlatform = async () => {
     if (!platformsActivate.value) return;
 
     payload.bc_platform = { ...platformsActivate.value }; // Pastikan objek tidak reaktif
-    console.log("📡 Payload yang dikirim:", JSON.stringify(payload));
+    // console.log("📡 Payload yang dikirim:", JSON.stringify(payload));
 
     try {
+        // console.log(payload.bc_platform)
+        store.commit("scService/setBCPlatformSelected", payload.bc_platform)
+
         const res = await store.dispatch("scService/setBCPlatform", payload);
         console.log("✅ Response backend:", res);
+
     } catch (error) {
-        console.error("❌ Error mengirim ke backend:", error);
+        // console.error("❌ Error mengirim ke backend:", error);
     }
 };
 // Fungsi untuk memilih platform baru
 const saveSelection = async () => {
     dialogSelectplatforms.value = false;
-
     // Set semua platform ke `false`
     platforms.value.forEach((platform) => (platform.active = false));
-
     // Temukan platform yang dipilih dan aktifkan
     platformsActivate.value =
         platforms.value.find((p) => p.name === selectedPlatform.value) || null;
-
     if (platformsActivate.value) {
         platformsActivate.value.active = true;
     }
@@ -113,6 +114,7 @@ const platformDiactive = async () => {
 
 
     // Kirim perubahan ke backend
+
     await setPlatform();
 
     // Pastikan platform ter-reset setelah update sukses
@@ -172,7 +174,6 @@ const getTahunAjaran = (semesterArray) => {
 
 watch(selectedTahunAjaran, (val) => {
     // tetapkan tahun ajaran yang dipilih
-    console.log(val)
     store.commit("sekolahService/SET_SELECTEDTAHUNAJARAN", val)
 })
 

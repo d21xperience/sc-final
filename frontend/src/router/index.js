@@ -162,15 +162,14 @@ const router = createRouter({
                 requiresAuth: true,
                 role: "admin",
               },
-              component: () =>
-                import("../views/sc_ijazah/BlockchainSettings.vue"),
-              children: [
-                {
-                  path: "send-krypto",
-                  name: "sendKrypto",
-                  component: () => import("../views/sc_ijazah/SendTrx.vue"),
-                },
-              ],
+              component: () => import("../views/sc_ijazah/Client_IPFS.vue"),
+              // children: [
+              //   {
+              //     path: "send-krypto",
+              //     name: "sendKrypto",
+              //     component: () => import("../views/sc_ijazah/SendTrx.vue"),
+              //   },
+              // ],
             },
             // {
             //   path: "list-bcnetwork",
@@ -245,14 +244,14 @@ const router = createRouter({
                 {
                   path: "input-guru",
                   name: "inputGuru",
-                  meta: { disableSelect: true, title: 'Tambah Guru' },
+                  meta: { disableSelect: true, title: "Tambah Guru" },
                   component: () =>
                     import("../views/dapodik/data_guru/AddGuru.vue"),
                 },
                 {
                   path: "edit-guru",
                   name: "editGuru",
-                  meta: { disableSelect: true , title: 'Edit Guru'},
+                  meta: { disableSelect: true, title: "Edit Guru" },
                   component: () =>
                     import("../views/dapodik/data_guru/AddGuru.vue"),
                   // props: true,
@@ -343,7 +342,7 @@ const router = createRouter({
                 {
                   path: "edit-kelas",
                   name: "editKelas",
-                  meta: { disableSelect: true,title: "Edit Kelas" },
+                  meta: { disableSelect: true, title: "Edit Kelas" },
                   component: () =>
                     import("../views/dapodik/data_kelas/AddKelas.vue"),
                   // props: true,

@@ -69,7 +69,7 @@ const actions = {
   },
 
   async setBCPlatform({ commit }, payload) {
-    console.log("in vuex: ", payload);
+    // console.log("in vuex: ", payload);
     const py = {
       bc_platform: {
         id: payload.bc_platform.id,
@@ -79,11 +79,10 @@ const actions = {
       schemaname: payload.schemaname,
     };
 
-    console.log(py);
+    // console.log(py);
     try {
       const response = await api.put("/sc/platform", py);
-      commit("setBCPlatformSelected", response.data.bcPlatform);
-      return response.data; // Mengembalikan data sekolah
+      return response.data;
     } catch (error) {
       console.error("Gagal set BC platform:", error);
       return null;

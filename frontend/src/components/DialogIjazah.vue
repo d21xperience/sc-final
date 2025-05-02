@@ -72,7 +72,7 @@ const alamatLengkap = ref({
     prov: ''
 })
 
-
+const selectedBCNetwork = computed(() => store.getters["scService/getBCPlatformSelected"])
 
 import Tabs from 'primevue/tabs';
 import TabList from 'primevue/tablist';
@@ -173,13 +173,13 @@ import TabPanel from 'primevue/tabpanel';
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="block text-gray-700" for="cid-uri">CID URL</label>
-                                <InputText v-model="alamatLengkap.prov" fluid name="cid-uri" id="prov"
-                                    placeholder="Masukan nama" />
+                                <FileUpload ref="uploadedFiles" mode="basic" name="file" accept=".jpg" :maxFileSize="2000000"
+                        :customUpload="true" severity="secondary" />
                             </div>
                             <div>
-                                <label class="block text-gray-700" for="blockhain-explorer">Blockhain Type</label>
-                                <InputText v-model="alamatLengkap.kab" fluid name="blockhain-explorer" id="kab"
-                                    placeholder="Masukan nama" />
+                                <label class="block text-gray-700" for="blockhain-type">Blockhain Type</label>
+                                <InputText v-model="selectedBCNetwork.name" fluid name="blockhain-type"
+                                    id="blockhain-type" placeholder="Masukan nama" disabled />
                             </div>
                         </div>
                     </section>

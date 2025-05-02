@@ -165,47 +165,44 @@ const menuItems = ref([
                 icon: 'pi pi-ethereum',
                 items: [
                     {
-                        label: 'Seting',
+                        label: 'Ethereum',
                         icon: 'pi pi-cog',
                         command: () => {
                             router.push({ name: 'setingBlockchain' })
                         }
                     },
-                    // {
-                    //     label: 'Daftar Jaringan',
-                    //     icon: 'pi pi-cloud',
-                    //     command: () => {
-                    //         router.push({ name: 'listBCNetwork' })
-                    //     }
-                    // },
-
-
-
-
+                    {
+                        label: 'Quorum',
+                        icon: 'pi pi-cog',
+                        command: () => {
+                            router.push({ name: 'setingBlockchain' })
+                        }
+                    },
+                    {
+                        label: 'Hyperledger',
+                        icon: 'pi pi-cog',
+                        command: () => {
+                            router.push({ name: 'setingBlockchain' })
+                        }
+                    },
 
                 ]
             },
             {
                 label: 'IPFS',
                 icon: 'pi pi-desktop',
-                items: [
-                    {
-                        label: 'Seting',
-                        icon: 'pi pi-cog',
-                        command: () => {
-                            router.push({ name: 'setingBlockchain' })
-                        }
-                    },
-                    // {
-                    //     label: 'URI Ijazah',
-                    //     icon: 'pi pi-file',
-                    //     command: () => {
-                    //         router.push({ name: 'ipfsIjazah' })
-                    //     }
-                    // },
+                command: () => {
+                    router.push({ name: 'ipfsNetwork' })
+                }
 
+            },
+            {
+                label: 'Ijazah',
+                icon: 'pi pi-desktop',
+                command: () => {
+                    router.push({ name: 'ipfsNetwork' })
+                }
 
-                ]
             },
         ]
     },

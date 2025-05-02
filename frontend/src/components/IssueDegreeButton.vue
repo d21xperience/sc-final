@@ -48,49 +48,49 @@ const handleSubmit = async () => {
         // console.log("subjects:", props.transcript?.subjects);
         // console.log("grades:", props.transcript?.grades);
 
-        // if (!contract.value) await loadContract();
+        if (!contract.value) await loadContract();
 
-        // const degreeHash = generateDegreeHash(props.degreeData);
-        // const issueDate = Math.floor(Date.now() / 1000);
+        const degreeHash = generateDegreeHash(props.degreeData);
+        const issueDate = Math.floor(Date.now() / 1000);
 
-        // // Validasi & parsing subjects dan grades
-        // let subjects = props.transcript?.subjects;
-        // let grades = props.transcript?.grades;
+        // Validasi & parsing subjects dan grades
+        let subjects = props.transcript?.subjects;
+        let grades = props.transcript?.grades;
 
-        // if (!Array.isArray(subjects) || !Array.isArray(grades)) {
-        //     throw new Error("Data transcript tidak valid. Pastikan subjects dan grades berupa array.");
-        // }
+        if (!Array.isArray(subjects) || !Array.isArray(grades)) {
+            throw new Error("Data transcript tidak valid. Pastikan subjects dan grades berupa array.");
+        }
 
-        // grades = grades.map((n) => parseInt(n));
+        grades = grades.map((n) => parseInt(n));
 
-        // if (subjects.length !== grades.length) {
-        //     throw new Error("Jumlah mata pelajaran dan nilai tidak cocok.");
-        // }
+        if (subjects.length !== grades.length) {
+            throw new Error("Jumlah mata pelajaran dan nilai tidak cocok.");
+        }
 
-        // const gasEstimate = await contract.value.issueDegree.estimateGas(
-        //     degreeHash,
-        //     props.sekolah,
-        //     issueDate,
-        //     props.ipfsUrl,
-        //     subjects,
-        //     grades
-        // );
+        const gasEstimate = await contract.value.issueDegree.estimateGas(
+            degreeHash,
+            props.sekolah,
+            issueDate,
+            props.ipfsUrl,
+            subjects,
+            grades
+        );
 
-        // const proceed = confirm(`Biaya gas kira-kira: ${ethers.formatUnits(gasEstimate, 'gwei')} Gwei. Lanjutkan?`);
-        // if (!proceed) return;
+        const proceed = confirm(`Biaya gas kira-kira: ${ethers.formatUnits(gasEstimate, 'gwei')} Gwei. Lanjutkan?`);
+        if (!proceed) return;
 
-        // const tx = await contract.value.issueDegree(
-        //     degreeHash,
-        //     props.sekolah,
-        //     issueDate,
-        //     props.ipfsUrl,
-        //     subjects,
-        //     grades
-        // );
+        const tx = await contract.value.issueDegree(
+            degreeHash,
+            props.sekolah,
+            issueDate,
+            props.ipfsUrl,
+            subjects,
+            grades
+        );
 
         // await tx.wait();
         alert("Ijazah berhasil diverifikasi di blockchain!");
-        saveToBackend("tx.hash", "degreeHash")
+        // saveToBackend("tx.hash", "degreeHash")
     } catch (err) {
         console.error(err);
         alert(`Gagal memproses: ${err.message}`);

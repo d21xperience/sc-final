@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sc-service/services"
 	"sync"
 	"syscall"
 	"time"
@@ -48,10 +49,29 @@ func StartServer() {
 	// HTTP Gateway
 	// =========================================
 	// Inisialisasi mux untuk HTTP Gateway
+	// Inisialisasi UploadServiceServer sebelum dipakai
+	UploadService := services.NewUploadServiceServer()
 	mux := runtime.NewServeMux()
+	method, pattern := createPattern("POST", "api", "v1", "ss", "upload", "rest")
+	mux.Handle(method, pattern, func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+		UploadService.UploadFileHTTP(w, r)
+	})
+	// method, pattern = createPattern("GET", "api", "v1", "ss", "download", "template")
+	// mux.Handle(method, pattern, func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	// 	UploadService.DownloadTemplateHTTP(w, r)
+	// })
 	// Middleware CORS
 	corsHandler := corsMiddleware(mux)
+	// HTTP Server dengan Timeout
+	httpServer := &http.Server{
+		Addr:         ":" + httpPort,
+		Handler:      corsHandler,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  30 * time.Second,
+	}
 	grpcServerEndpoint := fmt.Sprintf("%s:%s", grpcHost, gRPCPort)
+	// ================================================
 	RunHTTPGateway(ctx, mux, grpcServerEndpoint, httpPort) // HTTP gateway di port 8080
 	// HTTP Listener
 	httpListener, err := net.Listen("tcp", ":"+httpPort)
@@ -77,7 +97,7 @@ func StartServer() {
 	go func() {
 		defer wg.Done()
 		log.Printf("HTTP gateway berjalan di :%s", httpPort)
-		if err := http.Serve(httpListener, corsHandler); err != nil {
+		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Failed to serve HTTP Gateway: %v", err)
 		}
 	}()
@@ -123,4 +143,20 @@ func corsMiddleware(h http.Handler) http.Handler {
 
 		h.ServeHTTP(w, r)
 	})
+}
+
+func createPattern(method string, pathSegments ...string) (string, runtime.Pattern) {
+	pattern := runtime.MustPattern(
+		runtime.NewPattern(1, generatePatternIndexes(len(pathSegments)), pathSegments, ""),
+	)
+	return method, pattern
+}
+
+// generatePatternIndexes membantu membuat pola angka yang sesuai dengan jumlah segment
+func generatePatternIndexes(segmentCount int) []int {
+	indexes := []int{}
+	for i := 0; i < segmentCount; i++ {
+		indexes = append(indexes, 2, i)
+	}
+	return indexes
 }
