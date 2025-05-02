@@ -34,7 +34,7 @@ type Verification struct {
 }
 
 type IjazahBc struct {
-	ID                          string    `gorm:"primaryKey;type:uuid"` // atau varchar sesuai kebutuhan
+	ID                          uuid.UUID `gorm:"primaryKey;type:uuid"` // atau varchar sesuai kebutuhan
 	PesertaDidikID              uuid.UUID `gorm:"not null"`
 	Nama                        string
 	NIS                         string
@@ -62,18 +62,21 @@ func (IjazahBc) TableName() string {
 }
 
 type DegreeData struct {
-	ID             uint     `gorm:"primaryKey;autoIncrement"`
-	IjazahID       string   `gorm:"not null"`
-	Ijazah         IjazahBc `gorm:"foreignKey:IjazahID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	ID             uint      `gorm:"primaryKey;autoIncrement"`
+	IjazahID       uuid.UUID `gorm:"not null"`
+	Ijazah         IjazahBc  `gorm:"foreignKey:IjazahID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	DegreeHash     string
 	TxHash         string
 	IpfsURL        string
 	BcType         string
 	LinkBcExplorer string
-	SekolahId      uuid.UUID
-	TahunAjaranId  int32
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	// UrlBCExplorerEther  string `gorm:"column:url_bc_explorerEther"`
+	// UrlBCExplorerQuorum string `gorm:"column:url_bc_explorerQuorum"`
+	// UrlBCExplorerFabric string `gorm:"column:url_bc_explorerFabric"`
+	SekolahId     uuid.UUID
+	TahunAjaranId int32
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
 
 func (DegreeData) TableName() string {

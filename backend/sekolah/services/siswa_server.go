@@ -179,15 +179,15 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 			TeleponWali:      utils.SafeString(siswa.TeleponWali),
 			FotoSiswa:        utils.SafeString(siswa.FotoSiswa),
 			Siswa: &pb.Siswa{
-				Nis:          siswa.PesertaDidik.Nis,
-				Nisn:         siswa.PesertaDidik.Nisn,
-				NmSiswa:      siswa.PesertaDidik.NmSiswa,
-				TempatLahir:  siswa.PesertaDidik.TempatLahir,
-				TanggalLahir: siswa.PesertaDidik.TanggalLahir.Format("2006-01-02"),
-				JenisKelamin: siswa.PesertaDidik.JenisKelamin,
-				Agama:        siswa.PesertaDidik.Agama,
-				AlamatSiswa:  utils.SafeString(siswa.PesertaDidik.AlamatSiswa),
-				TeleponSiswa: siswa.PesertaDidik.TeleponSiswa,
+				Nis:           siswa.PesertaDidik.Nis,
+				Nisn:          siswa.PesertaDidik.Nisn,
+				NmSiswa:       siswa.PesertaDidik.NmSiswa,
+				TempatLahir:   siswa.PesertaDidik.TempatLahir,
+				TanggalLahir:  siswa.PesertaDidik.TanggalLahir.Format("2006-01-02"),
+				JenisKelamin:  siswa.PesertaDidik.JenisKelamin,
+				Agama:         siswa.PesertaDidik.Agama,
+				AlamatSiswa:   utils.SafeString(siswa.PesertaDidik.AlamatSiswa),
+				TeleponSiswa:  siswa.PesertaDidik.TeleponSiswa,
 				NmAyah:        siswa.PesertaDidik.NmAyah,
 				NmIbu:         siswa.PesertaDidik.NmIbu,
 				PekerjaanAyah: siswa.PesertaDidik.PekerjaanAyah,
@@ -207,7 +207,7 @@ func (s *SiswaServiceServer) GetSiswa(ctx context.Context, req *pb.GetSiswaReque
 func (s *SiswaServiceServer) SearchSiswa(ctx context.Context, req *pb.SearchSiswaRequest) (*pb.SearchSiswaResponse, error) {
 	log.Printf("Received Sekolah data request: %+v\n", req)
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"Schemaname", "NmSiswa"}
+	requiredFields := []string{"Schemaname", "PesertaDidikId"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
@@ -220,57 +220,33 @@ func (s *SiswaServiceServer) SearchSiswa(ctx context.Context, req *pb.SearchSisw
 	case "\"\"":
 		return nil, fmt.Errorf("schema name cannot nul value")
 	}
-	// if schemaName == "" || schemaName == "\"\"" {
-	// 	return nil, fmt.Errorf("schema name is required")
-	// }
 
-	joins := []string{
-		// "JOIN tabel_siswa ON tabel_siswa_pelengkap.peserta_didik_id = tabel_siswa.peserta_didik_id",
-	}
-	preloads := []string{}
-	groupByColumns := []string{"tabel_siswa.peserta_didik_id"} // Hindari duplikasi
-	conditions := map[string]any{}
 	// Ambil semua data siswa
-	var banyakSiswa []models.PesertaDidik
-	var err1 error
-	pesertaDidikId := utils.SafeString(req.PesertaDidikId)
-	if pesertaDidikId != "" {
-		mod, err := s.repo.FindByID(ctx, pesertaDidikId, schemaName, "peserta_didik_id")
-		if err != nil {
-			log.Printf("[ERROR] Gagal menemukan siswa di schema '%s': %v", schemaName, err)
-			return nil, fmt.Errorf("gagal menemukan siswa di schema '%s': %w", schemaName, err)
-		}
-		banyakSiswa = append(banyakSiswa, *mod)
-	} else {
-		nameVal := req.GetNmSiswa()
-		banyakSiswa, _, err1 = s.repo.SearchByColumnNamePreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns, 5, 0, "nm_siswa", nameVal)
-		if err1 != nil {
-			log.Printf("[ERROR] Gagal menemukan siswa di schema '%s': %v", schemaName, err)
-			return nil, fmt.Errorf("gagal menemukan siswa di schema '%s': %w", schemaName, err)
-		}
+	pesertaDidikId := req.PesertaDidikId
+	mod, err := s.repo.FindByID(ctx, pesertaDidikId, schemaName, "peserta_didik_id")
+	if err != nil {
+		log.Printf("[ERROR] Gagal menemukan siswa di schema '%s': %v", schemaName, err)
+		return nil, fmt.Errorf("gagal menemukan siswa di schema '%s': %w", schemaName, err)
 	}
-	banyakSiswaList := utils.ConvertModelsToPB(banyakSiswa, func(siswa models.PesertaDidik) *pb.Siswa {
-		return &pb.Siswa{
-			Nis:          siswa.Nis,
-			Nisn:         siswa.Nisn,
-			NmSiswa:      siswa.NmSiswa,
-			TempatLahir:  siswa.TempatLahir,
-			TanggalLahir: siswa.TanggalLahir.Format("2006-01-02"),
-			JenisKelamin: siswa.JenisKelamin,
-			Agama:        siswa.Agama,
-			AlamatSiswa:  utils.SafeString(siswa.AlamatSiswa),
-			TeleponSiswa: siswa.TeleponSiswa,
-			// DiterimaTanggal: utils.TimeToString(*siswa.DiterimaTanggal, "2006-01-02"),
-			// DiterimaTanggal: utils.SafeString(*siswa.DiterimaTanggal),
-			NmAyah:         siswa.NmAyah,
-			NmIbu:          siswa.NmIbu,
-			PekerjaanAyah:  siswa.PekerjaanAyah,
-			PekerjaanIbu:   siswa.PekerjaanIbu,
-			NmWali:         utils.SafeString(siswa.NmWali),
-			PekerjaanWali:  utils.SafeString(siswa.PekerjaanWali),
-			PesertaDidikId: siswa.PesertaDidikId,
-		}
-	})
+	banyakSiswaList := &pb.Siswa{
+		Nis:             mod.Nis,
+		Nisn:            mod.Nisn,
+		NmSiswa:         mod.NmSiswa,
+		TempatLahir:     mod.TempatLahir,
+		TanggalLahir:    mod.TanggalLahir.Format("2006-01-02"),
+		JenisKelamin:    mod.JenisKelamin,
+		Agama:           mod.Agama,
+		AlamatSiswa:     utils.SafeString(mod.AlamatSiswa),
+		TeleponSiswa:    mod.TeleponSiswa,
+		// DiterimaTanggal: utils.TimeToString(*mod.DiterimaTanggal, "2006-01-02"),
+		NmAyah:          mod.NmAyah,
+		NmIbu:           mod.NmIbu,
+		PekerjaanAyah:   mod.PekerjaanAyah,
+		PekerjaanIbu:    mod.PekerjaanIbu,
+		NmWali:          utils.SafeString(mod.NmWali),
+		PekerjaanWali:   utils.SafeString(mod.PekerjaanWali),
+		PesertaDidikId:  mod.PesertaDidikId,
+	}
 	return &pb.SearchSiswaResponse{
 		Siswa: banyakSiswaList,
 	}, nil

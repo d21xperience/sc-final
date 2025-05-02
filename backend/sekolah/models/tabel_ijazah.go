@@ -39,7 +39,7 @@ type Ijazah struct {
 	// TanggalLahir                string    `gorm:"type:date;not null"`
 	// Relasi
 	PesertaDidik PesertaDidik `gorm:"foreignKey:PesertaDidikId;references:PesertaDidikId"`
-	// RombonganBelajar RombonganBelajar `gorm:"foreignKey:RombonganBelajarId;references:RombonganBelajarId"`
+	AnggotaRombel RombelAnggota `gorm:"foreignKey:AnggotaRombelId;references:AnggotaRombelId"`
 	// NilaiUjianSekolah NIlaiRerataAkhir
 }
 

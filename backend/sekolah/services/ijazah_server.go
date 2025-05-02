@@ -158,35 +158,33 @@ func (s *IjazahServiceServer) GetProsesIjazah(ctx context.Context, req *pb.GetPr
 		conditions["ijazah.peserta_didik_id"] = req.GetPesertaDidikId()
 	}
 
-	joins := []string{
-		// "JOIN tabel_ptk ON tabel_kelas.ptk_id = tabel_ptk.ptk_id",
-		// "JOIN tabel_pembelajaran ON tabel_kelas.rombongan_belajar_id = tabel_pembelajaran.rombongan_belajar_id",
-		// fmt.Sprintf("JOIN ref.jurusan ON %s.tabel_kelas.jurusan_id = ref.jurusan.jurusan_id", schemaName),
-		// fmt.Sprintf("JOIN ref.kurikulum ON %s.tabel_kelas.kurikulum_id = ref.kurikulum.kurikulum_id", schemaName),
-		// fmt.Sprintf("JOIN ref.tingkat_pendidikan ON %s.tabel_kelas.tingkat_pendidikan_id = ref.tingkat_pendidikan.tingkat_pendidikan_id", schemaName),
-	}
-	preloads := []string{"PesertaDidik"}
+	// joins := []string{
+	// 	// "JOIN tabel_ptk ON tabel_kelas.ptk_id = tabel_ptk.ptk_id",
+	// 	// "JOIN tabel_pembelajaran ON tabel_kelas.rombongan_belajar_id = tabel_pembelajaran.rombongan_belajar_id",
+	// 	// fmt.Sprintf("JOIN ref.jurusan ON %s.tabel_kelas.jurusan_id = ref.jurusan.jurusan_id", schemaName),
+	// 	// fmt.Sprintf("JOIN ref.kurikulum ON %s.tabel_kelas.kurikulum_id = ref.kurikulum.kurikulum_id", schemaName),
+	// 	// fmt.Sprintf("JOIN ref.tingkat_pendidikan ON %s.tabel_kelas.tingkat_pendidikan_id = ref.tingkat_pendidikan.tingkat_pendidikan_id", schemaName),
+	// }
+	preloads := []string{"PesertaDidik", "AnggotaRombel", "AnggotaRombel.RombonganBelajar"}
+	// orderBy := []string{"tabel_kelas.nm_kelas ASC"}
 
-	groupByColumns := []string{} // Hindari duplikasi
-	rombelAnggota, err = s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, groupByColumns, nil, false)
+	// groupByColumns := []string{} // Hindari duplikasi
+	rombelAnggota, err = s.repo.FindWithPreloadAndJoins(ctx, schemaName, nil, preloads, conditions, nil, nil, false)
 	if err != nil {
 		return nil, err
 	}
 
 	banyakKelasList := utils.ConvertModelsToPB(rombelAnggota, func(kelas models.Ijazah) *pb.Ijazah {
-		// jmlhAnggota, err := s.repoRombelAnggota.CountRows(ctx, schemaName, "rombongan_belajar_id", kelas.RombonganBelajarId.String())
 		if err != nil {
 			return nil
 		}
 		return &pb.Ijazah{
-
-			// PesertaDidikId:     kelas.PesertaDidikId.String(),
 			AnggotaRombelId: kelas.AnggotaRombelId.String(),
 			NamaOrtuWali:    kelas.PesertaDidik.NmAyah,
 			ProgramKeahlian: kelas.ProgramKeahlian,
-			// RombonganBelajar: &pb.Kelas{
-			// 	NmKelas: kelas.RombonganBelajar.NmKelas,
-			// },
+			RombonganBelajar: &pb.Kelas{
+				NmKelas: kelas.AnggotaRombel.RombonganBelajar.NmKelas,
+			},
 			PesertaDidik: &pb.Siswa{
 				PesertaDidikId: kelas.PesertaDidik.PesertaDidikId,
 				NmSiswa:        kelas.PesertaDidik.NmSiswa,
@@ -195,12 +193,9 @@ func (s *IjazahServiceServer) GetProsesIjazah(ctx context.Context, req *pb.GetPr
 				Nisn:           kelas.PesertaDidik.Nisn,
 				Nik:            utils.SafeString(kelas.PesertaDidik.Nik),
 				TempatLahir:    kelas.PesertaDidik.TempatLahir,
-				TanggalLahir:   kelas.PesertaDidik.TanggalLahir.String(),
+				TanggalLahir:   kelas.PesertaDidik.TanggalLahir.Format("2006-01-02"),
 				Agama:          kelas.PesertaDidik.Agama,
 			},
-			// RombonganBelajar: &pb.Kelas{
-			// 	NmKelas: kelas.RombonganBelajar.NmKelas,
-			// },
 		}
 	})
 	return &pb.GetProsesIjazahResponse{

@@ -31,6 +31,9 @@ const load = () => {
 // NPSN INPUT TEXT
 import axios from "axios";
 import { debounce } from "lodash";
+import { useStore } from "vuex";
+const store = useStore();
+
 const selectedSekolah = ref()
 const filteredSekolah = ref([])
 const sekolah = ref(true)
@@ -78,7 +81,7 @@ watch(selectedSekolah, (newFilteredSekolah, oldFilteredsekolah) => {
   }
 })
 // Carousel data
-const products = ref()
+// const products = ref()
 
 
 // State untuk menyimpan query, hasil, dan error
@@ -91,14 +94,14 @@ const searchStudent = async () => {
     // Reset hasil dan error
     student.value = null;
     error.value = "";
-
+    const payload = {
+      nisn: query.value
+    }
+    const result = await store.dispatch("scService/searchIjazahBC", payload)
+    console.log(result)
+    student.value = result
     // Request ke endpoint backend
-    const response = await axios.get("http://localhost:8081/api/v1/student", {
-      params: { query: query.value },
-    });
 
-    // Simpan data student
-    student.value = response.data;
   } catch (err) {
     // Tangani error
     error.value = err.response?.data?.error || "An error occurred while fetching data.";
@@ -115,7 +118,7 @@ const showRobot = () => {
 
 const dataSiswa = ref({})
 const imgRef = ref(null);
-const isVisible = ref(false);
+const isVisible = ref(true);
 
 onMounted(() => {
   const observer = new IntersectionObserver(
@@ -132,7 +135,10 @@ onMounted(() => {
     observer.observe(imgRef.value);
   }
 });
-
+const tutup = () => {
+  query.value = ""
+  student.value = null
+}
 </script>
 
 <template>
@@ -188,24 +194,21 @@ onMounted(() => {
     <section id="home">
       <div class="bg-slate-800 ">
         <div class="container mx-auto p-4">
-          <div class=" p-8 flex flex-wrap">
-            <div class="lg:w-1/2 w-full mb-12">
-              <h1 class="font-sans text-3xl font-bold mb-4 text-slate-50">
-                Verifikasi Ijazah Dasar & Menengah
-              </h1>
-
+          <div class=" p-8 flex">
+            <div class="min-h-[300px]">
               <div class="mb-4">
+                <h1 class="font-sans text-3xl font-bold mb-4 text-slate-50">
+                  Verifikasi Ijazah Dasar & Menengah
+                </h1>
                 <Form v-slot="$form" :initialValues="dataSiswa">
                   <!-- Input untuk query -->
-                  <label for="cari-data" class="text-white">Masukan NISN atau NIK</label>
-                  <input v-model="query" name="cari-data" placeholder="Enter NISN or NIK" type="text"
-                    class="mt-1 p-2 w-full border rounded" />
-                  <div class="flex items-center gap-2 my-3">
-                    <!-- <button @click="showRobot" class="bg-white" type="button">&nbsp;&nbsp;</button> -->
+                  <label for="cari-data" class="text-white">NISN</label>
+                  <input v-model="query" name="cari-data" placeholder="Masukan NISN" type="text"
+                    class="mt-1 p-2 w-full border rounded mb-10" />
+                  <!-- <div class="flex items-center gap-2 my-3">
                     <input type="checkbox" name="robot" id="robot" @change="showRobot">
                     <label for="robot" class=" text-white">Saya bukan robot</label>
-                  </div>
-                  <!-- <button @click="searchStudent" class="bg-white text-black border p-2 rounded-full">Search</button> -->
+                  </div> -->
                   <button @click="searchStudent" :disabled="query.length === 0"
                     :class="{ 'opacity-25 cursor-not-allowed hover:bg-slate-500': query.length === 0 }"
                     class="w-full bg-slate-500 font-bold p-2 rounded shadow-md hover:bg-slate-400 hover:text-white"
@@ -214,11 +217,11 @@ onMounted(() => {
                     </i>
                     Cek Ijazah
                   </button>
-                </Form>
 
-                <!-- Tampilkan hasil jika ada -->
-                <div v-if="student">
-                  <div class=" mt-12">
+                </Form>
+                <div v-if="student" class="mt-12">
+                  <button class="text-white" @click="tutup">Close</button>
+                  <div>
                     <div class="flex flex-col gap-2 flex-wrap  bg-slate-100 rounded-lg hover:opacity-75">
                       <div class="flex cursor-pointer select-none align-middle text-left" tabindex="0" role="button">
                         <div class="min-w-[56px] inline-flex flex-shrink-0 "><svg
@@ -230,7 +233,10 @@ onMounted(() => {
                           </svg></div>
                         <div class="flex-auto mt-1 mb-1"><span class="block text-green-900">Data telah
                             Terverifikasi</span>
-                          <p class="text-sm">{{ student.nama }} | {{ student.asal_sekolah }} </p>
+                          <p class="text-sm">{{ student.ijazah.nama }} | {{ student.ijazah.asal_sekolah }} </p>
+                          <p>
+
+                          </p>
                         </div>
                         <div class="flex flex-col">
                           <div class="css-td0mdc">
@@ -247,20 +253,24 @@ onMounted(() => {
                         <span class="MuiTouchRipple-root css-w0pj6f"></span>
                       </div>
                     </div>
+
                   </div>
 
 
                 </div>
+
                 <!-- JIka ditemukan data ditampilkan dibawah -->
 
                 <!-- Tampilkan error jika ada -->
                 <div v-if="error" style="color: red;">
-                  {{ error }}
+                  Data tidak ditemukan
                 </div>
               </div>
 
             </div>
-            <div class="lg:w-1/2 w-full pl-8 text-slate-50">
+            <!-- Tampilkan hasil jika ada -->
+
+            <!-- <div class="lg:w-1/2 w-full pl-8 text-slate-50">
               <h2 class="text-xl font-bold mb-4">
                 Pengantar
                 <button>Read more...</button>
@@ -297,7 +307,7 @@ onMounted(() => {
                   </ul>
                 </li>
               </ol>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

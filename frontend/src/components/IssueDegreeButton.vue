@@ -177,12 +177,13 @@ const saveToBackend = async (txHash, degreeHash) => {
                 nisn: props.degreeData?.nisn,
                 program_keahlian: props.degreeData?.major
             },
+            schemaname: await store.getters["sekolahService/getTabeltenant"]?.schemaname
         }
 
         const payload = {
             degree_data: [degreData]
         }
-        console.log(payload)
+        // console.log(payload)
         // return
         const response = await store.dispatch("scService/createIjazahBC", payload)
         console.log(response)

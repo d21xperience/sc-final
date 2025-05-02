@@ -29,10 +29,6 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-
-
-
-
 // STORE
 import { useStore } from "vuex";
 const store = useStore();

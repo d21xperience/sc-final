@@ -31,8 +31,8 @@
                                             :disabled="!dataLulusan || !dataLulusan.length" /> -->
                     </template>
                     <template #end>
-                        <Button label="Import" icon="pi pi-download" severity="warn" @click="dialogImport = true"
-                            class="mr-2" />
+                        <!-- <Button label="Import" icon="pi pi-download" severity="warn" @click="dialogImport = true"
+                            class="mr-2" /> -->
                         <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
                             class="mr-2" />
                         <!-- <Button label="Proses" icon="pi pi-send" severity="info" @click="exportCSV($event)" /> -->
@@ -61,7 +61,8 @@
                         <InputIcon>
                             <i class="pi pi-search" />
                         </InputIcon>
-                        <InputText v-model="filters['global'].value" placeholder="Search..." />
+                        <InputText v-model="filters['global'].value" placeholder="Search..." name="search"
+                            id="search" />
                     </IconField>
                 </template>
             </Toolbar>
@@ -72,13 +73,13 @@
             :rowsPerPageOptions="[10, 20, 50]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
             <Column selectionMode="multiple" style="width: 3rem;" :exportable="false"></Column>
-            <!-- <Column field="anggotaKelas.nmKelas" header="Kelas"></Column> -->
+            <Column field="rombonganBelajar.nmKelas" header="Kelas"></Column>
             <Column field="pesertaDidik.nis" header="NIS"></Column>
             <Column field="pesertaDidik.nisn" header="NISN"></Column>
             <Column field="pesertaDidik.nmSiswa" header="Nama" sortable></Column>
             <Column field="pesertaDidik.jenisKelamin" header="JK"></Column>
             <Column field="pesertaDidik.tempatLahir" header="Tpt. Lahir"></Column>
-            <Column field="pesertaDidik.nmAyah" header="Nama Wali"></Column>
+            <Column field="namaOrtuWali" header="Nama Wali"></Column>
             <Column field="cidUrl" header="CID Ijazah"></Column>
             <Column field="nomorIjazah" header="No. Ijazah"></Column>
             <Column field="" header="Status">
@@ -100,9 +101,28 @@
 
             </Column>
         </DataTable>
-        <Dialog v-model:visible="visible" modal header="Data ijazah" :style="{ width: '100rem', height: '100rem' }">
-            <DialogIjazah />
+        <Dialog v-model:visible="visible" modal header="Data ijazah" :style="{ width: '60rem', height: '100rem' }">
+            <DialogIjazah :peserta-didik="selectedSiswa" :visible="visible" />
         </Dialog>
+        <!-- <Dialog v-model:visible="deleteSiswaSelected" header="Delete">
+            <p>Apakah siswa ini akan dihapus?</p>
+        </Dialog> -->
+        <Dialog v-model:visible="deleteSiswaSelected" :style="{ width: '450px' }" header="Confirm" :modal="true">
+            <div class="flex items-center gap-4">
+                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <span v-if="selectedSiswa.length === 1">Apakah siswa <b>{{ selectedSiswa[0].pesertaDidik?.nmSiswa }} ini
+                        akan
+                        dihapus</b>?</span>
+                <span v-else>Apakah siswa yang dipilih ini akan dihapus ?</span>
+            </div>
+            <template #footer>
+                <Button label="No" icon="pi pi-times" text @click="deleteSiswaSelected = false" />
+                <!-- <Button label="Yes" icon="pi pi-check" @click="deleteSiswa" /> -->
+            </template>
+        </Dialog>
+
+        <DialogImport :visible="dialogImport" />
+
     </div>
 </template>
 
@@ -111,12 +131,9 @@ import { ref, onMounted, watch, computed } from 'vue';
 import { useStore } from "vuex";
 const store = useStore();
 
-import FileUpload from 'primevue/fileupload';
 
-import AddIjazah from './AddIjazah.vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import Image from 'primevue/image';
 
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
@@ -141,36 +158,30 @@ const filters = ref({
 });
 
 // ================================
-const selectedTahunAjaran = computed(() => {
-    fetchSiswaLulus()
-    return store.getters["sekolahService/getSelectedTahunAjaran"]
-})
+const selectedTahunAjaran = computed(() => store.getters["sekolahService/getSelectedTahunAjaran"])
 const schemaname = computed(() => store.getters["sekolahService/getTabeltenant"]?.schemaname)
+watch(selectedTahunAjaran, async () => {
+    await fetchSiswaLulus()
+})
 
 const fetchSiswaLulus = async () => {
     try {
         let payload = {
-            schemaname: await store.getters["sekolahService/getTabeltenant"]?.schemaname,
-            tahun_ajaran_id: 2023//`${selectedTahunAjaran.value}`, 
+            schemaname: schemaname.value,
+            tahun_ajaran_id: `${selectedTahunAjaran.value.slice(0, 4)}`,
         }
         // console.log("fetchSiswaLulus", payload)
         const results = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
         // console.log(results)
         siswa.value = results
-
-        // if (results) {
-        //     // console.log(results.anggotaKelas)
-        //     siswa.value = results.kenaikan
-        // }
-        // store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedTahunAjaran.value)
-
     } catch (error) {
         console.log(error)
     }
 }
 // ==================================
+const deleteSiswaSelected = ref(false)
 const confirmDeleteSelected = () => {
-    deleteProductsDialog.value = true;
+    deleteSiswaSelected.value = true;
 };
 // ==================================
 const scData = ref({
@@ -183,6 +194,7 @@ const dataLulusan = ref();
 // const selectedJurusan = ref();
 import { ethers } from 'ethers';
 import DialogIjazah from '@/components/DialogIjazah.vue';
+import DialogImport from '@/components/DialogImport.vue';
 // Dummy data (bisa kamu ambil dari API atau input form)
 const degreeData = ref({
     nama: "",
@@ -279,4 +291,5 @@ const onFileSelect = (event, siswaRow) => {
 const editSelectedSiswa = () => {
 
 }
+const dialogImport = ref(false)
 </script>

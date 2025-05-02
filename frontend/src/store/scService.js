@@ -273,7 +273,7 @@ const actions = {
           nisn: payload.nisn,
         },
       });
-      return response.data;
+      return response.data.ijazahBc;
     } catch (error) {
       throw error;
     }

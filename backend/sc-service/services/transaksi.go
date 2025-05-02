@@ -10,6 +10,8 @@ import (
 	"sc-service/models"
 	"sc-service/repositories"
 	"sc-service/utils"
+
+	"github.com/google/uuid"
 )
 
 type TransaksiService struct {
@@ -47,38 +49,54 @@ func (s *TransaksiService) CreateIjazahBlockchain(ctx context.Context, req *pb.C
 		log.Printf("Isi lengkap DegreeData:\n%s", dataJSON)
 	}
 	degreeData := req.GetDegreeData()
-	log.Printf("%s", degreeData)
+	// log.Printf("%s", degreeData)
+	// =================
+	// proto sekolah
+	sekolahClient, err := NewSekolahServiceClient()
+	if err != nil {
+		return nil, err
+	}
+	// // 2. Panggil sekolah_service untuk membuat schema database sekolah
+	// if siswa := sekolahClient.SearchSiswaById(schemaname, pesertaDidikId); siswa != nil {
+	// 	return &pb.SearchSiswaResponse{
+	// 		Siswa: &pb.Siswa{
+	// 			PesertaDidikId: ,
+	// 		},
+	// 	}
+	// }
+
+	// =================
+	sekolah := sekolahClient.SearchSekolah(req.Schemaname)
 
 	var ijazahBcModels = []models.IjazahBc{}
 	degreeDataModels := utils.ConvertPBToModels(degreeData, func(item *pb.DegreeData) *models.DegreeData {
-		// if item == nil || item.Ijazah == nil {
-		// 	log.Println("Ijazah data is nil")
-		// 	return nil
-		// }
+		ijazahId := uuid.New()
+		siswa := sekolahClient.SearchSiswaById(req.Schemaname, item.Ijazah.PesertaDidikId)
 
-		// tglLahir, err := utils.StringToTime(item.Ijazah.TanggalLahir, "2006-01-02")
-		// if err != nil {
-		// 	log.Printf("Failed to parse tanggal_lahir: %v", err)
-		// 	return nil
-		// }
 		cek := models.IjazahBc{
-			PesertaDidikID: utils.StringToUUID(item.Ijazah.PesertaDidikId),
-			Nama:           item.Ijazah.Nama,
-			NIS:            item.Ijazah.Nis,
-			NISN:           item.Ijazah.Nisn,
-			NomorIjazah:    item.Ijazah.NomorIjazah,
-			TempatLahir:    item.Ijazah.TempatLahir,
-			// TanggalLahir:    &tglLahir,
-			AsalSekolah:     item.Ijazah.AsalSekolah,
-			ProgramKeahlian: item.Ijazah.ProgramKeahlian,
-			NamaOrtuwali:    item.Ijazah.NamaOrtuwali,
-			TempatIjazah:    item.Ijazah.TempatIjazah,
-			TanggalIjazah:   utils.TimeToPointer(item.Ijazah.TanggalIjazah),
-			PaketKeahlian:   item.Ijazah.PaketKeahlian,
+			ID:                          ijazahId,
+			PesertaDidikID:              siswa.PesertaDidikId,
+			Nama:                        siswa.Nama,
+			NIS:                         siswa.NIS,
+			NISN:                        siswa.NISN,
+			TempatLahir:                 siswa.TptLahir,
+			AsalSekolah:                 siswa.AsalSekolah,
+			NomorIjazah:                 item.Ijazah.NomorIjazah,
+			ProgramKeahlian:             item.Ijazah.ProgramKeahlian,
+			NamaOrtuwali:                item.Ijazah.NamaOrtuwali,
+			TempatIjazah:                item.Ijazah.TempatIjazah,
+			TanggalIjazah:               utils.TimeToPointer(item.Ijazah.TanggalIjazah),
+			PaketKeahlian:               item.Ijazah.PaketKeahlian,
+			KabupatenKota:               sekolah.KabKota,
+			Provinsi:                    sekolah.Propinsi,
+			SekolahPenyelenggaraUjianUS: sekolah.Nama,
+			SekolahPenyelenggaraUjianUN: sekolah.Nama,
+			NPSN:                        sekolah.Npsn,
 		}
 
 		ijazahBcModels = append(ijazahBcModels, cek)
 		return &models.DegreeData{
+			IjazahID:       ijazahId,
 			DegreeHash:     item.DegreeHash,
 			TxHash:         item.TxHash,
 			IpfsURL:        item.IpfsUrl,
@@ -86,13 +104,12 @@ func (s *TransaksiService) CreateIjazahBlockchain(ctx context.Context, req *pb.C
 			LinkBcExplorer: item.LinkBcExplorer,
 		}
 	})
-	degreData := s.repoDegreeData.SaveMany(ctx, "public", degreeDataModels, 100)
-	if degreData != nil {
-		return nil, err
-	}
-
 	ijazahBc := s.repoIjazahBc.SaveMany(ctx, "public", utils.SliceToPointer(ijazahBcModels), 100)
 	if ijazahBc != nil {
+		return nil, err
+	}
+	degreData := s.repoDegreeData.SaveMany(ctx, "public", degreeDataModels, 100)
+	if degreData != nil {
 		return nil, err
 	}
 
@@ -176,9 +193,38 @@ func (s *TransaksiService) SearchIjazahBlockchain(ctx context.Context, req *pb.S
 	// }
 
 	// schemaName := req.GetSchemaname()
+	ijazahModel, err := s.repoIjazahBc.FindByID(ctx, req.GetNisn(), "public", "nisn")
+	if err != nil {
+		return nil, err
+	}
+	degreeModel, err := s.repoDegreeData.FindByID(ctx, ijazahModel.ID.String(), "public", "ijazah_id")
+	if err != nil {
+		return nil, err
+	}
+	respon := utils.ConvertModelToPB(degreeModel, func(item *models.DegreeData) *pb.DegreeData {
+		return &pb.DegreeData{
+			DegreeHash:     item.DegreeHash,
+			TxHash:         item.TxHash,
+			IpfsUrl:        item.IpfsURL,
+			BcType:         item.BcType,
+			LinkBcExplorer: item.LinkBcExplorer,
+			TahunAjaranId:  item.TahunAjaranId,
+			Ijazah: &pb.Ijazah{
+				Nama:            ijazahModel.Nama,
+				NomorIjazah:     ijazahModel.NomorIjazah,
+				Nis:             ijazahModel.NIS,
+				Nisn:            ijazahModel.NISN,
+				ProgramKeahlian: ijazahModel.ProgramKeahlian,
+				Kabupatenkota:   ijazahModel.KabupatenKota,
+				Provinsi:        ijazahModel.Provinsi,
+				TempatIjazah:    ijazahModel.TempatIjazah,
+				AsalSekolah:     ijazahModel.AsalSekolah,
+			},
+		}
+	})
 	return &pb.SearchIjazahBlockchainResponse{
 		Status:   true,
 		Message:  "Berahail",
-		IjazahBc: nil,
+		IjazahBc: respon,
 	}, nil
 }

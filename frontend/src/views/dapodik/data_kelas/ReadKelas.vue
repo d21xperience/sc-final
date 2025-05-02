@@ -252,10 +252,8 @@ watch(selectedKelasNaik, () => {
 })
 const isDialogKelulusan = ref(false)
 const luluskan = async () => {
-    // console.log("cek")
     try {
         isDialogKelulusan.value = false
-
         const anggotaKelas = selectedKelas.value.flatMap(kelas => kelas?.anggotaKelas || []);
         const payload = {
             schemaname: await store.getters["sekolahService/getTabeltenant"]?.schemaname,
@@ -263,9 +261,6 @@ const luluskan = async () => {
             anggota_kelas: anggotaKelas,
             sekolah_id: await store.getters["sekolahService/getSekolah"]?.sekolah_id
         }
-        // console.log(payload)
-        // isLoading.value = true
-
         const res = await store.dispatch("sekolahService/createProsesIjazah", payload)
         console.log(res)
         if (res) {
@@ -275,12 +270,8 @@ const luluskan = async () => {
     } catch (error) {
 
         toast.add({ severity: 'error', summary: 'Gagal', detail: 'Gagal menambahkan data', life: 3000 });
-
     }
-    // isLoading.value = false
-
     isDialogKelulusan.value = false
-
 }
 const dialogKenaikan = async () => {
 
