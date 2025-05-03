@@ -218,17 +218,6 @@ watch(selectedSiswa, (newVal) => {
         degreeData.value.nama = newVal[0].pesertaDidik.nmSiswa
         degreeData.value.nisn = newVal[0].pesertaDidik.nisn
         degreeData.value.tahun_lulus = 2023
-        // scData.value.degreeData = { ...newVal[0].pesertaDidik }; // Salin object pertama
-        // scData.value.degreeData = {
-        //     nama: newVal.value.pesertaDidik.nmSiswa,
-        //     nisn: newVal.value.pesertaDidik.nisn,
-        //     tahun_lulus: 2023,
-        //     nik: "",
-        //     major: newVal.value.programKeahlian
-        // }
-        // scData.value.transcript = transcript.value
-        // scData.value.sekolah = sekolah.value
-        // scData.value.ipfsUrl = ipfsUrl
     }
 });
 
@@ -241,40 +230,6 @@ onMounted(async () => {
     // await fetchSemester()
 });
 // ==================================
-// watch(selectedTahunAjaran, async () => {
-//     // Panggil data untuk mengumpulkan siswa
-//     try {
-//         let payload = {
-//             schemaname: schemaname.value,
-//             semester_id: selectedTahunAjaran.value,
-//             tipe_kenaikan: 14
-//         }
-//         const results = await store.dispatch("sekolahService/fetchProsesIjazah", payload)
-//         if (results) {
-//             // console.log(results.anggotaKelas)
-//             siswa.value = results.kenaikan
-//         }
-//         // store.commit("sekolahService/SET_SELECTEDSEMESTER", selectedTahunAjaran.value)
-
-//     } catch (error) {
-//         console.log(error)
-//     }
-// })
-// const initContract = async () => {
-//     try {
-//         if (window.ethereum) {
-//             await window.ethereum.request({ method: 'eth_requestAccounts' });
-//             const provider = new ethers.BrowserProvider(window.ethereum);
-//             const signer = await provider.getSigner();
-//             const contractAddress = '0xYourContractAddressHere'; // Ganti dengan alamat kontrakmu
-//             contract.value = new ethers.Contract(contractAddress, DegreeContractABI, signer);
-//         } else {
-//             alert('Metamask tidak ditemukan. Harap instal terlebih dahulu.');
-//         }
-//     } catch (error) {
-//         console.error('Gagal memuat kontrak:', error);
-//     }
-// };
 
 const src = ref(null);
 
@@ -288,8 +243,5 @@ const onFileSelect = (event, siswaRow) => {
         reader.readAsDataURL(file);
     }
 };
-const editSelectedSiswa = () => {
-
-}
 const dialogImport = ref(false)
 </script>

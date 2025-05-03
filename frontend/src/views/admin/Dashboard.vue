@@ -1,5 +1,5 @@
 <template>
-    <h1 class="text-2xl mb-2">Welcome back, <span class="font-bold ">{{ store.state.authService.user?.username
+    <h1 class="text-xl mb-2">Welcome back, <span class="font-bold ">{{ store.state.authService.user?.username
             }}</span> 🖐</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <card-info title="Total blocks" date="22 - 29 May 2016" :value="totalBlocks" :percentage="33.87"
@@ -359,3 +359,6 @@ const fetchCountGuru = async () => {
 
 
 </script>
+<style>
+    
+</style>

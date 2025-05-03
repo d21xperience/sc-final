@@ -1,4 +1,4 @@
 <template>
 
-    HyperLedger
+    Hyperledger
 </template>

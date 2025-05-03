@@ -56,10 +56,10 @@ func StartServer() {
 	mux.Handle(method, pattern, func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
 		UploadService.UploadFileHTTP(w, r)
 	})
-	// method, pattern = createPattern("GET", "api", "v1", "ss", "download", "template")
-	// mux.Handle(method, pattern, func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	// 	UploadService.DownloadTemplateHTTP(w, r)
-	// })
+	method, pattern = createPattern("GET", "api", "v1", "ss", "download", "template")
+	mux.Handle(method, pattern, func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+		UploadService.DownloadTemplateHTTP(w, r)
+	})
 	// Middleware CORS
 	corsHandler := corsMiddleware(mux)
 	// HTTP Server dengan Timeout
@@ -73,18 +73,12 @@ func StartServer() {
 	grpcServerEndpoint := fmt.Sprintf("%s:%s", grpcHost, gRPCPort)
 	// ================================================
 	RunHTTPGateway(ctx, mux, grpcServerEndpoint, httpPort) // HTTP gateway di port 8080
-	// HTTP Listener
-	httpListener, err := net.Listen("tcp", ":"+httpPort)
-	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
-	}
-
-	// Sync WaitGroup
 	var wg sync.WaitGroup
-	// wg.Add(2)
-	wg.Add(2)
 
-	// Menjalankan gRPC server dalam Goroutine
+	// Tambahkan jumlah goroutine sebelum menjalankan
+	wg.Add(2) // Karena kita menjalankan dua goroutine
+
+	// Jalankan gRPC Server dalam Goroutine
 	go func() {
 		defer wg.Done()
 		log.Printf("gRPC server berjalan di :%s", gRPCPort)
@@ -93,7 +87,7 @@ func StartServer() {
 		}
 	}()
 
-	// Menjalankan HTTP Gateway dalam Goroutine
+	// Jalankan HTTP Gateway dalam Goroutine
 	go func() {
 		defer wg.Done()
 		log.Printf("HTTP gateway berjalan di :%s", httpPort)
@@ -102,29 +96,20 @@ func StartServer() {
 		}
 	}()
 
-	// Menunggu sinyal shutdown
-	wg.Add(1) // Tambahkan WaitGroup untuk shutdown goroutine
-	go func() {
-		defer wg.Done() // Pastikan WaitGroup diberi tahu setelah selesai
-		<-signalChan
-		fmt.Println("\nShutting down servers...")
+	// Menangani shutdown dengan signal handling
+	<-signalChan
+	fmt.Println("\nShutting down servers...")
 
-		// Timeout shutdown dalam 5 detik
-		_, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer shutdownCancel()
+	// Matikan server gRPC
+	grpcServer.GracefulStop()
 
-		// Matikan server gRPC
-		grpcServer.GracefulStop()
+	// Matikan HTTP Gateway
+	httpServer.Close()
 
-		// Matikan HTTP Gateway
-		if err := httpListener.Close(); err != nil {
-			log.Printf("Error while closing HTTP listener: %v", err)
-		}
-		// Batalkan context utama agar semua operasi berhenti
-		cancel()
-	}()
+	// Batalkan context utama
+	cancel()
 
-	// Menunggu semua Goroutine selesai
+	// Tunggu semua goroutine selesai
 	wg.Wait()
 	fmt.Println("Server shutdown complete")
 }

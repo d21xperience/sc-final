@@ -168,21 +168,21 @@ const menuItems = ref([
                         label: 'Ethereum',
                         icon: 'pi pi-cog',
                         command: () => {
-                            router.push({ name: 'setingBlockchain' })
+                            router.push({ name: 'ethereum' })
                         }
                     },
                     {
                         label: 'Quorum',
                         icon: 'pi pi-cog',
                         command: () => {
-                            router.push({ name: 'setingBlockchain' })
+                            router.push({ name: 'quorum' })
                         }
                     },
                     {
                         label: 'Hyperledger',
                         icon: 'pi pi-cog',
                         command: () => {
-                            router.push({ name: 'setingBlockchain' })
+                            router.push({ name: 'hyperledger' })
                         }
                     },
 
@@ -192,7 +192,7 @@ const menuItems = ref([
                 label: 'IPFS',
                 icon: 'pi pi-desktop',
                 command: () => {
-                    router.push({ name: 'ipfsNetwork' })
+                    router.push({ name: 'ipfs' })
                 }
 
             },
@@ -200,7 +200,7 @@ const menuItems = ref([
                 label: 'Ijazah',
                 icon: 'pi pi-desktop',
                 command: () => {
-                    router.push({ name: 'ipfsNetwork' })
+                    router.push({ name: 'ijazah' })
                 }
 
             },

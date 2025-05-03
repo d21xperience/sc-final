@@ -24,14 +24,14 @@ const handleClick = () => {
     <div :class="[bgColor, 'p-6 rounded-lg shadow-md cursor-pointer transition-all hover:shadow-lg']"
         @click="handleClick">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-gray-600 text-lg font-semibold">
+            <h2 class="text-gray-600 font-semibold">
                 {{ title }}
             </h2>
             <span class="text-gray-400 text-sm">
                 {{ date }}
             </span>
         </div>
-        <div class="text-2xl font-bold text-gray-800 mb-2">
+        <div class="text-xl font-bold text-gray-800 mb-2">
             {{ value.toLocaleString() }}
         </div>
         <div class="flex items-center" :class="percentage > 0 ? 'text-green-500' : 'text-red-500'">

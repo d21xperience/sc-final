@@ -98,39 +98,39 @@ const router = createRouter({
           name: "blockchain",
           component: () => import("../views/sc_ijazah/Main.vue"),
           children: [
-            {
-              path: "setting",
-              name: "setingBlockchain",
-              meta: {
-                title: "Blockhain setting",
-                requiresAuth: true,
-                role: "admin",
-              },
-              component: () =>
-                import("../views/sc_ijazah/BlockchainSettings.vue"),
-              children: [
-                {
-                  path: "send-krypto",
-                  name: "sendKrypto",
-                  component: () => import("../views/sc_ijazah/SendTrx.vue"),
-                },
-              ],
-            },
-            {
-              path: "list-bcnetwork",
-              name: "listBCNetwork",
-              meta: {
-                title: "Daftar Blockhain",
-                requiresAuth: true,
-                role: "admin",
-              },
-              component: () => import("../views/sc_ijazah/ListBCNetwork.vue"),
-            },
-            {
-              path: "add-bcnetworks",
-              name: "addBCNetworks",
-              component: () => import("../views/sc_ijazah/AddBCNetwork.vue"),
-            },
+            // {
+            //   path: "setting",
+            //   name: "setingBlockchain",
+            //   meta: {
+            //     title: "Blockhain setting",
+            //     requiresAuth: true,
+            //     role: "admin",
+            //   },
+            //   component: () =>
+            //     import("../views/sc_ijazah/BlockchainSettings.vue"),
+            //   children: [
+            //     {
+            //       path: "send-krypto",
+            //       name: "sendKrypto",
+            //       component: () => import("../views/sc_ijazah/SendTrx.vue"),
+            //     },
+            //   ],
+            // },
+            // {
+            //   path: "list-bcnetwork",
+            //   name: "listBCNetwork",
+            //   meta: {
+            //     title: "Daftar Blockhain",
+            //     requiresAuth: true,
+            //     role: "admin",
+            //   },
+            //   component: () => import("../views/sc_ijazah/ListBCNetwork.vue"),
+            // },
+            // {
+            //   path: "add-bcnetworks",
+            //   name: "addBCNetworks",
+            //   component: () => import("../views/sc_ijazah/AddBCNetwork.vue"),
+            // },
             {
               path: "sc-ijazah",
               name: "scIjazah",
@@ -150,52 +150,65 @@ const router = createRouter({
           ],
         },
         {
-          path: "ipfs-network",
-          name: "ipfs",
-          component: () => import("../views/ipfs_ijazah/Main.vue"),
+          path: "settings",
+          name: "settings",
+          component: () => import("../views/sc_ijazah/settings/Main.vue"),
           children: [
             {
-              path: "setting",
-              name: "ipfsNetwork",
+              path: "ipfs",
+              name: "ipfs",
               meta: {
                 title: "IPFS setting",
                 requiresAuth: true,
                 role: "admin",
               },
-              component: () => import("../views/sc_ijazah/Client_IPFS.vue"),
-              // children: [
-              //   {
-              //     path: "send-krypto",
-              //     name: "sendKrypto",
-              //     component: () => import("../views/sc_ijazah/SendTrx.vue"),
-              //   },
-              // ],
+              component: () =>
+                import("../views/sc_ijazah/settings/Client_IPFS.vue"),
             },
-            // {
-            //   path: "list-bcnetwork",
-            //   name: "listBCNetwork",
-            //   meta: {
-            //     title: "Daftar Blockhain",
-            //     requiresAuth: true,
-            //     role: "admin",
-            //   },
-            //   component: () => import("../views/sc_ijazah/ListBCNetwork.vue"),
-            // },
-            // {
-            //   path: "add-ipfsnetworks",
-            //   name: "addIPFSNetworks",
-            //   component: () => import("../views/sc_ijazah/AddBCNetwork.vue"),
-            // },
-            // {
-            //   path: "ipfs-ijazah",
-            //   name: "ipfsIjazah",
-            //   component: () => import("../views/ipfs_ijazah/IPFSIjazah.vue"),
-            // },
-            // {
-            //   path: "daftar-trx",
-            //   name: "daftarTrx",
-            //   component: () => import("../views/sc_ijazah/ListTrx.vue"),
-            // },
+            {
+              path: "ethereum",
+              name: "ethereum",
+              meta: {
+                title: "Setting Ethereum",
+                requiresAuth: true,
+                role: "admin",
+              },
+              component: () =>
+                import("../views/sc_ijazah/settings/Client_Ethereum.vue"),
+            },
+            {
+              path: "quorum",
+              name: "quorum",
+              meta: {
+                title: "Setting Quorum",
+                requiresAuth: true,
+                role: "admin",
+              },
+              component: () =>
+                import("../views/sc_ijazah/settings/Client_Quorum.vue"),
+            },
+            {
+              path: "hyperldeger",
+              name: "hyperledger",
+              meta: {
+                title: "Setting Hyperledger",
+                requiresAuth: true,
+                role: "admin",
+              },
+              component: () =>
+                import("../views/sc_ijazah/settings/Client_Hyperledger.vue"),
+            },
+            {
+              path: "ijazah",
+              name: "ijazah",
+              meta: {
+                title: "Setting ijazah",
+                requiresAuth: true,
+                role: "admin",
+              },
+              component: () =>
+                import("../views/sc_ijazah/settings/Ijazah_Setting.vue"),
+            },
           ],
         },
 
@@ -205,14 +218,6 @@ const router = createRouter({
           component: () => import("../views/dapodik/DataSiswa.vue"),
           meta: { title: "Data Ijazah", requiresAuth: true, role: "admin" },
         },
-
-        // Data DAPODIK
-        // {
-        //   path: "seting-dapodik",
-        //   name: "syncDapodik",
-        //   component: () => import("../views/dapodik/SetingDapodik.vue"),
-        //   meta: { title: "Seting Dapodik", requiresAuth: true, role: "admin" },
-        // },
         {
           path: "data-dapodik",
           name: "dataDapodik",

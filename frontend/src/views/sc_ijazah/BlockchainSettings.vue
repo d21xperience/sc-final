@@ -1,5 +1,5 @@
 <script setup>
-import EthereumSetting from './EthereumSetting.vue';
+import EthereumSetting from './Client_Ethereum.vue';
 
 
 </script>

@@ -1,19 +1,21 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 
-	// pb "sc-service/generated"
+	pb "sc-service/generated"
 
 	shell "github.com/ipfs/go-ipfs-api"
 )
 
 // UploadService menangani penyimpanan file yang diunggah
 type UploadServiceServer struct {
-	// pb.UnimplementedUploadDataSekolahServiceServer
+	pb.UnimplementedUploadDataSekolahServiceServer
 	uploadDir string
 	// repoSiswa          repositories.GenericRepository[models.PesertaDidik]
 	// repoSiswaPelengkap repositories.GenericRepository[models.PesertaDidikPelengkap]
@@ -45,22 +47,22 @@ func NewUploadServiceServer() *UploadServiceServer {
 }
 
 // UploadFile menangani upload melalui gRPC
-// func (s *UploadServiceServer) UploadDataSekolah(ctx context.Context, req *pb.UploadDataSekolahRequest) (*pb.UploadDataSekolahResponse, error) {
-// 	// Tentukan lokasi penyimpanan file
-// 	filePath := filepath.Join(s.uploadDir, req.Filename)
+func (s *UploadServiceServer) UploadDataSekolah(ctx context.Context, req *pb.UploadDataSekolahRequest) (*pb.UploadDataSekolahResponse, error) {
+	// Tentukan lokasi penyimpanan file
+	filePath := filepath.Join(s.uploadDir, req.Filename)
 
-// 	// Simpan file yang dikirim dalam bytes
-// 	err := os.WriteFile(filePath, req.File, 0644)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("gagal menyimpan file: %w", err)
-// 	}
+	// Simpan file yang dikirim dalam bytes
+	err := os.WriteFile(filePath, req.File, 0644)
+	if err != nil {
+		return nil, fmt.Errorf("gagal menyimpan file: %w", err)
+	}
 
-// 	// Kembalikan URL file yang diunggah
-// 	return &pb.UploadDataSekolahResponse{
-// 		Message: "File berhasil diunggah",
-// 		FileUrl: "/storage/uploads/" + req.Filename,
-// 	}, nil
-// }
+	// Kembalikan URL file yang diunggah
+	return &pb.UploadDataSekolahResponse{
+		Message: "File berhasil diunggah",
+		FileUrl: "/storage/uploads/" + req.Filename,
+	}, nil
+}
 
 // UploadFileHTTP menangani upload file melalui REST API dengan multipart/form-data
 func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Request) {
@@ -131,60 +133,60 @@ func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Requ
 // }
 
 // HandleDownloadTemplate adalah handler untuk mengunduh file template .xlsx.
-// func (h *UploadServiceServer) DownloadTemplateHTTP(w http.ResponseWriter, r *http.Request) {
-// 	// Ambil nama file dari query parameter
-// 	templateType := r.URL.Query().Get("template_type")
-// 	if templateType == "" {
-// 		http.Error(w, "template-type is required", http.StatusBadRequest)
-// 		return
-// 	}
-// 	// Lokasi direktori template
-// 	var param = ParamTemplate{
-// 		schemaname:   r.FormValue("Schemaname"),
-// 		semesterId:   r.FormValue("semesterId"),
-// 		templateType: templateType,
-// 	}
-// 	templatePath := fmt.Sprintf("templates/template_%s_%s_%s.xlsx", templateType, param.schemaname, param.semesterId)
-// 	param.filePath = templatePath
-// 	// Buat file template jika belum ada
-// 	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
-// 		err := GenerateTemplate(param, config.DB)
-// 		if err != nil {
-// 			http.Error(w, fmt.Sprintf("Gagal membuat template: %v", err), http.StatusInternalServerError)
-// 			return
-// 		}
-// 	}
+func (h *UploadServiceServer) DownloadTemplateHTTP(w http.ResponseWriter, r *http.Request) {
+	// Ambil nama file dari query parameter
+	templateType := r.URL.Query().Get("template_type")
+	if templateType == "" {
+		http.Error(w, "template-type is required", http.StatusBadRequest)
+		return
+	}
+	// // Lokasi direktori template
+	// var param = ParamTemplate{
+	// 	schemaname:   r.FormValue("Schemaname"),
+	// 	semesterId:   r.FormValue("semesterId"),
+	// 	templateType: templateType,
+	// }
+	// templatePath := fmt.Sprintf("templates/template_%s_%s_%s.xlsx", templateType, param.schemaname, param.semesterId)
+	// param.filePath = templatePath
+	// // Buat file template jika belum ada
+	// if _, err := os.Stat(templatePath); os.IsNotExist(err) {
+	// 	err := GenerateTemplate(param, config.DB)
+	// 	if err != nil {
+	// 		http.Error(w, fmt.Sprintf("Gagal membuat template: %v", err), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// }
 
-// 	// Buka file template
-// 	file, err := os.Open(templatePath)
-// 	if err != nil {
-// 		http.Error(w, fmt.Sprintf("Gagal membuka file template: %v", err), http.StatusInternalServerError)
-// 		return
-// 	}
-// 	defer file.Close()
+	// // // Buka file template
+	// file, err := os.Open(templatePath)
+	// if err != nil {
+	// 	http.Error(w, fmt.Sprintf("Gagal membuka file template: %v", err), http.StatusInternalServerError)
+	// 	return
+	// }
+	// defer file.Close()
 
-// 	// Mendapatkan informasi file untuk header
-// 	fileInfo, err := file.Stat()
-// 	if err != nil {
-// 		http.Error(w, fmt.Sprintf("Gagal mendapatkan informasi file: %v", err), http.StatusInternalServerError)
-// 		return
-// 	}
+	// // // Mendapatkan informasi file untuk header
+	// fileInfo, err := file.Stat()
+	// if err != nil {
+	// 	http.Error(w, fmt.Sprintf("Gagal mendapatkan informasi file: %v", err), http.StatusInternalServerError)
+	// 	return
+	// }
 
-// 	// w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"; filename*=UTF-8''%s", fileInfo.Name(), url.QueryEscape(fileInfo.Name())))
-// 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", fileInfo.Name()))
+	// w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"; filename*=UTF-8''%s", fileInfo.Name(), url.QueryEscape(fileInfo.Name())))
+	// w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", fileInfo.Name()))
 
-// 	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") // MIME type untuk Excel
-// 	w.Header().Set("Content-Transfer-Encoding", "binary")
-// 	w.Header().Set("Cache-Control", "no-cache")
-// 	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") // MIME type untuk Excel
+	w.Header().Set("Content-Transfer-Encoding", "binary")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Pragma", "no-cache")
 
-// 	// Kirim file
-// 	if _, err := io.Copy(w, file); err != nil {
-// 		http.Error(w, fmt.Sprintf("Gagal mengirim file: %v", err), http.StatusInternalServerError)
-// 		return
-// 	}
+	// Kirim file
+	// if _, err := io.Copy(w, file); err != nil {
+	// 	http.Error(w, fmt.Sprintf("Gagal mengirim file: %v", err), http.StatusInternalServerError)
+	// 	return
+	// }
 
-// }
+}
 
 // Definisikan fungsi untuk menangani upload berdasarkan tipe data
 // func processUpload[T any](

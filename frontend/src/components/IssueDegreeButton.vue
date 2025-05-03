@@ -27,7 +27,6 @@ const loadContract = async () => {
     if (window.ethereum) {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
-        // const contractAddress = '0xdc64a140aa3e981100a9beca4e685f962f0cf6c9'; // ganti dengan address kontrak kamu
         contract.value = new ethers.Contract(contractAddress, DegreeContractABI, signer);
     } else {
         alert('Metamask tidak ditemukan.');
@@ -88,9 +87,9 @@ const handleSubmit = async () => {
             grades
         );
 
-        // await tx.wait();
+        await tx.wait();
         alert("Ijazah berhasil diverifikasi di blockchain!");
-        // saveToBackend("tx.hash", "degreeHash")
+        saveToBackend(tx.hash, degreeHash)
     } catch (err) {
         console.error(err);
         alert(`Gagal memproses: ${err.message}`);
