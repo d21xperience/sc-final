@@ -6,4 +6,4 @@ for %%F in (auth_service sekolah sc-service) do (
 )
 
 set FRONTEND_PATH=%~dp0frontend
-start cmd /k "cd /d %FRONTEND_PATH% && npm run dev"
+#start cmd /k "cd /d %FRONTEND_PATH% && npm run dev"

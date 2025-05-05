@@ -261,13 +261,13 @@ const onLogout = async () => {
 
 
 <template>
-    <nav
+    <!-- <nav
         class="fixed top-0 w-[250px] h-screen py-1 px-4 hidden lg:block border-r-2 overflow-y-auto overflow-x-hidden z-30">
         <div class="mt-2">
             <PanelMenu :model="items" multiple class="" />
         </div>
-    </nav>
-    <div class="lg:ml-[250px]">
+    </nav> -->
+    <div class="">
         <div class="container mt-2">
             <RouterView></RouterView>
         </div>

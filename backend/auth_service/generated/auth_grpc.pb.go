@@ -19,13 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Login_FullMethodName         = "/auth.AuthService/Login"
-	AuthService_Register_FullMethodName      = "/auth.AuthService/Register"
-	AuthService_GetSekolah_FullMethodName    = "/auth.AuthService/GetSekolah"
-	AuthService_GetUserByID_FullMethodName   = "/auth.AuthService/GetUserByID"
-	AuthService_ResetPassword_FullMethodName = "/auth.AuthService/ResetPassword"
-	AuthService_CreateUsers_FullMethodName   = "/auth.AuthService/CreateUsers"
-	AuthService_GetUsers_FullMethodName      = "/auth.AuthService/GetUsers"
+	AuthService_Login_FullMethodName                   = "/auth.AuthService/Login"
+	AuthService_Register_FullMethodName                = "/auth.AuthService/Register"
+	AuthService_GetSekolah_FullMethodName              = "/auth.AuthService/GetSekolah"
+	AuthService_GetUserByID_FullMethodName             = "/auth.AuthService/GetUserByID"
+	AuthService_ResetPassword_FullMethodName           = "/auth.AuthService/ResetPassword"
+	AuthService_CreateUsers_FullMethodName             = "/auth.AuthService/CreateUsers"
+	AuthService_GetUsers_FullMethodName                = "/auth.AuthService/GetUsers"
+	AuthService_GenerateStudentUsername_FullMethodName = "/auth.AuthService/GenerateStudentUsername"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -39,6 +40,7 @@ type AuthServiceClient interface {
 	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
 	CreateUsers(ctx context.Context, in *CreateUsersRequest, opts ...grpc.CallOption) (*CreateUsersResponse, error)
 	GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
+	GenerateStudentUsername(ctx context.Context, in *GenerateStudentUsernameRequest, opts ...grpc.CallOption) (*GenerateStudentUsernameResponse, error)
 }
 
 type authServiceClient struct {
@@ -119,6 +121,16 @@ func (c *authServiceClient) GetUsers(ctx context.Context, in *GetUsersRequest, o
 	return out, nil
 }
 
+func (c *authServiceClient) GenerateStudentUsername(ctx context.Context, in *GenerateStudentUsernameRequest, opts ...grpc.CallOption) (*GenerateStudentUsernameResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GenerateStudentUsernameResponse)
+	err := c.cc.Invoke(ctx, AuthService_GenerateStudentUsername_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -130,6 +142,7 @@ type AuthServiceServer interface {
 	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
 	CreateUsers(context.Context, *CreateUsersRequest) (*CreateUsersResponse, error)
 	GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
+	GenerateStudentUsername(context.Context, *GenerateStudentUsernameRequest) (*GenerateStudentUsernameResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -160,6 +173,9 @@ func (UnimplementedAuthServiceServer) CreateUsers(context.Context, *CreateUsersR
 }
 func (UnimplementedAuthServiceServer) GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
+}
+func (UnimplementedAuthServiceServer) GenerateStudentUsername(context.Context, *GenerateStudentUsernameRequest) (*GenerateStudentUsernameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateStudentUsername not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -308,6 +324,24 @@ func _AuthService_GetUsers_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_GenerateStudentUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenerateStudentUsernameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GenerateStudentUsername(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_GenerateStudentUsername_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GenerateStudentUsername(ctx, req.(*GenerateStudentUsernameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -342,6 +376,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUsers",
 			Handler:    _AuthService_GetUsers_Handler,
+		},
+		{
+			MethodName: "GenerateStudentUsername",
+			Handler:    _AuthService_GenerateStudentUsername_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

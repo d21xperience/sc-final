@@ -7,23 +7,29 @@ import (
 )
 
 type UserProfile struct {
-	gorm.Model
-	// ID          int32  `gorm:"primaryKey;autoIncrement" json:"biodata_id"`
-	UserId      uint64 `gorm:"foreignKey:UserRefer"`
-	User        User   `gorm:"foreignKey:UserId;references:ID"`
-	Nama        string `gorm:"size:100" json:"nama"`
-	JK          string `gorm:"size:100" json:"jk"`
-	Phone       string `gorm:"size:100" json:"phone"`
-	TptLahir    string `gorm:"size:100" json:"tpt_lahir"`
-	TglLahir    time.Time
-	AlamatJalan string `gorm:"size:100" json:"alamat_jalan"`
-	KotaKab     string `gorm:"size:100" json:"kota_kab"`
-	Prov        string `gorm:"size:100" json:"prov"`
-	KodePos     string `gorm:"size:100" json:"kode_pos"`
-	NamaAyah    string `gorm:"size:100" json:"nama_ayah"`
-	NamaIbu     string `gorm:"size:100" json:"nama_ibu"`
-	PhotoUrl    string `gorm:"type:varchar(255)" json:"photo_url"`
-	// CreatedAt   time.Time `gorm:"autoCreateTime" json:"created_at"`
-	// UpdatedAt   time.Time `gorm:"autoUpdateTime" json:"updated_at"`
+	ID          int64          `gorm:"primaryKey;autoIncrement;column:id"`
+	UserID      *int64         `gorm:"column:user_id"`
+	Nama        *string        `gorm:"column:nama;size:100"`
+	JK          *string        `gorm:"column:jk;size:100"`
+	Phone       *string        `gorm:"column:phone;size:100"`
+	TptLahir    *string        `gorm:"column:tpt_lahir;size:100"`
+	TglLahir    *time.Time     `gorm:"column:tgl_lahir"`
+	AlamatJalan *string        `gorm:"column:alamat_jalan;size:100"`
+	KotaKab     *string        `gorm:"column:kota_kab;size:100"`
+	Prov        *string        `gorm:"column:prov;size:100"`
+	KodePos     *string        `gorm:"column:kode_pos;size:100"`
+	NamaAyah    *string        `gorm:"column:nama_ayah;size:100"`
+	NamaIbu     *string        `gorm:"column:nama_ibu;size:100"`
+	PhotoURL    *string        `gorm:"column:photo_url;size:255"`
+	CreatedAt   *time.Time     `gorm:"column:created_at"`
+	UpdatedAt   *time.Time     `gorm:"column:updated_at"`
+	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;index:idx_user_profiles_deleted_at"`
 
+	// Relasi ke User
+	User *User `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+}
+
+// TableName overrides the default table name
+func (UserProfile) TableName() string {
+	return "user_profiles"
 }

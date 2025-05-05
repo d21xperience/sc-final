@@ -62,11 +62,12 @@ func (s *AuthServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		Token: token,
 		Ok:    true,
 		User: &pb.User{
-			UserId:    resp.ID,
+			Id:        resp.ID,
 			Username:  resp.Username,
 			Email:     resp.Email,
-			Role:      resp.Role,
-			SekolahId: resp.SekolahID,
+			Role:      utils.SafeString(resp.Role),
+			SekolahId: utils.SafeString(resp.SekolahID),
+			
 		},
 	}, nil
 }
@@ -171,7 +172,6 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 		if err := scClient.RegistrasiSekolahTenant(sekolahModel, int32(userModel.ID)); err != nil {
 			return nil, err
 		}
-		
 
 	} else if userModel.Role == "siswa" {
 		// Registrasi siswa
@@ -259,11 +259,11 @@ func (s *AuthServiceServer) CreateUsers(ctx context.Context, req *pb.CreateUsers
 			return nil, err
 		}
 		newUser := models.User{
-			Username:  username,
-			Email:     v.Email,
-			Password:  pass,
-			SekolahID: v.Sekolah.SekolahId,
-			Role:      v.User.Role,
+			Username:         username,
+			Email:            v.Email,
+			Password:         pass,
+			IdSekolahAnggota: v.Sekolah.SekolahId,
+			Role:             &v.User.Role,
 		}
 		err = s.authService.Register(&newUser)
 		if err != nil {
@@ -333,6 +333,19 @@ func (s *AuthServiceServer) GetUsers(ctx context.Context, req *pb.GetUsersReques
 	}, nil
 
 }
+
+// func (s *AuthServiceServer) GenerateStudentUsername(ctx context.Context, req *pb.GenerateStudentUsernameRequest) (*pb.GenerateStudentUsernameResponse, error) {
+// 	// Debugging: Cek nilai request yang diterima
+// 	log.Printf("Received Sekolah data request: %+v\n", req)
+// 	// Daftar field yang wajib diisi
+// 	requiredFields := []string{"SekolahId", "PesertaDidikId"}
+// 	// Validasi request
+// 	err := utils.ValidateFields(req, requiredFields)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// }
 
 // func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
 // 	var query = repository.SekolahQuery{

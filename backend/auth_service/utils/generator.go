@@ -4,8 +4,7 @@ import (
 	crand "crypto/rand" // Alias untuk crypto/rand
 	"fmt"
 	"math/big"
-	mrand "math/rand" // Alias untuk math/rand
-	"strings"
+	"math/rand" // Alias untuk math/rand
 	"time"
 )
 
@@ -34,19 +33,45 @@ import (
 // 	return username
 // }
 
-// GenerateUsername membuat username dengan format {inisial_sekolah}_{nama_depan}{4_digit_acak}
-func GenerateUsername(namaSekolah, namaSiswa string) string {
-	// Ambil inisial sekolah
-	inisialSekolah := strings.ToLower(strings.ReplaceAll(namaSekolah, " ", ""))
-	// Ambil nama depan siswa
-	namaDepan := strings.Split(strings.ToLower(namaSiswa), " ")[0]
+// GenerateUsername membuat username dengan format {inisial_sekolah}_{nama_depan}{4_digit_acak} v.1
+// func GenerateUsername(namaSekolah, namaSiswa string) string {
+// 	// Ambil inisial sekolah
+// 	inisialSekolah := strings.ToLower(strings.ReplaceAll(namaSekolah, " ", ""))
+// 	// Ambil nama depan siswa
+// 	namaDepan := strings.Split(strings.ToLower(namaSiswa), " ")[0]
 
-	// Menggunakan local random generator
-	source := mrand.NewSource(time.Now().UnixNano())
-	randomGen := mrand.New(source)
-	randomNumber := randomGen.Intn(9000) + 1000 // Angka antara 1000-9999
+// 	// Menggunakan local random generator
+// 	source := mrand.NewSource(time.Now().UnixNano())
+// 	randomGen := mrand.New(source)
+// 	randomNumber := randomGen.Intn(9000) + 1000 // Angka antara 1000-9999
 
-	return fmt.Sprintf("%s_%s%d", inisialSekolah, namaDepan, randomNumber)
+// 	return fmt.Sprintf("%s_%s%d", inisialSekolah, namaDepan, randomNumber)
+// }
+
+// Fungsi generate username v.2
+func GenerateUsername(tahunLulus, tanggalLahir string) string {
+	// Buat source dan random generator baru
+	source := rand.NewSource(time.Now().UnixNano())
+	r := rand.New(source)
+
+	// Ambil dua digit tahun lulus (sudah dalam bentuk YY)
+	yy := tahunLulus // contoh: "23"
+
+	// Ambil ddmmYY dari tanggal lahir (harus berupa string "ddmmYY")
+	ddmmyy := tanggalLahir // contoh: "150590"
+
+	// Buat slice angka 0-9 untuk dipilih secara acak
+	digits := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	r.Shuffle(len(digits), func(i, j int) {
+		digits[i], digits[j] = digits[j], digits[i]
+	})
+
+	// Ambil 4 digit pertama setelah diacak
+	uniquePart := fmt.Sprintf("%d%d%d%d", digits[0], digits[1], digits[2], digits[3])
+
+	// Gabungkan semua bagian
+	username := yy + ddmmyy + uniquePart
+	return username
 }
 
 // GeneratePassword membuat password acak dengan panjang tertentu
