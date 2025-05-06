@@ -9,8 +9,9 @@ import (
 )
 
 type SekolahRepository interface {
-	CreateSekolah(*models.Sekolah) error
-	GetSekolah(query SekolahQuery) (*models.Sekolah, error)
+	CreateSekolah(*models.SekolahTenant) error
+	GetSekolah(query SekolahQuery) (*models.SekolahTenant, error)
+	GetSekolahByNPSN(npsn string) (*models.SekolahTenant, error)
 }
 
 type sekolahRepositoryImpl struct {
@@ -29,7 +30,7 @@ func NewSekolahRepository(db *gorm.DB) SekolahRepository {
 	return &sekolahRepositoryImpl{DB: db}
 }
 
-func (sri *sekolahRepositoryImpl) CreateSekolah(s *models.Sekolah) error {
+func (sri *sekolahRepositoryImpl) CreateSekolah(s *models.SekolahTenant) error {
 	result := sri.DB.Create(&s)
 	if result.Error != nil {
 		// Penangann Error jika terjadi duplikate
@@ -37,13 +38,13 @@ func (sri *sekolahRepositoryImpl) CreateSekolah(s *models.Sekolah) error {
 	}
 	return nil
 }
-func (sri *sekolahRepositoryImpl) GetSekolah(query SekolahQuery) (*models.Sekolah, error) {
+func (sri *sekolahRepositoryImpl) GetSekolah(query SekolahQuery) (*models.SekolahTenant, error) {
 	// Validasi: Pastikan minimal satu parameter ada
 	if query.Npsn == "" && query.SekolahID == 0 {
 		return nil, fmt.Errorf("minimal salah satu parameter (npsn atau sekolah_id) harus disediakan")
 	}
 
-	var sekolah models.Sekolah
+	var sekolah models.SekolahTenant
 
 	// Gunakan kedua parameter jika keduanya ada
 	dbQuery := sri.DB
@@ -58,6 +59,23 @@ func (sri *sekolahRepositoryImpl) GetSekolah(query SekolahQuery) (*models.Sekola
 			dbQuery = dbQuery.Where("id = ?", query.SekolahID)
 		}
 	}
+
+	// Eksekusi query
+	err := dbQuery.First(&sekolah).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, ErrRecordNotFound
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return &sekolah, nil
+}
+func (sri *sekolahRepositoryImpl) GetSekolahByNPSN(npsn string) (*models.SekolahTenant, error) {
+	// Validasi: Pastikan minimal satu parameter ada
+	var sekolah models.SekolahTenant
+	dbQuery := sri.DB
+	dbQuery = dbQuery.Where("npsn = ?", npsn)
 
 	// Eksekusi query
 	err := dbQuery.First(&sekolah).Error

@@ -18,7 +18,7 @@ type SchemaService interface {
 	GetOrCreateSchema(ctx context.Context, TenantSekolah *TenantSekolah) (*models.SekolahTenant, string, error)
 }
 type TenantSekolah struct {
-	SekolahId       int32
+	SekolahTenantId uint32
 	UserId          int32
 	Password        string
 	NamaSekolah     string
@@ -41,12 +41,12 @@ var ErrSchemaNotFound = errors.New("schema tidak ditemukan")
 var ErrSchemaFound = errors.New("schema ditemukan")
 
 func (s *schemaServiceImpl) RegistrasiSekolah(ctx context.Context, schemaName string) error {
-	// 1️ Ambil path direktori kerja
+	// 1 Ambil path direktori kerja
 	wd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("gagal mendapatkan direktori kerja: %w", err)
 	}
-	// 2️ Tentukan lokasi file SQL untuk schema
+	// 2 Tentukan lokasi file SQL untuk schema
 	schemaFile := filepath.Join(wd, "migrations", "schema_template.sql")
 	if err := s.schemaRepo.InitializeDatabase(ctx, schemaFile, schemaName); err != nil {
 		return fmt.Errorf("gagal membuat schema %s: %w", schemaName, err)
@@ -119,10 +119,10 @@ func (s *schemaServiceImpl) GetOrCreateSchema(ctx context.Context, TenantSekolah
 	}
 	// Simpan informasi schema sekolah
 	err = s.SimpanSchemaSekolah(&models.SekolahTenant{
-		NamaSekolah: TenantSekolah.NamaSekolah,
-		UserId:      TenantSekolah.UserId,
-		SekolahId:   TenantSekolah.SekolahId,
-		SchemaName:  TenantSekolah.SekolahIdEnkrip,
+		NamaSekolah:     TenantSekolah.NamaSekolah,
+		UserId:          TenantSekolah.UserId,
+		SekolahTenantId: TenantSekolah.SekolahTenantId,
+		SchemaName:      TenantSekolah.SekolahIdEnkrip,
 	})
 	if err != nil {
 		return nil, "", err

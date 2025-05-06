@@ -12,6 +12,8 @@ import (
 	"auth_service/repositories"
 
 	"auth_service/utils"
+
+	"google.golang.org/protobuf/proto"
 )
 
 // AuthServiceServer dengan Redis Client sebagai Dependency Injection
@@ -58,17 +60,18 @@ func (s *AuthServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		return nil, errors.New("failed to generate token")
 	}
 
+	user := &pb.User{
+		Id:              resp.ID,
+		Username:        resp.Username,
+		Email:           resp.Email,
+		Role:            resp.Role,
+		SekolahTenantId: resp.SekolahTenantID,
+	}
+
 	return &pb.LoginResponse{
 		Token: token,
 		Ok:    true,
-		User: &pb.User{
-			Id:        resp.ID,
-			Username:  resp.Username,
-			Email:     resp.Email,
-			Role:      utils.SafeString(resp.Role),
-			SekolahId: utils.SafeString(resp.SekolahID),
-			
-		},
+		User:  user,
 	}, nil
 }
 
@@ -89,23 +92,23 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 		Npsn: sekolah.Npsn,
 	}
 	// Cek apakah sekolah sudah ada
-	var sekolahModel *models.Sekolah
+	var sekolahModel *models.SekolahTenant
 	sekolahModel, err = s.repoSekolah.GetSekolah(query)
 	if err != nil {
 		if errors.Is(err, repositories.ErrRecordNotFound) {
 			if user.Role == "admin" {
 				// Buat sekolah baru
-				sekolahModel = &models.Sekolah{
-					NPSN:            sekolah.Npsn,
-					NamaSekolah:     sekolah.NamaSekolah,
-					SekolahIDEnkrip: sekolah.SekolahIdEnkrip,
-					Kecamatan:       sekolah.Kecamatan,
-					Kabupaten:       sekolah.Kabupaten,
-					Propinsi:        sekolah.Propinsi,
-					KodeKecamatan:   sekolah.KodeKecamatan,
-					KodeKab:         sekolah.KodeKab,
-					KodeProp:        sekolah.KodeProp,
-					AlamatJalan:     sekolah.AlamatJalan,
+				sekolahModel = &models.SekolahTenant{
+					NPSN:          sekolah.Npsn,
+					NamaSekolah:   sekolah.NamaSekolah,
+					EnkripID:      sekolah.EnkripId,
+					Kecamatan:     sekolah.Kecamatan,
+					Kabupaten:     sekolah.Kabupaten,
+					Propinsi:      sekolah.Propinsi,
+					KodeKecamatan: sekolah.KodeKecamatan,
+					KodeKab:       sekolah.KodeKab,
+					KodeProp:      sekolah.KodeProp,
+					AlamatJalan:   sekolah.AlamatJalan,
 				}
 				err = s.repoSekolah.CreateSekolah(sekolahModel)
 
@@ -125,11 +128,11 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 	}
 	// Hubungkan user dengan sekolah
 	userModel := &models.User{
-		Username:  user.Username,
-		Email:     user.Email,
-		Role:      user.Role,
-		SekolahID: sekolahModel.ID,
-		Password:  user.Password,
+		Username:        user.Username,
+		Email:           user.Email,
+		Role:            user.Role,
+		SekolahTenantID: sekolahModel.ID,
+		Password:        user.Password,
 	}
 
 	// Cek jika role user adalah admin dan apakah sudah ada admin
@@ -183,7 +186,7 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 
 	// Hubungkan user dengan profil
 	userProfileModel := &models.UserProfile{
-		UserId: userModel.ID,
+		ID: userModel.ID,
 	}
 
 	if err := s.repoProfile.Save(ctx, userProfileModel, "public"); err != nil {
@@ -201,11 +204,11 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 			Token: token,
 			Ok:    true,
 			User: &pb.User{
-				UserId:   userModel.ID,
+				Id:       userModel.ID,
 				Username: userModel.Username,
 				// Email:     userModel.Email,
-				Role:      userModel.Role,
-				SekolahId: userModel.SekolahID,
+				Role:            userModel.Role,
+				SekolahTenantId: userModel.SekolahTenantID,
 			},
 		}
 	} else {
@@ -259,11 +262,11 @@ func (s *AuthServiceServer) CreateUsers(ctx context.Context, req *pb.CreateUsers
 			return nil, err
 		}
 		newUser := models.User{
-			Username:         username,
-			Email:            v.Email,
-			Password:         pass,
-			IdSekolahAnggota: v.Sekolah.SekolahId,
-			Role:             &v.User.Role,
+			Username:        username,
+			Email:           v.Email,
+			Password:        pass,
+			SekolahTenantID: v.User.SekolahTenantId,
+			Role:            v.User.Role,
 		}
 		err = s.authService.Register(&newUser)
 		if err != nil {
@@ -272,14 +275,14 @@ func (s *AuthServiceServer) CreateUsers(ctx context.Context, req *pb.CreateUsers
 		// Hubungkan dengan user profile
 		userId := newUser.ID
 		userProfile := models.UserProfile{
-			UserId:   userId,
+			UserID:   userId,
 			Nama:     v.UserProfile.Nama,
 			JK:       v.UserProfile.Jk,
-			Phone:    v.UserProfile.Phone,
-			TptLahir: v.UserProfile.TptLahir,
+			Phone:    &v.UserProfile.Phone,
+			TptLahir: &v.UserProfile.TptLahir,
 			// TglLahir:  v.UserProfile.TglLahir,
-			AlamatJalan: v.UserProfile.AlamatJalan,
-			KotaKab:     v.UserProfile.KotaKab,
+			AlamatJalan: &v.UserProfile.AlamatJalan,
+			KotaKab:     &v.UserProfile.KotaKab,
 		}
 		err = s.repoProfile.Save(ctx, &userProfile, "public")
 		if err != nil {
@@ -314,7 +317,7 @@ func (s *AuthServiceServer) GetUsers(ctx context.Context, req *pb.GetUsersReques
 
 	var usersModel []models.User
 	if roleSiswa {
-		usersModel, err = s.repoUser.GetUsers("siswa", req.GetSekolahId())
+		usersModel, err = s.repoUser.GetUsers("siswa", req.GetSekolahTenantId())
 		if err != nil {
 			return nil, err
 		}
@@ -323,8 +326,8 @@ func (s *AuthServiceServer) GetUsers(ctx context.Context, req *pb.GetUsersReques
 	res := utils.ConvertModelsToPB(usersModel, func(model models.User) *pb.User {
 		return &pb.User{
 			Username:  model.Username,
-			Password:  model.InitialPassword,
-			LastLogin: model.LastLogin.String(),
+			Password:  utils.SafeString(model.InitialPassword),
+			LastLogin: proto.String(utils.TimeToString(*model.LastLogin, "2006-01=12")),
 		}
 	})
 
@@ -347,33 +350,40 @@ func (s *AuthServiceServer) GetUsers(ctx context.Context, req *pb.GetUsersReques
 
 // }
 
-// func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
-// 	var query = repository.SekolahQuery{
-// 		Npsn:      req.GetNpsn(),
-// 		SekolahID: int(req.GetSekolahId()),
-// 	}
+func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Npsn"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
 
-// 	sekolah, err := s.sekolahService.GetSekolah(query)
-// 	if err != nil {
-// 		log.Printf("Error fetching school data: %v", err)
-// 		return nil, errors.New("failed to retrieve school data")
-// 	}
+	sekolah, err := s.repoSekolah.GetSekolahByNPSN(req.GetNpsn())
+	if err != nil {
+		if errors.Is(err, repositories.ErrRecordNotFound) {
+			log.Printf("Error fetching school data: %v", err)
+			return nil, errors.New("failed to retrieve school data")
+		}
+		return nil, err
+	}
 
-// 	return &pb.GetSekolahResponse{
-// 		Nama: sekolah.NamaSekolah,
-// 		SekolahData: &pb.Sekolah{
-// 			SekolahId:       int32(sekolah.ID),
-// 			SekolahIdEnkrip: sekolah.SekolahIDEnkrip,
-// 			Kecamatan:       sekolah.Kecamatan,
-// 			Kabupaten:       sekolah.Kabupaten,
-// 			Propinsi:        sekolah.Propinsi,
-// 			KodeKecamatan:   sekolah.Kecamatan,
-// 			AlamatJalan:     sekolah.AlamatJalan,
-// 			KodeKab:         sekolah.KodeKab,
-// 			KodeProp:        sekolah.KodeProp,
-// 			NamaSekolah:     sekolah.NamaSekolah,
-// 			Status:          sekolah.Status,
-// 			Npsn:            sekolah.NPSN,
-// 		},
-// 	}, nil
-// }
+	return &pb.GetSekolahResponse{
+		Nama: sekolah.NamaSekolah,
+		SekolahData: &pb.SekolahTenant{
+			Id:            sekolah.ID,
+			EnkripId:      sekolah.EnkripID,
+			Kecamatan:     sekolah.Kecamatan,
+			Kabupaten:     sekolah.Kabupaten,
+			Propinsi:      sekolah.Propinsi,
+			KodeKecamatan: sekolah.Kecamatan,
+			AlamatJalan:   sekolah.AlamatJalan,
+			KodeKab:       sekolah.KodeKab,
+			KodeProp:      sekolah.KodeProp,
+			NamaSekolah:   sekolah.NamaSekolah,
+			Npsn:          sekolah.NPSN,
+		},
+	}, nil
+}

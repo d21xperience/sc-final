@@ -47,7 +47,7 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 	}
 
 	sekolah := req.GetSekolah()
-	Schemaname := fmt.Sprintf("tabel_%s", sekolah.SekolahIdEnkrip)
+	Schemaname := fmt.Sprintf("tabel_%s", sekolah.EnkripId)
 	existingSchema, err := s.schemaService.GetSchemaBySchemaname(Schemaname)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Printf("Lanjutkan pendaftaran: %v", err)
@@ -71,7 +71,7 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 	}
 	// 2 Simpan informasi schema sekolah
 	err = s.schemaService.SimpanSchemaSekolah(&models.SekolahTabelTenant{
-		SekolahID:   int(sekolah.SekolahId),
+		SekolahID:   int(sekolah.SekolahTenantId),
 		SchemaName:  Schemaname,
 		NamaSekolah: sekolah.NamaSekolah,
 	})

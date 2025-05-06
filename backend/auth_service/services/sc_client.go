@@ -18,11 +18,11 @@ type SCServiceClient struct {
 	// client pb.BlockchainAccountServiceClient
 }
 type AdminSekolah struct {
-	SekolahId       int32
-	UserId          int32
-	Password        string
-	NamaSekolah     string
-	SekolahIdEnkrip string
+	SekolahId   int32
+	UserId      int32
+	Password    string
+	NamaSekolah string
+	EnkripID    string
 }
 
 type BCNetwork struct {
@@ -50,16 +50,16 @@ func NewSCServiceClient() (*SCServiceClient, error) {
 	return &SCServiceClient{client: client, clientBC: clientBC}, nil
 }
 
-func (s *SCServiceClient) RegistrasiSekolahTenant(sekolah *models.Sekolah, userId int32) error {
+func (s *SCServiceClient) RegistrasiSekolahTenant(sekolah *models.SekolahTenant, userId int32) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	_, err := s.client.RegistrasiSekolahTenant(ctx, &pb.RegistrasiSekolahTenantRequest{
 		SekolahTenant: &pb.SekolahTenant{
-			NamaSekolah: sekolah.NamaSekolah,
-			Schemaname:  fmt.Sprintf("tabel_%s", sekolah.SekolahIDEnkrip),
-			SekolahId:   int32(sekolah.ID),
-			UserId:      userId,
+			NamaSekolah:     sekolah.NamaSekolah,
+			Schemaname:      fmt.Sprintf("tabel_%s", sekolah.EnkripID),
+			SekolahTenantId: sekolah.ID,
+			UserId:          userId,
 		},
 	})
 	if err != nil {
@@ -81,7 +81,7 @@ func (s *SCServiceClient) RegistrasiSekolahTenant(sekolah *models.Sekolah, userI
 // 			UserId: admin.UserId,
 // 			Password: admin.Password,
 // 			NamaSekolah: admin.NamaSekolah,
-// 			SekolahIdEnkrip: admin.SekolahIdEnkrip,
+// 			EnkripID: admin.EnkripID,
 // 		},
 // 		Network:    &pb.BCNetwork{
 // 			Name: bcNetowrk.Name,

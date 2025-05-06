@@ -43,7 +43,7 @@ func (s *TenantServiceServer) RegistrasiSekolahTenant(ctx context.Context, req *
 
 	sekolah := req.GetSekolahTenant()
 	schemaName := sekolah.Schemaname
-	existingSchema, err := s.schemaService.GetSchemaBySekolahID(int(sekolah.SekolahId))
+	existingSchema, err := s.schemaService.GetSchemaBySekolahID(int(sekolah.SekolahTenantId))
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Printf("Lanjutkan pendaftaran: %v", err)
 	}
@@ -83,7 +83,7 @@ func (s *TenantServiceServer) RegistrasiSekolahTenant(ctx context.Context, req *
 }
 
 func (s *TenantServiceServer) GetSekolahTenant(ctx context.Context, req *pb.GetSekolahTenantRequest) (*pb.GetSekolahTenantResponse, error) {
-	sekolahID := req.GetSekolahId()
+	sekolahID := req.GetSekolahTenantId()
 	sekolahTerdaftar, err := s.schemaService.GetSchemaBySekolahID(int(sekolahID))
 	if err != nil {
 		return nil, err
@@ -91,10 +91,10 @@ func (s *TenantServiceServer) GetSekolahTenant(ctx context.Context, req *pb.GetS
 
 	return &pb.GetSekolahTenantResponse{
 		SekolahTenant: &pb.SekolahTenant{
-			NamaSekolah: sekolahTerdaftar.NamaSekolah,
-			UserId:      sekolahTerdaftar.UserId,
-			SekolahId:   sekolahTerdaftar.SekolahId,
-			Schemaname:  sekolahTerdaftar.SchemaName,
+			NamaSekolah:     sekolahTerdaftar.NamaSekolah,
+			UserId:          sekolahTerdaftar.UserId,
+			SekolahTenantId: sekolahTerdaftar.SekolahTenantId,
+			Schemaname:      sekolahTerdaftar.SchemaName,
 		},
 	}, err
 

@@ -1,10 +1,10 @@
 CREATE SEQUENCE sekolah_id_seq;
-CREATE TABLE sekolah (
+CREATE TABLE sekolah_tenant (
 	id BIGINT NOT NULL DEFAULT nextval('sekolah_id_seq'::regclass),
+	sekolah_id VARCHAR NULL,
 	nama_sekolah VARCHAR NOT NULL,
 	npsn VARCHAR(8) NULL,
-	sekolah_id VARCHAR NULL,
-	sekolah_id_enkrip VARCHAR NULL,
+	enkrip_id VARCHAR NULL,
 	kecamatan VARCHAR(50) NULL,
 	kabupaten VARCHAR(50) NULL,
 	propinsi VARCHAR(50) NULL,
@@ -16,24 +16,23 @@ CREATE TABLE sekolah (
 	updated_at TIMESTAMPTZ NULL,
 	PRIMARY KEY (id)
 );
-CREATE UNIQUE INDEX uni_sekolahs_sekolah_id_enkrip ON sekolah (sekolah_id_enkrip);
-CREATE UNIQUE INDEX uni_sekolahs_npsn ON sekolah (npsn); 
+CREATE UNIQUE INDEX uni_sekolah_tenant_sekolah_id_enkrip ON sekolah_tenant (enkrip_id);
+CREATE UNIQUE INDEX uni_sekolah_tenant_npsn ON sekolah_tenant (npsn); 
 
 CREATE SEQUENCE users_id_seq;
 CREATE TABLE users (
 	id BIGINT NOT NULL DEFAULT nextval('users_id_seq'::regclass),
+	sekolah_tenant_id BIGINT NULL DEFAULT NULL,
 	username VARCHAR NOT NULL,
 	email VARCHAR NOT NULL,
 	password VARCHAR NOT NULL,
-	sekolah_id VARCHAR NULL DEFAULT NULL,
 	role VARCHAR NULL DEFAULT NULL,
-	id_sekolah_anggota BIGINT NULL DEFAULT NULL,
 	is_initial_password BOOLEAN NOT NULL DEFAULT 'true',
 	initial_password VARCHAR NULL DEFAULT NULL,
 	last_login TIMESTAMPTZ NULL DEFAULT NULL,
 	created_at TIMESTAMPTZ NULL DEFAULT NULL,
 	PRIMARY KEY (id),
-	CONSTRAINT fk_users_sekolah FOREIGN KEY (id_sekolah_anggota) REFERENCES sekolah (id) ON UPDATE CASCADE ON DELETE CASCADE
+	CONSTRAINT fk_users_sekolah FOREIGN KEY (sekolah_tenant_id) REFERENCES sekolah_tenant (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX uni_users_username ON users (username);
 CREATE UNIQUE INDEX uni_users_email ON users (email);

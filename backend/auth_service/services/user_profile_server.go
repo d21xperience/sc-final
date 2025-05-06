@@ -12,6 +12,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -40,19 +41,19 @@ func (s *UserProfileServiceServer) GetUserProfile(ctx context.Context, req *pb.G
 
 	return &pb.GetUserProfileResponse{
 		UserProfile: &pb.UserProfile{
-			UserId:   profile.UserId,
+			UserId:   profile.UserID,
 			Nama:     profile.Nama,
 			Jk:       profile.JK,
-			Phone:    profile.Phone,
-			TptLahir: profile.TptLahir,
+			Phone:    utils.SafeString(profile.Phone),
+			TptLahir: utils.SafeString(profile.TptLahir),
 			// TglLahir: profile.TglLahir.Format("2007-12-21",),
-			AlamatJalan: profile.AlamatJalan,
-			KotaKab:     profile.KotaKab,
-			Prov:        profile.Prov,
-			KodePos:     profile.KodePos,
-			NamaAyah:    profile.NamaAyah,
-			NamaIbu:     profile.NamaIbu,
-			PhotoUrl:    profile.PhotoUrl,
+			AlamatJalan: utils.SafeString(profile.AlamatJalan),
+			KotaKab:     utils.SafeString(profile.KotaKab),
+			Prov:        utils.SafeString(profile.Prov),
+			KodePos:     utils.SafeString(profile.KodePos),
+			NamaAyah:    utils.SafeString(profile.NamaAyah),
+			NamaIbu:     utils.SafeString(profile.NamaIbu),
+			PhotoUrl:    utils.SafeString(profile.PhotoURL),
 		},
 	}, nil
 }
@@ -99,17 +100,19 @@ func (s *UserProfileServiceServer) UpdateUserProfile(ctx context.Context, req *p
 	// Perbarui data profil berdasarkan input
 	profile.Nama = req.UserProfile.Nama
 	profile.JK = req.UserProfile.Jk
-	profile.Phone = req.UserProfile.Phone
-	profile.TptLahir = req.UserProfile.TptLahir
-	profile.AlamatJalan = req.UserProfile.AlamatJalan
-	profile.KotaKab = req.UserProfile.KotaKab
-	profile.Prov = req.UserProfile.Prov
-	profile.KodePos = req.UserProfile.KodePos
-	profile.NamaAyah = req.UserProfile.NamaAyah
-	profile.NamaIbu = req.UserProfile.NamaIbu
+	// profile.Phone = req.UserProfile.Phone
+	// profile.TptLahir = req.UserProfile.TptLahir
+	// profile.AlamatJalan = req.UserProfile.AlamatJalan
+	// profile.KotaKab = req.UserProfile.KotaKab
+	// profile.Prov = req.UserProfile.Prov
+	// profile.KodePos = req.UserProfile.KodePos
+	// profile.NamaAyah = req.UserProfile.NamaAyah
+	// profile.NamaIbu = req.UserProfile.NamaIbu
 
 	// Simpan perubahan ke database
-	err = s.repo.Update(ctx, profile, "public", "user_id", utils.ConvertUintToString(profile.User.ID))
+	userId := strconv.FormatUint(profile.UserID, 10)
+
+	err = s.repo.Update(ctx, profile, "public", "user_id", userId)
 	if err != nil {
 		log.Printf("Error updating user profile: %v", err)
 		return nil, errors.New("failed to update user profile")

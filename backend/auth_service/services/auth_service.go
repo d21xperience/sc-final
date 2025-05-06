@@ -13,7 +13,7 @@ import (
 )
 
 type AuthService interface {
-	IsAdminExists(schoolID uint32) (bool, error)
+	IsAdminExists(schoolTenantID uint32) (bool, error)
 	Register(user *models.User) error
 	RegisterAdmin(user *models.User) error
 	Login(username, password string) (*models.User, error)
@@ -31,8 +31,8 @@ func NewAuthService(as repositories.UserRepository) AuthService {
 }
 
 // IsAdminExists cek apakah admin sudah adah ada pada sekolah
-func (s *authServiceImpl) IsAdminExists(schoolID uint32) (bool, error) {
-	admin, err := s.repo.FindUserByRoleAndSchoolID("admin", schoolID)
+func (s *authServiceImpl) IsAdminExists(schoolTenantID uint32) (bool, error) {
+	admin, err := s.repo.FindUserByRoleAndSchoolID("admin", schoolTenantID)
 	if err != nil {
 		// Return false if no admin found or error is not nil
 		if err == repositories.ErrUserNotFound {
@@ -66,7 +66,7 @@ func (s *authServiceImpl) Register(user *models.User) error {
 	// user.Password, _ = utils.EncryptPassword(user.Password) // Encrypt password
 	// return s.repositories.Save(user)
 	// Enkripsi password
-	user.InitialPassword = user.Password
+	user.InitialPassword = &user.Password
 	encryptedPasswordChan := make(chan string, 1)
 	errorChan := make(chan error, 1)
 

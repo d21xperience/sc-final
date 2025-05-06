@@ -7,10 +7,10 @@ import (
 )
 
 type UserProfile struct {
-	ID          int64          `gorm:"primaryKey;autoIncrement;column:id"`
-	UserID      *int64         `gorm:"column:user_id"`
-	Nama        *string        `gorm:"column:nama;size:100"`
-	JK          *string        `gorm:"column:jk;size:100"`
+	ID          uint64         `gorm:"primaryKey;autoIncrement;column:id"`
+	UserID      uint64         `gorm:"column:user_id"`
+	Nama        string         `gorm:"column:nama;size:100"`
+	JK          string         `gorm:"column:jk;size:100"`
 	Phone       *string        `gorm:"column:phone;size:100"`
 	TptLahir    *string        `gorm:"column:tpt_lahir;size:100"`
 	TglLahir    *time.Time     `gorm:"column:tgl_lahir"`
