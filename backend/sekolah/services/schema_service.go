@@ -14,20 +14,20 @@ import (
 
 type SchemaService interface {
 	RegistrasiSekolah(ctx context.Context, schemaName string) error
-	SimpanSchemaSekolah(sekolahTabelTenant *models.SekolahTabelTenant) error
-	GetSchemaBySekolahID(int) (*models.SekolahTabelTenant, error)
-	GetSchemaBySchemaname(schemaName string) (*models.SekolahTabelTenant, error)
+	SimpanSchemaSekolah(SekolahTenant *models.SekolahTenant) error
+	GetSchemaBySekolahID(int) (*models.SekolahTenant, error)
+	GetSchemaBySchemaname(schemaName string) (*models.SekolahTenant, error)
 }
 
 type schemaServiceImpl struct {
 	schemaRepo         repositories.SchemaRepository
-	sekolahTabelTenant repositories.GenericRepository[models.SekolahTabelTenant]
+	SekolahTenant repositories.GenericRepository[models.SekolahTenant]
 }
 
-func NewSchemaService(s repositories.SchemaRepository, sTT repositories.GenericRepository[models.SekolahTabelTenant]) SchemaService {
+func NewSchemaService(s repositories.SchemaRepository, sTT repositories.GenericRepository[models.SekolahTenant]) SchemaService {
 	return &schemaServiceImpl{
 		schemaRepo:         s,
-		sekolahTabelTenant: sTT,
+		SekolahTenant: sTT,
 	}
 }
 
@@ -47,25 +47,25 @@ func (s *schemaServiceImpl) RegistrasiSekolah(ctx context.Context, schemaName st
 	return nil
 }
 
-func (s *schemaServiceImpl) SimpanSchemaSekolah(sekolahTabelTenant *models.SekolahTabelTenant) error {
+func (s *schemaServiceImpl) SimpanSchemaSekolah(SekolahTenant *models.SekolahTenant) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	// Call the schema repository to save the schema
-	schema := s.sekolahTabelTenant.Save(ctx, sekolahTabelTenant, "public")
+	schema := s.SekolahTenant.Save(ctx, SekolahTenant, "public")
 	if schema != nil {
 		return errors.New("gagal menyimpan tabel sekolah tenant")
 	}
 	return schema
 }
 
-func (s *schemaServiceImpl) GetSchemaBySchemaname(schemaName string) (*models.SekolahTabelTenant, error) {
+func (s *schemaServiceImpl) GetSchemaBySchemaname(schemaName string) (*models.SekolahTenant, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	conditions := map[string]interface{}{
 		"schema_name": schemaName,
 	}
-	res, err := s.sekolahTabelTenant.FindAllByConditions(ctx, "public", conditions, 100, 0, nil)
+	res, err := s.SekolahTenant.FindAllByConditions(ctx, "public", conditions, 100, 0, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -74,11 +74,11 @@ func (s *schemaServiceImpl) GetSchemaBySchemaname(schemaName string) (*models.Se
 	}
 	return res[0], nil
 }
-func (s *schemaServiceImpl) GetSchemaBySekolahID(sekolahId int) (*models.SekolahTabelTenant, error) {
+func (s *schemaServiceImpl) GetSchemaBySekolahID(sekolahId int) (*models.SekolahTenant, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	// Call the schema repository to get the schema by sekolah ID
-	sc, err := s.sekolahTabelTenant.FindByID(ctx, strconv.Itoa(int(sekolahId)), "public", "sekolah_id")
+	sc, err := s.SekolahTenant.FindByID(ctx, strconv.Itoa(int(sekolahId)), "public", "sekolah_id")
 	if err != nil {
 		return nil, errors.New("failed to retrieve tenant table: " + err.Error())
 	}

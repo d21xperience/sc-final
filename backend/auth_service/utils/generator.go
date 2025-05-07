@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/big"
 	"math/rand" // Alias untuk math/rand
+	"strings"
 	"time"
 )
 
@@ -49,7 +50,7 @@ import (
 // }
 
 // Fungsi generate username v.2
-func GenerateUsername(tahunLulus, tanggalLahir string) string {
+func GenerateUsernameForStudent(tahunLulus, tanggalLahir string) string {
 	// Buat source dan random generator baru
 	source := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(source)
@@ -86,4 +87,38 @@ func GeneratePassword(length int) (string, error) {
 		password[i] = charset[randomChar.Int64()]
 	}
 	return string(password), nil
+}
+
+// Fungsi untuk mengambil potongan nama dari email
+func getUsernameFromEmail(email string) string {
+	atIndex := strings.Index(email, "@")
+	if atIndex == -1 {
+		return ""
+	}
+	username := email[:atIndex] // Ambil bagian sebelum '@'
+	if len(username) > 4 {
+		return username[:4] // Ambil 4 huruf pertama
+	}
+	return username
+}
+
+// Fungsi utama untuk membuat username dengan panjang tepat 8 karakter
+func GenerateUsername(email string, npsn string) string {
+	emailPart := getUsernameFromEmail(email)
+	timestamp := time.Now().UnixNano() // Timestamp nano untuk keunikan
+
+	// Gabungkan komponen dasar
+	base := fmt.Sprintf("%s%s%d", emailPart, npsn, timestamp)
+
+	// Pastikan base minimal 8 karakter
+	for len(base) < 8 {
+		base += "0123456789"[rand.Intn(10) : rand.Intn(10)+1]
+	}
+
+	// Potong atau ambil 8 karakter pertama
+	if len(base) > 8 {
+		base = base[:8]
+	}
+
+	return base
 }

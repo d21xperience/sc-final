@@ -28,11 +28,11 @@ type Sekolah struct {
 	JenjangPendidikanId int32  `gorm:"column:jenjang_pendidikan_id"`
 }
 
-type SekolahTabelTenant struct {
+type SekolahTenant struct {
 	gorm.Model
-	NamaSekolah        string           `gorm:"unique;not null"`
-	SekolahID          int              `gorm:"unique;not null"`
-	SchemaName         string           `gorm:"unique;not null"`
+	NamaSekolah     string `gorm:"column:nama_sekolah"`
+	SekolahTenantId uint32 `gorm:"column:sekolah_tenant_id"`
+	SchemaName      string `gorm:"column:schema_name"`
 	// BentukPendidikanID uint16           `gorm:"not null;default:0;column:bentuk_pendidikan_id"`
 	// BentukPendidikan   BentukPendidikan `gorm:"foreignKey:BentukPendidikanID;references:BentukPendidikanID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 }
@@ -41,3 +41,7 @@ type SchemaLog struct {
 	gorm.Model
 	SchemaName string
 }
+
+// func (SekolahTenant) TableName() string {
+// 	return "sekolah_tenant"
+// }

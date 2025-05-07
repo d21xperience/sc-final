@@ -59,7 +59,7 @@ func (r *userRepositoryImpl) Save(user *models.User) error {
 // FindUserByRoleAndSchoolID fetches a user with the given role and school ID
 func (r *userRepositoryImpl) FindUserByRoleAndSchoolID(role string, schoolID uint32) (*models.User, error) {
 	var user models.User
-	err := r.db.Where("role = ? AND sekolah_id = ?", role, schoolID).First(&user).Error
+	err := r.db.Where("role = ? AND sekolah_tenant_id = ?", role, schoolID).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrUserNotFound

@@ -68,10 +68,19 @@ func (s *AuthServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		SekolahTenantId: resp.SekolahTenantID,
 	}
 
+	// Ambil data sekolah
+	sekolahModel, err := s.repoSekolah.GetSekolahByTenantId(resp.SekolahTenantID)
+	if err != nil {
+		return nil, err
+	}
 	return &pb.LoginResponse{
 		Token: token,
 		Ok:    true,
 		User:  user,
+		SekolahTenant: &pb.SekolahTenant{
+			NamaSekolah: sekolahModel.NamaSekolah,
+			Npsn:        sekolahModel.NPSN,
+		},
 	}, nil
 }
 
@@ -88,20 +97,17 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 	// Ambil data dari request
 	user := req.GetUser()
 	sekolah := req.GetSekolah()
-	var query = repositories.SekolahQuery{
-		Npsn: sekolah.Npsn,
-	}
 	// Cek apakah sekolah sudah ada
 	var sekolahModel *models.SekolahTenant
-	sekolahModel, err = s.repoSekolah.GetSekolah(query)
+	sekolahModel, err = s.repoSekolah.GetSekolahByNPSN(sekolah.Npsn)
 	if err != nil {
 		if errors.Is(err, repositories.ErrRecordNotFound) {
 			if user.Role == "admin" {
 				// Buat sekolah baru
 				sekolahModel = &models.SekolahTenant{
-					NPSN:          sekolah.Npsn,
 					NamaSekolah:   sekolah.NamaSekolah,
-					EnkripID:      sekolah.EnkripId,
+					NPSN:          sekolah.Npsn,
+					EnkripID:      *sekolah.EnkripId,
 					Kecamatan:     sekolah.Kecamatan,
 					Kabupaten:     sekolah.Kabupaten,
 					Propinsi:      sekolah.Propinsi,
@@ -128,11 +134,11 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 	}
 	// Hubungkan user dengan sekolah
 	userModel := &models.User{
-		Username:        user.Username,
+		Username:        utils.GenerateUsername(user.Username, sekolah.Npsn),
 		Email:           user.Email,
 		Role:            user.Role,
 		SekolahTenantID: sekolahModel.ID,
-		Password:        user.Password,
+		Password:        *user.Password,
 	}
 
 	// Cek jika role user adalah admin dan apakah sudah ada admin
@@ -146,34 +152,27 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 			return nil, fmt.Errorf("admin sudah ada untuk sekolah ini")
 		}
 
-		// ==============Inisialisasi database di sekolah service==============
-		// 1. Buat client untuk sekolah_service
-		sekolahClient, err := NewSekolahServiceClient()
-		if err != nil {
-			return nil, err
-		}
-		// 2. Panggil sekolah_service untuk membuat schema database sekolah
-		if err := sekolahClient.RegistrasiSekolah(sekolahModel); err != nil {
-			return nil, err
-		}
-		// 3. Panggil sekolah_service untuk membuat inisialiasi data sekolah
-		if err := sekolahClient.CreateSekolah(sekolahModel); err != nil {
-			return nil, err
-		}
 		// Registrasi admin
 		if err := s.authService.RegisterAdmin(userModel); err != nil {
 			log.Printf("Error registrasi admin: %v", err)
 			return nil, fmt.Errorf("gagal registrasi admin: %w", err)
 		}
+		// ==============Inisialisasi database di sekolah service==============
+		errChan := make(chan error, 1)
+		// 1. Buat client untuk sekolah_service
+		go func() {
+			errChan <- initSekolahService(sekolahModel)
+		}()
 		// ==============Inisialisasi database di sc service==============
 		// Buat client untuk SC_service
-		scClient, err := NewSCServiceClient()
-		if err != nil {
-			return nil, err
-		}
-		// 2. Panggil sekolah_service untuk membuat schema database sekolah
-		if err := scClient.RegistrasiSekolahTenant(sekolahModel, int32(userModel.ID)); err != nil {
-			return nil, err
+		// go func() {
+		// 	errChan <- initSCService(sekolahModel, int(userModel.ID))
+		// }()
+
+		for i := 0; i < 1; i++ {
+			if err := <-errChan; err != nil {
+				return nil, err
+			}
 		}
 
 	} else if userModel.Role == "siswa" {
@@ -186,7 +185,7 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 
 	// Hubungkan user dengan profil
 	userProfileModel := &models.UserProfile{
-		ID: userModel.ID,
+		UserID: userModel.ID,
 	}
 
 	if err := s.repoProfile.Save(ctx, userProfileModel, "public"); err != nil {
@@ -326,7 +325,7 @@ func (s *AuthServiceServer) GetUsers(ctx context.Context, req *pb.GetUsersReques
 	res := utils.ConvertModelsToPB(usersModel, func(model models.User) *pb.User {
 		return &pb.User{
 			Username:  model.Username,
-			Password:  utils.SafeString(model.InitialPassword),
+			Password:  model.InitialPassword,
 			LastLogin: proto.String(utils.TimeToString(*model.LastLogin, "2006-01=12")),
 		}
 	})
@@ -349,7 +348,7 @@ func (s *AuthServiceServer) GetUsers(ctx context.Context, req *pb.GetUsersReques
 // 	}
 
 // }
-
+// ✔ Digunakan
 func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRequest) (*pb.GetSekolahResponse, error) {
 	// Debugging: Cek nilai request yang diterima
 	log.Printf("Received Sekolah data request: %+v\n", req)
@@ -373,8 +372,8 @@ func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRe
 	return &pb.GetSekolahResponse{
 		Nama: sekolah.NamaSekolah,
 		SekolahData: &pb.SekolahTenant{
-			Id:            sekolah.ID,
-			EnkripId:      sekolah.EnkripID,
+			Id:            &sekolah.ID,
+			EnkripId:      &sekolah.EnkripID,
 			Kecamatan:     sekolah.Kecamatan,
 			Kabupaten:     sekolah.Kabupaten,
 			Propinsi:      sekolah.Propinsi,
@@ -386,4 +385,41 @@ func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRe
 			Npsn:          sekolah.NPSN,
 		},
 	}, nil
+}
+
+//	func registerAdmin(authService AuthService, userModel UserModel) error {
+//		if err := authService.RegisterAdmin(userModel); err != nil {
+//			log.Printf("Error registrasi admin: %v", err)
+//			return fmt.Errorf("gagal registrasi admin: %w", err)
+//		}
+//		return nil
+//	}
+func initSekolahService(sekolahModel *models.SekolahTenant) error {
+	sekolahClient, err := NewSekolahServiceClient()
+	if err != nil {
+		return err
+	}
+
+	if err := sekolahClient.RegistrasiSekolah(sekolahModel); err != nil {
+		return err
+	}
+
+	if err := sekolahClient.CreateSekolah(sekolahModel); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func initSCService(sekolahModel *models.SekolahTenant, userID int) error {
+	scClient, err := NewSCServiceClient()
+	if err != nil {
+		return err
+	}
+
+	if err := scClient.RegistrasiSekolahTenant(sekolahModel, int32(userID)); err != nil {
+		return err
+	}
+
+	return nil
 }

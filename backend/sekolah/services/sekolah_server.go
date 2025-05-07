@@ -21,18 +21,18 @@ type SekolahService struct {
 	// RedisClient    *redis.Client // Tambahkan Redis sebagai field
 	sekolahService    repositories.SekolahRepository
 	schemaService     SchemaService
-	repoSekolahTenant repositories.GenericRepository[models.SekolahTabelTenant]
+	repoSekolahTenant repositories.GenericRepository[models.SekolahTenant]
 }
 
 func NewSekolahService() *SekolahService {
 	sekolahRepo := repositories.NewSekolahRepository(config.DB)
 	schemaRepo := repositories.NewSchemaRepository(config.DB)
-	sekolahTabelTenant := repositories.NewsekolahTenantRepository(config.DB)
-	schemaService := NewSchemaService(schemaRepo, *sekolahTabelTenant)
+	SekolahTenant := repositories.NewsekolahTenantRepository(config.DB)
+	schemaService := NewSchemaService(schemaRepo, *SekolahTenant)
 	return &SekolahService{
 		sekolahService:    sekolahRepo,
 		schemaService:     schemaService,
-		repoSekolahTenant: *sekolahTabelTenant,
+		repoSekolahTenant: *SekolahTenant,
 	}
 }
 
@@ -70,10 +70,10 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 		return nil, fmt.Errorf("registrasi sekolah gagal: %w", cek)
 	}
 	// 2 Simpan informasi schema sekolah
-	err = s.schemaService.SimpanSchemaSekolah(&models.SekolahTabelTenant{
-		SekolahID:   int(sekolah.SekolahTenantId),
-		SchemaName:  Schemaname,
-		NamaSekolah: sekolah.NamaSekolah,
+	err = s.schemaService.SimpanSchemaSekolah(&models.SekolahTenant{
+		SekolahTenantId: sekolah.SekolahTenantId,
+		SchemaName:      Schemaname,
+		NamaSekolah:     sekolah.NamaSekolah,
 	})
 	if err != nil {
 		log.Printf("Gagal menyimpan schema sekolah: %v", err)
@@ -84,10 +84,11 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 	return &pb.TabelSekolahResponse{
 		Message: "Pembuatan database berhasil",
 		Status:  true,
+		
 	}, nil
 }
 
-func (s *SekolahService) GetSekolahTabelTenant(ctx context.Context, req *pb.SekolahTabelTenantRequest) (*pb.SekolahTabelTenantResponse, error) {
+func (s *SekolahService) GetSekolahTenant(ctx context.Context, req *pb.SekolahTenantRequest) (*pb.SekolahTenantResponse, error) {
 	// Daftar field yang wajib diisi
 	requiredFields := []string{"SekolahId"}
 	// Validasi request
@@ -95,16 +96,16 @@ func (s *SekolahService) GetSekolahTabelTenant(ctx context.Context, req *pb.Seko
 	if err != nil {
 		return nil, err
 	}
-	sekolahID := req.GetSekolahId()
+	sekolahID := req.GetSekolahTenantId()
 	sekolahTerdaftar, err := s.repoSekolahTenant.FindByID(ctx, strconv.Itoa(int(sekolahID)), "public", "sekolah_id")
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.SekolahTabelTenantResponse{
-		SekolahId:   int32(sekolahTerdaftar.SekolahID),
-		NamaSekolah: sekolahTerdaftar.NamaSekolah,
-		Schemaname:  sekolahTerdaftar.SchemaName, // nama schema
+	return &pb.SekolahTenantResponse{
+		SekolahTenantId: sekolahTerdaftar.SekolahTenantId,
+		NamaSekolah:     sekolahTerdaftar.NamaSekolah,
+		Schemaname:      sekolahTerdaftar.SchemaName, // nama schema
 	}, err
 
 }

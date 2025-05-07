@@ -501,12 +501,12 @@ var SemesterService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	SekolahService_GetSchoolInfo_FullMethodName         = "/sekolah.SekolahService/GetSchoolInfo"
-	SekolahService_RegistrasiSekolah_FullMethodName     = "/sekolah.SekolahService/RegistrasiSekolah"
-	SekolahService_GetSekolahTabelTenant_FullMethodName = "/sekolah.SekolahService/GetSekolahTabelTenant"
-	SekolahService_CreateSekolah_FullMethodName         = "/sekolah.SekolahService/CreateSekolah"
-	SekolahService_GetSekolah_FullMethodName            = "/sekolah.SekolahService/GetSekolah"
-	SekolahService_UpdateSekolah_FullMethodName         = "/sekolah.SekolahService/UpdateSekolah"
+	SekolahService_GetSchoolInfo_FullMethodName     = "/sekolah.SekolahService/GetSchoolInfo"
+	SekolahService_RegistrasiSekolah_FullMethodName = "/sekolah.SekolahService/RegistrasiSekolah"
+	SekolahService_GetSekolahTenant_FullMethodName  = "/sekolah.SekolahService/GetSekolahTenant"
+	SekolahService_CreateSekolah_FullMethodName     = "/sekolah.SekolahService/CreateSekolah"
+	SekolahService_GetSekolah_FullMethodName        = "/sekolah.SekolahService/GetSekolah"
+	SekolahService_UpdateSekolah_FullMethodName     = "/sekolah.SekolahService/UpdateSekolah"
 )
 
 // SekolahServiceClient is the client API for SekolahService service.
@@ -515,7 +515,7 @@ const (
 type SekolahServiceClient interface {
 	GetSchoolInfo(ctx context.Context, in *SchoolRequest, opts ...grpc.CallOption) (*SchoolResponse, error)
 	RegistrasiSekolah(ctx context.Context, in *TabelSekolahRequest, opts ...grpc.CallOption) (*TabelSekolahResponse, error)
-	GetSekolahTabelTenant(ctx context.Context, in *SekolahTabelTenantRequest, opts ...grpc.CallOption) (*SekolahTabelTenantResponse, error)
+	GetSekolahTenant(ctx context.Context, in *SekolahTenantRequest, opts ...grpc.CallOption) (*SekolahTenantResponse, error)
 	// // CRUD for Sekolah
 	CreateSekolah(ctx context.Context, in *CreateSekolahRequest, opts ...grpc.CallOption) (*CreateSekolahResponse, error)
 	GetSekolah(ctx context.Context, in *GetSekolahRequest, opts ...grpc.CallOption) (*GetSekolahResponse, error)
@@ -550,10 +550,10 @@ func (c *sekolahServiceClient) RegistrasiSekolah(ctx context.Context, in *TabelS
 	return out, nil
 }
 
-func (c *sekolahServiceClient) GetSekolahTabelTenant(ctx context.Context, in *SekolahTabelTenantRequest, opts ...grpc.CallOption) (*SekolahTabelTenantResponse, error) {
+func (c *sekolahServiceClient) GetSekolahTenant(ctx context.Context, in *SekolahTenantRequest, opts ...grpc.CallOption) (*SekolahTenantResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SekolahTabelTenantResponse)
-	err := c.cc.Invoke(ctx, SekolahService_GetSekolahTabelTenant_FullMethodName, in, out, cOpts...)
+	out := new(SekolahTenantResponse)
+	err := c.cc.Invoke(ctx, SekolahService_GetSekolahTenant_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -596,7 +596,7 @@ func (c *sekolahServiceClient) UpdateSekolah(ctx context.Context, in *UpdateSeko
 type SekolahServiceServer interface {
 	GetSchoolInfo(context.Context, *SchoolRequest) (*SchoolResponse, error)
 	RegistrasiSekolah(context.Context, *TabelSekolahRequest) (*TabelSekolahResponse, error)
-	GetSekolahTabelTenant(context.Context, *SekolahTabelTenantRequest) (*SekolahTabelTenantResponse, error)
+	GetSekolahTenant(context.Context, *SekolahTenantRequest) (*SekolahTenantResponse, error)
 	// // CRUD for Sekolah
 	CreateSekolah(context.Context, *CreateSekolahRequest) (*CreateSekolahResponse, error)
 	GetSekolah(context.Context, *GetSekolahRequest) (*GetSekolahResponse, error)
@@ -617,8 +617,8 @@ func (UnimplementedSekolahServiceServer) GetSchoolInfo(context.Context, *SchoolR
 func (UnimplementedSekolahServiceServer) RegistrasiSekolah(context.Context, *TabelSekolahRequest) (*TabelSekolahResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegistrasiSekolah not implemented")
 }
-func (UnimplementedSekolahServiceServer) GetSekolahTabelTenant(context.Context, *SekolahTabelTenantRequest) (*SekolahTabelTenantResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSekolahTabelTenant not implemented")
+func (UnimplementedSekolahServiceServer) GetSekolahTenant(context.Context, *SekolahTenantRequest) (*SekolahTenantResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSekolahTenant not implemented")
 }
 func (UnimplementedSekolahServiceServer) CreateSekolah(context.Context, *CreateSekolahRequest) (*CreateSekolahResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSekolah not implemented")
@@ -686,20 +686,20 @@ func _SekolahService_RegistrasiSekolah_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SekolahService_GetSekolahTabelTenant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SekolahTabelTenantRequest)
+func _SekolahService_GetSekolahTenant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SekolahTenantRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SekolahServiceServer).GetSekolahTabelTenant(ctx, in)
+		return srv.(SekolahServiceServer).GetSekolahTenant(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: SekolahService_GetSekolahTabelTenant_FullMethodName,
+		FullMethod: SekolahService_GetSekolahTenant_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SekolahServiceServer).GetSekolahTabelTenant(ctx, req.(*SekolahTabelTenantRequest))
+		return srv.(SekolahServiceServer).GetSekolahTenant(ctx, req.(*SekolahTenantRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -774,8 +774,8 @@ var SekolahService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SekolahService_RegistrasiSekolah_Handler,
 		},
 		{
-			MethodName: "GetSekolahTabelTenant",
-			Handler:    _SekolahService_GetSekolahTabelTenant_Handler,
+			MethodName: "GetSekolahTenant",
+			Handler:    _SekolahService_GetSekolahTenant_Handler,
 		},
 		{
 			MethodName: "CreateSekolah",
