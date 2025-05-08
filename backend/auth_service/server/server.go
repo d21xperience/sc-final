@@ -12,17 +12,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/go-redis/redis"
-
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 )
-
-// Inisialisasi Redis client global
-func InitRedis() *redis.Client {
-	return redis.NewClient(&redis.Options{
-		Addr: "redis_container:6379",
-	})
-}
 
 func StartGRPCServer() {
 	// Menggunakan environment variable untuk fleksibilitas

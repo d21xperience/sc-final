@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -294,4 +295,10 @@ func GenerateNomorIjazah(npsn string, tahun int) string {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	randomNumber := r.Intn(1000000) // random 6 digit
 	return fmt.Sprintf("%s/%d/%06d", npsn, tahun, randomNumber)
+}
+
+func IsEmail(input string) bool {
+	// Regex sederhana untuk validasi email
+	re := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
+	return re.MatchString(input)
 }

@@ -90,14 +90,14 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 
 func (s *SekolahService) GetSekolahTenant(ctx context.Context, req *pb.SekolahTenantRequest) (*pb.SekolahTenantResponse, error) {
 	// Daftar field yang wajib diisi
-	requiredFields := []string{"SekolahId"}
+	requiredFields := []string{"SekolahTenantId"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
 	if err != nil {
 		return nil, err
 	}
 	sekolahID := req.GetSekolahTenantId()
-	sekolahTerdaftar, err := s.repoSekolahTenant.FindByID(ctx, strconv.Itoa(int(sekolahID)), "public", "sekolah_id")
+	sekolahTerdaftar, err := s.repoSekolahTenant.FindByID(ctx, strconv.Itoa(int(sekolahID)), "public", "sekolah_tenant_id")
 	if err != nil {
 		return nil, err
 	}

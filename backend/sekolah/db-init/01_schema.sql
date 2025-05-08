@@ -24,5 +24,7 @@ CREATE TABLE schema_logs (
 	updated_at TIMESTAMPTZ NULL DEFAULT NULL,
 	deleted_at TIMESTAMPTZ NULL DEFAULT NULL,
 	PRIMARY KEY (id)
+	-- CONSTRAINT "FK_schema_logs_sekolah_tenant" FOREIGN KEY (schema_name) REFERENCES sekolah_tenant (schema_name) ON UPDATE CASCADE ON DELETE CASCADE
+
 );
 CREATE INDEX idx_schema_logs_deleted_at ON schema_logs (deleted_at)

@@ -10,6 +10,10 @@ import (
 )
 
 type Config struct {
+	RedisHost       string
+	RedisPort       int
+	RedisDBName     string
+	RedisPassword   string
 	Host            string
 	Port            int
 	User            string
@@ -27,8 +31,13 @@ func LoadConfig() Config {
 	}
 
 	port, _ := strconv.Atoi(os.Getenv("AUTHDB_PORT"))
+	redisPort, _ := strconv.Atoi(os.Getenv("AUTHREDIS_PORT"))
 
 	return Config{
+		RedisHost:       os.Getenv("AUTHREDIS_HOST"),
+		RedisPassword:   os.Getenv("AUTHREDIS_PASSWORD"),
+		RedisPort:       redisPort,
+		RedisDBName:     os.Getenv("AUTHREDIS_DB"),
 		Host:            os.Getenv("AUTHDB_HOST"),
 		Password:        os.Getenv("AUTHDB_PASSWORD"),
 		Port:            port,

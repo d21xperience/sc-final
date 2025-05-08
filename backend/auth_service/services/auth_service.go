@@ -122,24 +122,33 @@ func (s *authServiceImpl) RegisterAdmin(user *models.User) error {
 	}
 }
 
-func (s *authServiceImpl) Login(username, password string) (*models.User, error) {
+func (s *authServiceImpl) Login(identifier, password string) (*models.User, error) {
+	var user *models.User
+	var err error
 
-	// Ambil user berdasarkan username
-	user, err := s.repo.FindByUsername(username)
-	if err != nil {
+	// Deteksi apakah input adalah email
+	if utils.IsEmail(identifier) {
+		user, err = s.repo.FindByEmail(identifier)
+	} else {
+		user, err = s.repo.FindByUsername(identifier)
+	}
+
+	if err != nil || user == nil {
 		return nil, errors.New("invalid credentials")
 	}
-	// Verifikasi password
+
 	if !utils.VerifyPassword(password, user.Password) {
 		return nil, errors.New("invalid credentials")
 	}
-	// Update waktu login terakhir
+
 	err = s.repo.UpdateLastLogin(user.ID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update last login: %w", err)
 	}
+
 	return user, nil
 }
+
 func (as *authServiceImpl) GenerateToken(userID int, role string) (string, error) {
 	claims := jwt.MapClaims{
 		"userID": userID,

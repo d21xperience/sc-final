@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"crypto/md5"
 	crand "crypto/rand" // Alias untuk crypto/rand
+	"encoding/hex"
 	"fmt"
 	"math/big"
 	"math/rand" // Alias untuk math/rand
@@ -102,23 +104,31 @@ func getUsernameFromEmail(email string) string {
 	return username
 }
 
-// Fungsi utama untuk membuat username dengan panjang tepat 8 karakter
+// Fungsi generate username berbasis MD5 hash, output 12 karakter
 func GenerateUsername(email string, npsn string) string {
 	emailPart := getUsernameFromEmail(email)
-	timestamp := time.Now().UnixNano() // Timestamp nano untuk keunikan
+	timestamp := time.Now().UnixNano()
 
-	// Gabungkan komponen dasar
-	base := fmt.Sprintf("%s%s%d", emailPart, npsn, timestamp)
+	// Gabungkan komponen dasar sebagai input hash
+	input := fmt.Sprintf("%s%s%d", emailPart, npsn, timestamp)
 
-	// Pastikan base minimal 8 karakter
-	for len(base) < 8 {
-		base += "0123456789"[rand.Intn(10) : rand.Intn(10)+1]
+	// Buat MD5 hash
+	hash := md5.Sum([]byte(input))
+	hashStr := fmt.Sprintf("user-%s",hex.EncodeToString(hash[:])) // Konversi ke string hexadecimal
+
+	// Ambil 12 karakter pertama dari hash
+	if len(hashStr) >= 12 {
+		return hashStr[:12]
 	}
 
-	// Potong atau ambil 8 karakter pertama
-	if len(base) > 8 {
-		base = base[:8]
-	}
+	// Jika kurang dari 12 (jarang terjadi), tambahkan padding
+	return padString(hashStr, 12)
+}
 
-	return base
+// Fungsi helper untuk padding jika hash terlalu pendek
+func padString(s string, length int) string {
+	for len(s) < length {
+		s += "0"
+	}
+	return s[:length]
 }

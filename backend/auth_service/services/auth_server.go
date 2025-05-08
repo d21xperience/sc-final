@@ -9,6 +9,7 @@ import (
 	"auth_service/config"
 	pb "auth_service/generated"
 	"auth_service/models"
+	"auth_service/queue"
 	"auth_service/repositories"
 
 	"auth_service/utils"
@@ -24,6 +25,7 @@ type AuthServiceServer struct {
 	authService AuthService
 	repoProfile repositories.GenericRepository[models.UserProfile]
 	repoUser    repositories.UserRepository
+	rQueue      queue.RedisEnqueue
 }
 
 func NewAuthServiceServer() *AuthServiceServer {
@@ -32,11 +34,13 @@ func NewAuthServiceServer() *AuthServiceServer {
 	repoSekolah := repositories.NewSekolahRepository(config.DB)
 	repoProfile := repositories.NewUserProfileRepository(config.DB)
 	repoUser := repositories.NewUserRepository(config.DB)
+	rQueue := queue.NewRedisEnqueue(config.RDB)
 	return &AuthServiceServer{
 		authService: authService,
 		repoSekolah: repoSekolah,
 		repoProfile: *repoProfile,
 		repoUser:    repoUser,
+		rQueue:      *rQueue,
 	}
 }
 
@@ -46,13 +50,25 @@ type SchoolRegistration struct {
 }
 
 func (s *AuthServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	username := req.GetUsername()
-	password := req.Password
+	// log.Printf("Received Sekolah data request: %+v\n", req)
 
-	resp, err := s.authService.Login(username, password)
-	if err != nil {
-		log.Printf("Error username/password salah : %v", err)
-		return nil, err
+	username := req.GetUsername()
+	email := req.GetEmail()
+	password := req.Password
+	var resp *models.User
+	var err error
+	if email != "" {
+		resp, err = s.authService.Login(email, password)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if username != "" {
+		resp, err = s.authService.Login(username, password)
+		if err != nil {
+			log.Printf("Error username/password salah : %v", err)
+			return nil, err
+		}
 	}
 	// Generate JWT
 	token, err := utils.GenerateJWT(resp)
@@ -134,7 +150,7 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 	}
 	// Hubungkan user dengan sekolah
 	userModel := &models.User{
-		Username:        utils.GenerateUsername(user.Username, sekolah.Npsn),
+		Username:        utils.GenerateUsername(user.Email, sekolah.Npsn),
 		Email:           user.Email,
 		Role:            user.Role,
 		SekolahTenantID: sekolahModel.ID,
@@ -158,22 +174,27 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 			return nil, fmt.Errorf("gagal registrasi admin: %w", err)
 		}
 		// ==============Inisialisasi database di sekolah service==============
-		errChan := make(chan error, 1)
-		// 1. Buat client untuk sekolah_service
-		go func() {
-			errChan <- initSekolahService(sekolahModel)
-		}()
+		// errChan := make(chan error, 1)
+		// // 1. Buat client untuk sekolah_service
+		// go func() {
+		// 	errChan <- initSekolahService(sekolahModel)
+		// }()
+		if err := s.rQueue.EnqueueInitSekolahTask(*sekolahModel); err != nil {
+			log.Printf("Gagal enqueue task: %v", err)
+			return nil, fmt.Errorf("gagal enqueue initSekolahService: %w", err)
+		}
+
 		// ==============Inisialisasi database di sc service==============
 		// Buat client untuk SC_service
 		// go func() {
 		// 	errChan <- initSCService(sekolahModel, int(userModel.ID))
 		// }()
 
-		for i := 0; i < 1; i++ {
-			if err := <-errChan; err != nil {
-				return nil, err
-			}
-		}
+		// for i := 0; i < 1; i++ {
+		// 	if err := <-errChan; err != nil {
+		// 		return nil, err
+		// 	}
+		// }
 
 	} else if userModel.Role == "siswa" {
 		// Registrasi siswa
@@ -209,6 +230,9 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 				Role:            userModel.Role,
 				SekolahTenantId: userModel.SekolahTenantID,
 			},
+			SekolahTenant: &pb.SekolahTenant{
+				NamaSekolah: sekolahModel.NamaSekolah,
+			},
 		}
 	} else {
 		response = &pb.RegisterResponse{
@@ -216,29 +240,6 @@ func (s *AuthServiceServer) Register(ctx context.Context, req *pb.RegisterReques
 		}
 	}
 	log.Println("User berhasil didaftarkan")
-
-	// // Siapkan data registrasi sekolah untuk dikirim ke Redis
-	// registration := SchoolRegistration{
-	// 	SchoolName: sekolah.GetNamaSekolah(), // Menggunakan metode GetNamaSekolah()
-	// 	AdminEmail: user.GetEmail(),          // Menggunakan metode GetEmail()
-	// }
-
-	// // Konversi data ke JSON
-	// data, err := json.Marshal(registration)
-	// if err != nil {
-	// 	log.Printf("Error marshalling registration data: %v", err)
-	// 	return nil, fmt.Errorf("gagal memproses data registrasi")
-	// }
-
-	// // Kirim data ke Redis
-	// err = s.RedisClient.Publish("school_registration", data).Err()
-	// if err != nil {
-	// 	log.Printf("Error publishing to Redis: %v", err)
-	// 	return nil, fmt.Errorf("gagal mengirim data ke sistem antrian")
-	// }
-
-	// fmt.Println("Registration message published successfully!")
-
 	return response, nil
 }
 
@@ -394,22 +395,6 @@ func (s *AuthServiceServer) GetSekolah(ctx context.Context, req *pb.GetSekolahRe
 //		}
 //		return nil
 //	}
-func initSekolahService(sekolahModel *models.SekolahTenant) error {
-	sekolahClient, err := NewSekolahServiceClient()
-	if err != nil {
-		return err
-	}
-
-	if err := sekolahClient.RegistrasiSekolah(sekolahModel); err != nil {
-		return err
-	}
-
-	if err := sekolahClient.CreateSekolah(sekolahModel); err != nil {
-		return err
-	}
-
-	return nil
-}
 
 func initSCService(sekolahModel *models.SekolahTenant, userID int) error {
 	scClient, err := NewSCServiceClient()

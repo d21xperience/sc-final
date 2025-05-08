@@ -49,9 +49,9 @@ func StartServer() {
 	grpcServer := RunGRPCServer()
 	// HTTP Gateway
 	// =========================================
-	// Inisialisasi mux untuk HTTP Gateway
 	// Inisialisasi UploadServiceServer sebelum dipakai
 	UploadService := services.NewUploadServiceServer()
+	// Inisialisasi mux untuk HTTP Gateway
 	mux := runtime.NewServeMux()
 	method, pattern := createPattern("POST", "api", "v1", "ss", "upload", "rest")
 	mux.Handle(method, pattern, func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
