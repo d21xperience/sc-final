@@ -152,7 +152,7 @@ func (s *RombelAnggotaService) CreateBanyakAnggotaKelas(ctx context.Context, req
 // **GetKelas**
 func (s *RombelAnggotaService) GetAnggotaKelas(ctx context.Context, req *pb.GetAnggotaKelasRequest) (*pb.GetAnggotaKelasResponse, error) {
 	// Debugging: Cek nilai request yang diterima
-	log.Printf("Received Sekolah data request: %+v\n", req)
+	log.Printf("call rombel_anggota_server: data request: %+v\n", req)
 	// Daftar field yang wajib diisi
 	requiredFields := []string{"Schemaname", "SemesterId"}
 	// Validasi request

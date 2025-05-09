@@ -11,8 +11,9 @@ func main() {
 	// Load configuration from .env
 	cfg := config.LoadConfig()
 
-	// sendPtk(cfg, 2020, 2021)
-	// sendSiswa(cfg, 2020, 2024)
+	sendSekolah(cfg, 2020, 2021)
+	sendPtk(cfg, 2020, 2021)
+	sendSiswa(cfg, 2020, 2024)
 	sendRombel(cfg, 2021, 2021)
 }
 
