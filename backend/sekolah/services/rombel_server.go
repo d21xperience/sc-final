@@ -130,6 +130,7 @@ func (s *RombelServiceServer) CreateKelas(ctx context.Context, req *pb.CreateKel
 
 // **GetKelas**
 func (s *RombelServiceServer) GetKelas(ctx context.Context, req *pb.GetKelasRequest) (*pb.GetKelasResponse, error) {
+	log.Printf("GetKelas rombel_server, data request: %+v\n", req)
 	var err error
 	// Daftar field yang wajib diisi
 	requiredFields := []string{"Schemaname", "SemesterId"}

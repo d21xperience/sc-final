@@ -84,7 +84,6 @@ func (s *SekolahService) RegistrasiSekolah(ctx context.Context, req *pb.TabelSek
 	return &pb.TabelSekolahResponse{
 		Message: "Pembuatan database berhasil",
 		Status:  true,
-		
 	}, nil
 }
 
@@ -114,7 +113,7 @@ func (s *SekolahService) GetSekolahTenant(ctx context.Context, req *pb.SekolahTe
 // ================================================================================//
 func (s *SekolahService) CreateSekolah(ctx context.Context, req *pb.CreateSekolahRequest) (*pb.CreateSekolahResponse, error) {
 	// Debugging: Cek nilai request yang diterima
-	log.Printf("Received Sekolah data request: %+v\n", req)
+	// log.Printf("Received Sekolah data request: %+v\n", req)
 	requiredFields := []string{"Schemaname", "Sekolah"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
@@ -220,7 +219,7 @@ func (s *SekolahService) GetSekolah(ctx context.Context, req *pb.GetSekolahReque
 // Tambahkan fitur tambahan DELET, UPDATE , dan LIST digunakan untuk SUPER ADMIN
 func (s *SekolahService) UpdateSekolah(ctx context.Context, req *pb.UpdateSekolahRequest) (*pb.UpdateSekolahResponse, error) {
 	// Debugging: Cek nilai request yang diterima
-	log.Printf("Received Sekolah data request: %+v\n", req)
+	// log.Printf("Received Sekolah data request: %+v\n", req)
 	requiredFields := []string{"Schemaname", "Sekolah"}
 	// Validasi request
 	err := utils.ValidateFields(req, requiredFields)
@@ -244,7 +243,10 @@ func (s *SekolahService) UpdateSekolah(ctx context.Context, req *pb.UpdateSekola
 	modSekolah.Fax = sekolah.Fax
 	modSekolah.Telepon = sekolah.Telepon
 	modSekolah.BentukPendidikanId = sekolah.BentukPendidikanId
+	modSekolah.JenjangPendidikanId = sekolah.JenjangPendidikanId
 	modSekolah.KdPos = sekolah.KdPos
+	modSekolah.NmKepsek = sekolah.NmKepsek
+	modSekolah.NipKepsek = sekolah.NipKepsek
 
 	err = s.sekolahService.Update(ctx, modSekolah, Schemaname)
 	if err != nil {

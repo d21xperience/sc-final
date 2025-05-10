@@ -46,8 +46,6 @@ import (
 // }
 
 func ValidateFields(req interface{}, fieldNames []string) error {
-	log.Printf("Received data request: %+v\n", req)
-
 	// Cek apakah req kosong
 	if req == nil {
 		log.Println("Request is nil")
