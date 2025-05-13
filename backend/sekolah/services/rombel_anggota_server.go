@@ -230,7 +230,7 @@ func (s *RombelAnggotaService) SearchAnggotaKelas(ctx context.Context, req *pb.S
 	var banyakSiswa []models.RombelAnggota
 	pesertaDidikId := utils.SafeString(req.PesertaDidikId)
 	rombelId := utils.SafeString(req.RombonganBelajarId)
-
+	tingkatId := utils.SafeString(req.TingkatId)
 	joins := []string{
 		"JOIN tabel_siswa ON tabel_siswa.peserta_didik_id = tabel_anggotakelas.peserta_didik_id",
 		"JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = tabel_anggotakelas.rombongan_belajar_id",
@@ -273,6 +273,17 @@ func (s *RombelAnggotaService) SearchAnggotaKelas(ctx context.Context, req *pb.S
 			return nil, fmt.Errorf("gagal menemukan siswa di schema '%s': %w", schemaName, err)
 		}
 		banyakSiswa = utils.PointerToSlice(mod)
+	} else if tingkatId != "" {
+		conditions := map[string]any{
+			"tabel_kelas.tingkat_id": tingkatId,
+		}
+
+		mod, err := s.repo.FindWithPreloadAndJoins(ctx, schemaName, joins, []string{"RombonganBelajar"}, conditions, nil, []string{"tabel_kelas.nm_kelas ASC"}, false)
+		if err != nil {
+			log.Printf("[ERROR] Gagal menemukan siswa di schema '%s': %v", schemaName, err)
+			return nil, fmt.Errorf("gagal menemukan siswa di schema '%s': %w", schemaName, err)
+		}
+		banyakSiswa = mod
 	}
 	banyakSiswaList := utils.ConvertModelsToPB(banyakSiswa, func(siswa models.RombelAnggota) *pb.AnggotaKelas {
 		return &pb.AnggotaKelas{
@@ -363,13 +374,52 @@ func (s *RombelAnggotaService) DeleteAnggotaKelas(ctx context.Context, req *pb.D
 	err = s.repo.Delete(ctx, anggotaRombelId, schemaName, "anggota_rombel_id")
 	if err != nil {
 		log.Printf("Gagal menghapus Kelas: %v", err)
-		return nil, fmt.Errorf("gagal menghapus Kelas: %w", err)
+		return &pb.DeleteAnggotaKelasResponse{
+			Message: fmt.Sprintf("Gagal menghapus anggota kelas %s", err),
+			Status:  false,
+		}, nil
 	}
 
 	return &pb.DeleteAnggotaKelasResponse{
 		Message: "Anggota Kelas berhasil dihapus",
 		Status:  true,
 	}, nil
+}
+
+func (s *RombelAnggotaService) DeleteBatchAnggotaKelas(ctx context.Context, req *pb.DeleteBatchAnggotaKelasRequest) (*pb.DeleteBatchAnggotaKelasResponse, error) {
+	var err error
+	log.Printf("DeleteBatchAnggotaKelas Receiveddata request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname", "AnggotaRombelId"}
+	// Validasi request
+	err = utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaname()
+	switch schemaName {
+	case "":
+		return nil, fmt.Errorf("schema name is required")
+	case "\"\"":
+		return nil, fmt.Errorf("schema name cannot nul value")
+	}
+	anggotaRombelId := req.GetAnggotaRombelId()
+
+	err = s.repo.DeleteBatch(ctx, anggotaRombelId, schemaName, "anggota_rombel_id")
+	if err != nil {
+		log.Printf("Gagal menghapus anggota kelas: %v", err)
+		// return nil, fmt.Errorf("gagal menghapus Kelas: %w", err)
+		return &pb.DeleteBatchAnggotaKelasResponse{
+			Message: fmt.Sprintf("Gagal menghapus banyak anggota kelas %s", err),
+			Status:  false,
+		}, nil
+	}
+
+	return &pb.DeleteBatchAnggotaKelasResponse{
+		Message: "Anggota Kelas berhasil dihapus",
+		Status:  true,
+	}, nil
+
 }
 
 // // UploadKelas mengunggah data Kelas dari file Excel
@@ -472,3 +522,65 @@ func (s *RombelAnggotaService) DeleteAnggotaKelas(ctx context.Context, req *pb.D
 // 		Status:  true,
 // 	}, nil
 // }
+
+func (s *RombelAnggotaService) FilterAnggotaKelas(ctx context.Context, req *pb.FilterAnggotaKelasRequest) (*pb.FilterAnggotaKelasResponse, error) {
+	var err error
+	log.Printf("rombel_anggota_server->FilterAnggotaKelas with data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname", "SemesterId"}
+	// Validasi request
+	err = utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaname := req.GetSchemaname()
+	semesterId := req.GetSemesterId()
+
+	tingkatPendId := req.GetTingkatPendidikanId()
+	rombelId := req.GetRombonganBelajarId()
+	var anggotaRombelModels []models.RombelAnggota
+	joins := []string{
+		"JOIN tabel_kelas ON tabel_anggotakelas.rombongan_belajar_id = tabel_kelas.rombongan_belajar_id",
+		"JOIN tabel_siswa ON tabel_anggotakelas.peserta_didik_id = tabel_siswa.peserta_didik_id",
+	}
+	preloads := []string{"RombonganBelajar", "PesertaDidik"}
+	conditions := map[string]any{"tabel_anggotakelas.semester_id": semesterId}
+	orderBy := []string{"tabel_kelas.nm_kelas", "tabel_siswa.nm_siswa"}
+
+	if tingkatPendId != 0 {
+		conditions["tabel_kelas.tingkat_pendidikan_id"] = tingkatPendId
+		// orderBy = append(orderBy, "tabel_siswa.nm_siswa")
+		anggotaRombelModels, err = s.repo.FindWithPreloadAndJoins(ctx, schemaname, joins, preloads, conditions, nil, orderBy, false)
+		if err != nil {
+			return nil, err
+		}
+	} else if rombelId != "" {
+		conditions["tabel_anggotakelas.rombongan_belajar_id"] = rombelId
+		anggotaRombelModels, err = s.repo.FindWithPreloadAndJoins(ctx, schemaname, joins, preloads, conditions, nil, orderBy, false)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if anggotaRombelModels == nil {
+		return nil, fmt.Errorf("parameter kosong, pilih salah satu %v atau %v", tingkatPendId, rombelId)
+	}
+	results := utils.ConvertModelsToPB(anggotaRombelModels, func(item models.RombelAnggota) *pb.AnggotaKelas {
+		return &pb.AnggotaKelas{
+			AnggotaRombelId:    item.AnggotaRombelId.String(),
+			PesertaDidikId:     item.PesertaDidikId.String(),
+			NmSiswa:            item.PesertaDidik.NmSiswa,
+			NmKelas:            item.RombonganBelajar.NmKelas,
+			RombonganBelajarId: item.RombonganBelajarId.String(),
+			PesertaDidik: &pb.Siswa{
+				Nis:          item.PesertaDidik.Nis,
+				Nisn:         item.PesertaDidik.Nisn,
+				TempatLahir:  item.PesertaDidik.TempatLahir,
+				TanggalLahir: item.PesertaDidik.TanggalLahir.Format("2006-01-02"),
+			},
+		}
+	})
+
+	return &pb.FilterAnggotaKelasResponse{
+		AnggotaKelas: results,
+	}, nil
+}

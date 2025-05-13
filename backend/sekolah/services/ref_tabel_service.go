@@ -18,6 +18,7 @@ type ReferensiServiceServer struct {
 	repoKurikulum         repositories.GenericRepository[models.Kurikulum]
 	repoJurusan           repositories.GenericRepository[models.Jurusan]
 	repoMapel             repositories.GenericRepository[models.MataPelajaran]
+	repoGelarAkademik     repositories.GenericRepository[models.GelarAkademik]
 }
 
 func NewReferensiServiceServer() *ReferensiServiceServer {
@@ -28,6 +29,7 @@ func NewReferensiServiceServer() *ReferensiServiceServer {
 	repoKurikulum := repositories.NewKurikulumRepository(config.DB)
 	repoJurusan := repositories.NewJurusanRepository(config.DB)
 	repoMapel := repositories.NewMapelRepository(config.DB)
+	repoGelarAkademik := repositories.NewGelarAkademikRepository(config.DB)
 	return &ReferensiServiceServer{
 		repoBentukPendidikan:  *repoBentukPendidikan,
 		repoJenjangPendidikan: *repoJenjangPendidikan,
@@ -36,6 +38,7 @@ func NewReferensiServiceServer() *ReferensiServiceServer {
 		repoKurikulum:         *repoKurikulum,
 		repoJurusan:           *repoJurusan,
 		repoMapel:             *repoMapel,
+		repoGelarAkademik:     *repoGelarAkademik,
 	}
 }
 
@@ -218,5 +221,22 @@ func (s *ReferensiServiceServer) GetMapel(ctx context.Context, req *pb.GetMapelR
 	})
 	return &pb.GetMapelResponse{
 		Mapel: res,
+	}, nil
+}
+
+func (s *ReferensiServiceServer) GetGelarAkademik(ctx context.Context, req *pb.GetGelarAkademikRequest) (*pb.GetGelarAkademikResponse, error) {
+	gelarAkademikModel, err := s.repoGelarAkademik.FindAll(ctx, "ref", 1000, 0)
+	if err != nil {
+		return nil, err
+	}
+	results := utils.ConvertModelsToPB(gelarAkademikModel, func(item *models.GelarAkademik) *pb.GelarAkademik {
+		return &pb.GelarAkademik{
+			Kode:        item.Kode,
+			Nama:        item.Nama,
+			PosisiGelar: item.PosisiGelar,
+		}
+	})
+	return &pb.GetGelarAkademikResponse{
+		GelarAkademik: results,
 	}, nil
 }

@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS ref.jurusan (
 	last_update TIMESTAMP NOT NULL,
 	expired_date TIMESTAMP NULL DEFAULT NULL,
 	last_sync TIMESTAMP NOT NULL,
-	PRIMARY KEY ("jurusan_id")
+	PRIMARY KEY (jurusan_id)
 );
 
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS ref.kurikulum (
 	expired_date TIMESTAMP NULL DEFAULT NULL,
 	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
 	PRIMARY KEY (kurikulum_id),
-	CONSTRAINT "FK_kurikulum_jurusan" FOREIGN KEY ("jurusan_id") REFERENCES "ref"."jurusan" ("jurusan_id") ON UPDATE NO ACTION ON DELETE NO ACTION
+	CONSTRAINT FK_kurikulum_jurusan FOREIGN KEY (jurusan_id) REFERENCES ref.jurusan (jurusan_id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 CREATE TABLE IF NOT EXISTS ref.tahun_ajaran (
 	tahun_ajaran_id NUMERIC(4,0) NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS ref.semester (
 	expired_date TIMESTAMP NULL DEFAULT NULL,
 	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
 	PRIMARY KEY (semester_id),
-	CONSTRAINT "FK_semester_tahun_ajaran" FOREIGN KEY ("tahun_ajaran_id") REFERENCES "ref"."tahun_ajaran" ("tahun_ajaran_id") ON UPDATE CASCADE ON DELETE SET NULL
+	CONSTRAINT FK_semester_tahun_ajaran FOREIGN KEY (tahun_ajaran_id) REFERENCES ref.tahun_ajaran (tahun_ajaran_id) ON UPDATE CASCADE ON DELETE CASCADE
 
 );
 
@@ -129,7 +129,7 @@ CREATE TABLE ref.tingkat_pendidikan (
 	expired_date TIMESTAMP NULL DEFAULT NULL,
 	last_sync TIMESTAMP NOT NULL DEFAULT '1901-01-01 00:00:00',
 	PRIMARY KEY (tingkat_pendidikan_id),
-	CONSTRAINT "fk_tingkat__tingkat_j_jenjang_" FOREIGN KEY ("jenjang_pendidikan_id") REFERENCES ref.jenjang_pendidikan (jenjang_pendidikan_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+	CONSTRAINT fk_tingkat__tingkat_j_jenjang_ FOREIGN KEY (jenjang_pendidikan_id) REFERENCES ref.jenjang_pendidikan (jenjang_pendidikan_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE ref.gelar_akademik (

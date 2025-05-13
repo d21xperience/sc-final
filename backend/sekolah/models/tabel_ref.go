@@ -143,3 +143,14 @@ type MataPelajaran struct {
 func (MataPelajaran) TableName() string {
 	return "ref.mata_pelajaran"
 }
+
+type GelarAkademik struct {
+	GelarAkademikID int32  `gorm:"column:gelar_akademik_id;primaryKey"` // Primary key
+	Kode            string `gorm:"column:kode"`                         // Kelompok
+	Nama            string `gorm:"column:nama"`                         // Nama Mata Pelajaran
+	PosisiGelar     int32  `gorm:"column:posisi_gelar"`                 // Semester
+}
+
+func (GelarAkademik) TableName() string {
+	return "ref.gelar_akademik"
+}

@@ -1507,6 +1507,7 @@ const (
 	KelasService_GetKelas_FullMethodName            = "/sekolah.KelasService/GetKelas"
 	KelasService_UpdateKelas_FullMethodName         = "/sekolah.KelasService/UpdateKelas"
 	KelasService_DeleteKelas_FullMethodName         = "/sekolah.KelasService/DeleteKelas"
+	KelasService_GetKelasByName_FullMethodName      = "/sekolah.KelasService/GetKelasByName"
 	KelasService_ImportDapodikRombel_FullMethodName = "/sekolah.KelasService/ImportDapodikRombel"
 )
 
@@ -1523,6 +1524,7 @@ type KelasServiceClient interface {
 	GetKelas(ctx context.Context, in *GetKelasRequest, opts ...grpc.CallOption) (*GetKelasResponse, error)
 	UpdateKelas(ctx context.Context, in *UpdateKelasRequest, opts ...grpc.CallOption) (*UpdateKelasResponse, error)
 	DeleteKelas(ctx context.Context, in *DeleteKelasRequest, opts ...grpc.CallOption) (*DeleteKelasResponse, error)
+	GetKelasByName(ctx context.Context, in *GetKelasByNameRequest, opts ...grpc.CallOption) (*GetKelasByNameResponse, error)
 	ImportDapodikRombel(ctx context.Context, in *ImportDapodikRombelRequest, opts ...grpc.CallOption) (*ImportDapodikRombelResponse, error)
 }
 
@@ -1584,6 +1586,16 @@ func (c *kelasServiceClient) DeleteKelas(ctx context.Context, in *DeleteKelasReq
 	return out, nil
 }
 
+func (c *kelasServiceClient) GetKelasByName(ctx context.Context, in *GetKelasByNameRequest, opts ...grpc.CallOption) (*GetKelasByNameResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetKelasByNameResponse)
+	err := c.cc.Invoke(ctx, KelasService_GetKelasByName_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *kelasServiceClient) ImportDapodikRombel(ctx context.Context, in *ImportDapodikRombelRequest, opts ...grpc.CallOption) (*ImportDapodikRombelResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ImportDapodikRombelResponse)
@@ -1607,6 +1619,7 @@ type KelasServiceServer interface {
 	GetKelas(context.Context, *GetKelasRequest) (*GetKelasResponse, error)
 	UpdateKelas(context.Context, *UpdateKelasRequest) (*UpdateKelasResponse, error)
 	DeleteKelas(context.Context, *DeleteKelasRequest) (*DeleteKelasResponse, error)
+	GetKelasByName(context.Context, *GetKelasByNameRequest) (*GetKelasByNameResponse, error)
 	ImportDapodikRombel(context.Context, *ImportDapodikRombelRequest) (*ImportDapodikRombelResponse, error)
 	mustEmbedUnimplementedKelasServiceServer()
 }
@@ -1632,6 +1645,9 @@ func (UnimplementedKelasServiceServer) UpdateKelas(context.Context, *UpdateKelas
 }
 func (UnimplementedKelasServiceServer) DeleteKelas(context.Context, *DeleteKelasRequest) (*DeleteKelasResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteKelas not implemented")
+}
+func (UnimplementedKelasServiceServer) GetKelasByName(context.Context, *GetKelasByNameRequest) (*GetKelasByNameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetKelasByName not implemented")
 }
 func (UnimplementedKelasServiceServer) ImportDapodikRombel(context.Context, *ImportDapodikRombelRequest) (*ImportDapodikRombelResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ImportDapodikRombel not implemented")
@@ -1747,6 +1763,24 @@ func _KelasService_DeleteKelas_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _KelasService_GetKelasByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetKelasByNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KelasServiceServer).GetKelasByName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KelasService_GetKelasByName_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KelasServiceServer).GetKelasByName(ctx, req.(*GetKelasByNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _KelasService_ImportDapodikRombel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ImportDapodikRombelRequest)
 	if err := dec(in); err != nil {
@@ -1793,6 +1827,10 @@ var KelasService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _KelasService_DeleteKelas_Handler,
 		},
 		{
+			MethodName: "GetKelasByName",
+			Handler:    _KelasService_GetKelasByName_Handler,
+		},
+		{
 			MethodName: "ImportDapodikRombel",
 			Handler:    _KelasService_ImportDapodikRombel_Handler,
 		},
@@ -1807,6 +1845,7 @@ const (
 	AnggotaKelasService_GetAnggotaKelas_FullMethodName          = "/sekolah.AnggotaKelasService/GetAnggotaKelas"
 	AnggotaKelasService_UpdateAnggotaKelas_FullMethodName       = "/sekolah.AnggotaKelasService/UpdateAnggotaKelas"
 	AnggotaKelasService_DeleteAnggotaKelas_FullMethodName       = "/sekolah.AnggotaKelasService/DeleteAnggotaKelas"
+	AnggotaKelasService_DeleteBatchAnggotaKelas_FullMethodName  = "/sekolah.AnggotaKelasService/DeleteBatchAnggotaKelas"
 	AnggotaKelasService_SearchAnggotaKelas_FullMethodName       = "/sekolah.AnggotaKelasService/SearchAnggotaKelas"
 	AnggotaKelasService_FilterAnggotaKelas_FullMethodName       = "/sekolah.AnggotaKelasService/FilterAnggotaKelas"
 )
@@ -1816,7 +1855,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // =======================================
-// KELAS SERVICE
+// ANGGOTA KELAS SERVICE
 type AnggotaKelasServiceClient interface {
 	// AnggotaKelas
 	CreateAnggotaKelas(ctx context.Context, in *CreateAnggotaKelasRequest, opts ...grpc.CallOption) (*CreateAnggotaKelasResponse, error)
@@ -1824,6 +1863,7 @@ type AnggotaKelasServiceClient interface {
 	GetAnggotaKelas(ctx context.Context, in *GetAnggotaKelasRequest, opts ...grpc.CallOption) (*GetAnggotaKelasResponse, error)
 	UpdateAnggotaKelas(ctx context.Context, in *UpdateAnggotaKelasRequest, opts ...grpc.CallOption) (*UpdateAnggotaKelasResponse, error)
 	DeleteAnggotaKelas(ctx context.Context, in *DeleteAnggotaKelasRequest, opts ...grpc.CallOption) (*DeleteAnggotaKelasResponse, error)
+	DeleteBatchAnggotaKelas(ctx context.Context, in *DeleteBatchAnggotaKelasRequest, opts ...grpc.CallOption) (*DeleteBatchAnggotaKelasResponse, error)
 	SearchAnggotaKelas(ctx context.Context, in *SearchAnggotaKelasRequest, opts ...grpc.CallOption) (*SearchAnggotaKelasResponse, error)
 	FilterAnggotaKelas(ctx context.Context, in *FilterAnggotaKelasRequest, opts ...grpc.CallOption) (*FilterAnggotaKelasResponse, error)
 }
@@ -1886,6 +1926,16 @@ func (c *anggotaKelasServiceClient) DeleteAnggotaKelas(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *anggotaKelasServiceClient) DeleteBatchAnggotaKelas(ctx context.Context, in *DeleteBatchAnggotaKelasRequest, opts ...grpc.CallOption) (*DeleteBatchAnggotaKelasResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteBatchAnggotaKelasResponse)
+	err := c.cc.Invoke(ctx, AnggotaKelasService_DeleteBatchAnggotaKelas_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *anggotaKelasServiceClient) SearchAnggotaKelas(ctx context.Context, in *SearchAnggotaKelasRequest, opts ...grpc.CallOption) (*SearchAnggotaKelasResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SearchAnggotaKelasResponse)
@@ -1911,7 +1961,7 @@ func (c *anggotaKelasServiceClient) FilterAnggotaKelas(ctx context.Context, in *
 // for forward compatibility.
 //
 // =======================================
-// KELAS SERVICE
+// ANGGOTA KELAS SERVICE
 type AnggotaKelasServiceServer interface {
 	// AnggotaKelas
 	CreateAnggotaKelas(context.Context, *CreateAnggotaKelasRequest) (*CreateAnggotaKelasResponse, error)
@@ -1919,6 +1969,7 @@ type AnggotaKelasServiceServer interface {
 	GetAnggotaKelas(context.Context, *GetAnggotaKelasRequest) (*GetAnggotaKelasResponse, error)
 	UpdateAnggotaKelas(context.Context, *UpdateAnggotaKelasRequest) (*UpdateAnggotaKelasResponse, error)
 	DeleteAnggotaKelas(context.Context, *DeleteAnggotaKelasRequest) (*DeleteAnggotaKelasResponse, error)
+	DeleteBatchAnggotaKelas(context.Context, *DeleteBatchAnggotaKelasRequest) (*DeleteBatchAnggotaKelasResponse, error)
 	SearchAnggotaKelas(context.Context, *SearchAnggotaKelasRequest) (*SearchAnggotaKelasResponse, error)
 	FilterAnggotaKelas(context.Context, *FilterAnggotaKelasRequest) (*FilterAnggotaKelasResponse, error)
 	mustEmbedUnimplementedAnggotaKelasServiceServer()
@@ -1945,6 +1996,9 @@ func (UnimplementedAnggotaKelasServiceServer) UpdateAnggotaKelas(context.Context
 }
 func (UnimplementedAnggotaKelasServiceServer) DeleteAnggotaKelas(context.Context, *DeleteAnggotaKelasRequest) (*DeleteAnggotaKelasResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAnggotaKelas not implemented")
+}
+func (UnimplementedAnggotaKelasServiceServer) DeleteBatchAnggotaKelas(context.Context, *DeleteBatchAnggotaKelasRequest) (*DeleteBatchAnggotaKelasResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteBatchAnggotaKelas not implemented")
 }
 func (UnimplementedAnggotaKelasServiceServer) SearchAnggotaKelas(context.Context, *SearchAnggotaKelasRequest) (*SearchAnggotaKelasResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchAnggotaKelas not implemented")
@@ -2063,6 +2117,24 @@ func _AnggotaKelasService_DeleteAnggotaKelas_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AnggotaKelasService_DeleteBatchAnggotaKelas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBatchAnggotaKelasRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AnggotaKelasServiceServer).DeleteBatchAnggotaKelas(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AnggotaKelasService_DeleteBatchAnggotaKelas_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AnggotaKelasServiceServer).DeleteBatchAnggotaKelas(ctx, req.(*DeleteBatchAnggotaKelasRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AnggotaKelasService_SearchAnggotaKelas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchAnggotaKelasRequest)
 	if err := dec(in); err != nil {
@@ -2125,6 +2197,10 @@ var AnggotaKelasService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAnggotaKelas",
 			Handler:    _AnggotaKelasService_DeleteAnggotaKelas_Handler,
+		},
+		{
+			MethodName: "DeleteBatchAnggotaKelas",
+			Handler:    _AnggotaKelasService_DeleteBatchAnggotaKelas_Handler,
 		},
 		{
 			MethodName: "SearchAnggotaKelas",
@@ -3839,6 +3915,7 @@ const (
 	ReferensiService_GetJurusan_FullMethodName           = "/sekolah.ReferensiService/GetJurusan"
 	ReferensiService_GetKurikulum_FullMethodName         = "/sekolah.ReferensiService/GetKurikulum"
 	ReferensiService_GetMapel_FullMethodName             = "/sekolah.ReferensiService/GetMapel"
+	ReferensiService_GetGelarAkademik_FullMethodName     = "/sekolah.ReferensiService/GetGelarAkademik"
 )
 
 // ReferensiServiceClient is the client API for ReferensiService service.
@@ -3856,6 +3933,7 @@ type ReferensiServiceClient interface {
 	GetJurusan(ctx context.Context, in *GetJurusanRequest, opts ...grpc.CallOption) (*GetJurusanResponse, error)
 	GetKurikulum(ctx context.Context, in *GetKurikulumRequest, opts ...grpc.CallOption) (*GetKurikulumResponse, error)
 	GetMapel(ctx context.Context, in *GetMapelRequest, opts ...grpc.CallOption) (*GetMapelResponse, error)
+	GetGelarAkademik(ctx context.Context, in *GetGelarAkademikRequest, opts ...grpc.CallOption) (*GetGelarAkademikResponse, error)
 }
 
 type referensiServiceClient struct {
@@ -3936,6 +4014,16 @@ func (c *referensiServiceClient) GetMapel(ctx context.Context, in *GetMapelReque
 	return out, nil
 }
 
+func (c *referensiServiceClient) GetGelarAkademik(ctx context.Context, in *GetGelarAkademikRequest, opts ...grpc.CallOption) (*GetGelarAkademikResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGelarAkademikResponse)
+	err := c.cc.Invoke(ctx, ReferensiService_GetGelarAkademik_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ReferensiServiceServer is the server API for ReferensiService service.
 // All implementations must embed UnimplementedReferensiServiceServer
 // for forward compatibility.
@@ -3951,6 +4039,7 @@ type ReferensiServiceServer interface {
 	GetJurusan(context.Context, *GetJurusanRequest) (*GetJurusanResponse, error)
 	GetKurikulum(context.Context, *GetKurikulumRequest) (*GetKurikulumResponse, error)
 	GetMapel(context.Context, *GetMapelRequest) (*GetMapelResponse, error)
+	GetGelarAkademik(context.Context, *GetGelarAkademikRequest) (*GetGelarAkademikResponse, error)
 	mustEmbedUnimplementedReferensiServiceServer()
 }
 
@@ -3981,6 +4070,9 @@ func (UnimplementedReferensiServiceServer) GetKurikulum(context.Context, *GetKur
 }
 func (UnimplementedReferensiServiceServer) GetMapel(context.Context, *GetMapelRequest) (*GetMapelResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMapel not implemented")
+}
+func (UnimplementedReferensiServiceServer) GetGelarAkademik(context.Context, *GetGelarAkademikRequest) (*GetGelarAkademikResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGelarAkademik not implemented")
 }
 func (UnimplementedReferensiServiceServer) mustEmbedUnimplementedReferensiServiceServer() {}
 func (UnimplementedReferensiServiceServer) testEmbeddedByValue()                          {}
@@ -4129,6 +4221,24 @@ func _ReferensiService_GetMapel_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ReferensiService_GetGelarAkademik_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGelarAkademikRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferensiServiceServer).GetGelarAkademik(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferensiService_GetGelarAkademik_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferensiServiceServer).GetGelarAkademik(ctx, req.(*GetGelarAkademikRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ReferensiService_ServiceDesc is the grpc.ServiceDesc for ReferensiService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -4163,6 +4273,10 @@ var ReferensiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMapel",
 			Handler:    _ReferensiService_GetMapel_Handler,
+		},
+		{
+			MethodName: "GetGelarAkademik",
+			Handler:    _ReferensiService_GetGelarAkademik_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

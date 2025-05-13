@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"log"
 	"sekolah/config"
 	pb "sekolah/generated"
 	"sekolah/models"
@@ -252,25 +253,24 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 // }
 
 // // **DeletePTKTerdaftar**
-// func (s *PTKTerdaftarServiceServer) DeletePTKTerdaftar(ctx context.Context, req *pb.DeletePTKTerdaftarRequest) (*pb.DeletePTKTerdaftarResponse, error) {
-// 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"Schemaname", "PTKTerdaftarId"}
-// 	// Validasi request
-// 	err := utils.ValidateFields(req, requiredFields)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	schemaName := req.GetSchemaname()
-// 	PTKTerdaftarID := req.GetPTKTerdaftarId()
+func (s *PTKTerdaftarServiceServer) DeletePTKTerdaftar(ctx context.Context, req *pb.DeletePTKTerdaftarRequest) (*pb.DeletePTKTerdaftarResponse, error) {
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname", "PtkTerdaftarId"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaname()
+	PTKTerdaftarID := req.GetPtkTerdaftarId()
+	err = s.repo.Delete(ctx, PTKTerdaftarID, schemaName, "ptk_terdaftar_id")
+	if err != nil {
+		log.Printf("Gagal menghapus PTKTerdaftar: %s", err)
+		return &pb.DeletePTKTerdaftarResponse{Message: "Gagal menghapus", Status: false}, fmt.Errorf("gagal menghapus PTKTerdaftar: %w", err)
+	}
 
-// 	err = s.repo.Delete(ctx, PTKTerdaftarID, schemaName, "rombongan_belajar_id")
-// 	if err != nil {
-// 		log.Printf("Gagal menghapus PTKTerdaftar: %s", err)
-// 		return nil, fmt.Errorf("gagal menghapus PTKTerdaftar: %w", err)
-// 	}
-
-// 	return &pb.DeletePTKTerdaftarResponse{
-// 		Message: "PTKTerdaftar berhasil dihapus",
-// 		Status:  true,
-// 	}, nil
-// }
+	return &pb.DeletePTKTerdaftarResponse{
+		Message: "PTKTerdaftar berhasil dihapus",
+		Status:  true,
+	}, nil
+}

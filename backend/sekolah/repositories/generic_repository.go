@@ -10,6 +10,7 @@ import (
 
 	pb "sekolah/generated"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
 	"gorm.io/gorm"
 )
@@ -189,6 +190,53 @@ func (r *GenericRepository[T]) Delete(ctx context.Context, id string, schemaName
 		return nil
 	})
 }
+
+// func (r *GenericRepository[T]) DeleteBatch(ctx context.Context, id []string, schemaName, columnName string) error {
+// 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+// 		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+// 			return fmt.Errorf("failed to set schema: %w", err)
+// 		}
+
+// 		if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
+// 			Where(fmt.Sprintf("%s IN ?", columnName), id).
+// 			Delete(nil).Error; err != nil {
+// 			return fmt.Errorf("failed to delete record in schema %s: %w", schemaName, err)
+// 		}
+
+//			return nil
+//		})
+//	}
+func (r *GenericRepository[T]) DeleteBatch(ctx context.Context, ids []string, schemaName, columnName string) error {
+	// Validasi UUID
+	validIDs := make([]string, 0, len(ids))
+	for _, id := range ids {
+		if u, err := uuid.Parse(strings.TrimSpace(id)); err == nil {
+			validIDs = append(validIDs, u.String())
+		}
+	}
+
+	if len(validIDs) == 0 {
+		return fmt.Errorf("tidak ada ID valid untuk dihapus")
+	}
+
+	// Eksekusi dalam transaksi
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// Set schema aktif
+		if err := tx.Exec(fmt.Sprintf("SET search_path TO %s", strings.ToLower(schemaName))).Error; err != nil {
+			return fmt.Errorf("gagal mengatur schema: %w", err)
+		}
+
+		// Eksekusi delete
+		if err := tx.Table(fmt.Sprintf("%s.%s", strings.ToLower(schemaName), r.tableName)).
+			Where(fmt.Sprintf("%s IN ?", columnName), validIDs).
+			Delete(nil).Error; err != nil {
+			return fmt.Errorf("gagal menghapus record pada schema %s: %w", schemaName, err)
+		}
+
+		return nil
+	})
+}
+
 func (r *GenericRepository[T]) SaveMany(ctx context.Context, schemaName string, entities []*T, batchSize int) error {
 	// fmt.Println("eksekusi di savemany")
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
