@@ -3006,6 +3006,10 @@ const (
 	IjazahService_UpdateIjazah_FullMethodName    = "/sekolah.IjazahService/UpdateIjazah"
 	IjazahService_DeleteIjazah_FullMethodName    = "/sekolah.IjazahService/DeleteIjazah"
 	IjazahService_UploadIjazah_FullMethodName    = "/sekolah.IjazahService/UploadIjazah"
+	IjazahService_CreateDns_FullMethodName       = "/sekolah.IjazahService/CreateDns"
+	IjazahService_UpdateDns_FullMethodName       = "/sekolah.IjazahService/UpdateDns"
+	IjazahService_GetDns_FullMethodName          = "/sekolah.IjazahService/GetDns"
+	IjazahService_DeleteDns_FullMethodName       = "/sekolah.IjazahService/DeleteDns"
 )
 
 // IjazahServiceClient is the client API for IjazahService service.
@@ -3024,6 +3028,10 @@ type IjazahServiceClient interface {
 	DeleteIjazah(ctx context.Context, in *DeleteIjazahRequest, opts ...grpc.CallOption) (*DeleteIjazahResponse, error)
 	// UPLOAD IJAZAH
 	UploadIjazah(ctx context.Context, in *UploadIjazahRequest, opts ...grpc.CallOption) (*UploadIjazahResponse, error)
+	CreateDns(ctx context.Context, in *CreateDnsRequest, opts ...grpc.CallOption) (*CreateDnsResponse, error)
+	UpdateDns(ctx context.Context, in *UpdateDnsRequest, opts ...grpc.CallOption) (*UpdateDnsResponse, error)
+	GetDns(ctx context.Context, in *GetDnsRequest, opts ...grpc.CallOption) (*GetDnsResponse, error)
+	DeleteDns(ctx context.Context, in *DeleteDnsRequest, opts ...grpc.CallOption) (*DeleteDnsResponse, error)
 }
 
 type ijazahServiceClient struct {
@@ -3094,6 +3102,46 @@ func (c *ijazahServiceClient) UploadIjazah(ctx context.Context, in *UploadIjazah
 	return out, nil
 }
 
+func (c *ijazahServiceClient) CreateDns(ctx context.Context, in *CreateDnsRequest, opts ...grpc.CallOption) (*CreateDnsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateDnsResponse)
+	err := c.cc.Invoke(ctx, IjazahService_CreateDns_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ijazahServiceClient) UpdateDns(ctx context.Context, in *UpdateDnsRequest, opts ...grpc.CallOption) (*UpdateDnsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateDnsResponse)
+	err := c.cc.Invoke(ctx, IjazahService_UpdateDns_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ijazahServiceClient) GetDns(ctx context.Context, in *GetDnsRequest, opts ...grpc.CallOption) (*GetDnsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDnsResponse)
+	err := c.cc.Invoke(ctx, IjazahService_GetDns_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ijazahServiceClient) DeleteDns(ctx context.Context, in *DeleteDnsRequest, opts ...grpc.CallOption) (*DeleteDnsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteDnsResponse)
+	err := c.cc.Invoke(ctx, IjazahService_DeleteDns_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // IjazahServiceServer is the server API for IjazahService service.
 // All implementations must embed UnimplementedIjazahServiceServer
 // for forward compatibility.
@@ -3110,6 +3158,10 @@ type IjazahServiceServer interface {
 	DeleteIjazah(context.Context, *DeleteIjazahRequest) (*DeleteIjazahResponse, error)
 	// UPLOAD IJAZAH
 	UploadIjazah(context.Context, *UploadIjazahRequest) (*UploadIjazahResponse, error)
+	CreateDns(context.Context, *CreateDnsRequest) (*CreateDnsResponse, error)
+	UpdateDns(context.Context, *UpdateDnsRequest) (*UpdateDnsResponse, error)
+	GetDns(context.Context, *GetDnsRequest) (*GetDnsResponse, error)
+	DeleteDns(context.Context, *DeleteDnsRequest) (*DeleteDnsResponse, error)
 	mustEmbedUnimplementedIjazahServiceServer()
 }
 
@@ -3137,6 +3189,18 @@ func (UnimplementedIjazahServiceServer) DeleteIjazah(context.Context, *DeleteIja
 }
 func (UnimplementedIjazahServiceServer) UploadIjazah(context.Context, *UploadIjazahRequest) (*UploadIjazahResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadIjazah not implemented")
+}
+func (UnimplementedIjazahServiceServer) CreateDns(context.Context, *CreateDnsRequest) (*CreateDnsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDns not implemented")
+}
+func (UnimplementedIjazahServiceServer) UpdateDns(context.Context, *UpdateDnsRequest) (*UpdateDnsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDns not implemented")
+}
+func (UnimplementedIjazahServiceServer) GetDns(context.Context, *GetDnsRequest) (*GetDnsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDns not implemented")
+}
+func (UnimplementedIjazahServiceServer) DeleteDns(context.Context, *DeleteDnsRequest) (*DeleteDnsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDns not implemented")
 }
 func (UnimplementedIjazahServiceServer) mustEmbedUnimplementedIjazahServiceServer() {}
 func (UnimplementedIjazahServiceServer) testEmbeddedByValue()                       {}
@@ -3267,6 +3331,78 @@ func _IjazahService_UploadIjazah_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _IjazahService_CreateDns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDnsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IjazahServiceServer).CreateDns(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IjazahService_CreateDns_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IjazahServiceServer).CreateDns(ctx, req.(*CreateDnsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IjazahService_UpdateDns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDnsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IjazahServiceServer).UpdateDns(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IjazahService_UpdateDns_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IjazahServiceServer).UpdateDns(ctx, req.(*UpdateDnsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IjazahService_GetDns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDnsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IjazahServiceServer).GetDns(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IjazahService_GetDns_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IjazahServiceServer).GetDns(ctx, req.(*GetDnsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IjazahService_DeleteDns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDnsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IjazahServiceServer).DeleteDns(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IjazahService_DeleteDns_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IjazahServiceServer).DeleteDns(ctx, req.(*DeleteDnsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // IjazahService_ServiceDesc is the grpc.ServiceDesc for IjazahService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -3297,6 +3433,22 @@ var IjazahService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadIjazah",
 			Handler:    _IjazahService_UploadIjazah_Handler,
+		},
+		{
+			MethodName: "CreateDns",
+			Handler:    _IjazahService_CreateDns_Handler,
+		},
+		{
+			MethodName: "UpdateDns",
+			Handler:    _IjazahService_UpdateDns_Handler,
+		},
+		{
+			MethodName: "GetDns",
+			Handler:    _IjazahService_GetDns_Handler,
+		},
+		{
+			MethodName: "DeleteDns",
+			Handler:    _IjazahService_DeleteDns_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

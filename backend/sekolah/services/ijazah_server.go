@@ -9,6 +9,7 @@ import (
 	"sekolah/models"
 	"sekolah/repositories"
 	"sekolah/utils"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -20,6 +21,7 @@ type IjazahServiceServer struct {
 	repoAnggotaKelas repositories.GenericRepository[models.RombelAnggota]
 	repoSiswa        repositories.GenericRepository[models.PesertaDidik]
 	repoSekolah      repositories.SekolahRepository
+	repoDns          repositories.GenericRepository[models.DataNominasiSementara]
 }
 
 func NewIjazahServiceServer() *IjazahServiceServer {
@@ -28,12 +30,14 @@ func NewIjazahServiceServer() *IjazahServiceServer {
 	repoAnggotaKelas := repositories.NewRombelAnggotaRepository(config.DB)
 	repoSiswa := repositories.NewSiswaRepository(config.DB)
 	repoSekolah := repositories.NewSekolahRepository(config.DB)
+	repoDns := repositories.NewDnsRepository(config.DB)
 
 	return &IjazahServiceServer{
 		repo:             *repoIjazah,
 		repoKelas:        *repoKelas,
 		repoAnggotaKelas: *repoAnggotaKelas,
 		repoSiswa:        *repoSiswa,
+		repoDns:          *repoDns,
 		repoSekolah:      repoSekolah,
 	}
 }
@@ -246,5 +250,204 @@ func (s *IjazahServiceServer) DeleteIjazah(ctx context.Context, req *pb.DeleteIj
 	return &pb.DeleteIjazahResponse{
 		Message: "Ijazah berhasil dihapus",
 		Status:  true,
+	}, nil
+}
+
+func (s *IjazahServiceServer) CreateDns(ctx context.Context, req *pb.CreateDnsRequest) (*pb.CreateDnsResponse, error) {
+	log.Printf("createDns request: %+v\n", req)
+
+	var err error
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname", "TahunAjaranId"}
+	// Validasi request
+	err = utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaname()
+	if schemaName == "\"\"" {
+		return nil, fmt.Errorf("schema name is required")
+	}
+	pbDns := req.GetDataNominasiSementara()
+	dns := utils.ConvertPBToModels(pbDns, func(item *pb.Dns) *models.DataNominasiSementara {
+		tglLahir, err := utils.StringToTime(item.TanggalLahir, "2006-01-02")
+		if err != nil {
+			return nil
+		}
+		var tglIjazah time.Time
+		if item.TanggalIjazah != "" {
+			tglIjazah, err = utils.StringToTime(item.TanggalIjazah, "2006-01-02")
+			if err != nil {
+				return nil
+			}
+		}
+		return &models.DataNominasiSementara{
+			ID:                          uuid.New(),
+			PesertaDidikId:              utils.StringToUUID(item.PesertaDidikId),
+			RombonganBelajarId:          utils.StringToUUID(item.RombonganBelajarId),
+			Nama:                        item.Nama,
+			NIS:                         item.Nis,
+			NISN:                        item.Nisn,
+			TempatLahir:                 item.TempatLahir,
+			TanggalLahir:                tglLahir,
+			NamaOrtuWali:                item.NamaOrtuWali,
+			NPSN:                        item.Npsn,
+			ProgramKeahlian:             item.ProgramKeahlian,
+			KabupatenKota:               item.KabupatenKota,
+			SekolahPenyelenggaraUjianUS: item.SekolahPenyelenggaraUjianUs,
+			SekolahPenyelenggaraUjianUN: item.SekolahPenyelenggaraUjianUn,
+			PaketKeahlian:               item.PaketKeahlian,
+			Provinsi:                    item.Provinsi,
+			SekolahID:                   item.SekolahId,
+			AsalSekolah:                 item.AsalSekolah,
+			NomorIjazah:                 item.NomorIjazah,
+			TempatIjazah:                item.TempatIjazah,
+			TanggalIjazah:               tglIjazah,
+			TahunAjaranId:               req.GetTahunAjaranId(),
+			// IsComplete:                  true,
+		}
+	})
+	err = s.repoDns.SaveMany(ctx, schemaName, dns, 100)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateDnsResponse{
+		Message: "Data nominasi sementara berhasil disimpan",
+		Status:  true,
+	}, nil
+}
+func (s *IjazahServiceServer) UpdateDns(ctx context.Context, req *pb.UpdateDnsRequest) (*pb.UpdateDnsResponse, error) {
+	var err error
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname", "SemesterId"}
+	// Validasi request
+	err = utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaname()
+	if schemaName == "\"\"" {
+		return nil, fmt.Errorf("schema name is required")
+	}
+	pbDns := req.GetDataNominasiSementara()
+	dns := utils.ConvertPBToModels(pbDns, func(item *pb.Dns) *models.DataNominasiSementara {
+		tglLahir, err := utils.StringToTime(item.TanggalLahir, "2006-01-02")
+		if err != nil {
+			return nil
+		}
+		tglIjazah, err := utils.StringToTime(item.TanggalIjazah, "2006-01-02")
+		if err != nil {
+			return nil
+		}
+		return &models.DataNominasiSementara{
+			PesertaDidikId:              utils.StringToUUID(item.PesertaDidikId),
+			RombonganBelajarId:          utils.StringToUUID(item.RombonganBelajarId),
+			Nama:                        item.Nama,
+			NIS:                         item.Nis,
+			NISN:                        item.Nisn,
+			TempatLahir:                 item.TempatLahir,
+			TanggalLahir:                tglLahir,
+			NamaOrtuWali:                item.NamaOrtuWali,
+			NPSN:                        item.Npsn,
+			ProgramKeahlian:             item.ProgramKeahlian,
+			KabupatenKota:               item.KabupatenKota,
+			SekolahPenyelenggaraUjianUS: item.SekolahPenyelenggaraUjianUn,
+			SekolahPenyelenggaraUjianUN: item.SekolahPenyelenggaraUjianUn,
+			PaketKeahlian:               item.PaketKeahlian,
+			Provinsi:                    item.Provinsi,
+			SekolahID:                   item.SekolahId,
+			AsalSekolah:                 item.AsalSekolah,
+			NomorIjazah:                 item.NomorIjazah,
+			TempatIjazah:                item.TempatIjazah,
+			TanggalIjazah:               tglIjazah,
+			// IsComplete:                  true,
+		}
+	})
+	err = s.repoDns.SaveMany(ctx, schemaName, dns, 100)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdateDnsResponse{
+		Message: "Data nominasi sementara berhasil disimpan",
+		Status:  true,
+	}, nil
+}
+func (s *IjazahServiceServer) DeleteDns(ctx context.Context, req *pb.DeleteDnsRequest) (*pb.DeleteDnsResponse, error) {
+	schemaName := req.GetSchemaname()
+	DnsId := req.GetId()
+
+	err := s.repo.Delete(ctx, DnsId, schemaName, "id")
+	if err != nil {
+		log.Printf("Gagal menghapus DNS: %v", err)
+		return nil, fmt.Errorf("gagal menghapus DNS: %w", err)
+	}
+
+	return &pb.DeleteDnsResponse{
+		Message: "DNS berhasil dihapus",
+		Status:  true,
+	}, nil
+}
+func (s *IjazahServiceServer) GetDns(ctx context.Context, req *pb.GetDnsRequest) (*pb.GetDnsResponse, error) {
+	var err error
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname", "TahunAjaranId"}
+	// Validasi request
+	err = utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaname()
+	if schemaName == "\"\"" {
+		return nil, fmt.Errorf("schema name is required")
+	}
+	joins := []string{
+		"JOIN tabel_kelas ON tabel_kelas.rombongan_belajar_id = data_nominasi_sementara.rombongan_belajar_id",
+	}
+	preloads := []string{"RombonganBelajar", "PesertaDidik"}
+	conditions := map[string]any{
+		"data_nominasi_sementara.tahun_ajaran_id": req.TahunAjaranId,
+		"data_nominasi_sementara.is_complete":     false,
+	}
+	orderBy := []string{"tabel_kelas.nm_kelas ASC", "data_nominasi_sementara.nama ASC"}
+	DnsModels, err := s.repoDns.FindWithPreloadAndJoins(ctx, schemaName, joins, preloads, conditions, nil, orderBy, false)
+	if err != nil {
+		return nil, err
+	}
+	dns := utils.ConvertModelsToPB(DnsModels, func(item models.DataNominasiSementara) *pb.Dns {
+		return &pb.Dns{
+			PesertaDidikId:              item.PesertaDidikId.String(),
+			RombonganBelajarId:          item.RombonganBelajarId.String(),
+			Nama:                        item.Nama,
+			Nis:                         item.NIS,
+			Nisn:                        item.NISN,
+			TempatLahir:                 item.TempatLahir,
+			TanggalLahir:                item.TanggalLahir.Format("2006-01-02"),
+			NamaOrtuWali:                item.NamaOrtuWali,
+			Npsn:                        item.NPSN,
+			ProgramKeahlian:             item.ProgramKeahlian,
+			KabupatenKota:               item.KabupatenKota,
+			SekolahPenyelenggaraUjianUs: item.SekolahPenyelenggaraUjianUS,
+			SekolahPenyelenggaraUjianUn: item.SekolahPenyelenggaraUjianUN,
+			PaketKeahlian:               item.PaketKeahlian,
+			Provinsi:                    item.Provinsi,
+			SekolahId:                   item.SekolahID,
+			AsalSekolah:                 item.AsalSekolah,
+			NomorIjazah:                 item.NomorIjazah,
+			TempatIjazah:                item.TempatIjazah,
+			TanggalIjazah:               item.TanggalLahir.Format("2006-01-02"),
+			IsComplete:                  item.IsComplete,
+			Kelas: &pb.Kelas{
+				NmKelas: item.RombonganBelajar.NmKelas,
+			},
+			Siswa: &pb.Siswa{
+				JenisKelamin: item.PesertaDidik.JenisKelamin,
+			},
+		}
+	})
+
+	return &pb.GetDnsResponse{
+		DataNominasiSementara: dns,
+		Message:               "Data nominasi sementara berhasil diambil",
+		Status:                true,
 	}, nil
 }

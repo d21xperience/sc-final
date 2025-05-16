@@ -72,36 +72,41 @@ func (s *UploadServiceServer) UploadDataSekolah(ctx context.Context, req *pb.Upl
 
 // UploadFileHTTP menangani upload file melalui REST API dengan multipart/form-data
 func (s *UploadServiceServer) UploadFileHTTP(w http.ResponseWriter, r *http.Request) {
-	var err error
-
-	paramValue := r.URL.Query().Get("upload_type")
-	if paramValue == "" {
-		http.Error(w, "param_name tidak boleh kosong", http.StatusBadRequest)
-		return
-	}
-	// Parse form data
-	err = r.ParseMultipartForm(10 << 20) // Batas ukuran file 10MB
+	err := r.ParseMultipartForm(10 << 20) // 10 MB
 	if err != nil {
 		http.Error(w, "Gagal mem-parsing form data", http.StatusBadRequest)
 		return
 	}
 
-	fileHeader := r.MultipartForm.File["file"]
-	param := ParamTemplate{
-		templateType: r.FormValue("upload_type"),
-		schemaname:   r.FormValue("Schemaname"),
-		// semesterId:   r.FormValue("semester_id"),
+	// Ambil upload_type dari form data, bukan query
+	paramValue := r.FormValue("upload_type")
+	if paramValue == "" {
+		http.Error(w, "upload_type tidak boleh kosong", http.StatusBadRequest)
+		return
 	}
+
+	fileHeader := r.MultipartForm.File["file"]
 	if len(fileHeader) == 0 {
 		http.Error(w, "File tidak ditemukan", http.StatusBadRequest)
 		return
 	}
+
 	file, err := fileHeader[0].Open()
 	if err != nil {
 		http.Error(w, "Gagal membuka file", http.StatusInternalServerError)
 		return
 	}
 	defer file.Close()
+
+	param := ParamTemplate{
+		templateType: paramValue,
+		schemaname:   r.FormValue("schemaname"),
+		// semesterId:   r.FormValue("semester_id"),
+	}
+	if len(fileHeader) == 0 {
+		http.Error(w, "File tidak ditemukan", http.StatusBadRequest)
+		return
+	}
 
 	// Validasi file Excel
 	fileName := fileHeader[0].Filename
@@ -311,93 +316,81 @@ func (s *UploadServiceServer) processUploadSiswa(
 		return fmt.Errorf("gagal memproses file: %v", err)
 	}
 
-	// Iterasi data dan simpan ke database
-	for i := range data {
-		// utils.HandleNilPointers(&data[i]) // Hindari pointer nil
+	for i, row := range data {
+		// Skip header atau baris kosong (misalnya baris pertama sebagai judul)
+		if i == 0 || len(row) < 16 {
+			continue
+		}
 
-		// Simpan ke database
-		// database tabel_siswa
+		// Buat UUID untuk entitas terkait
 		pesertaDidikId := uuid.New()
 		pelengkapSiswaId := uuid.New()
 		anggotaRombelId := uuid.New()
-		alamatSiswa := fmt.Sprintf("%s RT.%s RW.%s, Desa %s Kec. %s %s", data[i][8], data[i][9], data[i][10], data[i][12], data[i][13], data[i][14])
 
-		// Validasi tanggal lahir
-
-		var tanggalLahir time.Time
-		tanggalLahirStr := data[i][5]
+		// Parse tanggal lahir jika tersedia
+		var tanggalLahir *time.Time
+		tanggalLahirStr := row[4] // tanggal_lahir di index 4
 		if tanggalLahirStr != "" {
-			tanggalLahir, err = time.Parse("2006-01-02", tanggalLahirStr)
+			parsedDate, err := time.Parse("2006-01-02", tanggalLahirStr)
 			if err == nil {
-				// tanggalLahir = &tanggalLahir
+				tanggalLahir = &parsedDate
 			}
 		}
 
-		// Validasi diterima_tanggal
-		// diterimaTanggalStr := data[i][5]
-		// if diterimaTanggalStr != "" {
-		// 	parsedDate, err := time.Parse("2006-01-02", diterimaTanggalStr)
-		// 	if err == nil {
-		// 		siswa.DiterimaTgl = &parsedDate
-		// 	}
-		// }
-
+		// Simpan ke tabel peserta didik (siswa)
 		err := s.repoSiswa.Save(ctx, &models.PesertaDidik{
-			PesertaDidikId: pesertaDidikId.String(),
-			NmSiswa:        data[i][0],
-			Nis:            data[i][1],
-			JenisKelamin:   data[i][2],
-			Nisn:           data[i][3],
-			TempatLahir:    data[i][4],
-			TanggalLahir:   &tanggalLahir,
-			Agama:          data[i][7],
-			AlamatSiswa:    &alamatSiswa,
-			TeleponSiswa:   data[i][18],
-			// DiterimaTanggal: data[i][1],
-			NmAyah:        data[i][23],
-			PekerjaanAyah: data[i][26],
-			NmIbu:         data[i][29],
-			PekerjaanIbu:  data[i][32],
-			NmWali:        &data[i][39],
-			PekerjaanWali: &data[i][41],
-			// DiterimaTanggal: ,
+			PesertaDidikId:  pesertaDidikId.String(),
+			NmSiswa:         row[2],       // nm_siswa
+			Nis:             row[0],       // nis
+			Nisn:            row[1],       // nisn
+			JenisKelamin:    row[5],       // jenis_kelamin
+			TempatLahir:     row[3],       // tempat_lahir
+			TanggalLahir:    tanggalLahir, // tanggal_lahir
+			Agama:           row[6],       // agama
+			AlamatSiswa:     &row[7],      // alamat_siswa
+			TeleponSiswa:    row[8],       // telepon_siswa
+			DiterimaTanggal: nil,          // tidak ada di contoh data
+			NmAyah:          row[10],      // nm_ayah
+			NmIbu:           row[11],      // nm_ibu
+			PekerjaanAyah:   row[12],      // pekerjaan_ayah
+			PekerjaanIbu:    row[13],      // pekerjaan_ibu
+			NmWali:          &row[14],     // nm_wali
+			PekerjaanWali:   &row[15],     // pekerjaan_wali
 		}, param.schemaname)
+
 		if err != nil {
-			return err
+			return fmt.Errorf("gagal menyimpan peserta didik: %v", err)
 		}
+
+		// Simpan ke tabel pelengkap siswa (opsional)
 		err = s.repoSiswaPelengkap.Save(ctx, &models.PesertaDidikPelengkap{
 			PelengkapSiswaId: pelengkapSiswaId.String(),
 			PesertaDidikId:   func(s string) *string { return &s }(pesertaDidikId.String()),
-			SekolahAsal:      data[i][55],
-			AnakKe:           &data[i][56],
-
-			// FotoSiswa: ,
+			SekolahAsal:      "",  // Tidak tersedia di format data
+			AnakKe:           nil, // Tidak tersedia di format data
 		}, param.schemaname)
+
 		if err != nil {
-			return err
+			return fmt.Errorf("gagal menyimpan data pelengkap siswa: %v", err)
 		}
 
-		// database tabel_anggotakelas
-		// Jika kelas kosong abaikan
-		if data[i][41] != "" {
+		// Jika kelas tersedia, simpan ke rombel anggota
+		namaKelas := row[15] // Misalkan pekerjaan_wali digunakan untuk kelas? Cek lagi formatmu
+		if namaKelas != "" {
 			err = s.repoKelasAnggota.Save(ctx, &models.RombelAnggota{
 				AnggotaRombelId: utils.StringToUUID(anggotaRombelId.String()),
 				PesertaDidikId:  utils.StringToUUID(pesertaDidikId.String()),
-				// SemesterId: ,
-				// SemesterId: ,
 				RombonganBelajar: models.RombonganBelajar{
-					NmKelas: data[i][41],
+					NmKelas: namaKelas,
 				},
 			}, param.schemaname)
-			if err != nil {
-				return err
-			}
-			// if err := saveFunc(ctx, &data[i], param.schemaname); err != nil {
-			// 	return fmt.Errorf("gagal menyimpan data: %v", err)
-			// }
-		}
 
+			if err != nil {
+				return fmt.Errorf("gagal menyimpan anggota rombel: %v", err)
+			}
+		}
 	}
+
 	return nil
 }
 

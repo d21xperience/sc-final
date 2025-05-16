@@ -16,16 +16,19 @@ import (
 
 type PTKTerdaftarServiceServer struct {
 	pb.UnimplementedPTKTerdaftarServiceServer
-	repo    repositories.GenericRepository[models.PTKTerdaftar]
-	repoPTK repositories.GenericRepository[models.TabelPTK]
+	repo             repositories.GenericRepository[models.PTKTerdaftar]
+	repoPTK          repositories.GenericRepository[models.TabelPTK]
+	repoPTKPelengkap repositories.GenericRepository[models.PtkPelengkap]
 }
 
 func NewPTKTerdaftarServiceServer() *PTKTerdaftarServiceServer {
 	repoPTKTerdaftar := repositories.NewPTKTerdaftarRepository(config.DB)
 	repoPTK := repositories.NewPTKRepository(config.DB)
+	repoPTKPelengkap := repositories.NewPTKPelengkapRepository(config.DB)
 	return &PTKTerdaftarServiceServer{
-		repo:    *repoPTKTerdaftar,
-		repoPTK: *repoPTK,
+		repo:             *repoPTKTerdaftar,
+		repoPTK:          *repoPTK,
+		repoPTKPelengkap: *repoPTKPelengkap,
 	}
 }
 
@@ -177,16 +180,8 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 	}
 	// Konversi ke protobuf
 	ptkTerdaftarPB := utils.ConvertModelsToPB(PTKTerdaftarModel, func(ptk models.PTKTerdaftar) *pb.PTKTerdaftar {
-		ptkTerdaftarId, err := utils.ConvertUUIDToStringViceVersa(ptk.PtkTerdaftarId)
-		if err != nil {
-			return nil
-		}
-		// tglLahir, err := ptk.PTK.TanggalLahir, "2006-01-02")
-		// if err != nil {
-		// 	return nil
-		// }
 		return &pb.PTKTerdaftar{
-			PtkTerdaftarId: ptkTerdaftarId.(string),
+			PtkTerdaftarId: ptk.PtkTerdaftarId.String(),
 			TahunAjaranId:  ptk.TahunAjaranId,
 			Ptk: &pb.PTK{
 				PtkId:             ptk.PTK.PtkID.String(),
@@ -200,11 +195,6 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 				Nuptk:             utils.SafeString(ptk.PTK.NUPTK),
 				Nip:               utils.SafeString(ptk.PTK.NIP),
 			},
-			// PtkPelengkap: &pb.PTKPelengkap{
-			// 	PtkPelengkapId: ptk.PTKPelengkap.PTKID,
-			// 	GelarDepan: ptk.PTK.,
-			// },
-			// Isi field sesuai kebutuhan
 		}
 	})
 
@@ -215,42 +205,85 @@ func (s *PTKTerdaftarServiceServer) GetPTKTerdaftar(ctx context.Context, req *pb
 }
 
 // // **UpdatePTKTerdaftar**
-// func (s *PTKTerdaftarServiceServer) UpdatePTKTerdaftar(ctx context.Context, req *pb.UpdatePTKTerdaftarRequest) (*pb.UpdatePTKTerdaftarResponse, error) {
-// 	// Debugging: Cek nilai request yang diterima
-// 	log.Printf("Received Sekolah data request: %+v\n", req)
-// 	// Daftar field yang wajib diisi
-// 	requiredFields := []string{"Schemaname", "PTKTerdaftar"}
-// 	// Validasi request
-// 	err := utils.ValidateFields(req, requiredFields)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	schemaName := req.GetSchemaname()
-// 	PTKTerdaftar := req.PTKTerdaftar
+func (s *PTKTerdaftarServiceServer) UpdatePTKTerdaftar(ctx context.Context, req *pb.UpdatePTKTerdaftarRequest) (*pb.UpdatePTKTerdaftarResponse, error) {
+	// Debugging: Cek nilai request yang diterima
+	log.Printf("Received Sekolah data request: %+v\n", req)
+	// Daftar field yang wajib diisi
+	requiredFields := []string{"Schemaname", "PtkTerdaftar"}
+	// Validasi request
+	err := utils.ValidateFields(req, requiredFields)
+	if err != nil {
+		return nil, err
+	}
+	schemaName := req.GetSchemaname()
+	PTKTerdaftar := req.GetPtkTerdaftar()
+	if len(PTKTerdaftar) == 1 {
 
-// 	PTKTerdaftarModel := &models.RombonganBelajar{
-// 		NmPTKTerdaftar:             PTKTerdaftar.NmPTKTerdaftar,
-// 		SekolahId:           PTKTerdaftar.SekolahId,
-// 		SemesterId:          PTKTerdaftar.SemesterId,
-// 		JurusanId:           PTKTerdaftar.JurusanId,
-// 		TingkatPendidikanId: PTKTerdaftar.TingkatPendidikanId,
-// 		PtkId:               PTKTerdaftar.PtkId,
-// 		JenisPTKTerdaftar:         PTKTerdaftar.JenisPTKTerdaftar,
-// 		NamaJurusanSp:       PTKTerdaftar.NamaJurusanSp,
-// 		JurusanSpId:         PTKTerdaftar.JurusanSpId,
-// 		KurikulumId:         PTKTerdaftar.KurikulumId,
-// 		// RombonganBelajarId:  PTKTerdaftar.RombonganBelajarId,
-// 	}
-// 	err = s.repo.Update(ctx, PTKTerdaftarModel, schemaName, "rombongan_belajar_id", PTKTerdaftar.SemesterId)
-// 	if err != nil {
-// 		log.Printf("Gagal memperbaharui PTKTerdaftar: %s", err)
-// 		return nil, fmt.Errorf("gagal memperbaharui PTKTerdaftar: %w", err)
-// 	}
-// 	return &pb.UpdatePTKTerdaftarResponse{
-// 		Message: "PTKTerdaftar berhasil diperbarui",
-// 		Status:  true,
-// 	}, nil
-// }
+		PTKModel := &models.TabelPTK{
+			Nama:          PTKTerdaftar[0].Ptk.Nama,
+			NIP:           &PTKTerdaftar[0].Ptk.Nip,
+			JenisKelamin:  PTKTerdaftar[0].Ptk.JenisKelamin,
+			NUPTK:         &PTKTerdaftar[0].Ptk.Nuptk,
+			TempatLahir:   PTKTerdaftar[0].Ptk.TempatLahir,
+			GelarDepan:    &PTKTerdaftar[0].Ptk.GelarDepan,
+			GelarBelakang: &PTKTerdaftar[0].Ptk.GelarBelakang,
+			AlamatJalan:   PTKTerdaftar[0].Ptk.AlamatJalan,
+		}
+		err = s.repoPTK.Update(ctx, PTKModel, schemaName, "ptk_id", PTKTerdaftar[0].Ptk.PtkId)
+		if err != nil {
+			log.Printf("Gagal memperbaharui PTK: %s", err)
+			return &pb.UpdatePTKTerdaftarResponse{
+				Message: fmt.Sprintf("gagal memperbaharui PTK: %s", err),
+				Status:  false,
+			}, nil
+		}
+		// Cek apakah data sudah tersimpan di tabel_ptk_pelengkap?
+
+		PTKPelengkap := &models.PtkPelengkap{
+			// PtkPelengkapId: uuid.New(),
+			PtkId: utils.StringToUUID(PTKTerdaftar[0].Ptk.PtkId),
+			RT:    PTKTerdaftar[0].PtkPelengkap.Rt,
+			RW:    PTKTerdaftar[0].PtkPelengkap.Rw,
+			Desa:  PTKTerdaftar[0].PtkPelengkap.Desa,
+			Kec:   PTKTerdaftar[0].PtkPelengkap.Kec,
+			Kab:   PTKTerdaftar[0].PtkPelengkap.Kab,
+			Prov:  PTKTerdaftar[0].PtkPelengkap.Prov,
+		}
+		// Cek apakah data sudah tersimpan di tabel_ptk_pelengkap?
+		cek, err := s.repoPTKPelengkap.FindOrCreateByID(ctx, PTKTerdaftar[0].Ptk.PtkId, schemaName, "ptk_id", func(id string) *models.PtkPelengkap {
+			return &models.PtkPelengkap{
+				PtkId: utils.StringToUUID(id),
+				RT:    PTKTerdaftar[0].PtkPelengkap.Rt,
+				RW:    PTKTerdaftar[0].PtkPelengkap.Rw,
+				Desa:  PTKTerdaftar[0].PtkPelengkap.Desa,
+				Kec:   PTKTerdaftar[0].PtkPelengkap.Kec,
+				Kab:   PTKTerdaftar[0].PtkPelengkap.Kab,
+				Prov:  PTKTerdaftar[0].PtkPelengkap.Prov,
+			}
+		})
+		if err != nil {
+			log.Printf("Gagal membuat PTK Pelengkap: %s", err)
+			return &pb.UpdatePTKTerdaftarResponse{
+				Message: fmt.Sprintf("gagal membuat PTK Pelengkap: %s", err),
+				Status:  false,
+			}, nil
+		}
+		if cek != nil {
+			err := s.repoPTKPelengkap.Update(ctx, PTKPelengkap, schemaName, "ptk_id", PTKTerdaftar[0].Ptk.PtkId)
+			if err != nil {
+				log.Printf("Gagal memperbaharui PTK Pelengkap: %s", err)
+				return &pb.UpdatePTKTerdaftarResponse{
+					Message: fmt.Sprintf("gagal memperbaharui PTK Pelengkap: %s", err),
+					Status:  false,
+				}, nil
+			}
+		}
+	}
+	return &pb.UpdatePTKTerdaftarResponse{
+		Message: "PTKTerdaftar berhasil diperbarui",
+		Status:  true,
+	}, nil
+}
 
 // // **DeletePTKTerdaftar**
 func (s *PTKTerdaftarServiceServer) DeletePTKTerdaftar(ctx context.Context, req *pb.DeletePTKTerdaftarRequest) (*pb.DeletePTKTerdaftarResponse, error) {

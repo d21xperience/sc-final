@@ -231,6 +231,8 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.data_nominasi_sementara (
     id UUID NOT NULL DEFAULT public.uuid_generate_v4(),
 	PRIMARY KEY (id),
 	peserta_didik_id UUID NULL DEFAULT NULL,
+	rombongan_belajar_id NULL DEFAULT NULL,
+	tahun_ajaran_id VARCHAR(4) NULL DEFAULT NULL,
     program_keahlian VARCHAR(100) NOT NULL,
     paket_keahlian VARCHAR(100) NOT NULL,
     sekolah_id UUID NOT NULL,
@@ -249,8 +251,48 @@ CREATE TABLE IF NOT EXISTS {{schema_name}}.data_nominasi_sementara (
     nomor_ijazah VARCHAR(50) UNIQUE NOT NULL,
     tempat_ijazah VARCHAR(100) NOT NULL,
     tanggal_ijazah DATE NOT NULL,
+	is_complete BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL,
-   	CONSTRAINT FK_tabel_ijazah FOREIGN KEY (peserta_didik_id) REFERENCES {{schema_name}}.tabel_siswa (peserta_didik_id) ON UPDATE CASCADE ON DELETE CASCADE
+   	CONSTRAINT FK_tabel_ijazah FOREIGN KEY (peserta_didik_id) REFERENCES {{schema_name}}.tabel_siswa (peserta_didik_id) ON UPDATE CASCADE ON DELETE CASCADE,
+   	CONSTRAINT FK_data_nominasi_sementara_tabel_kelas FOREIGN KEY (rombongan_belajar_id) REFERENCES {{schema_name}}.tabel_kelas (rombongan_belajar_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+-- CREATE OR REPLACE FUNCTION {{schema_name}}.check_is_complete()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     -- Ganti pengecekan NULL sesuai kebutuhan kolom
+--     IF NEW.peserta_didik_id IS NOT NULL AND
+--        NEW.rombongan_belajar_id IS NOT NULL AND
+--        NEW.program_keahlian IS NOT NULL AND
+--        NEW.paket_keahlian IS NOT NULL AND
+--        NEW.sekolah_id IS NOT NULL AND
+--        NEW.npsn IS NOT NULL AND
+--        NEW.kabupaten_kota IS NOT NULL AND
+--        NEW.provinsi IS NOT NULL AND
+--        NEW.nama IS NOT NULL AND
+--        NEW.tempat_lahir IS NOT NULL AND
+--        NEW.tanggal_lahir IS NOT NULL AND
+--        NEW.nis IS NOT NULL AND
+--        NEW.nisn IS NOT NULL AND
+--        NEW.nama_ortu_wali IS NOT NULL AND
+--        NEW.sekolah_penyelenggara_ujian_us IS NOT NULL AND
+--        NEW.sekolah_penyelenggara_ujian_un IS NOT NULL AND
+--        NEW.asal_sekolah IS NOT NULL AND
+--        NEW.nomor_ijazah IS NOT NULL AND
+--        NEW.tempat_ijazah IS NOT NULL AND
+--        NEW.tanggal_ijazah IS NOT NULL THEN
+       
+--        NEW.is_complete := TRUE;
+--     ELSE
+--        NEW.is_complete := FALSE;
+--     END IF;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE TRIGGER trigger_check_is_complete
+-- BEFORE INSERT OR UPDATE ON {{schema_name}}.data_nominasi_sementara
+-- FOR EACH ROW
+-- EXECUTE FUNCTION {{schema_name}}.check_is_complete();

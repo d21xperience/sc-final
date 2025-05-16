@@ -43,3 +43,26 @@ func (PTKTerdaftar) TableName() string {
 func (TabelPTK) TableName() string {
 	return "tabel_ptk"
 }
+
+type PtkPelengkap struct {
+	PtkPelengkapId uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"ptk_pelengkap_id"`
+	PtkId          uuid.UUID `gorm:"type:uuid;not null" json:"ptk_id"`
+
+	GelarDepan    string `gorm:"type:varchar(20)" json:"gelar_depan,omitempty"`
+	GelarBelakang string `gorm:"type:varchar(20)" json:"gelar_belakang,omitempty"`
+	NipNiy        string `gorm:"type:varchar(18)" json:"nip_niy,omitempty"`
+	AlamatJalan   string `gorm:"type:varchar" json:"alamat_jalan,omitempty"`
+	RT            string `gorm:"type:varchar" json:"rt,omitempty"`
+	RW            string `gorm:"type:varchar" json:"rw,omitempty"`
+	Desa          string `gorm:"type:varchar" json:"desa,omitempty"`
+	Kec           string `gorm:"type:varchar" json:"kec,omitempty"`
+	Kab           string `gorm:"type:varchar" json:"kab,omitempty"`
+	Prov          string `gorm:"type:varchar" json:"prov,omitempty"`
+
+	// Relasi opsional ke tabel PTK
+	Ptk *TabelPTK `gorm:"foreignKey:PtkId;references:PtkID"`
+}
+
+func (PtkPelengkap) TableName() string {
+	return "tabel_ptk"
+}

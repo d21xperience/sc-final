@@ -5,5 +5,5 @@ for %%F in (auth_service sekolah sc-service) do (
     start cmd /k "cd /d %BASE_PATH%\%%F && go run main.go"
 )
 
-set FRONTEND_PATH=%~dp0frontend
+set FRONTEND_PATH=%~dp0sakai-vue
 #start cmd /k "cd /d %FRONTEND_PATH% && npm run dev"
