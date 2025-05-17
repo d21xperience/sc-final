@@ -9,12 +9,12 @@ import (
 type TabelPTK struct {
 	PtkID             uuid.UUID  `gorm:"column:ptk_id;primaryKey"`   // UUID
 	Nama              string     `gorm:"column:nama"`                // String
+	NUPTK             *string    `gorm:"column:nuptk"`               // Nullable string
 	NIP               *string    `gorm:"column:nip"`                 // Nullable string
 	JenisPtkID        int32      `gorm:"column:jenis_ptk_id"`        // String
 	JenisKelamin      string     `gorm:"column:jenis_kelamin"`       // String
 	TempatLahir       string     `gorm:"column:tempat_lahir"`        // String
 	TanggalLahir      *time.Time `gorm:"column:tanggal_lahir"`       // String (format tanggal, bisa diubah ke time.Time jika perlu)
-	NUPTK             *string    `gorm:"column:nuptk"`               // Nullable string
 	AlamatJalan       string     `gorm:"column:alamat_jalan"`        // String
 	StatusKeaktifanID int32      `gorm:"column:status_keaktifan_id"` // String
 	GelarDepan        *string    `gorm:"column:gelar_depan"`         // Nullable string
@@ -31,7 +31,7 @@ type PTKTerdaftar struct {
 	// Relasi ke PTK
 	PTK TabelPTK `gorm:"foreignKey:PtkID;references:PtkID"`
 	// Pembelajaran []Pembelajaran `gorm:"foreignKey:PtkTerdaftarId;references:PtkTerdaftarId"`
-	// PTKPelengkap PTKPelengkap `gorm:"foreignKey:PTKID;references:PtkID"` // Menyertakan PTKPelengkap
+	PTKPelengkap PtkPelengkap `gorm:"foreignKey:PtkID;references:PtkId"` // Menyertakan PTKPelengkap
 }
 
 // Menentukan nama tabel kustom
@@ -47,7 +47,6 @@ func (TabelPTK) TableName() string {
 type PtkPelengkap struct {
 	PtkPelengkapId uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"ptk_pelengkap_id"`
 	PtkId          uuid.UUID `gorm:"type:uuid;not null" json:"ptk_id"`
-
 	GelarDepan    string `gorm:"type:varchar(20)" json:"gelar_depan,omitempty"`
 	GelarBelakang string `gorm:"type:varchar(20)" json:"gelar_belakang,omitempty"`
 	NipNiy        string `gorm:"type:varchar(18)" json:"nip_niy,omitempty"`

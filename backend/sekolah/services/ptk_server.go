@@ -121,6 +121,7 @@ func (s *PTKServiceServer) GetPTK(ctx context.Context, req *pb.GetPTKRequest) (*
 			GelarDepan:        utils.SafeString(item.GelarBelakang),
 			GelarBelakang:     utils.SafeString(item.GelarBelakang),
 			NipNiy:            utils.SafeString(item.NIP_NIY),
+			
 		}
 	})
 
